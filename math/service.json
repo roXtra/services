@@ -1,0 +1,102 @@
+{
+  "id": "math-service",
+  "name": "MATH Service",
+  "actions": [
+    {
+      "id": "addition",
+      "label": "Addition",
+      "configMethod": "additionConfig",
+      "settings": "addition-config.js",
+      "serviceFile": "addition-service.js",
+      "serviceMethod": "addition",
+      "fields": [
+        {
+          "name": "numberField1",
+          "type": "select",
+          "onload": "fields"
+        },
+        {
+          "name": "numberField2",
+          "type": "select",
+          "onload": "fields"
+        },
+        {
+          "name": "targetField",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "id": "subtraktion",
+      "label": "Subtraktion",
+      "configMethod": "subtraktionConfig",
+      "settings": "subtraktion-config.js",
+      "serviceFile": "subtraktion-service.js",
+      "serviceMethod": "subtraktion",
+      "fields": [
+        {
+          "name": "numberField1",
+          "type": "select",
+          "onload": "fields"
+        },
+        {
+          "name": "numberField2",
+          "type": "select",
+          "onload": "fields"
+        },
+        {
+          "name": "targetField",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "id": "multiplikation",
+      "label": "Multiplikation",
+      "configMethod": "multiplikationConfig",
+      "settings": "multiplikation-config.js",
+      "serviceFile": "multiplikation-service.js",
+      "serviceMethod": "multiplikation",
+      "fields": [
+        {
+          "name": "numberField1",
+          "type": "select",
+          "onload": "fields"
+        },
+        {
+          "name": "numberField2",
+          "type": "select",
+          "onload": "fields"
+        },
+        {
+          "name": "targetField",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "id": "division",
+      "label": "Division",
+      "configMethod": "divisionConfig",
+      "settings": "division-config.js",
+      "serviceFile": "division-service.js",
+      "serviceMethod": "division",
+      "fields": [
+        {
+          "name": "numberField1",
+          "type": "select",
+          "onload": "fields"
+        },
+        {
+          "name": "numberField2",
+          "type": "select",
+          "onload": "fields"
+        },
+        {
+          "name": "targetField",
+          "type": "text"
+        }
+      ]
+    }
+  ]
+}

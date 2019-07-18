@@ -1,0 +1,22 @@
+{
+  "name": "services",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "copyfiles": "copyfiles */service.json */dist/* */node_modules/**/* zipped_services",
+    "zip": "cd zipped_services/ && bestzip ../zipped_services.zip *",
+    "copyandzip": "npm run copyfiles && npm run zip && rimraf zipped_services/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/roXtra/services.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/roXtra/services/issues"
+  },
+  "homepage": "https://github.com/roXtra/services#readme"
+}

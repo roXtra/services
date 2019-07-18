@@ -1,0 +1,47 @@
+{
+  "id": "csv-service",
+  "name": "CSV Service",
+  "actions": [
+    {
+      "id": "csvreader",
+      "label": "CSV Datei lesen",
+      "configMethod": "csvreaderConfig",
+      "settings": "csvreader-config.js",
+      "serviceFile": "csvreader-service.js",
+      "serviceMethod": "csvreader",
+      "fields": [
+        {
+          "name": "filePath",
+          "type": "text"
+        },
+        {
+          "name": "sheetName",
+          "type": "text"
+        },
+        {
+          "name": "query",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "id": "projectreader",
+      "label": "Projekt aus CSV Datei lesen",
+      "configMethod": "projectreaderConfig",
+      "settings": "projectreader-config.js",
+      "serviceFile": "projectreader-service.js",
+      "serviceMethod": "projectreader",
+      "fields": [
+        {
+          "name": "filePath",
+          "type": "text"
+        },
+        {
+          "name": "PSP",
+          "type": "select",
+          "onload": "fields"
+        }
+      ]
+    }
+  ]
+}
