@@ -5,7 +5,7 @@ let ps = new PowerShell("Get-ChildItem -Path ./ | where {($_.psiscontainer)} | C
 ps.on("output", data => {
     data = JSON.parse(data);
     data.forEach(childDir => {
-        if(childDir.Name !== "node_modules") {
+        if(childDir.Name !== "node_modules" && childDir.Name !== "zipped_services") {
         new PowerShell("cd ./" + childDir.Name + ";" + "npm install; tsc; npm run copyandzip; cd..")
         .on("output", data => {
             console.log(data);
