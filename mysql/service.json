@@ -1,0 +1,22 @@
+{
+  "id": "mysql-service",
+  "name": "MySQL Service",
+  "actions": [
+    { 
+      "id": "executeQuery",
+      "label": "Abfrage ausführen", 
+      "configMethod": "executeQueryConfig",
+      "settings": "executequery-config.js",
+      "serviceFile": "executequery-service.js",
+      "serviceMethod": "executeQuery",
+      "fields": [
+        { "name": "server", "type": "text" }, 
+        { "name": "username", "type": "text" }, 
+        { "name": "password", "type": "text" }, 
+        { "name": "database", "type": "text" }, 
+        { "name": "query", "type": "text" }, 
+        { "name": "targetField", "type": "select", "onload": "fields" } 
+      ]
+    } 
+  ]
+}

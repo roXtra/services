@@ -1,0 +1,22 @@
+{
+  "id": "ics-service",
+  "name": "ICS Service",
+  "actions": [
+    { 
+      "id": "generate",
+      "label": "generiere ICS Datei", 
+      "configMethod": "generateConfig",
+      "settings": "generate-config.js",
+      "serviceFile": "generate-service.js",
+      "serviceMethod": "generate",
+      "fields": [
+        { "name": "titleField", "type": "text" }, 
+        { "name": "fromField", "type": "select", "onload": "fields" }, 
+        { "name": "tillField", "type": "select", "onload": "fields" }, 
+        { "name": "targetField", "type": "select", "onload": "fields" },
+        { "name": "descriptionField", "type": "select", "onload": "fields" }
+        
+      ]
+    }
+  ]
+}

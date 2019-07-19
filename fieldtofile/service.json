@@ -1,0 +1,18 @@
+{
+  "id": "fieldtofile-service",
+  "name": "Feld in Datei Service",
+  "actions": [
+    { 
+      "id": "copyFieldToFile",
+      "label": "Feld in Datei kopieren", 
+      "configMethod": "fieldToFileConfig",
+      "settings": "fieldtofile-config.js",
+      "serviceFile": "fieldtofile-service.js",
+      "serviceMethod": "executeFieldToFile",
+      "fields": [
+        { "name": "sourceField", "type": "select", "onload": "fields" },
+        { "name": "targetPath", "type": "text" }
+      ]
+    } 
+  ]
+}

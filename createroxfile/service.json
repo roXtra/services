@@ -1,0 +1,17 @@
+{
+  "id": "createroxfile",
+  "name": "Erzeuge roXtra Datei",
+  "actions": [
+    { 
+      "id": "createRoxFile",
+      "label": "roXtra Datei anlegen", 
+      "configMethod": "createroxfileconfig",
+      "settings": "createroxfile-config.js",
+      "serviceFile": "createroxfile-service.js",
+      "serviceMethod": "executeCreateRoxFile",
+      "fields": [
+        { "name": "targetField", "type": "select", "onload": "fields" } 
+      ]
+    } 
+  ]
+}
