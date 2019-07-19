@@ -11,7 +11,7 @@ If the command ran without erros, a folder should have been created named zipped
 
 ## Develop Services
 Services are written in TypeScript.
-That a service can be built without errors, serveral files are needed.
+That a service can be built without errors, several files are needed.
 - package.json, to specify the dependencies
 - tsconfig.json, to specify compile options
 - tslint.json, to specify lint options
