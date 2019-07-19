@@ -1,9 +1,10 @@
 # services
 
+Requirements: Node.js
+
 ## Getting Started
-- If you haven't installed Node.js yet, install it
 - Clone the repository
-- Open it in VSCode
+- Open it in VSCode or in your prefered IDE
 - Install all dependencies via `npm install`
 - Execute the command `npm run build`
 
