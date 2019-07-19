@@ -1,9 +1,10 @@
 # services
 
+Requirements: Node.js
+
 ## Getting Started
-- If you haven't installed Node.js yet, install it
 - Clone the repository
-- Open it in VSCode
+- Open it in VSCode or in your prefered IDE
 - Install all dependencies via `npm install`
 - Execute the command `npm run build`
 
@@ -11,7 +12,7 @@ If the command ran without erros, a folder should have been created named zipped
 
 ## Develop Services
 Services are written in TypeScript.
-That a service can be built without errors, serveral files are needed.
+That a service can be built without errors, several files are needed.
 - package.json, to specify the dependencies
 - tsconfig.json, to specify compile options
 - tslint.json, to specify lint options
