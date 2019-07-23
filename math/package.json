@@ -18,6 +18,7 @@
     "typescript": "^3.5.2"
   },
   "devDependencies": {
-    "@types/react": "^16.8.23"
+    "@types/react": "^16.8.23",
+    "bestzip": "^2.1.4"
   }
 }
