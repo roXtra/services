@@ -1,13 +1,13 @@
 {
-  "name": "math",
+  "name": "@eformservice/math",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "copyfiles": "copyfiles service.json dist/* node_modules/**/* %npm_package_name%",
-    "zip": "bestzip %npm_package_name%.zip %npm_package_name%",
-    "copyandzip": "npm run copyfiles && npm run zip && rimraf %npm_package_name%/"
+    "copyfiles": "copyfiles service.json dist/* node_modules/**/* build",
+    "zip": "bestzip math.zip build",
+    "copyandzip": "npm run copyfiles && npm run zip && rimraf build/"
   },
   "author": "",
   "license": "ISC",
