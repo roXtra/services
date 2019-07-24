@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "copyfiles": "copyfiles service.json dist/* node_modules/**/* build",
-    "zip": "bestzip csv.zip build",
-    "copyandzip": "npm run copyfiles && npm run zip && rimraf build/"
+    "copyfiles": "copyfiles service.json dist/* node_modules/**/* csv",
+    "zip": "bestzip csv.zip csv",
+    "copyandzip": "npm run copyfiles && npm run zip && rimraf csv/"
   },
   "author": "",
   "license": "ISC",
@@ -15,9 +15,7 @@
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/blob/develop/processhub-sdk-8.5.0.tgz?raw=true",
     "react": "^16.8.6",
     "semantic-ui-react": "^0.87.2",
-    "xlsx": "^0.14.3",
-    "lodash": "4.17.15",
-    "moddle": "4.1.0"
+    "xlsx": "^0.14.3"
   },
   "devDependencies": {
     "@types/graphql": "^14.2.2",

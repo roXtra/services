@@ -1,23 +1,25 @@
 {
-  "name": "servicetemplate",
+  "name": "@eformservice/servicetemplate",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "copyfiles": "copyfiles service.json dist/* node_modules/**/* %npm_package_name%",
-    "zip": "bestzip %npm_package_name%.zip %npm_package_name%",
-    "copyandzip": "npm run copyfiles && npm run zip && rimraf %npm_package_name%/"
+    "copyfiles": "copyfiles service.json dist/* node_modules/**/* servicetemplate",
+    "zip": "bestzip servicetemplate.zip servicetemplate",
+    "copyandzip": "npm run copyfiles && npm run zip && rimraf servicetemplate/"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/blob/develop/processhub-sdk-8.5.0.tgz?raw=true",
     "react": "^16.8.6",
-    "semantic-ui-react": "^0.87.2",
-    "typescript": "^3.5.2"
+    "semantic-ui-react": "^0.87.2"
   },
   "devDependencies": {
-    "@types/react": "^16.8.23"
+    "@types/react": "^16.8.23",
+    "bestzip": "^2.1.4",
+    "copyfiles": "^2.1.1",
+    "typescript": "^3.5.2"
   }
 }

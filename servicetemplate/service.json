@@ -1,0 +1,44 @@
+{
+    "id": "servicetemplate-service",
+    "name": "Service Template",
+    "actions": [
+        {
+            "id": "service1",
+            "label": "Service 1 von Service Template",
+            "configMethod": "service1Config",
+            "settings": "service1-config.js",
+            "serviceFile": "service1-service.js",
+            "serviceMethod": "service1",
+            "fields": [
+                {
+                    "name": "inputField",
+                    "type": "text"
+                },
+                {
+                    "name": "selectField",
+                    "type": "select",
+                    "onload": "fields"
+                }
+            ]
+        },
+        {
+            "id": "service2",
+            "label": "Service 2 von Service Template",
+            "configMethod": "service2Config",
+            "settings": "service2-config.js",
+            "serviceFile": "service2-service.js",
+            "serviceMethod": "service2",
+            "fields": [
+                {
+                    "name": "inputField",
+                    "type": "text"
+                },
+                {
+                    "name": "selectField",
+                    "type": "select",
+                    "onload": "fields"
+                }
+            ]
+        }
+    ]
+}
