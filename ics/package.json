@@ -1,13 +1,15 @@
 {
   "name": "@eformservice/ics",
+  "servicename": "ics",
   "version": "1.0.2",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "copyfiles": "copyfiles service.json dist/* node_modules/**/* build",
-    "zip": "bestzip ics.zip build",
-    "copyandzip": "npm run copyfiles && npm run zip && rimraf build/"
+    "copyproduction": "copyfiles package.json production && cd ./production && npm install --production && cd.. && copyfiles -u 1 production/node_modules/** %npm_package_servicename% && rimraf production/",
+    "copyfiles": "copyfiles service.json dist/* %npm_package_servicename% && npm run copyproduction",
+    "zip": "bestzip %npm_package_servicename%.zip %npm_package_servicename%",
+    "copyandzip": "npm run copyfiles && npm run zip && rimraf %npm_package_servicename%/"
   },
   "author": "",
   "license": "ISC",
@@ -17,8 +19,10 @@
     "semantic-ui-react": "^0.87.2"
   },
   "devDependencies": {
+    "@types/graphql": "^14.2.2",
     "@types/react": "^16.8.23",
     "bestzip": "^2.1.4",
-    "typescript": "^3.5.3"
+    "copyfiles": "^2.1.1",
+    "typescript": "^3.5.2"
   }
 }
