@@ -37,7 +37,7 @@
           "type": "text"
         },
         {
-          "name": "PSP",
+          "name": "searchField",
           "type": "select",
           "onload": "fields"
         }

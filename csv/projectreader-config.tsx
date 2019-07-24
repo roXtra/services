@@ -23,11 +23,11 @@ export function projectreaderConfig() {
 
           <Semantic.Table.Row>
             <Semantic.Table.Cell>
-              <PH.TL text={"PSP"} />
+              <PH.TL text={"Suchfeld"} />
             </Semantic.Table.Cell>
             <Semantic.Table.Cell>
               <select
-                id="PSP"
+                id="searchField"
               />
             </Semantic.Table.Cell>
           </Semantic.Table.Row>

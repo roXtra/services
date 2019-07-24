@@ -15,11 +15,11 @@ export async function projectreader(environment: PH.ServiceTask.ServiceTaskEnvir
   let instance = environment.instanceDetails;
 
   let filePath = fields.find(f => f.key == "filePath").value;
-  let PSPField = fields.find(f => f.key == "PSP").value;
+  let searchField = fields.find(f => f.key == "searchField").value;
 
-  let PSP = getValueFromFieldName(environment, PSPField);
+  let keyword = getValueFromFieldName(environment, searchField);
 
-  let project = getProjectFromXLSX(filePath, PSP);
+  let project = getProjectFromXLSX(filePath, keyword);
 
   errorHandling(instance, () => initFields(instance, project));
 
@@ -43,7 +43,7 @@ function errorHandling(instance: any, normalBehavior: Function) {
 
     case ErrorStates.ERRORCODE_NOSUCHPROJECT:
       instance.extras.fieldContents["Info"] = {
-        value: "Kein Projekt mit dieser PSP gefunden",
+        value: "Kein Projekt mit diesem Suchbegriff gefunden",
         type: "ProcessHubTextArea"
       };
       break;
@@ -51,32 +51,20 @@ function errorHandling(instance: any, normalBehavior: Function) {
 }
 
 function initFields(instance: PH.Instance.InstanceDetails, project: any) {
-  instance.extras.fieldContents["Bezeichnung"] = {
-    value: project.Bezeichnung,
-    type: "ProcessHubTextArea"
-  };
-
-  instance.extras.fieldContents["WE"] = {
-    value: project.WE,
-    type: "ProcessHubTextArea"
-  };
-
-  instance.extras.fieldContents["Kostenstelle"] = {
-    value: project.Kostenstelle,
-    type: "ProcessHubTextArea"
-  };
-
-  instance.extras.fieldContents["Overheadanteil"] = {
-    value: project.Overheadanteil,
-    type: "ProcessHubTextArea"
-  };
+  const keys = Object.keys(project);
+  keys.forEach((key: any) => {
+    instance.extras.fieldContents[key] = {
+      value: project[key],
+      type: "ProcessHubTextArea"
+    };
+  });
 }
 
 function getValueFromFieldName(environment: PH.ServiceTask.ServiceTaskEnvironment, fieldName: string): string {
   return ((environment.instanceDetails.extras.fieldContents[fieldName] as PH.Data.FieldValue).value as string).trim();
 }
 
-function getProjectFromXLSX(filePath: string, PSP: string): any {
+function getProjectFromXLSX(filePath: string, keyword: string): any {
   let workbook: XLSX.WorkBook;
   try {
     workbook = XLSX.readFile(filePath);
@@ -87,7 +75,7 @@ function getProjectFromXLSX(filePath: string, PSP: string): any {
   let projectArray: any[] = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
 
   for (let project of projectArray) {
-    if (project.PSP === PSP) {
+    if (project[Object.keys(project)[0]] === keyword) {
       return project;
     }
   }
