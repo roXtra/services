@@ -20,6 +20,7 @@
     "xlsx": "^0.14.3"
   },
   "devDependencies": {
+    "@types/chai": "^4.1.7",
     "@types/graphql": "^14.2.2",
     "@types/react": "^16.8.23",
     "bestzip": "^2.1.4",

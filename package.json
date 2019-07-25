@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "copyzips": "copyfiles -u 1 */*.zip zipped_services",
-    "build": "node buildScript.js"
+    "build": "node buildScript.js",
+    "test-roxtra": "cross-env HOTRELOAD=no DEBUG=bpmn-engine:123* mocha \"./*/dist/*.roxtest.js\" --exit js:babel-register --recursive --timeout 4000000 --require babel-polyfill"
   },
   "repository": {
     "type": "git",
@@ -19,7 +20,13 @@
   },
   "homepage": "https://github.com/roXtra/services#readme",
   "dependencies": {
-    "@types/graphql": "^14.2.2",
+    "@types/graphql": "^14.2.2"
+  },
+  "devDependencies": {
+    "@types/mocha": "^5.2.7",
+    "babel-polyfill": "^6.26.0",
+    "cross-env": "^5.2.0",
+    "mocha": "^6.2.0",
     "powershell": "^2.3.1"
   }
 }

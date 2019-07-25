@@ -5,6 +5,13 @@ import { ErrorStates } from "./csvServiceMethods";
 let errorState: number = 0;
 
 export async function projectreader(environment: PH.ServiceTask.ServiceTaskEnvironment) {
+  await serviceLogic(environment);
+
+  await PH.Instance.updateInstance(environment.instanceDetails, environment.accessToken);
+  return !Boolean(errorState);
+}
+
+export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnvironment) {
   errorState = ErrorStates.NOERROR;
   let processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
@@ -22,9 +29,6 @@ export async function projectreader(environment: PH.ServiceTask.ServiceTaskEnvir
   let project = getProjectFromXLSX(filePath, keyword);
 
   errorHandling(instance, () => initFields(instance, project));
-
-  await PH.Instance.updateInstance(environment.instanceDetails, environment.accessToken);
-  return !Boolean(errorState);
 }
 
 function errorHandling(instance: any, normalBehavior: Function) {
