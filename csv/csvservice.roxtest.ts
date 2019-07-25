@@ -14,7 +14,7 @@ describe("services", () => {
       return env;
     }
 
-    it("executes CSV ProjectReader service test_99bac7df-530a-4adb-a1b7-78b5708d11d9", async () => {
+    it("executes CSV ProjectReader service test_6623c33a-dd82-465e-921f-57ccf1ddfa92", async () => {
       const column1 = ["A1", "A2", "A3", "A4", "A5", "A6", "A7"];
 
       for (let i = 0, len = column1.length; i < len; i++) {
@@ -31,7 +31,7 @@ describe("services", () => {
       }
     });
 
-    it("executes CSV ProjectReader service test with wrong ID_99bac7df-530a-4adb-a1b7-78b5708d11d9", async () => {
+    it("executes CSV ProjectReader service test with wrong ID_82f44d87-4535-4bdd-8735-e15fb3a57a63", async () => {
       let env: PH.ServiceTask.ServiceTaskEnvironment = createEnvironment("./csv/testfiles/csvprojectreader.bpmn", "ServiceTask_EF35559B7A880A91", "Z");
       await ProjectReaderService.serviceLogic(env);
       assert.equal((env.instanceDetails.extras.fieldContents.ID as PH.Data.FieldValue).value as string, "Z");
@@ -43,7 +43,7 @@ describe("services", () => {
       assert.equal(((env.instanceDetails.extras.fieldContents["Info"] as PH.Data.FieldValue).value as string), "Kein Projekt mit diesem Suchbegriff gefunden");
     });
 
-    it("executes CSV ProjectReader service test with wrong path_99bac7df-530a-4adb-a1b7-78b5708d11d9", async () => {
+    it("executes CSV ProjectReader service test with wrong path_1aea29df-8a3c-4163-b86c-19bcb028a452", async () => {
       let env: PH.ServiceTask.ServiceTaskEnvironment = createEnvironment("./csv/testfiles/csvprojectreader.bpmn", "ServiceTask_355880496663D62A", "Z");
       await ProjectReaderService.serviceLogic(env);
       assert.equal((env.instanceDetails.extras.fieldContents.ID as PH.Data.FieldValue).value as string, "Z");
