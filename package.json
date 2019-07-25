@@ -23,6 +23,7 @@
     "@types/graphql": "^14.2.2"
   },
   "devDependencies": {
+    "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.7",
     "babel-polyfill": "^6.26.0",
     "cross-env": "^5.2.0",
