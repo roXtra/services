@@ -19,7 +19,11 @@ If the command ran without erros, a folder should have been created named zipped
 
 ## Install Services
 To install services you need to build them by your own like in the getting started guide or download the already builded versions of services from the releases section.  
+
 Once you have a builded service you have to place it in the Roxtra/eformulare/node_modules/@eformservice directory.  
+
+![Image 1](https://github.com/roXtra/services/blob/master/resources/images/service_folder.PNG "Image 1")
+
 To run your new service you have to restart your roXtra instance.
 
 ## Write your own Service
