@@ -1,14 +1,15 @@
 import { assert } from "chai";
 import * as PH from "processhub-sdk";
-import * as Service1 from "./service1-service"
-import * as Service2 from "./service2-service"
+import * as Service1 from "./service1-service";
+import * as Service2 from "./service2-service";
+import fs = require("fs");
 
 describe("services", () => {
     describe("servicetemplate", () => {
 
         // create a mock service environment
         function createEnvironment(bpmnXmlPath: string, bpmnTaskId: string, field1Value: string, field2Value: string): PH.ServiceTask.ServiceTaskEnvironment {
-            let env = PH.Test.createEmptyTestServiceEnvironment(bpmnXmlPath);
+            let env = PH.Test.createEmptyTestServiceEnvironment(fs.readFileSync(bpmnXmlPath, "utf8"));
             env.bpmnTaskId = bpmnTaskId;
             env.fieldContents = { "Field1": { type: "ProcessHubNumber", value: field1Value }, "Field2": { type: "ProcessHubNumber", value: field2Value } };
             env.instanceDetails.extras.fieldContents = env.fieldContents;

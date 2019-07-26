@@ -4,6 +4,7 @@ import * as Addition from "./addition-service";
 import * as Subtraktion from "./subtraktion-service";
 import * as Multiplikation from "./multiplikation-service";
 import * as Division from "./division-service";
+import fs = require("fs");
 
 const operators = {
   ADDITION: 0,
@@ -22,7 +23,7 @@ describe("services", () => {
   describe("math", () => {
 
     function createEnvironment(bpmnXmlPath: string, bpmnTaskId: string, number1: number, number2: number): PH.ServiceTask.ServiceTaskEnvironment {
-      let env = PH.Test.createEmptyTestServiceEnvironment(bpmnXmlPath);
+      let env = PH.Test.createEmptyTestServiceEnvironment(fs.readFileSync(bpmnXmlPath, "utf8"));
       env.bpmnTaskId = bpmnTaskId;
       env.fieldContents = { "Feld_1": { type: "ProcessHubNumber", value: number1 }, "Feld_2": { type: "ProcessHubNumber", value: number2 } };
       env.instanceDetails.extras.fieldContents = env.fieldContents;

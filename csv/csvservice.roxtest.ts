@@ -1,12 +1,13 @@
 import { assert } from "chai";
 import * as PH from "processhub-sdk";
 import * as ProjectReaderService from "./projectreader-service";
+import fs = require("fs");
 
 describe("services", () => {
   describe("csv", () => {
 
     function createEnvironment(path: string, bpmnTaskId: string, inputValue: string): PH.ServiceTask.ServiceTaskEnvironment {
-      let env = PH.Test.createEmptyTestServiceEnvironment(path);
+      let env = PH.Test.createEmptyTestServiceEnvironment(fs.readFileSync(path, "utf8"));
       env.bpmnTaskId = bpmnTaskId;
       env.fieldContents = { "ID": { type: "ProcessHubTextInput", value: inputValue } };
       env.instanceDetails.extras.fieldContents = { "ID": { type: "ProcessHubTextInput", value: inputValue } };
