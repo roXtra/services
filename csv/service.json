@@ -39,7 +39,7 @@
         {
           "name": "searchField",
           "type": "select",
-          "onload": "fields"
+          "onload": "reportDrafts"
         }
       ]
     }

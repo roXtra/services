@@ -1,4 +1,5 @@
 import { assert } from "chai";
+import * as fs from "fs";
 import * as PH from "processhub-sdk";
 import * as ProjectReaderService from "./projectreader-service";
 import fs = require("fs");
