@@ -1,0 +1,31 @@
+{
+    "id": "report-service",
+    "name": "Bericht Service",
+    "actions": [
+        {
+            "id": "createReport",
+            "label": "Bericht erstellen",
+            "configMethod": "createReportConfig",
+            "settings": "createReport-config.js",
+            "serviceFile": "createReport-service.js",
+            "serviceMethod": "createReport",
+            "fields": [
+                {
+                    "name": "selectReportDraft",
+                    "type": "select",
+                    "onload": "reportDrafts"
+                },
+                {
+                    "name": "selectReportType",
+                    "type": "select",
+                    "onload": "reportTypes"
+                },
+                {
+                    "name": "selectReportField",
+                    "type": "select",
+                    "onload": "fields ProcessHubFileUpload"
+                }
+            ]
+        }
+    ]
+}
