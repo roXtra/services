@@ -1,0 +1,17 @@
+{
+  "id": "antragsnr",
+  "name": "Antragsnr. erzeugen",
+  "actions": [
+    { 
+      "id": "antragsnr",
+      "label": "Antragsnr. erzeugen", 
+      "configMethod": "antragsnrconfig",
+      "settings": "antragsnr-config.js",
+      "serviceFile": "antragsnr-service.js",
+      "serviceMethod": "antragsnrAction",
+      "fields": [
+        { "name": "targetfield", "type": "text" }
+      ]
+    }
+  ]
+}

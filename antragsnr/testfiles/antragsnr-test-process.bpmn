@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:processhub="http://processhub.com/schema/1.0/bpmn" id="Definition_A3F95B444B87C87A">
+  <bpmn:collaboration id="Collaboration_BEF7009CC238E84D">
+    <bpmn:participant id="Participant_01D5E5714472B10C" name="Antragsnr-Test-Process" processRef="Process_95B467106A131E90" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_95B467106A131E90" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_8C787EF71FEA9820">
+      <bpmn:lane id="Lane_DAF8ED6DEEC6CA8F" name="Ersteller">
+        <bpmn:flowNodeRef>StartEvent_DFC767F9E2EE559A</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_200E0EA9800FAD93</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ServiceTask_508AF9C8EEE3A181</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="StartEvent_DFC767F9E2EE559A">
+      <bpmn:extensionElements>
+        <processhub:inputOutput>
+          <processhub:inputParameter name="processhub-userform">[{"name":"Titel","type":"ProcessHubTextInput","isRequired":false,"config":{}},{"name":"Feld_1","type":"ProcessHubTextInput","isRequired":false,"config":{}},{"name":"Feld_2","type":"ProcessHubTextArea","isRequired":false,"config":{}},{"name":"Anlagen","type":"ProcessHubFileUpload","isRequired":false,"config":{}}]</processhub:inputParameter>
+          <processhub:inputParameter name="roleowners-editable">true</processhub:inputParameter>
+        </processhub:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>SequenceFlow_C0B298BD75953BD1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="EndEvent_200E0EA9800FAD93">
+      <bpmn:incoming>SequenceFlow_F630B6CFC486B465</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="ServiceTask_508AF9C8EEE3A181">
+      <bpmn:extensionElements>
+        <processhub:inputOutput>
+          <processhub:inputParameter name="service-task-config-object">{"selectedServiceId":"antragsnr","selectedActionId":"antragsnr","fields":[{"key":"targetfield","type":"text","value":"target"}]}</processhub:inputParameter>
+        </processhub:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_C0B298BD75953BD1</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_F630B6CFC486B465</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_C0B298BD75953BD1" sourceRef="StartEvent_DFC767F9E2EE559A" targetRef="ServiceTask_508AF9C8EEE3A181" />
+    <bpmn:sequenceFlow id="SequenceFlow_F630B6CFC486B465" sourceRef="ServiceTask_508AF9C8EEE3A181" targetRef="EndEvent_200E0EA9800FAD93" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram name="BPMNDiagram_EB1BBB4510AD10C8">
+    <bpmndi:BPMNPlane bpmnElement="Collaboration_BEF7009CC238E84D">
+      <bpmndi:BPMNShape id="BPMNShape_9B7F638AB67A4E9C" bpmnElement="Lane_DAF8ED6DEEC6CA8F">
+        <dc:Bounds x="430" y="0" width="683" height="125" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_EB7BB22467ADBEB9" bpmnElement="Participant_01D5E5714472B10C">
+        <dc:Bounds x="400" y="0" width="713" height="125" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_E78DD446A91B09A0" bpmnElement="StartEvent_DFC767F9E2EE559A">
+        <dc:Bounds x="500" y="45" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_484953CFB1F8C24E" bpmnElement="EndEvent_200E0EA9800FAD93">
+        <dc:Bounds x="1044" y="45" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_9B66CAB944714BCC" bpmnElement="ServiceTask_508AF9C8EEE3A181">
+        <dc:Bounds x="722" y="23" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_775A07D45D48C66A" bpmnElement="SequenceFlow_C0B298BD75953BD1" sourceElement="BPMNShape_E78DD446A91B09A0" targetElement="BPMNShape_9B66CAB944714BCC">
+        <di:waypoint x="536" y="63" />
+        <di:waypoint x="722" y="63" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_85C5BADA83639FB8" bpmnElement="SequenceFlow_F630B6CFC486B465" sourceElement="BPMNShape_9B66CAB944714BCC" targetElement="BPMNShape_484953CFB1F8C24E">
+        <di:waypoint x="822" y="63" />
+        <di:waypoint x="1044" y="63" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
