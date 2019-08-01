@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:processhub="http://processhub.com/schema/1.0/bpmn" id="Definition_D20B9DF798DFB8C0">
+  <bpmn:collaboration id="Collaboration_BA7F6D527C1C8737">
+    <bpmn:participant id="Participant_A94B7A0EBC00DF87" name="Report-PDF-Test" processRef="Process_9D308168DDF20BBD" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_9D308168DDF20BBD" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_72AA003243F591E3">
+      <bpmn:lane id="Lane_53EF3FA3F44312C1" name="Ersteller">
+        <bpmn:flowNodeRef>StartEvent_25BD13F2F3A0013D</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_3D3DFDDF79313DA3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ServiceTask_F269D56AEDCBE5BB</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="StartEvent_25BD13F2F3A0013D">
+      <bpmn:extensionElements>
+        <processhub:inputOutput>
+          <processhub:inputParameter name="roleowners-editable">true</processhub:inputParameter>
+          <processhub:inputParameter name="processhub-userform">[{"name":"UploadField","type":"ProcessHubFileUpload","isRequired":false,"config":{}}]</processhub:inputParameter>
+        </processhub:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>SequenceFlow_90AAA4031399B817</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="EndEvent_3D3DFDDF79313DA3">
+      <bpmn:incoming>SequenceFlow_A38B934BE9CB1C82</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="ServiceTask_F269D56AEDCBE5BB">
+      <bpmn:extensionElements>
+        <processhub:inputOutput>
+          <processhub:inputParameter name="service-task-config-object">{"selectedServiceId":"report-service","selectedActionId":"createReport","fields":[{"key":"selectReportDraft","type":"select","value":"2683AD6E5B328930"},{"key":"selectReportType","type":"select","value":"pdf"},{"key":"selectReportField","type":"select","value":"UploadField"}]}</processhub:inputParameter>
+        </processhub:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_90AAA4031399B817</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_A38B934BE9CB1C82</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_90AAA4031399B817" sourceRef="StartEvent_25BD13F2F3A0013D" targetRef="ServiceTask_F269D56AEDCBE5BB" />
+    <bpmn:sequenceFlow id="SequenceFlow_A38B934BE9CB1C82" sourceRef="ServiceTask_F269D56AEDCBE5BB" targetRef="EndEvent_3D3DFDDF79313DA3" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram name="BPMNDiagram_CCDB9E8392C7D76E">
+    <bpmndi:BPMNPlane bpmnElement="Collaboration_BA7F6D527C1C8737">
+      <bpmndi:BPMNShape id="BPMNShape_B3F0F7B7D199AA12" bpmnElement="Lane_53EF3FA3F44312C1">
+        <dc:Bounds x="430" y="0" width="556" height="294" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_48AA8A7864ED1BEB" bpmnElement="Participant_A94B7A0EBC00DF87">
+        <dc:Bounds x="400" y="0" width="586" height="294" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_002436A47043F4FA" bpmnElement="StartEvent_25BD13F2F3A0013D">
+        <dc:Bounds x="500" y="129" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_C8F8013F13A59F74" bpmnElement="EndEvent_3D3DFDDF79313DA3">
+        <dc:Bounds x="909" y="129" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_6D2C7C1EBE2AB3D4" bpmnElement="ServiceTask_F269D56AEDCBE5BB">
+        <dc:Bounds x="656" y="107" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_3BDD3E89A4B703C9" bpmnElement="SequenceFlow_90AAA4031399B817" sourceElement="BPMNShape_002436A47043F4FA" targetElement="BPMNShape_6D2C7C1EBE2AB3D4">
+        <di:waypoint x="536" y="147" />
+        <di:waypoint x="656" y="147" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_F2217205CC4D0C9E" bpmnElement="SequenceFlow_A38B934BE9CB1C82" sourceElement="BPMNShape_6D2C7C1EBE2AB3D4" targetElement="BPMNShape_C8F8013F13A59F74">
+        <di:waypoint x="756" y="147" />
+        <di:waypoint x="909" y="147" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -14,11 +14,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "chai": "^4.2.0",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/blob/develop/processhub-sdk-8.5.0.tgz?raw=true",
     "react": "^16.8.6",
     "semantic-ui-react": "^0.87.2"
   },
   "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.7",
     "@types/graphql": "^14.2.2",
     "@types/react": "^16.8.23",
     "bestzip": "^2.1.4",

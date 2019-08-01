@@ -1,6 +1,6 @@
 import * as PH from "processhub-sdk";
 import { GenerateReportRequest, GenerateReportReply } from "processhub-sdk/lib/instance";
-import { API_FAILED, ApiResult } from "processhub-sdk/lib/legacyapi";
+import { ApiResult } from "processhub-sdk/lib/legacyapi";
 
 const ERRORCODES = {
   NOERROR: 0,
@@ -88,7 +88,7 @@ async function getReport(environment: PH.ServiceTask.ServiceTaskEnvironment, rep
   return response;
 }
 
-function initReportUploadField(response: PH.Instance.UploadAttachmentReply, instance: PH.Instance.InstanceDetails, reportFieldName: string) {
+export function initReportUploadField(response: PH.Instance.UploadAttachmentReply, instance: PH.Instance.InstanceDetails, reportFieldName: string) {
   if (response && response.result == PH.LegacyApi.ApiResult.API_OK) {
     if (instance.extras.fieldContents[reportFieldName] == null) {
       instance.extras.fieldContents[reportFieldName] = { type: "ProcessHubFileUpload", value: null } as PH.Data.FieldValue;
