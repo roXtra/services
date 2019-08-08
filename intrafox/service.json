@@ -1,0 +1,65 @@
+{
+    "id": "intrafoxservice",
+    "name": "Intrafox Maßnahmen Service",
+    "actions": [
+        {
+            "id": "getActivityByNumber",
+            "label": "Nummernfilter für Maßnahmen",
+            "configMethod": "getActivityByNumberConfig",
+            "settings": "getActivityByNumber-config.js",
+            "serviceFile": "getActivityByNumber-service.js",
+            "serviceMethod": "getActivityByNumber",
+            "fields": [
+                {
+                    "name": "token",
+                    "type": "text"
+                },
+                {
+                    "name": "username",
+                    "type": "select",
+                    "onload": "fields"
+                },
+                {
+                    "name": "activityNumber",
+                    "type": "select",
+                    "onload": "fields"
+                }
+            ]
+        },
+
+        {
+            "id": "createActivity",
+            "label": "Erstelle Maßnahme",
+            "configMethod": "createActivityConfig",
+            "settings": "createActivity-config.js",
+            "serviceFile": "createActivity-service.js",
+            "serviceMethod": "createActivity",
+            "fields": [
+                {
+                    "name": "token",
+                    "type": "text"
+                },
+                {
+                    "name": "username",
+                    "type": "select",
+                    "onload": "fields"
+                },
+                {
+                    "name": "activityAbbrevation",
+                    "type": "select",
+                    "onload": "fields"
+                },
+                {
+                    "name": "activityDescription",
+                    "type": "select",
+                    "onload": "fields"
+                },
+                {
+                    "name": "activityExpirationdate",
+                    "type": "select",
+                    "onload": "fields ProcessHubDate"
+                }
+            ]
+        }
+    ]
+}

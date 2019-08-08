@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:processhub="http://processhub.com/schema/1.0/bpmn" id="Definition_2026C17C17973580">
+  <bpmn:collaboration id="Collaboration_C27B7B25758BB981">
+    <bpmn:participant id="Participant_82FADAC85A506B2A" name="Create-Activity" processRef="Process_D939D668E8B77A55" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_D939D668E8B77A55" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_1D3FAF91A6882135">
+      <bpmn:lane id="Lane_CF8895AAFB1F06F8" name="Ersteller">
+        <bpmn:flowNodeRef>StartEvent_5216153BFBCCF93A</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_C8FCCC83CBB75EEB</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ServiceTask_16C58B2F292DE836</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="StartEvent_5216153BFBCCF93A">
+      <bpmn:extensionElements>
+        <processhub:inputOutput>
+          <processhub:inputParameter name="roleowners-editable">true</processhub:inputParameter>
+          <processhub:inputParameter name="processhub-userform">[{"name":"Username","type":"ProcessHubTextInput","isRequired":false,"config":{}},{"name":"Abb","type":"ProcessHubTextInput","isRequired":false,"config":{}},{"name":"Desc","type":"ProcessHubTextInput","isRequired":false,"config":{}},{"name":"Date","type":"ProcessHubDate","isRequired":false,"config":{}}]</processhub:inputParameter>
+        </processhub:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>SequenceFlow_2CE247F1C4A928C6</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="EndEvent_C8FCCC83CBB75EEB">
+      <bpmn:incoming>SequenceFlow_00743749DDD4E37B</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="ServiceTask_16C58B2F292DE836">
+      <bpmn:extensionElements>
+        <processhub:inputOutput>
+          <processhub:inputParameter name="service-task-config-object">{"selectedServiceId":"intrafoxservice","selectedActionId":"createActivity","fields":[{"key":"token","type":"text","value":"123"},{"key":"username","type":"select","value":"Username"},{"key":"activityAbbrevation","type":"select","value":"Abb"},{"key":"activityDescription","type":"select","value":"Desc"},{"key":"activityExpirationdate","type":"select","value":"Date"}]}</processhub:inputParameter>
+        </processhub:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_2CE247F1C4A928C6</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_00743749DDD4E37B</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_2CE247F1C4A928C6" sourceRef="StartEvent_5216153BFBCCF93A" targetRef="ServiceTask_16C58B2F292DE836" />
+    <bpmn:sequenceFlow id="SequenceFlow_00743749DDD4E37B" sourceRef="ServiceTask_16C58B2F292DE836" targetRef="EndEvent_C8FCCC83CBB75EEB" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram name="BPMNDiagram_5FA600A4EF626A10">
+    <bpmndi:BPMNPlane bpmnElement="Collaboration_C27B7B25758BB981">
+      <bpmndi:BPMNShape id="BPMNShape_7480337B49D4B29D" bpmnElement="Lane_CF8895AAFB1F06F8">
+        <dc:Bounds x="430" y="0" width="680" height="125" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_AB5C86B59F4D9DFE" bpmnElement="Participant_82FADAC85A506B2A">
+        <dc:Bounds x="400" y="0" width="710" height="125" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_FE80ED556DFCDCCF" bpmnElement="StartEvent_5216153BFBCCF93A">
+        <dc:Bounds x="500" y="45" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_7C2715118F3020EB" bpmnElement="EndEvent_C8FCCC83CBB75EEB">
+        <dc:Bounds x="1047" y="45" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_04B8CC71C1A52ADE" bpmnElement="ServiceTask_16C58B2F292DE836">
+        <dc:Bounds x="737" y="22" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_B7E6837742745AF4" bpmnElement="SequenceFlow_2CE247F1C4A928C6" sourceElement="BPMNShape_FE80ED556DFCDCCF" targetElement="BPMNShape_04B8CC71C1A52ADE">
+        <di:waypoint x="536" y="63" />
+        <di:waypoint x="636.5" y="63" />
+        <di:waypoint x="636.5" y="62" />
+        <di:waypoint x="737" y="62" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_6E01134CC7F3AD29" bpmnElement="SequenceFlow_00743749DDD4E37B" sourceElement="BPMNShape_04B8CC71C1A52ADE" targetElement="BPMNShape_7C2715118F3020EB">
+        <di:waypoint x="837" y="62" />
+        <di:waypoint x="942" y="62" />
+        <di:waypoint x="942" y="63" />
+        <di:waypoint x="1047" y="63" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

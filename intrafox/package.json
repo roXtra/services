@@ -1,0 +1,33 @@
+{
+  "name": "@eformservice/intrafoxservice",
+  "servicename": "intrafoxservice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "copyproduction": "copyfiles package.json production && cd ./production && npm install --production && cd.. && copyfiles -u 1 production/node_modules/** %npm_package_servicename% && rimraf production/",
+    "copyfiles": "copyfiles service.json dist/* %npm_package_servicename% && npm run copyproduction",
+    "zip": "bestzip %npm_package_servicename%.zip %npm_package_servicename%",
+    "copyandzip": "npm run copyfiles && npm run zip && rimraf %npm_package_servicename%/"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/dateformat": "^3.0.0",
+    "dateformat": "^3.0.3",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/blob/develop/processhub-sdk-8.6.0.tgz?raw=true",
+    "react": "^16.8.6",
+    "semantic-ui-react": "^0.87.2"
+  },
+  "devDependencies": {
+    "@types/graphql": "^14.2.2",
+    "@types/react": "^16.8.23",
+    "bestzip": "^2.1.4",
+    "chai": "^4.2.0",
+    "copyfiles": "^2.1.1",
+    "mockserver-client": "^5.6.1",
+    "mockserver-node": "^5.6.1",
+    "typescript": "^3.5.2"
+  }
+}
