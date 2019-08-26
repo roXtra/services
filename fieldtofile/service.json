@@ -1,6 +1,7 @@
 {
   "id": "fieldtofile-service",
   "name": "Feld in Datei Service",
+  "minRoXtraVersion": "8.006.0",
   "actions": [
     { 
       "id": "copyFieldToFile",

@@ -1,6 +1,7 @@
 {
   "id": "math-service",
   "name": "MATH Service",
+  "minRoXtraVersion": "8.006.0",
   "actions": [
     {
       "id": "addition",

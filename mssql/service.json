@@ -1,6 +1,7 @@
 {
   "id": "mssql-service",
   "name": "MSSQL Service",
+  "minRoXtraVersion": "8.006.0",
   "actions": [
     { 
       "id": "executeQuery",

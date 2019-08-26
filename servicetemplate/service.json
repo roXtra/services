@@ -1,6 +1,8 @@
 {
     "id": "servicetemplate-service",
     "name": "Service Template",
+    "minRoXtraVersion": "8.006.0",
+    "maxRoXtraVersion": "100.0.0",
     "actions": [
         {
             "id": "service1",
