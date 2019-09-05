@@ -96,13 +96,34 @@ export function createRoxFileConfig() {
 
       <Semantic.Table.Row>
         <Semantic.Table.Cell colSpan="2">
-          <h3>Erklärung Eingabefeld</h3>
+          <h3>Erklärung Dateifeld</h3>
           <div>
-            <p>Ein Eingabefeld dient der textuellen Eingabe.</p>
+            <p>Geben Sie das Feld an, das die Datei enthält die als roXtra Datei gespeichert werden soll.</p>
           </div>
-          <h3>Erklärung Auswahlfeld</h3>
+          <h3>Erklärung Dateititelfeld</h3>
           <div>
-            <p>Ein Auswahlfeld dient der Auswahl verschiedener exestierender Felder.</p>
+            <p>Geben Sie das Feld an, in dem bestimmt werden soll welchen Namen die Datei haben soll. 
+              Wenn kein Name gesetzt wurde, dann wird der Name der hochzuladenenden Datei genommen</p>
+          </div>
+          <h3>Erklärung Dokumenttyp</h3>
+          <div>
+            <p>Geben Sie den Dokumententypen an.</p>
+          </div>
+          <h3>Erklärung Beschreibungfeld</h3>
+          <div>
+            <p>Geben Sie das Feld an, in dem bestimmt werden soll welche Beschreibung die Datei haben soll.</p>
+          </div>
+          <h3>Erklärung Ziel ID</h3>
+          <div>
+            <p>Geben Sie die ID des Ziels an. Zum Beispiel die ID des Ordners in der die Datei gespeichert werden soll.</p>
+          </div>
+          <h3>Erklärung Ziel Typ</h3>
+          <div>
+            <p>Geben Sie den Typ des Ziels an. Zum Beispiel 1 wenn es sich um einen Ordner handelt.</p>
+          </div>
+          <h3>Erklärung Name des Feldes für Feld ID</h3>
+          <div>
+            <p>Geben Sie den Namen des Feldes an, in dem die ID der erstellten Datei angezeigt werden soll. Wenn kein Name gesetzt wurde wird kein Feld erstellt.</p>
           </div>
         </Semantic.Table.Cell>
       </Semantic.Table.Row>

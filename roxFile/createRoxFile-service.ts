@@ -4,10 +4,12 @@ import { readFileBase64Async, createRoxFileCall, missingRequiredField, initRequi
 
 let errorState: number = Types.ERRORCODES.NOERROR;
 let APIUrl: string;
+let efAccessToken: string;
 
 export async function createRoxFile(environment: PH.ServiceTask.ServiceTaskEnvironment) {
   errorState = Types.ERRORCODES.NOERROR;
   APIUrl = environment.serverConfig.roXtra.efApiEndpoint;
+  efAccessToken = await environment.getEfApiToken();
 
   // Get the instance to manipulate and add fields
   let instance = await serviceLogic(environment);
@@ -63,7 +65,7 @@ export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnviro
       "DestinationID": destinationID,
       "DestinationType": destinationType,
       "DocTypeID": docType,
-      "Fields2Set": [{
+      "Fields": [{
         "Id": "Description",
         "Value": description
       }],
@@ -74,8 +76,7 @@ export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnviro
     }
 
     // code for Post Request
-    const response = await createRoxFileCall(APIUrl, body, environment.accessToken);
-
+    const response = await createRoxFileCall(APIUrl, body, efAccessToken, environment.accessToken);
     if (response) {
       await createFileIDField(fileIDFieldName, response, instance);
       return instance;

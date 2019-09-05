@@ -21,6 +21,7 @@ export const ERRORCODES = {
 export interface RequestHeader extends Record<string, string> {
     "Accept": "application/json",
     "Content-Type": "application/json",
+    "ef-authtoken": string,
     "authtoken": string
 }
 
@@ -39,7 +40,7 @@ export interface CreateFileRequestBody {
     "DestinationID": string,
     "DestinationType": string,
     "DocTypeID": string,
-    "Fields2Set"?: SetFileFieldsObject[],
+    "Fields"?: SetFileFieldsObject[],
     "FileData": {
         "Base64EncodedData": string,
         "Filename": string

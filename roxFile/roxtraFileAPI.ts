@@ -2,10 +2,11 @@ import * as Types from "./roxtraFileAPITypes";
 import * as fs from "fs";
 import * as PH from "processhub-sdk";
 
-async function post(APIUrl: string, requestBody: Types.CreateFileRequestBody | Types.SetFileFieldsObject[], token: string) {
+async function post(APIUrl: string, requestBody: Types.CreateFileRequestBody | Types.SetFileFieldsObject[], eftoken: string, token: string) {
   const headers: Types.RequestHeader = {
     "Accept": "application/json",
     "Content-Type": "application/json",
+    "ef-authtoken": eftoken,
     "authtoken": token
   };
 
@@ -18,10 +19,11 @@ async function post(APIUrl: string, requestBody: Types.CreateFileRequestBody | T
   return await fetch(APIUrl, req);
 }
 
-async function get(APIUrl: string, token: string) {
+async function get(APIUrl: string, eftoken: string, token: string) {
   const headers: Types.RequestHeader = {
     "Accept": "application/json",
     "Content-Type": "application/json",
+    "ef-authtoken": eftoken,
     "authtoken": token
   };
 
@@ -32,33 +34,29 @@ async function get(APIUrl: string, token: string) {
   return await fetch(APIUrl, req);
 }
 
-export async function createRoxFileCall(APIUrl: string, body: Types.CreateFileRequestBody, token: string) {
-  const response = await post(APIUrl + "/CreateNewDocument", body, token);
-
+export async function createRoxFileCall(APIUrl: string, body: Types.CreateFileRequestBody, eftoken: string, token: string) {
+  const response = await post(APIUrl + "CreateNewDocument", body, eftoken, token);
   if (response.status == 200) {
     return await response.json();
   }
 }
 
-export async function setFileFieldsCall(APIUrl: string, body: Types.SetFileFieldsObject[], fileId: string, token: string) {
-  const response = await post(APIUrl + "/SetFileFields/" + fileId, body, token);
-
+export async function setFileFieldsCall(APIUrl: string, body: Types.SetFileFieldsObject[], fileId: string, eftoken: string, token: string) {
+  const response = await post(APIUrl + "SetFileFields/" + fileId, body, eftoken, token);
   if (response.status == 200) {
     return await response.json();
   }
 }
 
-export async function getSelectionsCall(APIUrl: string, token: string): Promise<Types.Selection[]> {
-  const response = await get(APIUrl + "/GetSelections", token);
-
+export async function getSelectionsCall(APIUrl: string, eftoken: string, token: string): Promise<Types.Selection[]> {
+  const response = await get(APIUrl + "GetSelections", eftoken, token);
   if (response.status == 200) {
     return await response.json();
   }
 }
 
-export async function getFileDetailsCall(APIUrl: string, fileID: string, token: string) {
-  const response = await get(APIUrl + "/GetFileDetails/" + fileID, token);
-
+export async function getFileDetailsCall(APIUrl: string, fileID: string, eftoken: string, token: string) {
+  const response = await get(APIUrl + "GetFileDetails/" + fileID, eftoken, token);
   if (response.status == 200) {
     return await response.json();
   }
@@ -104,37 +102,35 @@ export function missingRequiredField(requiredFields: Map<string, PH.Data.Service
 }
 
 export function errorHandling(errorState: number, instance: PH.Instance.InstanceDetails) {
-  let errorField;
+  let errorField: PH.Data.FieldValue = {
+    value: "",
+    type: "ProcessHubTextArea"
+  };
 
   if (errorState == Types.ERRORCODES.NOERROR) {
     return instance;
   }
 
-  errorField = errorHandlingCreateRoxFile(errorState);
+  errorField = errorHandlingCreateRoxFile(errorState, errorField);
   if (errorField.value) {
     instance.extras.fieldContents["ERROR beim Erstellen einer Datei"] = errorField;
     return instance;
   }
 
-  errorField = errorHandlingSetRoxFileField(errorState);
+  errorField = errorHandlingSetRoxFileField(errorState, errorField);
   if (errorField.value) {
     instance.extras.fieldContents["ERROR beim Bearbeiten eines Dokumentenfeldes"] = errorField;
     return instance;
   }
 
-  errorField = errorHandlingAPICall(errorState);
+  errorField = errorHandlingAPICall(errorState, errorField);
   if (errorField.value) {
     instance.extras.fieldContents["ERROR beim Aufruf der roXtra-Schnittstelle"] = errorField;
     return instance;
   }
 }
 
-function errorHandlingCreateRoxFile(errorState: number): PH.Data.FieldValue {
-  let errorField: PH.Data.FieldValue = {
-    value: "",
-    type: "ProcessHubTextArea"
-  }
-
+function errorHandlingCreateRoxFile(errorState: number, errorField: PH.Data.FieldValue): PH.Data.FieldValue {
   switch (errorState) {
     case Types.ERRORCODES.MISSING_DOCTYPE: {
       errorField.value = "Der Dokumententyp wurde nicht angegeben.";
@@ -156,14 +152,10 @@ function errorHandlingCreateRoxFile(errorState: number): PH.Data.FieldValue {
       return errorField;
     }
   }
+  return errorField;
 }
 
-function errorHandlingSetRoxFileField(errorState: number) {
-  let errorField: PH.Data.FieldValue = {
-    value: "",
-    type: "ProcessHubTextArea"
-  }
-
+function errorHandlingSetRoxFileField(errorState: number, errorField: PH.Data.FieldValue) {
   switch (errorState) {
 
     case Types.ERRORCODES.MISSING_FILEID: {
@@ -186,14 +178,10 @@ function errorHandlingSetRoxFileField(errorState: number) {
       return errorField;
     }
   }
+  return errorField;
 }
 
-function errorHandlingAPICall(errorState: number) {
-  let errorField: PH.Data.FieldValue = {
-    value: "",
-    type: "ProcessHubTextArea"
-  }
-
+function errorHandlingAPICall(errorState: number, errorField: PH.Data.FieldValue) {
   switch (errorState) {
 
     case Types.ERRORCODES.APICALLERROR: {
@@ -201,4 +189,5 @@ function errorHandlingAPICall(errorState: number) {
       return errorField;
     }
   }
+  return errorField;
 }

@@ -5,10 +5,12 @@ import * as JSONQuery from "json-query";
 
 let errorState: number = ERRORCODES.NOERROR;
 let APIUrl: string;
+let efAccessToken: string;
 
 export async function setRoxFileField(environment: PH.ServiceTask.ServiceTaskEnvironment) {
     errorState = ERRORCODES.NOERROR;
     APIUrl = environment.serverConfig.roXtra.efApiEndpoint;
+    efAccessToken = await environment.getEfApiToken();
 
     // Get the instance to manipulate and add fields
     let instance = await serviceLogic(environment);
@@ -23,7 +25,6 @@ export async function setRoxFileField(environment: PH.ServiceTask.ServiceTaskEnv
     return !errorState;
 }
 
-// Extract the serviceLogic that testing is possible
 export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnvironment) {
     let fields = await PH.ServiceTask.getFields(environment);
     let instance = environment.instanceDetails;
@@ -57,8 +58,7 @@ export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnviro
             const fieldDetails = await getFieldDetails(fileId, fieldId, environment.accessToken);
 
             body[0].ValueIds = await selectionValueIDMapping(body[0], fieldDetails.RoxSelection, fieldDetails.RoxType, environment.accessToken);
-
-            await setFileFieldsCall(APIUrl, body, fileId, environment.accessToken);
+            await setFileFieldsCall(APIUrl, body, fileId, efAccessToken, environment.accessToken);
         }
 
         return instance;
@@ -69,7 +69,7 @@ export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnviro
 }
 
 async function getFieldDetails(fileID: string, fieldID: string, token: string) {
-    const fileDetails = await getFileDetailsCall(APIUrl, fileID, token);
+    const fileDetails = await getFileDetailsCall(APIUrl, fileID, efAccessToken, token);
 
     const data = {
         fieldID: fieldID,
@@ -80,8 +80,7 @@ async function getFieldDetails(fileID: string, fieldID: string, token: string) {
 }
 
 async function selectionValueIDMapping(body: SetFileFieldsObject, selectionID: string, selectID: string, token: string) {
-    const selections: Selection[] = await getSelectionsCall(APIUrl, token);
-
+    const selections: Selection[] = await getSelectionsCall(APIUrl, efAccessToken, token);
     const data = {
         body: body,
         selections: selections
@@ -94,6 +93,7 @@ async function selectionValueIDMapping(body: SetFileFieldsObject, selectionID: s
 
 function handleSelectField(selectID: string, value: string, selection: Selection) {
     switch (selectID) {
+        
         case SelectTypes.COMPLEXSELECT: {
             return JSONQuery("SelectionsList[Value = " + value.split(",")[0].trim() + "].GUID", { data: selection }).value;
         }

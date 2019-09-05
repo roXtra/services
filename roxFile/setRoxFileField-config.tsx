@@ -49,13 +49,17 @@ export function setRoxFileFieldConfig() {
 
       <Semantic.Table.Row>
         <Semantic.Table.Cell colSpan="2">
-          <h3>Erklärung Eingabefeld</h3>
+          <h3>Erklärung Datei ID</h3>
           <div>
-            <p>Ein Eingabefeld dient der textuellen Eingabe.</p>
+            <p>Geben Sie die ID der Datei an.</p>
           </div>
-          <h3>Erklärung Auswahlfeld</h3>
+          <h3>Erklärung Feld ID</h3>
           <div>
-            <p>Ein Auswahlfeld dient der Auswahl verschiedener exestierender Felder.</p>
+            <p>Geben Sie die ID des Feldes an, welches editiert werden soll.</p>
+          </div>
+          <h3>Erklärung Wert</h3>
+          <div>
+            <p>Geben Sie den Wert an, den das Feld der Datei haben soll.</p>
           </div>
         </Semantic.Table.Cell>
       </Semantic.Table.Row>
