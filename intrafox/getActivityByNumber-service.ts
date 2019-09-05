@@ -25,6 +25,8 @@ export async function serviceLogic(url: string, environment: PH.ServiceTask.Serv
   let activityNumber = ((instance.extras.fieldContents[activityNumberField] as PH.Data.FieldValue).value as string).trim();
   let username = ((instance.extras.fieldContents[usernameField] as PH.Data.FieldValue).value as string).trim();
   
+  await IntrafoxAPI.setGlobalActivityValues(url, username, token);
+
   const response = await IntrafoxAPI.getActivityByNumber(url, activityNumber, username, token);
   const activity = response as IntrafoxTypes.GetGlobalActivityListResponse;
   const error = response as IntrafoxTypes.IntraFoxErrorResponse;
