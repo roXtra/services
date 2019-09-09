@@ -3,8 +3,8 @@ import MathServiceMethods from "./mathServiceMethods";
 
 export async function division(environment: PH.ServiceTask.ServiceTaskEnvironment) {
   try {
-    await (serviceLogic(environment))
-    await PH.Instance.updateInstance(environment.instanceDetails, environment.accessToken);
+    await (serviceLogic(environment));
+    await environment.instances.updateInstance(environment.instanceDetails);
     return true;
   } catch {
     return false;

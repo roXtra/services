@@ -38,7 +38,7 @@ export async function executeQuery(environment: PH.ServiceTask.ServiceTaskEnviro
     // res.status(200).json(rows);
     if (rows.length > 0) {
       (environment.instanceDetails.extras.fieldContents[targetField] as PH.Data.FieldValue).value = rows[0].result;
-      await PH.Instance.updateInstance(environment.instanceDetails, environment.accessToken);
+      await environment.instances.updateInstance(environment.instanceDetails);
     }
     sql.close();
   } catch (ex) {

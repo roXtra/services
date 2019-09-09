@@ -5,7 +5,7 @@ import * as IntrafoxTypes from "./IntrafoxTypes";
 export async function createActivity(environment: PH.ServiceTask.ServiceTaskEnvironment) {
   
   await serviceLogic("https://asp3.intrafox.net/cgi-bin/ws.app?D=P32zdyNCFcIwZ40HE1RY", environment);
-  await PH.Instance.updateInstance(environment.instanceDetails, environment.accessToken);
+  await environment.instances.updateInstance(environment.instanceDetails);
   return true;
 }
 

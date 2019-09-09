@@ -7,7 +7,7 @@ let errorState: number = 0;
 export async function projectreader(environment: PH.ServiceTask.ServiceTaskEnvironment) {
   await serviceLogic(environment);
 
-  await PH.Instance.updateInstance(environment.instanceDetails, environment.accessToken);
+  await environment.instances.updateInstance(environment.instanceDetails);
   return !Boolean(errorState);
 }
 

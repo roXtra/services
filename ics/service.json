@@ -1,6 +1,7 @@
 {
   "id": "ics-service",
   "name": "ICS Service",
+  "minRoXtraVersion": "8.009.0",
   "actions": [
     { 
       "id": "generate",

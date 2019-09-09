@@ -7,7 +7,7 @@ let errorState = ErrorStates.NOERROR;
 export async function csvreader(environment: PH.ServiceTask.ServiceTaskEnvironment) {
   await serviceLogic(environment);
 
-  await PH.Instance.updateInstance(environment.instanceDetails, environment.accessToken);
+  await environment.instances.updateInstance(environment.instanceDetails);
   return true;
 }
 

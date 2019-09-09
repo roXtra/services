@@ -6,7 +6,7 @@ const ERRORCODES = {
   NOERROR: 0,
   NOSELECTEDTEMPLATE: 1,
   SERVERERROR: 2
-}
+};
 
 let error = ERRORCODES.NOERROR;
 
@@ -16,7 +16,7 @@ export async function createReport(environment: PH.ServiceTask.ServiceTaskEnviro
   // Get the instance to manipulate and add fields
   let instance = await serviceLogic(environment);
 
-  errorHandling(instance)
+  errorHandling(instance);
   // update the Instance with changes
   await PH.Instance.updateInstance(environment.instanceDetails, environment.accessToken);
   return true;
@@ -64,7 +64,7 @@ function errorHandling(instance: PH.Instance.InstanceDetails) {
   }
 }
 
-async function getReport(environment: PH.ServiceTask.ServiceTaskEnvironment, reportDraftID: string, reportType: string): Promise<PH.Instance.UploadAttachmentReply> {
+async function getReport(environment: PH.ServiceTask.ServiceTaskEnvironment, reportDraftID: string, reportType: string): Promise<string> {
   let instance = environment.instanceDetails; 
 
   let reply: GenerateReportReply = await PH.LegacyApi.getJson(PH.Instance.ProcessEngineApiRoutes.generateReport, {
