@@ -18,7 +18,7 @@ export async function createReport(environment: PH.ServiceTask.ServiceTaskEnviro
 
   errorHandling(instance);
   // update the Instance with changes
-  await PH.Instance.updateInstance(environment.instanceDetails, environment.accessToken);
+  await environment.instances.updateInstance(environment.instanceDetails);
   return true;
 }
 
@@ -31,7 +31,7 @@ export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnviro
   let config = extensionValues.serviceTaskConfigObject;
   let fields = config.fields;
   let instance = environment.instanceDetails;
-  
+
   let reportDraftID = fields.find(f => f.key == "selectReportDraft").value;
   let reportType = fields.find(f => f.key == "selectReportType").value;
   let reportFieldName = fields.find(f => f.key == "selectReportField").value;
@@ -41,9 +41,12 @@ export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnviro
     return instance;
   }
 
-  const response = await getReport(environment, reportDraftID, reportType);
-
-  initReportUploadField(response, instance, reportFieldName);
+  if (reportType === "docx" || reportType === "pdf") {
+    const response = await getReport(environment, reportDraftID, reportType);
+    initReportUploadField(response, instance, reportFieldName);
+  } else {
+    throw new Error(`Invalid report type ${reportType}`);
+  }
 
   return instance;
 }
@@ -64,35 +67,21 @@ function errorHandling(instance: PH.Instance.InstanceDetails) {
   }
 }
 
-async function getReport(environment: PH.ServiceTask.ServiceTaskEnvironment, reportDraftID: string, reportType: string): Promise<string> {
-  let instance = environment.instanceDetails; 
+async function getReport(environment: PH.ServiceTask.ServiceTaskEnvironment, reportDraftID: string, reportType: "docx" | "pdf"): Promise<string> {
+  let instance = environment.instanceDetails;
 
-  let reply: GenerateReportReply = await PH.LegacyApi.getJson(PH.Instance.ProcessEngineApiRoutes.generateReport, {
-    instanceIds: instance.instanceId,
-    draftId: reportDraftID,
-    type: reportType
-  } as GenerateReportRequest , environment.accessToken) as GenerateReportReply;
 
-  if (reply.result === ApiResult.API_ERROR) {
-    error = ERRORCODES.SERVERERROR;
-    return null;
-  }
+  const reply = await environment.instances.generateInstanceReport(instance.instanceId, reportDraftID, reportType);
+  const url = await environment.instances.uploadAttachment(instance.processId, instance.instanceId, reply.fileName, Buffer.from(reply.doc).toString("base64"));
 
-  let response = await PH.LegacyApi.postJson(PH.Instance.ProcessEngineApiRoutes.uploadAttachment, {
-    data: Buffer.from(reply.doc).toString("base64"),
-    fileName: reply.fileName,
-    instanceId: instance.instanceId,
-    processId: instance.processId,
-  } as PH.Instance.UploadAttachmentRequest, environment.accessToken) as PH.Instance.UploadAttachmentReply;
-
-  return response;
+  return url;
 }
 
-export function initReportUploadField(response: PH.Instance.UploadAttachmentReply, instance: PH.Instance.InstanceDetails, reportFieldName: string) {
-  if (response && response.result == PH.LegacyApi.ApiResult.API_OK) {
+export function initReportUploadField(url: string, instance: PH.Instance.InstanceDetails, reportFieldName: string) {
+  if (url && url.length > 0) {
     if (instance.extras.fieldContents[reportFieldName] == null) {
       instance.extras.fieldContents[reportFieldName] = { type: "ProcessHubFileUpload", value: null } as PH.Data.FieldValue;
     }
-    (instance.extras.fieldContents[reportFieldName] as PH.Data.FieldValue).value = [response.url];
+    (instance.extras.fieldContents[reportFieldName] as PH.Data.FieldValue).value = [url];
   }
 }

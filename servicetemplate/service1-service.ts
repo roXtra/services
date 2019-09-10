@@ -11,7 +11,7 @@ export async function service1(environment: PH.ServiceTask.ServiceTaskEnvironmen
   };
 
   // update the Instance with changes
-  await PH.Instance.updateInstance(environment.instanceDetails, environment.accessToken);
+  await environment.instances.updateInstance(environment.instanceDetails);
   return true;
 }
 

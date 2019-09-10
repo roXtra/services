@@ -19,7 +19,9 @@
     "semantic-ui-react": "^0.87.2"
   },
   "devDependencies": {
+    "@types/chai": "^4.2.2",
     "@types/graphql": "^14.2.2",
+    "@types/mocha": "^5.2.7",
     "@types/react": "^16.8.23",
     "bestzip": "^2.1.4",
     "copyfiles": "^2.1.1",

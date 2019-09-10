@@ -5,7 +5,7 @@ export async function service2(environment: PH.ServiceTask.ServiceTaskEnvironmen
   await serviceLogic(environment);
 
   // update the Instance with changes
-  await PH.Instance.updateInstance(environment.instanceDetails, environment.accessToken);
+  await environment.instances.updateInstance(environment.instanceDetails);
   return true;
 }
 

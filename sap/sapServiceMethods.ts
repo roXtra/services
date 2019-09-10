@@ -82,31 +82,26 @@ export default class SAPServiceMethods {
     return currentErrorState;
   }
 
-  static async serviceOutputLogic(rows: Array<any>, newValue: any, accessToken: string, instance: any, targetFieldTable: string, targetFieldCSV: string): Promise<boolean> {
+  static async serviceOutputLogic(rows: Array<any>, newValue: any, environment: PH.ServiceTask.ServiceTaskEnvironment, instance: any, targetFieldTable: string, targetFieldCSV: string): Promise<boolean> {
     let noErrors = true;
-    let response: PH.Instance.UploadAttachmentReply = null;
+    let url: string;
 
     if (rows && rows.length) {
       newValue.value = this.generateTable(rows);
       instance.extras.fieldContents[targetFieldTable] = newValue;
 
-      response = await PH.LegacyApi.postJson(PH.Instance.ProcessEngineApiRoutes.uploadAttachment, {
-        data: Buffer.from(this.generateCSV(rows)).toString("base64"),
-        fileName: "results.csv",
-        instanceId: instance.instanceId,
-        processId: instance.processId,
-      } as PH.Instance.UploadAttachmentRequest, accessToken) as PH.Instance.UploadAttachmentReply;
+      url = await environment.instances.uploadAttachment(instance.processId, instance.instanceId, "results.csv", Buffer.from(this.generateCSV(rows)).toString("base64"));
     }
 
-    if (response && response.result == PH.LegacyApi.ApiResult.API_OK) {
+    if (url && url.length > 0) {
       if (instance.extras.fieldContents[targetFieldCSV] == null) {
         instance.extras.fieldContents[targetFieldCSV] = { type: "ProcessHubFileUpload", value: null } as PH.Data.FieldValue;
       }
-      (instance.extras.fieldContents[targetFieldCSV] as PH.Data.FieldValue).value = [response.url];
+      (instance.extras.fieldContents[targetFieldCSV] as PH.Data.FieldValue).value = [url];
     }
 
-    const updateResult = await PH.Instance.updateInstance(instance, accessToken);
-    return await this.errorOutput(updateResult.result !== PH.LegacyApi.ApiResult.API_OK, "SAP service: updateInstance call failed", noErrors);
+    await environment.instances.updateInstance(environment.instanceDetails);
+    return true;
   }
 
   private static generateTable(rows: Array<any>): string {
