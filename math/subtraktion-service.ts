@@ -3,7 +3,7 @@ import MathServiceMethods from "./mathServiceMethods";
 
 export async function subtraktion(environment: PH.ServiceTask.ServiceTaskEnvironment) {
   await serviceLogic(environment);
-  await PH.Instance.updateInstance(environment.instanceDetails, environment.accessToken);
+  await environment.instances.updateInstance(environment.instanceDetails);
   return true;
 }
 

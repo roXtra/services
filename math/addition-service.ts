@@ -4,7 +4,7 @@ import { Bpmn } from "modeler/bpmn/bpmn";
 
 export async function addition(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<boolean> {
   await serviceLogic(environment);
-  await PH.Instance.updateInstance(environment.instanceDetails, environment.accessToken);
+  await environment.instances.updateInstance(environment.instanceDetails);
   return true;
 }
 

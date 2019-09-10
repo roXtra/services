@@ -35,6 +35,6 @@ export async function executeSAPQuery(environment: PH.ServiceTask.ServiceTaskEnv
   };
 
   return await Methods.execQuery(connectionParams, query, async (rows: Array<any>) => {
-    return await Methods.serviceOutputLogic(rows, newValue, environment.accessToken, instance, targetFieldTable, targetFieldCSV);
+    return await Methods.serviceOutputLogic(rows, newValue, environment, instance, targetFieldTable, targetFieldCSV);
   });
 }

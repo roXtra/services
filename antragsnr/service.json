@@ -1,6 +1,6 @@
 {
   "id": "antragsnr",
-  "minRoXtraVersion": "8.006.0",
+  "minRoXtraVersion": "8.009.0",
   "name": "Antragsnr. erzeugen",
   "actions": [
     { 

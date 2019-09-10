@@ -21,6 +21,7 @@
   "devDependencies": {
     "@types/chai": "^4.1.7",
     "@types/graphql": "^14.2.2",
+    "@types/mocha": "^5.2.7",
     "@types/react": "^16.8.23",
     "bestzip": "^2.1.4",
     "copyfiles": "^2.1.1",

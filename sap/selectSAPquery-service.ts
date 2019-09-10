@@ -35,7 +35,7 @@ export async function selectSAPQuery(environment: PH.ServiceTask.ServiceTaskEnvi
   let selectQuery = Methods.buildSelectQuery(tableName, columns, where, instance);
   
   const result = await Methods.execQuery(connectionParams, selectQuery, async (rows: Array<any>) => {
-    return await Methods.serviceOutputLogic(rows, newValue, environment.accessToken, instance, "Ergebnis", "CSV Export");
+    return await Methods.serviceOutputLogic(rows, newValue, environment, instance, "Ergebnis", "CSV Export");
   });
 
   return result;

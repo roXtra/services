@@ -14,9 +14,9 @@ export async function antragsnrAction(environment: PH.ServiceTask.ServiceTaskEnv
     const fields = config.fields;
     const targetField = fields.find(f => f.key == "targetfield").value;
     
-    const processDetails = await PH.Process.loadProcess(environment.instanceDetails.processId, environment.instanceDetails.instanceId, ProcessExtras.ExtrasInstances, true, environment.accessToken);
+    const processDetails = await environment.processes.getProcessDetails(environment.instanceDetails.processId, ProcessExtras.ExtrasInstances);
     serviceLogic(processDetails, environment, targetField);
-    await PH.Instance.updateInstance(environment.instanceDetails, environment.accessToken);
+    await environment.instances.updateInstance(environment.instanceDetails);
   } catch (ex) {
     await setError(environment, "(StartUpdateProcess): " + ex.toString());
     return false;

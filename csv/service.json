@@ -1,7 +1,7 @@
 {
   "id": "csv-service",
   "name": "CSV Service",
-  "minRoXtraVersion": "8.006.0",
+  "minRoXtraVersion": "8.009.0",
   "actions": [
     {
       "id": "csvreader",

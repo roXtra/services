@@ -53,8 +53,8 @@ export async function generate(environment: PH.ServiceTask.ServiceTaskEnvironmen
 
     icsString += "SUMMARY:" + parsedSummary + "\n";
     // icsString += "LOCATION:" + Location + "";
-    
-    let descriptionValue =  instance.extras.fieldContents[descriptionField] != null ? (instance.extras.fieldContents[descriptionField] as PH.Data.FieldValue).value : "";
+
+    let descriptionValue = instance.extras.fieldContents[descriptionField] != null ? (instance.extras.fieldContents[descriptionField] as PH.Data.FieldValue).value : "";
     icsString += "DESCRIPTION:" + descriptionValue + "\n";
     // icsString += "PRIORITY:3\n";
     icsString += "END:VEVENT\n";
@@ -62,30 +62,24 @@ export async function generate(environment: PH.ServiceTask.ServiceTaskEnvironmen
     // end calendar item
     icsString += "END:VCALENDAR\n";
 
+    const url: string = await environment.instances.uploadAttachment(
+      instance.processId,
+      instance.instanceId,
+      "ics_import_file.ics",
+      Buffer.from(icsString).toString("base64"));
 
 
-    const response: PH.Instance.UploadAttachmentReply = await PH.LegacyApi.postJson(PH.Instance.ProcessEngineApiRoutes.uploadAttachment, {
-      data: Buffer.from(icsString).toString("base64"),
-      fileName: "ics_import_file.ics",
-      instanceId: instance.instanceId,
-      processId: instance.processId,
-    } as PH.Instance.UploadAttachmentRequest, environment.accessToken) as PH.Instance.UploadAttachmentReply;
-
-
-    if (response.result == PH.LegacyApi.ApiResult.API_OK) {
+    if (url) {
       if (instance.extras.fieldContents[targetField] == null) {
         instance.extras.fieldContents[targetField] = { type: "ProcessHubFileUpload", value: null } as PH.Data.FieldValue;
       }
-      (instance.extras.fieldContents[targetField] as PH.Data.FieldValue).value = [response.url];
-      const updateResult = await PH.Instance.updateInstance(instance, environment.accessToken);
-      if (updateResult.result !== PH.LegacyApi.ApiResult.API_OK) {
-        console.log("ICS service: updateInstance call failed");        
-        return false;
-      }
+      (instance.extras.fieldContents[targetField] as PH.Data.FieldValue).value = [url];
+      await environment.instances.updateInstance(instance);
+     
       return true;
     }
 
-    return true;
+    return false;
   } catch (ex) {
     return false;
   }
