@@ -1,7 +1,7 @@
 {
   "name": "@eformservice/ics",
   "servicename": "ics",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "index.js",
   "minRoXtraVersion": "8.006.0",
