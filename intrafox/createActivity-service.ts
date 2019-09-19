@@ -34,7 +34,7 @@ export async function serviceLogic(url: string, environment: PH.ServiceTask.Serv
   const responseOK = response as string;
   const error = response as IntrafoxTypes.IntraFoxErrorResponse;
 
-  if(responseOK === "ok") {
+  if (responseOK === "ok") {
     instance.extras.fieldContents["Info"] = {
       value: "Maßnahme wurde erstellt",
       type: "ProcessHubTextArea"
