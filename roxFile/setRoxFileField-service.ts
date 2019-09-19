@@ -10,7 +10,7 @@ let efAccessToken: string;
 export async function setRoxFileField(environment: PH.ServiceTask.ServiceTaskEnvironment) {
     errorState = ERRORCODES.NOERROR;
     APIUrl = environment.serverConfig.roXtra.efApiEndpoint;
-    efAccessToken = await environment.getEfApiToken();
+    efAccessToken = await environment.roxApi.getEfApiToken();
 
     // Get the instance to manipulate and add fields
     let instance = await serviceLogic(environment);
@@ -20,7 +20,7 @@ export async function setRoxFileField(environment: PH.ServiceTask.ServiceTaskEnv
         instance = errorHandling(errorState, instance);
     }
 
-    await PH.Instance.updateInstance(environment.instanceDetails, environment.accessToken);
+    await environment.instances.updateInstance(environment.instanceDetails);
 
     return !errorState;
 }
@@ -34,7 +34,7 @@ export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnviro
 
     if (missingField.isMissing) {
         errorState = errorHandlingMissingField(missingField.key);
-        return instance
+        return instance;
     }
 
     // Get field name of the corresponding field ID
@@ -47,18 +47,18 @@ export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnviro
     let value = ((environment.instanceDetails.extras.fieldContents[valueField] as PH.Data.FieldValue).value as string);
 
     try {
-        fileId = parseFileID(fileId, environment)
+        fileId = parseFileID(fileId, environment);
 
         let body: SetFileFieldsObject[] = [{
             "Id": fieldId,
             "Value": value
-        }]
+        }];
 
         if (value) {
-            const fieldDetails = await getFieldDetails(fileId, fieldId, environment.accessToken);
+            const fieldDetails = await getFieldDetails(fileId, fieldId, environment);
 
-            body[0].ValueIds = await selectionValueIDMapping(body[0], fieldDetails.RoxSelection, fieldDetails.RoxType, environment.accessToken);
-            await setFileFieldsCall(APIUrl, body, fileId, efAccessToken, environment.accessToken);
+            body[0].ValueIds = await selectionValueIDMapping(body[0], fieldDetails.RoxSelection, fieldDetails.RoxType, environment);
+            await setFileFieldsCall(APIUrl, body, fileId, efAccessToken, environment.roxApi.getApiToken());
         }
 
         return instance;
@@ -68,23 +68,23 @@ export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnviro
     }
 }
 
-async function getFieldDetails(fileID: string, fieldID: string, token: string) {
-    const fileDetails = await getFileDetailsCall(APIUrl, fileID, efAccessToken, token);
+async function getFieldDetails(fileID: string, fieldID: string, environment: PH.ServiceTask.ServiceTaskEnvironment) {
+    const fileDetails = await getFileDetailsCall(APIUrl, fileID, efAccessToken, environment.roxApi.getApiToken());
 
     const data = {
         fieldID: fieldID,
         fields: fileDetails.Fields
-    }
+    };
 
     return JSONQuery("fields[Id = {fieldID}]", { data: data }).value;
 }
 
-async function selectionValueIDMapping(body: SetFileFieldsObject, selectionID: string, selectID: string, token: string) {
-    const selections: Selection[] = await getSelectionsCall(APIUrl, efAccessToken, token);
+async function selectionValueIDMapping(body: SetFileFieldsObject, selectionID: string, selectID: string, environment: PH.ServiceTask.ServiceTaskEnvironment) {
+    const selections: Selection[] = await getSelectionsCall(APIUrl, efAccessToken, environment.roxApi.getApiToken());
     const data = {
         body: body,
         selections: selections
-    }
+    };
 
     let selection: Selection = JSONQuery("selections[Id = " + selectionID + "]", { data: data }).value;
 
@@ -93,7 +93,7 @@ async function selectionValueIDMapping(body: SetFileFieldsObject, selectionID: s
 
 function handleSelectField(selectID: string, value: string, selection: Selection) {
     switch (selectID) {
-        
+
         case SelectTypes.COMPLEXSELECT: {
             return JSONQuery("SelectionsList[Value = " + value.split(",")[0].trim() + "].GUID", { data: selection }).value;
         }

@@ -1,7 +1,7 @@
 {
     "id": "roxFile-service",
     "name": "roXtra Datei",
-    "minRoXtraVersion": "8.008.0",
+    "minRoXtraVersion": "8.009.0",
     "maxRoXtraVersion": "100.0.0",
     "actions": [
         {

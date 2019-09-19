@@ -92,13 +92,13 @@ export function missingRequiredField(requiredFields: Map<string, PH.Data.Service
       return {
         "isMissing": true,
         "key": key
-      }
+      };
     }
   }
 
   return {
     "isMissing": false
-  }
+  };
 }
 
 export function errorHandling(errorState: number, instance: PH.Instance.InstanceDetails) {
@@ -113,19 +113,19 @@ export function errorHandling(errorState: number, instance: PH.Instance.Instance
 
   errorField = errorHandlingCreateRoxFile(errorState, errorField);
   if (errorField.value) {
-    instance.extras.fieldContents["ERROR beim Erstellen einer Datei"] = errorField;
+    instance.extras.fieldContents[PH.tl("ERROR beim Erstellen einer Datei")] = errorField;
     return instance;
   }
 
   errorField = errorHandlingSetRoxFileField(errorState, errorField);
   if (errorField.value) {
-    instance.extras.fieldContents["ERROR beim Bearbeiten eines Dokumentenfeldes"] = errorField;
+    instance.extras.fieldContents[PH.tl("ERROR beim Bearbeiten eines Dokumentenfeldes")] = errorField;
     return instance;
   }
 
   errorField = errorHandlingAPICall(errorState, errorField);
   if (errorField.value) {
-    instance.extras.fieldContents["ERROR beim Aufruf der roXtra-Schnittstelle"] = errorField;
+    instance.extras.fieldContents[PH.tl("ERROR beim Aufruf der roXtra-Schnittstelle")] = errorField;
     return instance;
   }
 }
@@ -133,22 +133,22 @@ export function errorHandling(errorState: number, instance: PH.Instance.Instance
 function errorHandlingCreateRoxFile(errorState: number, errorField: PH.Data.FieldValue): PH.Data.FieldValue {
   switch (errorState) {
     case Types.ERRORCODES.MISSING_DOCTYPE: {
-      errorField.value = "Der Dokumententyp wurde nicht angegeben.";
+      errorField.value = PH.tl("Der Dokumententyp wurde nicht angegeben.");
       return errorField;
     }
 
     case Types.ERRORCODES.MISSING_DESTINATIONID: {
-      errorField.value = "Die ID des Ziels wurde nicht angegeben.";
+      errorField.value = PH.tl("Die ID des Ziels wurde nicht angegeben.");
       return errorField;
     }
 
     case Types.ERRORCODES.MISSING_DESTINATIONTYPE: {
-      errorField.value = "Der Typ des Ziels wurde nicht angegeben.";
+      errorField.value = PH.tl("Der Typ des Ziels wurde nicht angegeben.");
       return errorField;
     }
 
     case Types.ERRORCODES.UNKNOWNERROR_CREATE: {
-      errorField.value = "Ein Fehler ist aufgetreten, überprüfen Sie die eingegebenen Daten.";
+      errorField.value = PH.tl("Ein Fehler ist aufgetreten, überprüfen Sie die eingegebenen Daten.");
       return errorField;
     }
   }
@@ -159,22 +159,22 @@ function errorHandlingSetRoxFileField(errorState: number, errorField: PH.Data.Fi
   switch (errorState) {
 
     case Types.ERRORCODES.MISSING_FILEID: {
-      errorField.value = "Die ID des Dokuments wurde nicht gefunden";
+      errorField.value = PH.tl("Die ID des Dokuments wurde nicht gefunden");
       return errorField;
     }
 
     case Types.ERRORCODES.MISSING_FIELDID: {
-      errorField.value = "Die ID des Dokumentenfeldes wurde nicht gefunden";
+      errorField.value = PH.tl("Die ID des Dokumentenfeldes wurde nicht gefunden");
       return errorField;
     }
 
     case Types.ERRORCODES.NO_FILEIDFIELD: {
-      errorField.value = "Das Feld für die ID des Dokumentenfeldes wurde nicht gefunden";
+      errorField.value = PH.tl("Das Feld für die ID des Dokumentenfeldes wurde nicht gefunden");
       return errorField;
     }
 
     case Types.ERRORCODES.UNKNOWNERROR_SET: {
-      errorField.value = "Ein Fehler ist aufgetreten, überprüfen Sie die eingegebenen Daten.";
+      errorField.value = PH.tl("Ein Fehler ist aufgetreten, überprüfen Sie die eingegebenen Daten.");
       return errorField;
     }
   }
@@ -185,7 +185,7 @@ function errorHandlingAPICall(errorState: number, errorField: PH.Data.FieldValue
   switch (errorState) {
 
     case Types.ERRORCODES.APICALLERROR: {
-      errorField.value = "Es ist etwas beim Aufruf der roXtra-Schnittstelle schief gelaufen, bitte überprüfen Sie Ihre Eingaben.";
+      errorField.value = PH.tl("Es ist etwas beim Aufruf der roXtra-Schnittstelle schief gelaufen, bitte überprüfen Sie Ihre Eingaben.");
       return errorField;
     }
   }

@@ -1,5 +1,5 @@
 import * as PH from "processhub-sdk";
-import * as Types from "./roxtraFileAPITypes"
+import * as Types from "./roxtraFileAPITypes";
 import { readFileBase64Async, createRoxFileCall, missingRequiredField, initRequiredFields, errorHandling } from "./roxtraFileAPI";
 
 let errorState: number = Types.ERRORCODES.NOERROR;
@@ -9,7 +9,7 @@ let efAccessToken: string;
 export async function createRoxFile(environment: PH.ServiceTask.ServiceTaskEnvironment) {
   errorState = Types.ERRORCODES.NOERROR;
   APIUrl = environment.serverConfig.roXtra.efApiEndpoint;
-  efAccessToken = await environment.getEfApiToken();
+  efAccessToken = await environment.roxApi.getEfApiToken();
 
   // Get the instance to manipulate and add fields
   let instance = await serviceLogic(environment);
@@ -19,7 +19,7 @@ export async function createRoxFile(environment: PH.ServiceTask.ServiceTaskEnvir
     instance = errorHandling(errorState, instance);
   }
 
-  await PH.Instance.updateInstance(environment.instanceDetails, environment.accessToken);
+  await environment.instances.updateInstance(environment.instanceDetails);
 
   return !errorState;
 }
@@ -33,7 +33,7 @@ export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnviro
   const missingField = missingRequiredField(requiredFields);
 
   if (missingField.isMissing) {
-    errorState = errorHandlingMissingField(missingField.key)
+    errorState = errorHandlingMissingField(missingField.key);
     return instance;
   }
 
@@ -73,10 +73,10 @@ export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnviro
         "Base64EncodedData": fileData,
         "Filename": title
       }
-    }
+    };
 
     // code for Post Request
-    const response = await createRoxFileCall(APIUrl, body, efAccessToken, environment.accessToken);
+    const response = await createRoxFileCall(APIUrl, body, efAccessToken, environment.roxApi.getApiToken());
     if (response) {
       await createFileIDField(fileIDFieldName, response, instance);
       return instance;
