@@ -1,6 +1,7 @@
 {
     "id": "intrafoxservice",
     "name": "Intrafox Maßnahmen Service",
+    "minRoXtraVersion": "8.009.0",
     "actions": [
         {
             "id": "getActivityByNumber",

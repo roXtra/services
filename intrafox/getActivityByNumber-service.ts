@@ -5,7 +5,7 @@ import * as IntrafoxTypes from "./IntrafoxTypes";
 export async function getActivityByNumber(environment: PH.ServiceTask.ServiceTaskEnvironment) {
 
   await serviceLogic("https://asp3.intrafox.net/cgi-bin/ws.app?D=P32zdyNCFcIwZ40HE1RY", environment);
-  await PH.Instance.updateInstance(environment.instanceDetails, environment.accessToken);
+  await environment.instances.updateInstance(environment.instanceDetails);
   return true;
 }
 
@@ -31,7 +31,7 @@ export async function serviceLogic(url: string, environment: PH.ServiceTask.Serv
   const activity = response as IntrafoxTypes.GetGlobalActivityListResponse;
   const error = response as IntrafoxTypes.IntraFoxErrorResponse;
 
-  if(activity) {
+  if (activity) {
     instance.extras.fieldContents["Abkürzung"] = {
       value: activity.ACTIVITY_ABBREVIATION,
       type: "ProcessHubTextArea"

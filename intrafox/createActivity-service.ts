@@ -5,7 +5,7 @@ import * as IntrafoxTypes from "./IntrafoxTypes";
 export async function createActivity(environment: PH.ServiceTask.ServiceTaskEnvironment) {
   
   await serviceLogic("https://asp3.intrafox.net/cgi-bin/ws.app?D=P32zdyNCFcIwZ40HE1RY", environment);
-  await PH.Instance.updateInstance(environment.instanceDetails, environment.accessToken);
+  await environment.instances.updateInstance(environment.instanceDetails);
   return true;
 }
 
@@ -34,7 +34,7 @@ export async function serviceLogic(url: string, environment: PH.ServiceTask.Serv
   const responseOK = response as string;
   const error = response as IntrafoxTypes.IntraFoxErrorResponse;
 
-  if(responseOK === "ok") {
+  if (responseOK === "ok") {
     instance.extras.fieldContents["Info"] = {
       value: "Maßnahme wurde erstellt",
       type: "ProcessHubTextArea"
