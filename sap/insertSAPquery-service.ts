@@ -30,6 +30,6 @@ export async function insertSAPQuery(environment: PH.ServiceTask.ServiceTaskEnvi
   let insertQuery = Methods.buildInsertQuery(tableName, columns, values, instance);
 
   return await Methods.execQuery(connectionParams, insertQuery, async () => {
-    return await PH.Instance.updateInstance(environment.instanceDetails, environment.accessToken);
+    return await environment.instances.updateInstance(environment.instanceDetails);
   });
 }
