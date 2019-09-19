@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "copyfiles": "copyfiles service.json \"dist/*\" \"node_modules/**/*\" %npm_package_name%",
-    "zip": "bestzip %npm_package_name%.zip %npm_package_name%",
-    "copyandzip": "npm run copyfiles && npm run zip && rimraf %npm_package_name%/"
+    "copyfiles": "cross-var copyfiles service.json \"dist/*\" \"node_modules/**/*\" $npm_package_name",
+    "zip": "cross-var bestzip $npm_package_name.zip $npm_package_name",
+    "copyandzip": "cross-var npm run copyfiles && npm run zip && rimraf $npm_package_name/"
   },
   "author": "",
   "license": "ISC",
@@ -22,6 +22,7 @@
     "@types/hapi": "^18.0.2",
     "@types/mocha": "^5.2.7",
     "@types/react": "^16.8.23",
+    "cross-var": "^1.1.0",
     "rimraf": "^3.0.0"
   }
 }
