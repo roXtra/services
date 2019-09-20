@@ -1,18 +1,18 @@
 import * as PH from "processhub-sdk";
 import * as Types from "./roxtraFileAPITypes";
-import { readFileBase64Async, createRoxFileCall, missingRequiredField, initRequiredFields, errorHandling } from "./roxtraFileAPI";
+import { readFileBase64Async, missingRequiredField, initRequiredFields, errorHandling, RoXtraFileApi } from "./roxtraFileAPI";
+import { IRoXtraFileApi } from "./iroxtrafileapi";
 
-let errorState: number = Types.ERRORCODES.NOERROR;
+export let errorState: number = Types.ERRORCODES.NOERROR;
 let APIUrl: string;
 let efAccessToken: string;
 
 export async function createRoxFile(environment: PH.ServiceTask.ServiceTaskEnvironment) {
-  errorState = Types.ERRORCODES.NOERROR;
   APIUrl = environment.serverConfig.roXtra.efApiEndpoint;
   efAccessToken = await environment.roxApi.getEfApiToken();
 
   // Get the instance to manipulate and add fields
-  let instance = await serviceLogic(environment);
+  let instance = await serviceLogic(environment, new RoXtraFileApi());
 
   // update the Instance with changes
   if (errorState) {
@@ -25,7 +25,8 @@ export async function createRoxFile(environment: PH.ServiceTask.ServiceTaskEnvir
 }
 
 // Extract the serviceLogic that testing is possible
-export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnvironment) {
+export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnvironment, roxtraFileAPI: IRoXtraFileApi) {
+  errorState = Types.ERRORCODES.NOERROR;
   let fields = await PH.ServiceTask.getFields(environment);
   let instance = environment.instanceDetails;
 
@@ -76,7 +77,7 @@ export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnviro
     };
 
     // code for Post Request
-    const response = await createRoxFileCall(APIUrl, body, efAccessToken, environment.roxApi.getApiToken());
+    const response = await roxtraFileAPI.createRoxFileCall(APIUrl, body, efAccessToken, environment.roxApi.getApiToken());
     if (response) {
       await createFileIDField(fileIDFieldName, response, instance);
       return instance;
@@ -86,6 +87,7 @@ export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnviro
     }
   }
   catch (e) {
+    console.error(e);
     errorState = Types.ERRORCODES.UNKNOWNERROR_CREATE;
     return instance;
   }

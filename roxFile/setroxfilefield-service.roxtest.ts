@@ -1,4 +1,4 @@
-import { setRoxFileField, serviceLogic, errorState } from "./setRoxFileField-service";
+import { serviceLogic, errorState } from "./setRoxFileField-service";
 import * as PH from "processhub-sdk";
 import * as fs from "fs";
 import { expect } from "chai";
@@ -15,6 +15,7 @@ describe("services", () => {
           let bodyFromSetCall: SetFileFieldsObject[];
 
           const testApi: IRoXtraFileApi = {
+            createRoxFileCall: async () => {},
             setFileFieldsCall: async (_url, body, _fileId, _efToken, _token) => {
               bodyFromSetCall = body;
             },

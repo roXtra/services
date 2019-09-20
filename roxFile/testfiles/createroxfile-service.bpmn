@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:processhub="http://processhub.com/schema/1.0/bpmn" id="Definition_06D830129C58684C">
+  <bpmn:extensionElements>
+    <processhub:inputOutput>
+      <processhub:inputParameter name="roxtra-version">8.006.0</processhub:inputParameter>
+    </processhub:inputOutput>
+  </bpmn:extensionElements>
+  <bpmn:collaboration id="Collaboration_BFAE108559C0B33F">
+    <bpmn:participant id="Participant_7EB9DFA03B581F38" name="createroxfile-service" processRef="Process_D31E105DBCC70606" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_D31E105DBCC70606" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_0916D36836789062">
+      <bpmn:lane id="Lane_537ABAE02F7F1C22" name="Ersteller">
+        <bpmn:flowNodeRef>StartEvent_00E33EFBC3A67B1A</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ServiceTask_712C1B34834A21B9</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_F4B13506F65D0682</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="StartEvent_00E33EFBC3A67B1A">
+      <bpmn:extensionElements>
+        <processhub:inputOutput>
+          <processhub:inputParameter name="processhub-userform">[{"name":"Titel","type":"ProcessHubTextInput","isRequired":false,"config":{}},{"name":"Feld_1","type":"ProcessHubTextInput","isRequired":false,"config":{}},{"name":"Feld_2","type":"ProcessHubTextArea","isRequired":false,"config":{}},{"name":"Anlagen","type":"ProcessHubFileUpload","isRequired":false,"config":{}}]</processhub:inputParameter>
+          <processhub:inputParameter name="roleowners-editable">true</processhub:inputParameter>
+        </processhub:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>SequenceFlow_65ACBDC07068EB7C</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="ServiceTask_712C1B34834A21B9" name="createroxfile">
+      <bpmn:extensionElements>
+        <processhub:inputOutput>
+          <processhub:inputParameter name="service-task-config-object">{"selectedServiceId":"roxFile-service","selectedActionId":"createRoxFile","fields":[{"key":"roxFile","type":"select","value":"Anlagen"},{"key":"title","type":"select","value":"Titel"},{"key":"docType","type":"text","value":"105"},{"key":"description","type":"select","value":"Feld_1"},{"key":"destinationID","type":"text","value":"100"},{"key":"destinationType","type":"text","value":"1"},{"key":"fileIDFieldName","type":"text","value":"CreatedRoxFileId"}]}</processhub:inputParameter>
+        </processhub:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_65ACBDC07068EB7C</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_46C4CED18A262CA7</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_65ACBDC07068EB7C" sourceRef="StartEvent_00E33EFBC3A67B1A" targetRef="ServiceTask_712C1B34834A21B9" />
+    <bpmn:endEvent id="EndEvent_F4B13506F65D0682">
+      <bpmn:incoming>SequenceFlow_46C4CED18A262CA7</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_46C4CED18A262CA7" sourceRef="ServiceTask_712C1B34834A21B9" targetRef="EndEvent_F4B13506F65D0682" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram name="BPMNDiagram_0DAA0E6C0DCAAB9F">
+    <bpmndi:BPMNPlane bpmnElement="Collaboration_BFAE108559C0B33F">
+      <bpmndi:BPMNShape id="BPMNShape_E386599F87544FBA" bpmnElement="Lane_537ABAE02F7F1C22">
+        <dc:Bounds x="430" y="0" width="472" height="123" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_3DB7C08FFBD6842B" bpmnElement="Participant_7EB9DFA03B581F38">
+        <dc:Bounds x="400" y="0" width="502" height="123" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_809F87187599B75C" bpmnElement="StartEvent_00E33EFBC3A67B1A">
+        <dc:Bounds x="500" y="45" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_61678A3DFC714EE0" bpmnElement="ServiceTask_712C1B34834A21B9">
+        <dc:Bounds x="617" y="23" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_5435B26DD1E692FB" bpmnElement="SequenceFlow_65ACBDC07068EB7C" sourceElement="BPMNShape_809F87187599B75C" targetElement="BPMNShape_61678A3DFC714EE0">
+        <di:waypoint x="536" y="63" />
+        <di:waypoint x="617" y="63" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="BPMNShape_974DAA7BFE324027" bpmnElement="EndEvent_F4B13506F65D0682">
+        <dc:Bounds x="779" y="44.405" width="37.19" height="37.19" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_A893C2C79E8277A1" bpmnElement="SequenceFlow_46C4CED18A262CA7" sourceElement="BPMNShape_61678A3DFC714EE0" targetElement="BPMNShape_974DAA7BFE324027">
+        <di:waypoint x="717" y="63" />
+        <di:waypoint x="779" y="63" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

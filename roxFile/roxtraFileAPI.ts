@@ -5,6 +5,13 @@ import { IRoXtraFileApi } from "./iroxtrafileapi";
 
 export class RoXtraFileApi implements IRoXtraFileApi {
 
+  public async createRoxFileCall(APIUrl: string, body: Types.CreateFileRequestBody, eftoken: string, token: string): Promise<any> {
+    const response = await post(APIUrl + "CreateNewDocument", body, eftoken, token);
+    if (response.status == 200) {
+      return await response.json();
+    }
+  }
+
   public async setFileFieldsCall(APIUrl: string, body: Types.SetFileFieldsObject[], fileId: string, eftoken: string, token: string): Promise<any> {
     const response = await post(APIUrl + "SetFileFields/" + fileId, body, eftoken, token);
     if (response.status == 200) {
@@ -58,13 +65,6 @@ async function get(APIUrl: string, eftoken: string, token: string) {
     headers: headers,
   };
   return await fetch(APIUrl, req);
-}
-
-export async function createRoxFileCall(APIUrl: string, body: Types.CreateFileRequestBody, eftoken: string, token: string) {
-  const response = await post(APIUrl + "CreateNewDocument", body, eftoken, token);
-  if (response.status == 200) {
-    return await response.json();
-  }
 }
 
 export async function readFileBase64Async(path: string): Promise<string> {
