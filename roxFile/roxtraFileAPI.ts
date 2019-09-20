@@ -1,6 +1,32 @@
 import * as Types from "./roxtraFileAPITypes";
 import * as fs from "fs";
 import * as PH from "processhub-sdk";
+import { IRoXtraFileApi } from "./iroxtrafileapi";
+
+export class RoXtraFileApi implements IRoXtraFileApi {
+
+  public async setFileFieldsCall(APIUrl: string, body: Types.SetFileFieldsObject[], fileId: string, eftoken: string, token: string): Promise<any> {
+    const response = await post(APIUrl + "SetFileFields/" + fileId, body, eftoken, token);
+    if (response.status == 200) {
+      return await response.json();
+    }
+  }
+
+  public async getSelectionsCall(APIUrl: string, eftoken: string, token: string): Promise<Types.Selection[]> {
+    const response = await get(APIUrl + "GetSelections", eftoken, token);
+    if (response.status == 200) {
+      return await response.json();
+    }
+  }
+
+  public async getFileDetailsCall(APIUrl: string, fileID: string, eftoken: string, token: string): Promise<any> {
+    const response = await get(APIUrl + "GetFileDetails/" + fileID, eftoken, token);
+    if (response.status == 200) {
+      return await response.json();
+    }
+  }
+
+}
 
 async function post(APIUrl: string, requestBody: Types.CreateFileRequestBody | Types.SetFileFieldsObject[], eftoken: string, token: string) {
   const headers: Types.RequestHeader = {
@@ -36,27 +62,6 @@ async function get(APIUrl: string, eftoken: string, token: string) {
 
 export async function createRoxFileCall(APIUrl: string, body: Types.CreateFileRequestBody, eftoken: string, token: string) {
   const response = await post(APIUrl + "CreateNewDocument", body, eftoken, token);
-  if (response.status == 200) {
-    return await response.json();
-  }
-}
-
-export async function setFileFieldsCall(APIUrl: string, body: Types.SetFileFieldsObject[], fileId: string, eftoken: string, token: string) {
-  const response = await post(APIUrl + "SetFileFields/" + fileId, body, eftoken, token);
-  if (response.status == 200) {
-    return await response.json();
-  }
-}
-
-export async function getSelectionsCall(APIUrl: string, eftoken: string, token: string): Promise<Types.Selection[]> {
-  const response = await get(APIUrl + "GetSelections", eftoken, token);
-  if (response.status == 200) {
-    return await response.json();
-  }
-}
-
-export async function getFileDetailsCall(APIUrl: string, fileID: string, eftoken: string, token: string) {
-  const response = await get(APIUrl + "GetFileDetails/" + fileID, eftoken, token);
   if (response.status == 200) {
     return await response.json();
   }
