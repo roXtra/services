@@ -9,18 +9,18 @@ import * as DateFormat from "dateformat";
 describe("services", () => {
     describe("intrafox", () => {
 
-        before(function () {
+        before(async function () {
             console.log("Start Mockserver");
-            mockserver.start_mockserver({
+            await mockserver.start_mockserver({
                 serverPort: 1080,
                 trace: true
             });
             console.log("Started Mockserver");
         });
 
-        after(function () {
+        after(async function () {
             console.log("Shut down Mockserver");
-            mockserver.stop_mockserver({
+            await mockserver.stop_mockserver({
                 serverPort: 1080
             });
             console.log("Mockserver is offline");
@@ -82,8 +82,8 @@ describe("services", () => {
                 }
             );
 
-            const env = await performCreateActivityTest(testGuid, "./intrafox/testfiles/create-activity.bpmn", "ServiceTask_16C58B2F292DE836", username, abbreation, describtion, expirationDate);
-            assert.equal(((env.instanceDetails.extras.fieldContents["Info"] as PH.Data.FieldValue).value as string), "Activity wurde erstellt");
+            const env = await performCreateActivityTest(testGuid, "./testfiles/create-activity.bpmn", "ServiceTask_16C58B2F292DE836", username, abbreation, describtion, expirationDate);
+            assert.equal(((env.instanceDetails.extras.fieldContents["Info"] as PH.Data.FieldValue).value as string), "Maßnahme wurde erstellt");
             assert.equal(((env.instanceDetails.extras.fieldContents["Abb"] as PH.Data.FieldValue).value as string), abbreation);
             assert.equal(((env.instanceDetails.extras.fieldContents["Desc"] as PH.Data.FieldValue).value as string), describtion);
             assert.equal(((env.instanceDetails.extras.fieldContents["Date"] as PH.Data.FieldValue).value as Date), expirationDate);
@@ -128,7 +128,7 @@ describe("services", () => {
                 }
             );
 
-            const env = await performCreateActivityTest(testGuid, "./intrafox/testfiles/create-activity.bpmn", "ServiceTask_16C58B2F292DE836", username, abbreation, describtion, expirationDate);
+            const env = await performCreateActivityTest(testGuid, "./testfiles/create-activity.bpmn", "ServiceTask_16C58B2F292DE836", username, abbreation, describtion, expirationDate);
             assert.equal(((env.instanceDetails.extras.fieldContents["ERROR"] as PH.Data.FieldValue).value as string), "Ein Fehler ist aufgetreten, ARGS wurden falsch gesetzt.");
             assert.equal(((env.instanceDetails.extras.fieldContents["Abb"] as PH.Data.FieldValue).value as string), abbreation);
             assert.equal(((env.instanceDetails.extras.fieldContents["Desc"] as PH.Data.FieldValue).value as string), describtion);
@@ -174,7 +174,7 @@ describe("services", () => {
                 }
             );
 
-            const env = await performCreateActivityTest(testGuid, "./intrafox/testfiles/create-activity.bpmn", "ServiceTask_16C58B2F292DE836", username, abbreation, describtion, expirationDate);
+            const env = await performCreateActivityTest(testGuid, "./testfiles/create-activity.bpmn", "ServiceTask_16C58B2F292DE836", username, abbreation, describtion, expirationDate);
             assert.equal(((env.instanceDetails.extras.fieldContents["ERROR"] as PH.Data.FieldValue).value as string), "Ein Fehler ist aufgetreten, Authentifizierungstoken ist ungültig.");
             assert.equal(((env.instanceDetails.extras.fieldContents["Abb"] as PH.Data.FieldValue).value as string), abbreation);
             assert.equal(((env.instanceDetails.extras.fieldContents["Desc"] as PH.Data.FieldValue).value as string), describtion);

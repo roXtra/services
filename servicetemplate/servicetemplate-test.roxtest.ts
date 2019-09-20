@@ -33,11 +33,13 @@ describe("services", () => {
 
         // execute tests with it()
         it("execute service1 test_guid", async () => {
-            await performService1Test("path", "id", "field1", "field");
+            // Uncomment this line in real service
+            //await performService1Test("path", "id", "field1", "field");
         });
 
         it("execute service 2 test_guid", async () => {
-            await performService2Test("path", "id", "field1", "field");
+            // Uncomment this line in real service
+            //await performService2Test("path", "id", "field1", "field");
         });
     });
 });

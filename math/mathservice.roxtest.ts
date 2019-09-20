@@ -32,7 +32,7 @@ describe("services", () => {
     }
 
     async function executeMathTest(num1: number, num2: number, expResult: number, operator: number) {
-      let env = await createEnvironment("./math/testfiles/math-service.bpmn", serviceTaskIDs[operator], num1, num2);
+      let env = await createEnvironment("./testfiles/math-service.bpmn", serviceTaskIDs[operator], num1, num2);
 
       switch (operator) {
         case operators.ADDITION:

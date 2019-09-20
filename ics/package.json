@@ -6,7 +6,7 @@
   "main": "index.js",
   "minRoXtraVersion": "8.006.0",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "cross-env HOTRELOAD=no DEBUG=bpmn-engine:123* ts-mocha -p tsconfig.json ./**/*.roxtest.ts --exit --recursive --timeout 40000 --require regenerator-runtime",
     "copyproduction": "cross-var copyfiles package.json production && cd ./production && npm install --production && cd .. && cross-var copyfiles -u 1 production/node_modules/** $npm_package_servicename && rimraf production/",
     "copyfiles": "cross-var copyfiles service.json dist/* $npm_package_servicename && npm run copyproduction",
     "zip": "cross-var bestzip $npm_package_servicename.zip $npm_package_servicename",
@@ -15,7 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v8.009.0/processhub-sdk-8.009.0.tgz",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v8.10.0-0/release.tgz",
     "react": "^16.8.6",
     "semantic-ui-react": "^0.87.2"
   },
@@ -25,8 +25,12 @@
     "@types/react": "^16.8.23",
     "bestzip": "^2.1.4",
     "copyfiles": "^2.1.1",
+    "cross-env": "^6.0.0",
     "cross-var": "^1.1.0",
+    "mocha": "^6.2.0",
+    "regenerator-runtime": "^0.13.3",
     "rimraf": "^3.0.0",
+    "ts-mocha": "^6.0.0",
     "typescript": "^3.5.2"
   }
 }
