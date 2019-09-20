@@ -1,25 +1,30 @@
 {
-  "name": "antragsnr",
+  "name": "@eformservice/antragsnr",
+  "servicename": "antragsnr",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "copyfiles": "copyfiles service.json dist/* node_modules/**/* %npm_package_name%",
-    "zip": "bestzip %npm_package_name%.zip %npm_package_name%",
-    "copyandzip": "npm run copyfiles && npm run zip && rimraf %npm_package_name%/"
+    "copyproduction": "cross-var copyfiles package.json production && cd ./production && npm install --production && cd .. && cross-var copyfiles -u 1 production/node_modules/** $npm_package_servicename && rimraf production/",
+    "copyfiles": "cross-var copyfiles service.json dist/* $npm_package_servicename && npm run copyproduction",
+    "zip": "cross-var bestzip $npm_package_servicename.zip $npm_package_servicename",
+    "copyandzip": "cross-var npm run copyfiles && npm run zip && cross-var rimraf $npm_package_servicename"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/raw/develop/processhub-sdk-8.5.0.tgz",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v8.009.0/processhub-sdk-8.009.0.tgz",
     "react": "^16.8.6",
     "semantic-ui-react": "^0.87.2",
     "typescript": "^3.5.2"
   },
   "devDependencies": {
     "@types/chai": "^4.2.0",
+    "@types/hapi": "^18.0.2",
     "@types/mocha": "^5.2.7",
-    "@types/react": "^16.8.23"
+    "@types/react": "^16.8.23",
+    "cross-var": "^1.1.0",
+    "rimraf": "^3.0.0"
   }
 }

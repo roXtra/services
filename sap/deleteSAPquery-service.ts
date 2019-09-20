@@ -29,6 +29,6 @@ export async function deleteSAPQuery(environment: PH.ServiceTask.ServiceTaskEnvi
   let insertQuery = Methods.buildDeleteQuery(tableName, where, instance);
 
   return await Methods.execQuery(connectionParams, insertQuery, async () => {
-    return await PH.Instance.updateInstance(environment.instanceDetails, environment.accessToken);
+    return await environment.instances.updateInstance(environment.instanceDetails);
   });
 }

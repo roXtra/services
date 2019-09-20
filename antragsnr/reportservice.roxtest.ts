@@ -41,7 +41,9 @@ describe("services", () => {
                     instanceId: "",
                     workspaceId: "",
                     processId: "",
-                    extras: {},
+                    extras: {
+                        instanceState: null
+                    },
                     createdAt: new Date("October 13, 2018 11:13:00"),
                 },
 
@@ -50,14 +52,18 @@ describe("services", () => {
                     instanceId: "",
                     workspaceId: "",
                     processId: "",
-                    extras: {},
+                    extras: {
+                        instanceState: null
+                    },
                     createdAt: new Date("October 13, 2014 11:13:00"),
                 },
                 {
                     instanceId: "",
                     workspaceId: "",
                     processId: "",
-                    extras: {},
+                    extras: {
+                        instanceState: null
+                    },
                     createdAt: new Date("October 13, 2015 11:13:00"),
                 }
             ];
@@ -76,7 +82,9 @@ describe("services", () => {
                     instanceId: "",
                     workspaceId: "",
                     processId: "",
-                    extras: {},
+                    extras: {
+                        instanceState: null
+                    },
                     createdAt: new Date("October 13, 2018 11:13:00"),
                 },
 
@@ -85,14 +93,18 @@ describe("services", () => {
                     instanceId: "",
                     workspaceId: "",
                     processId: "",
-                    extras: {},
+                    extras: {
+                        instanceState: null
+                    },
                     createdAt: new Date("October 12, 2018 11:13:00"),
                 },
                 {
                     instanceId: "",
                     workspaceId: "",
                     processId: "",
-                    extras: {},
+                    extras: {
+                        instanceState: null
+                    },
                     createdAt: new Date("October 13, 2015 11:13:00"),
                 }
             ];
@@ -111,7 +123,9 @@ describe("services", () => {
                     instanceId: "",
                     workspaceId: "",
                     processId: "",
-                    extras: {},
+                    extras: {
+                        instanceState: null
+                    },
                     createdAt: new Date("October 13, 2018 11:13:00"),
                 },
 
@@ -120,14 +134,18 @@ describe("services", () => {
                     instanceId: "",
                     workspaceId: "",
                     processId: "",
-                    extras: {},
+                    extras: {
+                        instanceState: null
+                    },
                     createdAt: new Date("October 12, 2018 11:13:00"),
                 },
                 {
                     instanceId: "",
                     workspaceId: "",
                     processId: "",
-                    extras: {},
+                    extras: {
+                        instanceState: null
+                    },
                     createdAt: new Date("October 11, 2018 11:13:00"),
                 }
             ];
