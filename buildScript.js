@@ -60,6 +60,10 @@ function buildService(directoryPath) {
         console.log("Executed npm tests (if present) for " + directoryPath);
 
         if (runMode === 'bundle') {
+            // npm pack
+            execSync('npm pack', childProcessOptions);
+            console.log("Executed npm pack for " + directoryPath);
+
             // npm run copyandzip
             execSync('npm run copyandzip', childProcessOptions);
             console.log("Executed npm run copyandzip for " + directoryPath);
