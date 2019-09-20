@@ -1,0 +1,37 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [8.x]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: npm install
+      - name: Install globally required packages
+        run: |
+          npm i -g bestzip
+          npm i -g copyfiles
+      - name: Build and Bundle services.zip
+        run: |
+          npm run build
+          npm run bundle
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: services.zip
+          prerelease: ${{ false }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

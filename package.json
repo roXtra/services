@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "copyzips": "copyfiles -u 1 */*.zip zipped_services",
-    "build": "node buildScript.js && npm run copyzips"
+    "build": "node buildScript.js",
+    "bundle": "npm run copyzips && cd zipped_services/ && bestzip ../services.zip * && rimraf zipped_services"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,7 @@
     "@types/mocha": "^5.2.7",
     "cross-env": "^5.2.0",
     "directory-tree": "^2.2.4",
-    "mocha": "^6.2.0"
+    "mocha": "^6.2.0",
+    "rimraf": "^3.0.0"
   }
 }

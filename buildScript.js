@@ -4,7 +4,7 @@ const { execSync } = require('child_process');
 const processHubSDKVersion = 'v8.9.0-0';
 
 const childProcessStdioOptions = [0, 1, 2];
-const childProcessTimeout = 120000;
+const childProcessTimeout = 300000;
 
 let errorOccurred = false;
 
