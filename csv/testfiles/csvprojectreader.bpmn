@@ -29,7 +29,7 @@
     <bpmn:serviceTask id="ServiceTask_EF35559B7A880A91" name="0">
       <bpmn:extensionElements>
         <processhub:inputOutput>
-          <processhub:inputParameter name="service-task-config-object">{"selectedServiceId":"csv-service","selectedActionId":"projectreader","fields":[{"key":"filePath","type":"text","value":"./csv/testfiles/test.XLSX"},{"key":"searchField","type":"select","value":"ID"}]}</processhub:inputParameter>
+          <processhub:inputParameter name="service-task-config-object">{"selectedServiceId":"csv-service","selectedActionId":"projectreader","fields":[{"key":"filePath","type":"text","value":"./testfiles/test.XLSX"},{"key":"searchField","type":"select","value":"ID"}]}</processhub:inputParameter>
         </processhub:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_D45182C4560AC2DF</bpmn:incoming>

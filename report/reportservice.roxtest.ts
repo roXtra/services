@@ -27,12 +27,12 @@ describe("services", () => {
         }
 
         it("execute report service test with correct result_8fd1ba08-f8a1-4caa-b685-27b3ee946037", async () => {
-            const testStr = await performReportTest("report/testfiles/report-pdf-test.bpmn", "ServiceTask_F269D56AEDCBE5BB", "test/test");
+            const testStr = await performReportTest("./testfiles/report-pdf-test.bpmn", "ServiceTask_F269D56AEDCBE5BB", "test/test");
             assert.equal(testStr, "test/test");
         });
 
         it("execute report service test with incorrect result_eba2198c-e8ae-4503-addf-c4aa22253297", async () => {
-            const testStr = await performReportTest("report/testfiles/report-pdf-test.bpmn", "ServiceTask_F269D56AEDCBE5BB", "test/test");
+            const testStr = await performReportTest("./testfiles/report-pdf-test.bpmn", "ServiceTask_F269D56AEDCBE5BB", "test/test");
             assert.notEqual(testStr, "not equal");
         });
     });

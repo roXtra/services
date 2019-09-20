@@ -14,7 +14,11 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - name: Install global dependencies
+      run: |
+        sudo apt update
+        sudo apt install openjdk-8-jdk
     - name: Install dependencies
       run: npm install
-    - name: Build services
+    - name: Build and Test services
       run: npm run buildonly

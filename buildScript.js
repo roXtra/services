@@ -1,7 +1,7 @@
 const dirTree = require('directory-tree');
 const { execSync } = require('child_process');
 
-const processHubSDKVersion = 'v8.009.0';
+const processHubSDKVersion = 'v8.10.0-0';
 
 const childProcessStdioOptions = [0, 1, 2];
 const childProcessTimeout = 300000;
@@ -44,7 +44,7 @@ function buildService(directoryPath) {
         }
 
         // Install current processhub-sdk for child
-        execSync('npm i --save https://github.com/roXtra/processhub-sdk/releases/download/' + processHubSDKVersion + '/processhub-sdk-8.009.0.tgz', childProcessOptions);
+        execSync('npm i --save https://github.com/roXtra/processhub-sdk/releases/download/' + processHubSDKVersion + '/release.tgz', childProcessOptions);
         console.log("Installed current processhub SDK for " + directoryPath);
 
         // npm install
@@ -54,6 +54,10 @@ function buildService(directoryPath) {
         // tsc
         execSync('tsc', childProcessOptions);
         console.log("Executed tsc for " + directoryPath);
+
+        // Run tests
+        execSync('npm test', childProcessOptions);
+        console.log("Executed npm tests (if present) for " + directoryPath);
 
         if (runMode === 'bundle') {
             // npm run copyandzip

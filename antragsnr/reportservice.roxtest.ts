@@ -68,7 +68,7 @@ describe("services", () => {
                 }
             ];
 
-            let env = await performAntragsnrTest("./antragsnr/testfiles/antragsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName);
+            let env = await performAntragsnrTest("./testfiles/antragsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName);
 
             assert.equal(((env.fieldContents[targetFieldName] as PH.Data.FieldValue).value as string), "2018/01");
         });
@@ -109,7 +109,7 @@ describe("services", () => {
                 }
             ];
 
-            let env = await performAntragsnrTest("./antragsnr/testfiles/antragsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName);
+            let env = await performAntragsnrTest("./testfiles/antragsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName);
 
             assert.equal(((env.fieldContents[targetFieldName] as PH.Data.FieldValue).value as string), "2018/02");
         });
@@ -150,7 +150,7 @@ describe("services", () => {
                 }
             ];
 
-            let env = await performAntragsnrTest("./antragsnr/testfiles/antragsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName);
+            let env = await performAntragsnrTest("./testfiles/antragsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName);
 
             assert.equal(((env.fieldContents[targetFieldName] as PH.Data.FieldValue).value as string), "2018/03");
         });
