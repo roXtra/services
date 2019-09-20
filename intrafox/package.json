@@ -6,10 +6,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "copyproduction": "cross-var copyfiles package.json production && cd ./production && npm install --production && cd .. && copyfiles -u 1 production/node_modules/** $npm_package_servicename && rimraf production/",
+    "copyproduction": "cross-var copyfiles package.json production && cd ./production && npm install --production && cd .. && cross-var copyfiles -u 1 production/node_modules/** $npm_package_servicename && rimraf production/",
     "copyfiles": "cross-var copyfiles service.json dist/* $npm_package_servicename && npm run copyproduction",
     "zip": "cross-var bestzip $npm_package_servicename.zip $npm_package_servicename",
-    "copyandzip": "cross-var npm run copyfiles && npm run zip && rimraf $npm_package_servicename/"
+    "copyandzip": "cross-var npm run copyfiles && npm run zip && cross-var rimraf $npm_package_servicename"
   },
   "author": "",
   "license": "ISC",

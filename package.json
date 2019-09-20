@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "copyzips": "copyfiles -u 1 */*.zip zipped_services",
-    "build": "node buildScript.js"
+    "build": "node buildScript.js && npm run copyzips"
   },
   "repository": {
     "type": "git",
