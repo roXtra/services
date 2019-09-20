@@ -26,8 +26,7 @@ jobs:
           npm i -g copyfiles
       - name: Build and Bundle services.zip
         run: |
-          npm run build
-          npm run bundle
+          npm run buildbundle
       - name: Release
         uses: softprops/action-gh-release@v1
         with:

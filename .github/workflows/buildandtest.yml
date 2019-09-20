@@ -16,9 +16,5 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Install dependencies
       run: npm install
-    - name: Install globally required packages
-      run: |
-        npm i -g bestzip
-        npm i -g copyfiles
     - name: Build services
-      run: npm run build
+      run: npm run buildonly

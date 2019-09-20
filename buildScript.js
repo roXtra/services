@@ -1,10 +1,13 @@
 const dirTree = require('directory-tree');
 const { execSync } = require('child_process');
 
-const processHubSDKVersion = 'v8.9.0-0';
+const processHubSDKVersion = 'v8.009.0';
 
 const childProcessStdioOptions = [0, 1, 2];
 const childProcessTimeout = 300000;
+
+const args = process.argv.slice(2);
+const runMode = args[0];
 
 let errorOccurred = false;
 
@@ -30,10 +33,6 @@ const directoryTree = dirTree("./", {
         if (buildReturnCode !== 0)
             errorOccurred = true;
     }
-    /* new PowerShell("cd ./" + childDir.Name + ";" + "npm install; tsc; npm run copyandzip; cd..")
-                .on("output", data => {
-                    console.log(data);
-                }); */
 });
 
 function buildService(directoryPath) {
@@ -45,7 +44,7 @@ function buildService(directoryPath) {
         }
 
         // Install current processhub-sdk for child
-        execSync('npm i --save https://github.com/roXtra/processhub-sdk/releases/download/' + processHubSDKVersion + '/release.tgz', childProcessOptions);
+        execSync('npm i --save https://github.com/roXtra/processhub-sdk/releases/download/' + processHubSDKVersion + '/processhub-sdk-8.009.0.tgz', childProcessOptions);
         console.log("Installed current processhub SDK for " + directoryPath);
 
         // npm install
@@ -56,9 +55,11 @@ function buildService(directoryPath) {
         execSync('tsc', childProcessOptions);
         console.log("Executed tsc for " + directoryPath);
 
-        // npm run copyandzip
-        execSync('npm run copyandzip', childProcessOptions);
-        console.log("Executed npm run copyandzip for " + directoryPath);
+        if (runMode === 'bundle') {
+            // npm run copyandzip
+            execSync('npm run copyandzip', childProcessOptions);
+            console.log("Executed npm run copyandzip for " + directoryPath);
+        }
     } catch (error) {
         console.log("Error occurred: " + error);
         console.log("stdout: " + error.stdout);

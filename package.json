@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "copyzips": "copyfiles -u 1 */*.zip zipped_services",
-    "build": "node buildScript.js",
-    "bundle": "npm run copyzips && cd zipped_services/ && bestzip ../services.zip * && rimraf zipped_services"
+    "buildonly": "node buildScript.js buildonly",
+    "buildbundle": "node buildScript.js bundle && npm run copyzips && cd zipped_services/ && bestzip ../services.zip * && rimraf zipped_services"
   },
   "repository": {
     "type": "git",
