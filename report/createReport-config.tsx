@@ -2,7 +2,7 @@ import * as React from "react";
 import * as Semantic from "semantic-ui-react";
 import * as PH from "processhub-sdk";
 
-export function createReportConfig() {
+export function createReportConfig(): JSX.Element {
   return <Semantic.Modal.Content>
     <div id="service-form" className="ui form center">
 
@@ -49,7 +49,7 @@ export function createReportConfig() {
           <h3>Berichtsvorlage</h3>
           <div>
             <p>Wählen Sie die Berichtsvorlage aus die zum Erstellen des Berichts verwendet werden soll. </p>
-            <b>Hinweis: Beim Erstellen eines neuen Prozesses sind noch keine Vorlagen verfügbar. 
+            <b>Hinweis: Beim Erstellen eines neuen Prozesses sind noch keine Vorlagen verfügbar.
               Speichern Sie hierfür den Prozess einmal ab und bearbeiten Sie ihn dannach, dann sollte die Standartvorlage verfügbar sein.</b>
           </div>
           <h3>Dateityp</h3>

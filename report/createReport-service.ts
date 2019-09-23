@@ -1,6 +1,4 @@
 import * as PH from "processhub-sdk";
-import { GenerateReportRequest, GenerateReportReply } from "processhub-sdk/lib/instance";
-import { ApiResult } from "processhub-sdk/lib/legacyapi";
 
 const ERRORCODES = {
   NOERROR: 0,
@@ -10,31 +8,38 @@ const ERRORCODES = {
 
 let error = ERRORCODES.NOERROR;
 
-export async function createReport(environment: PH.ServiceTask.ServiceTaskEnvironment) {
-  error = ERRORCODES.NOERROR;
+async function getReport(environment: PH.ServiceTask.ServiceTaskEnvironment, reportDraftID: string, reportType: "docx" | "pdf"): Promise<string> {
+  const instance = environment.instanceDetails;
 
-  // Get the instance to manipulate and add fields
-  let instance = await serviceLogic(environment);
 
-  errorHandling(instance);
-  // update the Instance with changes
-  await environment.instances.updateInstance(environment.instanceDetails);
-  return true;
+  const reply = await environment.instances.generateInstanceReport(instance.instanceId, reportDraftID, reportType);
+  const url = await environment.instances.uploadAttachment(instance.processId, instance.instanceId, reply.fileName, Buffer.from(reply.doc).toString("base64"));
+
+  return url;
+}
+
+export function initReportUploadField(url: string, instance: PH.Instance.InstanceDetails, reportFieldName: string): void {
+  if (url && url.length > 0) {
+    if (instance.extras.fieldContents[reportFieldName] == null) {
+      instance.extras.fieldContents[reportFieldName] = { type: "ProcessHubFileUpload", value: null } as PH.Data.FieldValue;
+    }
+    (instance.extras.fieldContents[reportFieldName] as PH.Data.FieldValue).value = [url];
+  }
 }
 
 // Extract the serviceLogic that testing is possible
 export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<PH.Instance.InstanceDetails> {
-  let processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
+  const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
-  let taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
-  let extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
-  let config = extensionValues.serviceTaskConfigObject;
-  let fields = config.fields;
-  let instance = environment.instanceDetails;
+  const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
+  const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
+  const config = extensionValues.serviceTaskConfigObject;
+  const fields = config.fields;
+  const instance = environment.instanceDetails;
 
-  let reportDraftID = fields.find(f => f.key == "selectReportDraft").value;
-  let reportType = fields.find(f => f.key == "selectReportType").value;
-  let reportFieldName = fields.find(f => f.key == "selectReportField").value;
+  const reportDraftID = fields.find(f => f.key === "selectReportDraft").value;
+  const reportType = fields.find(f => f.key === "selectReportType").value;
+  const reportFieldName = fields.find(f => f.key === "selectReportField").value;
 
   if (!reportDraftID) {
     error = ERRORCODES.NOSELECTEDTEMPLATE;
@@ -51,7 +56,7 @@ export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnviro
   return instance;
 }
 
-function errorHandling(instance: PH.Instance.InstanceDetails) {
+function errorHandling(instance: PH.Instance.InstanceDetails): void {
   switch (error) {
     case ERRORCODES.NOERROR: {
       break;
@@ -67,21 +72,14 @@ function errorHandling(instance: PH.Instance.InstanceDetails) {
   }
 }
 
-async function getReport(environment: PH.ServiceTask.ServiceTaskEnvironment, reportDraftID: string, reportType: "docx" | "pdf"): Promise<string> {
-  let instance = environment.instanceDetails;
+export async function createReport(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<boolean> {
+  error = ERRORCODES.NOERROR;
 
+  // Get the instance to manipulate and add fields
+  const instance = await serviceLogic(environment);
 
-  const reply = await environment.instances.generateInstanceReport(instance.instanceId, reportDraftID, reportType);
-  const url = await environment.instances.uploadAttachment(instance.processId, instance.instanceId, reply.fileName, Buffer.from(reply.doc).toString("base64"));
-
-  return url;
-}
-
-export function initReportUploadField(url: string, instance: PH.Instance.InstanceDetails, reportFieldName: string) {
-  if (url && url.length > 0) {
-    if (instance.extras.fieldContents[reportFieldName] == null) {
-      instance.extras.fieldContents[reportFieldName] = { type: "ProcessHubFileUpload", value: null } as PH.Data.FieldValue;
-    }
-    (instance.extras.fieldContents[reportFieldName] as PH.Data.FieldValue).value = [url];
-  }
+  errorHandling(instance);
+  // Update the Instance with changes
+  await environment.instances.updateInstance(environment.instanceDetails);
+  return true;
 }

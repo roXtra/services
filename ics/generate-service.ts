@@ -1,30 +1,37 @@
 import * as PH from "processhub-sdk";
 
-export async function generate(environment: PH.ServiceTask.ServiceTaskEnvironment) {
+function getDateFormatted(date: Date, start: boolean): string {
+  const month = (date.getMonth() + 1);
+  const monthString = month < 10 ? "0" + month : month;
+  const endDay = start ? date.getDate() : +date.getDate() + 1;
+  return date.getFullYear().toString() + monthString + endDay; // + "T" + time;
+}
+
+export async function generate(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<boolean> {
   try {
-    let processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
+    const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
     await processObject.loadXml(environment.bpmnXml);
-    let taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
-    let extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
-    let config = extensionValues.serviceTaskConfigObject;
-    let fields = config.fields;
-    let instance = environment.instanceDetails;
+    const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
+    const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
+    const config = extensionValues.serviceTaskConfigObject;
+    const fields = config.fields;
+    const instance = environment.instanceDetails;
 
-    let title = fields.find(f => f.key == "titleField").value;
-    let fromField = fields.find(f => f.key == "fromField").value;
-    let tillField = fields.find(f => f.key == "tillField").value;
-    let targetField = fields.find(f => f.key == "targetField").value;
-    let descriptionField = fields.find(f => f.key == "descriptionField") != null ? fields.find(f => f.key == "descriptionField").value : null;
+    const title = fields.find(f => f.key === "titleField").value;
+    const fromField = fields.find(f => f.key === "fromField").value;
+    const tillField = fields.find(f => f.key === "tillField").value;
+    const targetField = fields.find(f => f.key === "targetField").value;
+    const descriptionField = fields.find(f => f.key === "descriptionField") != null ? fields.find(f => f.key === "descriptionField").value : null;
 
 
 
-    let icsString: string = "";
+    let icsString = "";
     icsString += "BEGIN:VCALENDAR\n";
     icsString += "VERSION:2.0\n";
     icsString += "PRODID:--//rossmanith//DE\n";
     icsString += "CALSCALE:GREGORIAN\n";
 
-    // create a time zone if needed, TZID to be used in the event itself
+    // Create a time zone if needed, TZID to be used in the event itself
     // icsString += "BEGIN:VTIMEZONE\n";
     // icsString += "TZID:Europe/Berlin\n";
     // icsString += "BEGIN:STANDARD\n";
@@ -33,33 +40,36 @@ export async function generate(environment: PH.ServiceTask.ServiceTaskEnvironmen
     // icsString += "END:STANDARD\n";
     // icsString += "END:VTIMEZONE\n";
 
-    // add the event
+    // Add the event
     icsString += "BEGIN:VEVENT\n";
 
-    // with time zone specified
-    let fromValue = (instance.extras.fieldContents[fromField] as PH.Data.FieldValue).value;
-    let fromDate = new Date(fromValue as string);
+    // With time zone specified
+    const fromValue = (instance.extras.fieldContents[fromField] as PH.Data.FieldValue).value;
+    const fromDate = new Date(fromValue as string);
 
-    let tillValue = (instance.extras.fieldContents[tillField] as PH.Data.FieldValue).value;
-    let tillDate = new Date(tillValue as string);
+    const tillValue = (instance.extras.fieldContents[tillField] as PH.Data.FieldValue).value;
+    const tillDate = new Date(tillValue as string);
 
+    // Timezone
     // icsString += "DTSTART;TZID=Europe/Amsterdam:" + getDateFormatted(fromDate, true) + "\n";
     // icsString += "DTEND;TZID=Europe/Amsterdam:" + getDateFormatted(tillDate, false) + "\n";
     // or without
     icsString += "DTSTART:" + getDateFormatted(fromDate, true) + "\n";
     icsString += "DTEND:" + getDateFormatted(tillDate, false) + "\n";
 
-    let parsedSummary = PH.Data.parseAndInsertStringWithFieldContent(title, instance.extras.fieldContents, processObject, instance.extras.roleOwners);
+    const parsedSummary = PH.Data.parseAndInsertStringWithFieldContent(title, instance.extras.fieldContents, processObject, instance.extras.roleOwners);
 
     icsString += "SUMMARY:" + parsedSummary + "\n";
+    // Location
     // icsString += "LOCATION:" + Location + "";
 
-    let descriptionValue = instance.extras.fieldContents[descriptionField] != null ? (instance.extras.fieldContents[descriptionField] as PH.Data.FieldValue).value : "";
+    const descriptionValue = instance.extras.fieldContents[descriptionField] != null ? (instance.extras.fieldContents[descriptionField] as PH.Data.FieldValue).value : "";
     icsString += "DESCRIPTION:" + descriptionValue + "\n";
+    // Priority
     // icsString += "PRIORITY:3\n";
     icsString += "END:VEVENT\n";
 
-    // end calendar item
+    // End calendar item
     icsString += "END:VCALENDAR\n";
 
     const url: string = await environment.instances.uploadAttachment(
@@ -75,7 +85,7 @@ export async function generate(environment: PH.ServiceTask.ServiceTaskEnvironmen
       }
       (instance.extras.fieldContents[targetField] as PH.Data.FieldValue).value = [url];
       await environment.instances.updateInstance(instance);
-     
+
       return true;
     }
 
@@ -83,11 +93,4 @@ export async function generate(environment: PH.ServiceTask.ServiceTaskEnvironmen
   } catch (ex) {
     return false;
   }
-}
-
-function getDateFormatted(date: Date, start: boolean) {
-  let month = (date.getMonth() + 1);
-  let monthString = month < 10 ? "0" + month : month;
-  let endDay = start ? date.getDate() : +date.getDate() + 1;
-  return date.getFullYear().toString() + monthString + endDay; // + "T" + time;
 }

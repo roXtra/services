@@ -13,17 +13,17 @@ const operators = {
   DIVISION: 3
 };
 
-const serviceTaskIDs = ["ServiceTask_C479EDB7D2E3D038", //addition-service id
-  "ServiceTask_7E48F9F434FFC8E0", // subtraktion-service id
-  "ServiceTask_8A0A4BACC8498EBA", // multiplikation-service id
-  "ServiceTask_134D60764565E6B9" // division-service id
+const serviceTaskIDs = ["ServiceTask_C479EDB7D2E3D038", // Addition-service id
+  "ServiceTask_7E48F9F434FFC8E0", // Subtraktion-service id
+  "ServiceTask_8A0A4BACC8498EBA", // Multiplikation-service id
+  "ServiceTask_134D60764565E6B9" // Division-service id
 ];
 
 describe("services", () => {
   describe("math", () => {
 
     function createEnvironment(bpmnXmlPath: string, bpmnTaskId: string, number1: number, number2: number): PH.ServiceTask.ServiceTaskEnvironment {
-      let env = PH.Test.createEmptyTestServiceEnvironment(fs.readFileSync(bpmnXmlPath, "utf8"));
+      const env = PH.Test.createEmptyTestServiceEnvironment(fs.readFileSync(bpmnXmlPath, "utf8"));
       env.bpmnTaskId = bpmnTaskId;
       env.fieldContents = { "Feld_1": { type: "ProcessHubNumber", value: number1 }, "Feld_2": { type: "ProcessHubNumber", value: number2 } };
       env.instanceDetails.extras.fieldContents = env.fieldContents;
@@ -31,8 +31,8 @@ describe("services", () => {
       return env;
     }
 
-    async function executeMathTest(num1: number, num2: number, expResult: number, operator: number) {
-      let env = await createEnvironment("./testfiles/math-service.bpmn", serviceTaskIDs[operator], num1, num2);
+    async function executeMathTest(num1: number, num2: number, expResult: number, operator: number): Promise<void> {
+      const env = createEnvironment("./testfiles/math-service.bpmn", serviceTaskIDs[operator], num1, num2);
 
       switch (operator) {
         case operators.ADDITION:

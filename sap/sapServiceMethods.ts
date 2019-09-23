@@ -1,5 +1,5 @@
 import * as PH from "processhub-sdk";
-const hanaClient = require("@sap/hana-client");
+import * as hanaClient from "@sap/hana-client";
 
 export default class SAPServiceMethods {
   static parseFieldsOfQuery(query: string, instance: PH.Instance.InstanceDetails): string {
@@ -51,18 +51,18 @@ export default class SAPServiceMethods {
   }
 
   static async execQuery(connectionParams: any, query: string, updateMethod: Function): Promise<boolean> {
-    let noErrors: boolean = true;
+    let noErrors = true;
 
     const connection = await hanaClient.createConnection();
     await connection.connect(connectionParams, async (err: any) => {
 
-      noErrors = await this.errorOutput(err, "Connection error", noErrors);
+      noErrors = this.errorOutput(err, "Connection error", noErrors);
 
       await connection.exec(query, async (err: any, rows: Array<any>) => {
         await connection.disconnect();
 
         if (noErrors) {
-          noErrors = await this.errorOutput(err, "SQL execute error:", noErrors);
+          noErrors = this.errorOutput(err, "SQL execute error:", noErrors);
         }
 
         if (noErrors) {
@@ -74,7 +74,7 @@ export default class SAPServiceMethods {
     return noErrors;
   }
 
-  private static async errorOutput(err: any, errorMessage: string, currentErrorState: boolean): Promise<boolean> {
+  private static errorOutput(err: any, errorMessage: string, currentErrorState: boolean): boolean {
     if (err) {
       console.error(errorMessage, err);
       return false;
@@ -83,7 +83,6 @@ export default class SAPServiceMethods {
   }
 
   static async serviceOutputLogic(rows: Array<any>, newValue: any, environment: PH.ServiceTask.ServiceTaskEnvironment, instance: any, targetFieldTable: string, targetFieldCSV: string): Promise<boolean> {
-    let noErrors = true;
     let url: string;
 
     if (rows && rows.length) {

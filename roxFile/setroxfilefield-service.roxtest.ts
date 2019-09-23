@@ -16,9 +16,11 @@ describe("services", () => {
 
           const testApi: IRoXtraFileApi = {
             createRoxFileCall: async () => {},
-            setFileFieldsCall: async (_url, body, _fileId, _efToken, _token) => {
+            // eslint-disable-next-line @typescript-eslint/require-await
+            setFileFieldsCall: async (_url, body) => {
               bodyFromSetCall = body;
             },
+            // eslint-disable-next-line @typescript-eslint/require-await
             getFileDetailsCall: async () => {
               return {
                 "Fields": [
@@ -47,6 +49,7 @@ describe("services", () => {
                 ]
               };
             },
+            // eslint-disable-next-line @typescript-eslint/require-await
             getSelectionsCall: async () => {
               return [{
                 "Id": "roXtraFeld",
@@ -80,7 +83,7 @@ describe("services", () => {
           expect(errorState).to.equal(ERRORCODES.NOERROR);
           await serviceLogic(environment, testApi);
           expect(errorState).to.equal(ERRORCODES.NOERROR);
-          // make sure setFileFieldsCall was called with the right values
+          // Make sure setFileFieldsCall was called with the right values
           expect(bodyFromSetCall.length).to.equal(1);
           expect(bodyFromSetCall[0].Id).to.equal("roXtraFeld");
           expect(bodyFromSetCall[0].Value).to.equal("Hello");

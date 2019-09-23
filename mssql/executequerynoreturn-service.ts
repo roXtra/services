@@ -1,38 +1,40 @@
-const sql = require("mssql");
+import * as sql from "mssql";
 import * as PH from "processhub-sdk";
+import { ServiceActionConfigField } from "processhub-sdk/lib/data";
 
-export async function executeQueryNoReturn(environment: PH.ServiceTask.ServiceTaskEnvironment) {
-  let processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
+export async function executeQueryNoReturn(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<boolean> {
+  const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
-  let taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
-  let extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
-  let config = extensionValues.serviceTaskConfigObject;
-  let fields = config.fields;
+  const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
+  const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
+  const config = extensionValues.serviceTaskConfigObject;
+  const fields = config.fields;
 
-  let server = fields.find((f: any) => f.key == "server").value;
-  let user = fields.find((f: any) => f.key == "username").value;
-  let password = fields.find((f: any) => f.key == "password").value;
-  let database = fields.find((f: any) => f.key == "database").value;
-  let query = fields.find((f: any) => f.key == "query").value;
+  const server = fields.find((f: ServiceActionConfigField) => f.key === "server").value;
+  const user = fields.find((f: ServiceActionConfigField) => f.key === "username").value;
+  const password = fields.find((f: ServiceActionConfigField) => f.key === "password").value;
+  const database = fields.find((f: ServiceActionConfigField) => f.key === "database").value;
+  const query = fields.find((f: ServiceActionConfigField) => f.key === "query").value;
+
+  // Config for your database
+  const dbConfig = {
+    user: user,
+    password: password,
+    server: server,
+    database: database
+  };
+  const pool = new sql.ConnectionPool(dbConfig);
   try {
-    // config for your database
-    let dbConfig = {
-      user: user,
-      password: password,
-      server: server,
-      database: database
-    };
-
-    // connect to your database
-    let pool = await new sql.ConnectionPool(dbConfig).connect();
+    // Connect to your database
+    await pool.connect();
     await pool.request().query(query);
 
-    // res.setHeader("Access-Control-Allow-Origin", "*");
+    // Res.setHeader("Access-Control-Allow-Origin", "*");
     // res.status(200).json(rows);
-    sql.close();
   } catch (err) {
-    sql.close();
     return false;
+  } finally {
+    await pool.close();
   }
   return true;
 }

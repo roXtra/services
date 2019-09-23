@@ -2,7 +2,7 @@ import * as React from "react";
 import * as Semantic from "semantic-ui-react";
 import * as PH from "processhub-sdk";
 
-export function executeQueryNoReturnConfig() {
+export function executeQueryNoReturnConfig(): JSX.Element {
   return <Semantic.Modal.Content>
     <div id="service-form" className="ui form center">
 

@@ -11,13 +11,15 @@ describe("services", () => {
 
       describe("serviceLogic", () => {
         it("creates a roxFile", async () => {
-          const newRoxFileId: string = "1000";
+          const newRoxFileId = "1000";
 
           const testApi: IRoXtraFileApi = {
             setFileFieldsCall: async () => { },
             getFileDetailsCall: async () => { },
+            // eslint-disable-next-line @typescript-eslint/require-await
             getSelectionsCall: async () => [],
-            createRoxFileCall: async (APIUrl: string, body: CreateFileRequestBody, eftoken: string, token: string) => {
+            // eslint-disable-next-line @typescript-eslint/require-await
+            createRoxFileCall: async (APIUrl: string, body: CreateFileRequestBody) => {
               expect(body.DestinationID).to.equal("100");
               expect(body.DestinationType).to.equal("1");
               expect(body.DocTypeID).to.equal("105");
@@ -49,6 +51,7 @@ describe("services", () => {
           };
           environment.instanceDetails.extras.fieldContents = environment.fieldContents;
           environment.fileStore = {} as PH.FileStore.IFileStore;
+          // eslint-disable-next-line @typescript-eslint/unbound-method
           environment.fileStore.getPhysicalPath = () => "./testfiles/doc.docx";
           const instance = await serviceLogic(environment, testApi);
           expect(PH.Data.isFieldValue(instance.extras.fieldContents["CreatedRoxFileId"])).to.equal(true);

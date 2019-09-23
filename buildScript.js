@@ -51,6 +51,10 @@ function buildService(directoryPath) {
         execSync('npm install', childProcessOptions);
         console.log("Executed npm install for " + directoryPath);
 
+        // Lint
+        execSync('npm run lint', childProcessOptions);
+        console.log("Executed linter for " + directoryPath);
+
         // tsc
         execSync('tsc', childProcessOptions);
         console.log("Executed tsc for " + directoryPath);

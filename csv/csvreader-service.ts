@@ -1,51 +1,10 @@
 import * as PH from "processhub-sdk";
 import * as XLSX from "xlsx";
-import { csvServiceMethods, ErrorStates } from "./csvServiceMethods";
+import { CSVServiceMethods, ErrorStates } from "./csvServiceMethods";
 
 let errorState = ErrorStates.NOERROR;
 
-export async function csvreader(environment: PH.ServiceTask.ServiceTaskEnvironment) {
-  await serviceLogic(environment);
-
-  await environment.instances.updateInstance(environment.instanceDetails);
-  return true;
-}
-
-export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnvironment) {
-  errorState = ErrorStates.NOERROR;
-  let processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
-  await processObject.loadXml(environment.bpmnXml);
-  let taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
-  let extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
-  let config = extensionValues.serviceTaskConfigObject;
-  let fields = config.fields;
-  let instance = environment.instanceDetails;
-
-  let filePath = fields.find(f => f.key == "filePath").value;
-  let sheetName = fields.find(f => f.key == "sheetName").value;
-  let query = fields.find(f => f.key == "query").value;
-  let xlsxfile;
-  let table;
-
-  try {
-    xlsxfile = XLSX.readFile(filePath);
-  }
-  catch {
-    errorState = ErrorStates.ERRORCODE_NOSUCHFILE;
-  }
-  if (errorState == ErrorStates.NOERROR) {
-    let json = XLSX.utils.sheet_to_json(xlsxfile.Sheets[sheetName]);
-    query = csvServiceMethods.parseFieldsOfQuery(query, instance);
-    let resultArray = csvServiceMethods.query(json, query);
-    table = csvServiceMethods.generateTable(resultArray);
-    if (table == "") {
-      errorState = ErrorStates.ERRORCODE_NORESULTS;
-    }
-  }
-  errorHandling(instance, table);
-}
-
-function errorHandling(instance: PH.Instance.InstanceDetails, table: string) {
+function errorHandling(instance: PH.Instance.InstanceDetails, table: string): void {
   switch (errorState) {
     case ErrorStates.NOERROR:
       instance.extras.fieldContents["Ergebnis"] = {
@@ -67,4 +26,45 @@ function errorHandling(instance: PH.Instance.InstanceDetails, table: string) {
       };
       break;
   }
+}
+
+export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<void> {
+  errorState = ErrorStates.NOERROR;
+  const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
+  await processObject.loadXml(environment.bpmnXml);
+  const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
+  const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
+  const config = extensionValues.serviceTaskConfigObject;
+  const fields = config.fields;
+  const instance = environment.instanceDetails;
+
+  const filePath = fields.find(f => f.key === "filePath").value;
+  const sheetName = fields.find(f => f.key === "sheetName").value;
+  let query = fields.find(f => f.key === "query").value;
+  let xlsxfile;
+  let table;
+
+  try {
+    xlsxfile = XLSX.readFile(filePath);
+  }
+  catch {
+    errorState = ErrorStates.ERRORCODE_NOSUCHFILE;
+  }
+  if (errorState === ErrorStates.NOERROR) {
+    const json = XLSX.utils.sheet_to_json(xlsxfile.Sheets[sheetName]);
+    query = CSVServiceMethods.parseFieldsOfQuery(query, instance);
+    const resultArray = CSVServiceMethods.query(json, query);
+    table = CSVServiceMethods.generateTable(resultArray);
+    if (table === "") {
+      errorState = ErrorStates.ERRORCODE_NORESULTS;
+    }
+  }
+  errorHandling(instance, table);
+}
+
+export async function csvreader(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<boolean> {
+  await serviceLogic(environment);
+
+  await environment.instances.updateInstance(environment.instanceDetails);
+  return true;
 }

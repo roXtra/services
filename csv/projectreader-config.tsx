@@ -2,14 +2,14 @@ import * as React from "react";
 import * as Semantic from "semantic-ui-react";
 import * as PH from "processhub-sdk";
 
-export function projectreaderConfig() {
+export function projectreaderConfig(): JSX.Element {
   return <Semantic.Modal.Content>
     <div id="service-form" className="ui form center">
 
       <Semantic.Table striped>
         <Semantic.Table.Body>
 
-        <Semantic.Table.Row>
+          <Semantic.Table.Row>
             <Semantic.Table.Cell>
               <PH.TL text={"Dateipfad"} />
             </Semantic.Table.Cell>

@@ -2,36 +2,33 @@ import * as PH from "processhub-sdk";
 import * as XLSX from "xlsx";
 import { ErrorStates } from "./csvServiceMethods";
 
-let errorState: number = 0;
+let errorState = 0;
 
-export async function projectreader(environment: PH.ServiceTask.ServiceTaskEnvironment) {
-  await serviceLogic(environment);
-
-  await environment.instances.updateInstance(environment.instanceDetails);
-  return !Boolean(errorState);
+function getValueFromFieldName(environment: PH.ServiceTask.ServiceTaskEnvironment, fieldName: string): string {
+  return ((environment.instanceDetails.extras.fieldContents[fieldName] as PH.Data.FieldValue).value as string).trim();
 }
 
-export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnvironment) {
-  errorState = ErrorStates.NOERROR;
-  let processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
-  await processObject.loadXml(environment.bpmnXml);
-  let taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
-  let extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
-  let config = extensionValues.serviceTaskConfigObject;
-  let fields = config.fields;
-  let instance = environment.instanceDetails;
+function getProjectFromXLSX(filePath: string, keyword: string): any {
+  let workbook: XLSX.WorkBook;
+  try {
+    workbook = XLSX.readFile(filePath);
+  } catch {
+    errorState = ErrorStates.ERRORCODE_FILEPATHNOTFOUND;
+    return null;
+  }
+  const projectArray: any[] = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
 
-  let filePath = fields.find(f => f.key == "filePath").value;
-  let searchField = fields.find(f => f.key == "searchField").value;
+  for (const project of projectArray) {
+    if (project[Object.keys(project)[0]] === keyword) {
+      return project;
+    }
+  }
 
-  let keyword = getValueFromFieldName(environment, searchField);
-
-  let project = getProjectFromXLSX(filePath, keyword);
-
-  errorHandling(instance, () => initFields(instance, project));
+  errorState = ErrorStates.ERRORCODE_NOSUCHPROJECT;
+  return null;
 }
 
-function errorHandling(instance: any, normalBehavior: Function) {
+function errorHandling(instance: any, normalBehavior: Function): void {
   switch (errorState) {
     case ErrorStates.NOERROR:
       normalBehavior();
@@ -54,7 +51,7 @@ function errorHandling(instance: any, normalBehavior: Function) {
   }
 }
 
-function initFields(instance: PH.Instance.InstanceDetails, project: any) {
+function initFields(instance: PH.Instance.InstanceDetails, project: any): void {
   const keys = Object.keys(project);
   keys.forEach((key: any) => {
     instance.extras.fieldContents[key] = {
@@ -64,26 +61,29 @@ function initFields(instance: PH.Instance.InstanceDetails, project: any) {
   });
 }
 
-function getValueFromFieldName(environment: PH.ServiceTask.ServiceTaskEnvironment, fieldName: string): string {
-  return ((environment.instanceDetails.extras.fieldContents[fieldName] as PH.Data.FieldValue).value as string).trim();
+export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<void> {
+  errorState = ErrorStates.NOERROR;
+  const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
+  await processObject.loadXml(environment.bpmnXml);
+  const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
+  const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
+  const config = extensionValues.serviceTaskConfigObject;
+  const fields = config.fields;
+  const instance = environment.instanceDetails;
+
+  const filePath = fields.find(f => f.key === "filePath").value;
+  const searchField = fields.find(f => f.key === "searchField").value;
+
+  const keyword = getValueFromFieldName(environment, searchField);
+
+  const project = getProjectFromXLSX(filePath, keyword);
+
+  errorHandling(instance, () => initFields(instance, project));
 }
 
-function getProjectFromXLSX(filePath: string, keyword: string): any {
-  let workbook: XLSX.WorkBook;
-  try {
-    workbook = XLSX.readFile(filePath);
-  } catch {
-    errorState = ErrorStates.ERRORCODE_FILEPATHNOTFOUND;
-    return null;
-  }
-  let projectArray: any[] = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+export async function projectreader(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<boolean> {
+  await serviceLogic(environment);
 
-  for (let project of projectArray) {
-    if (project[Object.keys(project)[0]] === keyword) {
-      return project;
-    }
-  }
-
-  errorState = ErrorStates.ERRORCODE_NOSUCHPROJECT;
-  return null;
+  await environment.instances.updateInstance(environment.instanceDetails);
+  return !errorState;
 }
