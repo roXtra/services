@@ -1,0 +1,80 @@
+{
+    "id": "roxFile-service",
+    "name": "roXtra Datei",
+    "minRoXtraVersion": "8.009.0",
+    "maxRoXtraVersion": "100.0.0",
+    "actions": [
+        {
+            "id": "createRoxFile",
+            "label": "Erstelle eine roXtra Datei",
+            "configMethod": "createRoxFileConfig",
+            "settings": "createRoxFile-config.js",
+            "serviceFile": "createRoxFile-service.js",
+            "serviceMethod": "createRoxFile",
+            "fields": [
+                {
+                    "name": "roxFile",
+                    "type": "select",
+                    "onload": "fields ProcessHubFileUpload"
+                },
+                
+                {
+                    "name": "title",
+                    "type": "select",
+                    "onload": "fields"
+                },
+
+                {
+                    "name": "docType",
+                    "type": "text"
+                },
+
+                {
+                    "name": "description",
+                    "type": "select",
+                    "onload": "fields"
+                },
+
+                {
+                    "name": "destinationID",
+                    "type": "text"
+                },
+
+                {
+                    "name": "destinationType",
+                    "type": "text"
+                },
+
+                {
+                    "name": "fileIDFieldName",
+                    "type": "text"
+                }
+            ]
+        },
+        {
+            "id": "setRoxFileField",
+            "label": "Setze ein Feld einer roXtra Datei",
+            "configMethod": "setRoxFileFieldConfig",
+            "settings": "setRoxFileField-config.js",
+            "serviceFile": "setRoxFileField-service.js",
+            "serviceMethod": "setRoxFileField",
+            "fields": [
+                {
+                    "name": "fileId",
+                    "type": "text"
+                },
+
+                {
+                    "name": "fieldId",
+                    "type": "text"
+                },
+
+                {
+                    "name": "value",
+                    "type": "select",
+                    "onload": "fields"
+                }
+            ]
+        }
+    ]
+}
