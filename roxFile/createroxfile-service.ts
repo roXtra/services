@@ -1,6 +1,6 @@
 import * as PH from "processhub-sdk";
-import * as Types from "./roxtraFileAPITypes";
-import { readFileBase64Async, missingRequiredField, initRequiredFields, errorHandling, RoXtraFileApi } from "./roxtraFileAPI";
+import * as Types from "./roxtrafileapitypes";
+import { readFileBase64Async, missingRequiredField, initRequiredFields, errorHandling, RoXtraFileApi } from "./roxtrafileapi";
 import { IRoXtraFileApi } from "./iroxtrafileapi";
 
 export let errorState: number = Types.ERRORCODES.NOERROR;
@@ -27,8 +27,8 @@ export async function createRoxFile(environment: PH.ServiceTask.ServiceTaskEnvir
 // Extract the serviceLogic that testing is possible
 export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnvironment, roxtraFileAPI: IRoXtraFileApi) {
   errorState = Types.ERRORCODES.NOERROR;
-  let fields = await PH.ServiceTask.getFields(environment);
-  let instance = environment.instanceDetails;
+  const fields = await PH.ServiceTask.getFields(environment);
+  const instance = environment.instanceDetails;
 
   const requiredFields = initRequiredFields(["docType", "destinationID", "destinationType"], fields);
   const missingField = missingRequiredField(requiredFields);
@@ -39,19 +39,19 @@ export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnviro
   }
 
   // Get field name of the corresponding field ID
-  let docType = requiredFields.get("docType").value;
-  let destinationID = requiredFields.get("destinationID").value;
-  let destinationType = requiredFields.get("destinationType").value;
+  const docType = requiredFields.get("docType").value;
+  const destinationID = requiredFields.get("destinationID").value;
+  const destinationType = requiredFields.get("destinationType").value;
 
-  let roxFileField = fields.find(f => f.key == "roxFile").value;
-  let titleField = fields.find(f => f.key == "title").value;
-  let descritionField = fields.find(f => f.key == "description").value;
-  let fileIDFieldName = fields.find(f => f.key == "fileIDFieldName").value;
+  const roxFileField = fields.find(f => f.key == "roxFile").value;
+  const titleField = fields.find(f => f.key == "title").value;
+  const descritionField = fields.find(f => f.key == "description").value;
+  const fileIDFieldName = fields.find(f => f.key == "fileIDFieldName").value;
 
   // Get the value of a selected field
-  let roxFile = ((environment.instanceDetails.extras.fieldContents[roxFileField] as PH.Data.FieldValue).value as string);
+  const roxFile = ((environment.instanceDetails.extras.fieldContents[roxFileField] as PH.Data.FieldValue).value as string);
   let title = ((environment.instanceDetails.extras.fieldContents[titleField] as PH.Data.FieldValue).value as string);
-  let description = ((environment.instanceDetails.extras.fieldContents[descritionField] as PH.Data.FieldValue).value as string);
+  const description = ((environment.instanceDetails.extras.fieldContents[descritionField] as PH.Data.FieldValue).value as string);
 
   try {
     const relativePath = roxFile[0].split("eformulare/files/")[1];
@@ -110,7 +110,7 @@ function generateTitleWithDataType(title: string, dataPath: string): string {
 
   const splittedTitle = title.trim().split(".");
 
-  for (let titlePart of splittedTitle) {
+  for (const titlePart of splittedTitle) {
     if (titlePart) {
       return titlePart.trim() + dataPath.substring(dataPath.lastIndexOf("."), dataPath.length);
     }

@@ -1,4 +1,4 @@
-import * as Types from "./roxtraFileAPITypes";
+import * as Types from "./roxtrafileapitypes";
 import * as fs from "fs";
 import * as PH from "processhub-sdk";
 import { IRoXtraFileApi } from "./iroxtrafileapi";
@@ -43,7 +43,7 @@ async function post(APIUrl: string, requestBody: Types.CreateFileRequestBody | T
     "authtoken": token
   };
 
-  let req: Types.PostRequest = {
+  const req: Types.PostRequest = {
     method: "POST",
     body: JSON.stringify(requestBody),
     headers: headers,
@@ -60,7 +60,7 @@ async function get(APIUrl: string, eftoken: string, token: string) {
     "authtoken": token
   };
 
-  let req: Types.GetRequest = {
+  const req: Types.GetRequest = {
     method: "GET",
     headers: headers,
   };
@@ -81,9 +81,9 @@ export async function readFileBase64Async(path: string): Promise<string> {
 }
 
 export function initRequiredFields(keys: string[], fields: PH.Data.ServiceActionConfigField[]): Map<string, PH.Data.ServiceActionConfigField> {
-  let requiredFields: Map<string, PH.Data.ServiceActionConfigField> = new Map();
+  const requiredFields: Map<string, PH.Data.ServiceActionConfigField> = new Map();
 
-  for (let key of keys) {
+  for (const key of keys) {
     requiredFields.set(key, fields.find(f => f.key == key));
   }
 
@@ -92,7 +92,7 @@ export function initRequiredFields(keys: string[], fields: PH.Data.ServiceAction
 
 export function missingRequiredField(requiredFields: Map<string, PH.Data.ServiceActionConfigField>): Types.MissingField {
   const keys = requiredFields.keys();
-  for (let key of keys) {
+  for (const key of keys) {
     if (!requiredFields.get(key) || !requiredFields.get(key).value) {
       return {
         "isMissing": true,

@@ -1,6 +1,6 @@
 import * as PH from "processhub-sdk";
-import { missingRequiredField, initRequiredFields, errorHandling, RoXtraFileApi } from "./roxtraFileAPI";
-import { SetFileFieldsObject, Selection, SelectTypes, ERRORCODES } from "./roxtraFileAPITypes";
+import { missingRequiredField, initRequiredFields, errorHandling, RoXtraFileApi } from "./roxtrafileapi";
+import { SetFileFieldsObject, Selection, SelectTypes, ERRORCODES } from "./roxtrafileapitypes";
 import * as JSONQuery from "json-query";
 import { IRoXtraFileApi } from "./iroxtrafileapi";
 
@@ -28,8 +28,8 @@ export async function setRoxFileField(environment: PH.ServiceTask.ServiceTaskEnv
 
 export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnvironment, roxFileApi: IRoXtraFileApi) {
     errorState = ERRORCODES.NOERROR;
-    let fields = await PH.ServiceTask.getFields(environment);
-    let instance = environment.instanceDetails;
+    const fields = await PH.ServiceTask.getFields(environment);
+    const instance = environment.instanceDetails;
 
     const requiredFields = initRequiredFields(["fileId", "fieldId"], fields);
     const missingField = missingRequiredField(requiredFields);
@@ -41,18 +41,18 @@ export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnviro
 
     // Get field name of the corresponding field ID
     let fileId = requiredFields.get("fileId").value;
-    let fieldId = requiredFields.get("fieldId").value;
+    const fieldId = requiredFields.get("fieldId").value;
 
-    let valueField = fields.find(f => f.key == "value").value;
+    const valueField = fields.find(f => f.key == "value").value;
 
     // Get the value of a selected field
-    let value = ((environment.instanceDetails.extras.fieldContents[valueField] as PH.Data.FieldValue).value as string);
+    const value = ((environment.instanceDetails.extras.fieldContents[valueField] as PH.Data.FieldValue).value as string);
 
     try {
 
         fileId = parseFileID(fileId, environment);
 
-        let body: SetFileFieldsObject[] = [{
+        const body: SetFileFieldsObject[] = [{
             "Id": fieldId,
             "Value": value
         }];
@@ -89,7 +89,7 @@ async function selectionValueIDMapping(body: SetFileFieldsObject, selectionID: s
         selections: selections
     };
 
-    let selection: Selection = JSONQuery("selections[Id = " + selectionID + "]", { data: data }).value;
+    const selection: Selection = JSONQuery("selections[Id = " + selectionID + "]", { data: data }).value;
 
     return handleSelectField(selectID, body.Value, selection);
 }

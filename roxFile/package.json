@@ -33,6 +33,7 @@
     "cross-var": "^1.1.0",
     "mocha": "^6.2.0",
     "regenerator-runtime": "^0.13.3",
+    "rimraf": "^3.0.0",
     "ts-mocha": "^6.0.0",
     "typescript": "^3.5.2"
   }

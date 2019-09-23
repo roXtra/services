@@ -1,9 +1,9 @@
 import * as PH from "processhub-sdk";
 import * as fs from "fs";
-import { serviceLogic } from "./createRoxFile-service";
 import { expect } from "chai";
-import { CreateFileRequestBody } from "./roxtraFileAPITypes";
 import { IRoXtraFileApi } from "./iroxtrafileapi";
+import { CreateFileRequestBody } from "./roxtrafileapitypes";
+import { serviceLogic } from "./createroxfile-service";
 
 describe("services", () => {
   describe("roxfile", () => {

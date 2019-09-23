@@ -1,4 +1,4 @@
-import * as Types from "./roxtraFileAPITypes";
+import * as Types from "./roxtrafileapitypes";
 
 export interface IRoXtraFileApi {
   getFileDetailsCall(APIUrl: string, fileID: string, eftoken: string, token: string): Promise<any>;

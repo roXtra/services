@@ -1,8 +1,8 @@
-import { serviceLogic, errorState } from "./setRoxFileField-service";
+import { serviceLogic, errorState } from "./setroxfilefield-service";
 import * as PH from "processhub-sdk";
 import * as fs from "fs";
 import { expect } from "chai";
-import { ERRORCODES, SetFileFieldsObject } from "./roxtraFileAPITypes";
+import { ERRORCODES, SetFileFieldsObject } from "./roxtrafileapitypes";
 import { IRoXtraFileApi } from "./iroxtrafileapi";
 
 describe("services", () => {

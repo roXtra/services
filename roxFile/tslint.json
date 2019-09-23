@@ -45,6 +45,7 @@
     ]
   },
   "rules": {
+    "prefer-const": true,
     "no-unused-variable": [
       true,
       "react"
