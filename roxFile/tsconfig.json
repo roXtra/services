@@ -6,16 +6,16 @@
     "noImplicitAny": true,
     "sourceMap": true,
     "outDir": "./dist/",
-    "jsx" : "react",
+    "jsx": "react",
     "allowJs": true,
-    "lib": [      
+    "lib": [
       "es2015",
       "dom",
       "esnext.asynciterable"
     ]
   },
-   "include": [
-    "./**/*",
+  "include": [
+    "./**/*"
   ],
   "exclude": [
     "./dist/**/*",

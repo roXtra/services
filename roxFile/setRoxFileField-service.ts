@@ -50,7 +50,7 @@ export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnviro
 
     try {
 
-        // fileId = parseFileID(fileId, environment);
+        fileId = parseFileID(fileId, environment);
 
         let body: SetFileFieldsObject[] = [{
             "Id": fieldId,
@@ -59,8 +59,8 @@ export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnviro
 
         if (value) {
             const fieldDetails = await getFieldDetails(fileId, fieldId, environment, roxFileApi);
-            body[0].ValueIds = await selectionValueIDMapping(body[0], fieldDetails.RoxSelection, fieldDetails.RoxType, environment, roxFileApi);            
-            await roxFileApi.setFileFieldsCall(APIUrl, body, fileId, efAccessToken, environment.roxApi.getApiToken());            
+            body[0].ValueIds = await selectionValueIDMapping(body[0], fieldDetails.RoxSelection, fieldDetails.RoxType, environment, roxFileApi);
+            await roxFileApi.setFileFieldsCall(APIUrl, body, fileId, efAccessToken, environment.roxApi.getApiToken());
         }
 
         return instance;
@@ -116,18 +116,18 @@ function handleSelectField(selectID: string, value: string, selection: Selection
     }
 }
 
-function parseFileID(fieldID: string, environment: PH.ServiceTask.ServiceTaskEnvironment) {
+function parseFileID(fieldID: string, environment: PH.ServiceTask.ServiceTaskEnvironment): string {
     const fieldIDSplit = fieldID.split("@@");
 
     if (fieldIDSplit.length > 1) {
         fieldID = fieldIDSplit[1].trim();
+        try {
+            return ((environment.instanceDetails.extras.fieldContents[fieldID] as PH.Data.FieldValue).value as string);
+        } catch (e) {
+            errorState = ERRORCODES.NO_FILEIDFIELD;
+        }
     } else {
-        fieldID = fieldIDSplit[0].trim();
-    }
-    try {
-        return ((environment.instanceDetails.extras.fieldContents[fieldID] as PH.Data.FieldValue).value as string);
-    } catch (e) {
-        errorState = ERRORCODES.NO_FILEIDFIELD;
+        return fieldID.trim();
     }
 }
 
