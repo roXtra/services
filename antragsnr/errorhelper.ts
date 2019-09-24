@@ -1,15 +1,15 @@
 import * as PH from "processhub-sdk";
 
-export const ErrorField: string = "ErrorField";
+export const ErrorField = "ErrorField";
 
-export async function resetError(environment: PH.ServiceTask.ServiceTaskEnvironment) {
-  if (environment.fieldContents[ErrorField] && environment.fieldContents[ErrorField] != "") {
+export async function resetError(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<void> {
+  if (environment.fieldContents[ErrorField] && environment.fieldContents[ErrorField] !== "") {
     environment.fieldContents[ErrorField] = "";
     await PH.Instance.updateInstance(environment.instanceDetails);
   }
 }
 
-export async function setError(environment: PH.ServiceTask.ServiceTaskEnvironment, error: string) {
+export async function setError(environment: PH.ServiceTask.ServiceTaskEnvironment, error: string): Promise<void> {
   if (environment.fieldContents[ErrorField]) {
     environment.fieldContents[ErrorField] = error;
     await PH.Instance.updateInstance(environment.instanceDetails);
@@ -20,4 +20,4 @@ export async function setError(environment: PH.ServiceTask.ServiceTaskEnvironmen
     };
     await PH.Instance.updateInstance(environment.instanceDetails);
   }
-} 
+}

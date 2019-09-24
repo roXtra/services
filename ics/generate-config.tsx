@@ -2,7 +2,7 @@ import * as React from "react";
 import * as Semantic from "semantic-ui-react";
 import * as PH from "processhub-sdk";
 
-export function generateConfig() {
+export function generateConfig(): JSX.Element {
   return <Semantic.Modal.Content>
     <div id="service-form" className="ui form center">
 
@@ -25,7 +25,7 @@ export function generateConfig() {
               <PH.TL text={"Von Feld"} />
             </Semantic.Table.Cell>
             <Semantic.Table.Cell>
-            <select
+              <select
                 id="fromField"
               />
             </Semantic.Table.Cell>

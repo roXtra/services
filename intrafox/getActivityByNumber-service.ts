@@ -2,29 +2,22 @@ import * as PH from "processhub-sdk";
 import * as IntrafoxAPI from "./IntrafoxAPI";
 import * as IntrafoxTypes from "./IntrafoxTypes";
 
-export async function getActivityByNumber(environment: PH.ServiceTask.ServiceTaskEnvironment) {
-
-  await serviceLogic("https://asp3.intrafox.net/cgi-bin/ws.app?D=P32zdyNCFcIwZ40HE1RY", environment);
-  await environment.instances.updateInstance(environment.instanceDetails);
-  return true;
-}
-
-export async function serviceLogic(url: string, environment: PH.ServiceTask.ServiceTaskEnvironment) {
-  let processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
+export async function serviceLogic(url: string, environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<PH.Instance.InstanceDetails> {
+  const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
-  let taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
-  let extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
-  let config = extensionValues.serviceTaskConfigObject;
-  let fields = config.fields;
-  let instance = environment.instanceDetails;
-  
-  let token = fields.find(f => f.key == "token").value;
-  let activityNumberField = fields.find(f => f.key == "activityNumber").value;
-  let usernameField = fields.find(f => f.key == "username").value;
+  const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
+  const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
+  const config = extensionValues.serviceTaskConfigObject;
+  const fields = config.fields;
+  const instance = environment.instanceDetails;
 
-  let activityNumber = ((instance.extras.fieldContents[activityNumberField] as PH.Data.FieldValue).value as string).trim();
-  let username = ((instance.extras.fieldContents[usernameField] as PH.Data.FieldValue).value as string).trim();
-  
+  const token = fields.find(f => f.key === "token").value;
+  const activityNumberField = fields.find(f => f.key === "activityNumber").value;
+  const usernameField = fields.find(f => f.key === "username").value;
+
+  const activityNumber = ((instance.extras.fieldContents[activityNumberField] as PH.Data.FieldValue).value as string).trim();
+  const username = ((instance.extras.fieldContents[usernameField] as PH.Data.FieldValue).value as string).trim();
+
   await IntrafoxAPI.setGlobalActivityValues(url, username, token);
 
   const response = await IntrafoxAPI.getActivityByNumber(url, activityNumber, username, token);
@@ -36,7 +29,7 @@ export async function serviceLogic(url: string, environment: PH.ServiceTask.Serv
       value: activity.ACTIVITY_ABBREVIATION,
       type: "ProcessHubTextArea"
     };
-  
+
     instance.extras.fieldContents["Beschreibung"] = {
       value: activity.ACTIVITY_DESCRIPTION,
       type: "ProcessHubTextArea"
@@ -46,4 +39,10 @@ export async function serviceLogic(url: string, environment: PH.ServiceTask.Serv
   }
 
   return instance;
+}
+
+export async function getActivityByNumber(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<boolean> {
+  await serviceLogic("https://asp3.intrafox.net/cgi-bin/ws.app?D=P32zdyNCFcIwZ40HE1RY", environment);
+  await environment.instances.updateInstance(environment.instanceDetails);
+  return true;
 }

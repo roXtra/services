@@ -1,30 +1,20 @@
 import * as PH from "processhub-sdk";
 import MathServiceMethods from "./mathServiceMethods";
 
-export async function division(environment: PH.ServiceTask.ServiceTaskEnvironment) {
-  try {
-    await serviceLogic(environment);
-    await environment.instances.updateInstance(environment.instanceDetails);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnvironment) {
-  let processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
+export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<void> {
+  const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
-  let taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
-  let extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
-  let config = extensionValues.serviceTaskConfigObject;
-  let fields = config.fields;
+  const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
+  const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
+  const config = extensionValues.serviceTaskConfigObject;
+  const fields = config.fields;
 
-  let numberField1 = fields.find(f => f.key == "numberField1").value;
-  let numberField2 = fields.find(f => f.key == "numberField2").value;
-  let targetField = fields.find(f => f.key == "targetField").value;
+  const numberField1 = fields.find(f => f.key === "numberField1").value;
+  const numberField2 = fields.find(f => f.key === "numberField2").value;
+  const targetField = fields.find(f => f.key === "targetField").value;
 
   if (((environment.instanceDetails.extras.fieldContents[numberField2] as PH.Data.FieldValue).value as number) === 0) {
-    return false;
+    return;
   }
 
   const newValue: PH.Data.FieldValue = {
@@ -33,4 +23,14 @@ export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnviro
   };
 
   environment.instanceDetails.extras.fieldContents[targetField] = newValue;
+}
+
+export async function division(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<boolean> {
+  try {
+    await serviceLogic(environment);
+    await environment.instances.updateInstance(environment.instanceDetails);
+    return true;
+  } catch {
+    return false;
+  }
 }

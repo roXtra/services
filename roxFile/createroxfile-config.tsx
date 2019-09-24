@@ -2,7 +2,7 @@ import * as React from "react";
 import * as Semantic from "semantic-ui-react";
 import * as PH from "processhub-sdk";
 
-export function createRoxFileConfig() {
+export function createRoxFileConfig(): JSX.Element {
   return <Semantic.Modal.Content>
     <div id="service-form" className="ui form center">
 
@@ -102,7 +102,7 @@ export function createRoxFileConfig() {
           </div>
           <h3>Erklärung Dateititelfeld</h3>
           <div>
-            <p>Geben Sie das Feld an, in dem bestimmt werden soll welchen Namen die Datei haben soll. 
+            <p>Geben Sie das Feld an, in dem bestimmt werden soll welchen Namen die Datei haben soll.
               Wenn kein Name gesetzt wurde, dann wird der Name der hochzuladenenden Datei genommen</p>
           </div>
           <h3>Erklärung Dokumenttyp</h3>

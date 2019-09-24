@@ -8,9 +8,9 @@ export enum ErrorStates {
   ERRORCODE_NOSUCHPROJECT = 4,
 }
 
-export class csvServiceMethods {
+export class CSVServiceMethods {
   public static query(objectArray: any[], queryString: string): any[] {
-    let result: any[] = [];
+    const result: any[] = [];
     const queryArray = queryString.split("&");
     objectArray.forEach(object => {
       let isCandidate = true;
@@ -18,7 +18,7 @@ export class csvServiceMethods {
         const arr = query.split("=");
         const key = arr[0];
         const value = arr[1];
-        if (object[key] != value) {
+        if (object[key] !== value) {
           isCandidate = false;
         }
       });
