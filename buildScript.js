@@ -56,7 +56,7 @@ function buildService(directoryPath) {
         console.log("Executed linter for " + directoryPath);
 
         // tsc
-        execSync('tsc', childProcessOptions);
+        execSync('npm run build', childProcessOptions);
         console.log("Executed tsc for " + directoryPath);
 
         // Run tests

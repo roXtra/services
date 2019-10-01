@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint --ext .ts,.tsx ./",
+    "build": "tsc",
     "test": "cross-env HOTRELOAD=no DEBUG=bpmn-engine:123* ts-mocha -p tsconfig.json ./**/*.roxtest.ts --exit --recursive --timeout 40000 --require regenerator-runtime",
     "copyproduction": "cross-var copyfiles package.json production && copyfiles .npmrc production && cd ./production && npm install --production && cd .. && cross-var copyfiles -u 1 production/node_modules/** $npm_package_servicename && rimraf production/",
     "copyfiles": "cross-var copyfiles service.json dist/* $npm_package_servicename && npm run copyproduction",
