@@ -1,7 +1,7 @@
 const dirTree = require('directory-tree');
 const { execSync } = require('child_process');
 
-const processHubSDKVersion = 'v8.10.0-0';
+const processHubSDKVersion = 'v8.10.0-2';
 
 const childProcessStdioOptions = [0, 1, 2];
 const childProcessTimeout = 300000;
@@ -56,7 +56,7 @@ function buildService(directoryPath) {
         console.log("Executed linter for " + directoryPath);
 
         // tsc
-        execSync('tsc', childProcessOptions);
+        execSync('npm run build', childProcessOptions);
         console.log("Executed tsc for " + directoryPath);
 
         // Run tests

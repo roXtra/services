@@ -37,6 +37,6 @@ jobs:
           files: |
             services.zip
             eformservice-*.tgz
-          prerelease: ${{ false }}
+          prerelease: ${{ true }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

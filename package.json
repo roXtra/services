@@ -1,13 +1,16 @@
 {
   "name": "services",
-  "version": "1.0.0",
+  "version": "8.10.0-1",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "copyzips": "copyfiles -u 1 */*.zip zipped_services && copyfiles -u 1 */eformservice-*.tgz ./",
     "buildonly": "node buildScript.js buildonly",
-    "buildbundle": "rimraf ./**/*.zip && rimraf ./**/*.tgz && node buildScript.js bundle && npm run copyzips && cd zipped_services/ && bestzip ../services.zip * && rimraf zipped_services"
+    "buildbundle": "rimraf ./**/*.zip && rimraf ./**/*.tgz && node buildScript.js bundle && npm run copyzips && cd zipped_services/ && bestzip ../services.zip * && rimraf zipped_services",
+    "release-switch-to-next-rc": "npm version preminor",
+    "release-bump-preview-version": "npm version prerelease",
+    "release-make-next-rc-final": "npm version minor"
   },
   "repository": {
     "type": "git",
