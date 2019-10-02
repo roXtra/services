@@ -1,0 +1,31 @@
+{
+    "id": "startinstance-service",
+    "name": "Vorgang starten",
+    "minRoXtraVersion": "8.010.0",
+    "actions": [
+        {
+            "id": "startinstance",
+            "label": "Vorgang starten",
+            "configMethod": "startInstanceConfig",
+            "settings": "startinstance-config.js",
+            "serviceFile": "startinstance-service.js",
+            "serviceMethod": "startinstance",
+            "fields": [
+                {
+                    "name": "processId",
+                    "type": "select",
+                    "onload": "allProcesses"
+                },
+                {
+                    "name": "fields",
+                    "type": "select",
+                    "onload": "fields"
+                },
+                {
+                    "name": "executingUserId",
+                    "type": "text"
+                }
+            ]
+        }
+    ]
+}
