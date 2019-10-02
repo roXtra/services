@@ -12,10 +12,10 @@
   ````
 - Execute the command 
   ```javascript
-  npm run build
+  npm run buildbundle
   ````
 
-If the command ran without erros, a folder should have been created named zipped_services containing all zipped servcies. Now you are ready to install or develop your own services.
+If the command ran without erros, a services.zip should have been created in the root directory containing all zipped services. Now you are ready to install or develop your own services.
 
 ## Install Services
 To install services you need to build them by your own like in the getting started guide or download the already builded versions of services from the releases section.  
@@ -31,7 +31,7 @@ Services are written in TypeScript.
 That a service can be built without errors, several files are needed.
 - package.json, to specify the dependencies
 - tsconfig.json, to specify compile options
-- tslint.json, to specify lint options
+- .eslintrc.json, to specify lint options
 
 The following files should contain code for the service you want to develop:
 - service.json, defines the basic strucure of the service
