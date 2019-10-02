@@ -50,7 +50,7 @@ export function createReportConfig(): JSX.Element {
           <div>
             <p>Wählen Sie die Berichtsvorlage aus die zum Erstellen des Berichts verwendet werden soll. </p>
             <b>Hinweis: Beim Erstellen eines neuen Prozesses sind noch keine Vorlagen verfügbar.
-              Speichern Sie hierfür den Prozess einmal ab und bearbeiten Sie ihn dannach, dann sollte die Standartvorlage verfügbar sein.</b>
+              Speichern Sie hierfür den Prozess einmal ab und bearbeiten Sie ihn anschließend, um die Standardvorlage auswählen zu können.</b>
           </div>
           <h3>Dateityp</h3>
           <div>
