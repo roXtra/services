@@ -8,7 +8,7 @@ describe("services", () => {
   describe("servicetemplate", () => {
 
     // Create a mock service environment
-    function createEnvironment(bpmnXmlPath: string, bpmnTaskId: string): PH.ServiceTask.ServiceTaskEnvironment {
+    function createEnvironment(bpmnXmlPath: string, bpmnTaskId: string): PH.ServiceTask.IServiceTaskEnvironment {
       const env = PH.Test.createEmptyTestServiceEnvironment(fs.readFileSync(bpmnXmlPath, "utf8"));
       env.bpmnTaskId = bpmnTaskId;
       env.fieldContents = {};
@@ -17,9 +17,9 @@ describe("services", () => {
       return env;
     }
 
-    function performAntragsnrTest(bpmnXmlPath: string, bpmnTaskId: string, instances: PH.Instance.InstanceDetails[], tragetField: string): PH.ServiceTask.ServiceTaskEnvironment {
+    function performAntragsnrTest(bpmnXmlPath: string, bpmnTaskId: string, instances: PH.Instance.IInstanceDetails[], tragetField: string): PH.ServiceTask.IServiceTaskEnvironment {
       const env = createEnvironment(bpmnXmlPath, bpmnTaskId);
-      const processDetails: PH.Process.ProcessDetails = {
+      const processDetails: PH.Process.IProcessDetails = {
         processId: "",
         workspaceId: "",
         displayName: "",
@@ -35,7 +35,7 @@ describe("services", () => {
     it("execute antragsnr service test_8fd1ba08-f8a1-4caa-b685-27b3ee946038", () => {
       const targetFieldName = "target";
 
-      const instances: PH.Instance.InstanceDetails[] = [
+      const instances: PH.Instance.IInstanceDetails[] = [
         // Current instance
         {
           instanceId: "",
@@ -70,13 +70,13 @@ describe("services", () => {
 
       const env = performAntragsnrTest("./testfiles/antragsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName);
 
-      assert.equal(((env.fieldContents[targetFieldName] as PH.Data.FieldValue).value as string), "2018/01");
+      assert.equal(((env.fieldContents[targetFieldName] as PH.Data.IFieldValue).value as string), "2018/01");
     });
 
     it("execute antragsnr service test_8fd1ba08-f8a1-4caa-b685-27b3ee946038", () => {
       const targetFieldName = "target";
 
-      const instances: PH.Instance.InstanceDetails[] = [
+      const instances: PH.Instance.IInstanceDetails[] = [
         // Current instance
         {
           instanceId: "",
@@ -111,13 +111,13 @@ describe("services", () => {
 
       const env = performAntragsnrTest("./testfiles/antragsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName);
 
-      assert.equal(((env.fieldContents[targetFieldName] as PH.Data.FieldValue).value as string), "2018/02");
+      assert.equal(((env.fieldContents[targetFieldName] as PH.Data.IFieldValue).value as string), "2018/02");
     });
 
     it("execute antragsnr service test_8fd1ba08-f8a1-4caa-b685-27b3ee946038", () => {
       const targetFieldName = "target";
 
-      const instances: PH.Instance.InstanceDetails[] = [
+      const instances: PH.Instance.IInstanceDetails[] = [
         // Current instance
         {
           instanceId: "",
@@ -152,7 +152,7 @@ describe("services", () => {
 
       const env = performAntragsnrTest("./testfiles/antragsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName);
 
-      assert.equal(((env.fieldContents[targetFieldName] as PH.Data.FieldValue).value as string), "2018/03");
+      assert.equal(((env.fieldContents[targetFieldName] as PH.Data.IFieldValue).value as string), "2018/03");
     });
   });
 });

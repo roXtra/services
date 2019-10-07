@@ -1,8 +1,8 @@
 import * as sql from "mssql";
 import * as PH from "processhub-sdk";
-import { ServiceActionConfigField } from "processhub-sdk/lib/data";
+import { IServiceActionConfigField } from "processhub-sdk/lib/data";
 
-export async function executeQueryNoReturn(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<boolean> {
+export async function executeQueryNoReturn(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
   const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
@@ -10,11 +10,11 @@ export async function executeQueryNoReturn(environment: PH.ServiceTask.ServiceTa
   const config = extensionValues.serviceTaskConfigObject;
   const fields = config.fields;
 
-  const server = fields.find((f: ServiceActionConfigField) => f.key === "server").value;
-  const user = fields.find((f: ServiceActionConfigField) => f.key === "username").value;
-  const password = fields.find((f: ServiceActionConfigField) => f.key === "password").value;
-  const database = fields.find((f: ServiceActionConfigField) => f.key === "database").value;
-  const query = fields.find((f: ServiceActionConfigField) => f.key === "query").value;
+  const server = fields.find((f: IServiceActionConfigField) => f.key === "server").value;
+  const user = fields.find((f: IServiceActionConfigField) => f.key === "username").value;
+  const password = fields.find((f: IServiceActionConfigField) => f.key === "password").value;
+  const database = fields.find((f: IServiceActionConfigField) => f.key === "database").value;
+  const query = fields.find((f: IServiceActionConfigField) => f.key === "query").value;
 
   // Config for your database
   const dbConfig = {

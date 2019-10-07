@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as PH from "processhub-sdk";
 
-export async function executeFieldToFile(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<boolean> {
+export async function executeFieldToFile(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
   const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
@@ -36,7 +36,7 @@ export async function executeFieldToFile(environment: PH.ServiceTask.ServiceTask
       return false;
     }
 
-    const fileUrls: string[] = (environment.instanceDetails.extras.fieldContents[sourceField] as PH.Data.FieldValue).value as string[];
+    const fileUrls: string[] = (environment.instanceDetails.extras.fieldContents[sourceField] as PH.Data.IFieldValue).value as string[];
     for (const fileUrl of fileUrls) {
       if (fileUrl != null && fileUrl !== "") {
 

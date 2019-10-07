@@ -8,7 +8,7 @@ describe("services", () => {
   describe("servicetemplate", () => {
 
     // Create a mock service environment
-    function createEnvironment(bpmnXmlPath: string, bpmnTaskId: string): PH.ServiceTask.ServiceTaskEnvironment {
+    function createEnvironment(bpmnXmlPath: string, bpmnTaskId: string): PH.ServiceTask.IServiceTaskEnvironment {
       const env = PH.Test.createEmptyTestServiceEnvironment(fs.readFileSync(bpmnXmlPath, "utf8"));
       env.bpmnTaskId = bpmnTaskId;
       env.fieldContents = { "UploadField": { type: "ProcessHubFileUpload", value: null }};
@@ -22,7 +22,7 @@ describe("services", () => {
 
       CreateReport.initReportUploadField(url, env.instanceDetails, "UploadField");
 
-      return (env.instanceDetails.extras.fieldContents["UploadField"] as PH.Data.FieldValue).value as string;
+      return (env.instanceDetails.extras.fieldContents["UploadField"] as PH.Data.IFieldValue).value as string;
     }
 
     it("execute report service test with correct result_8fd1ba08-f8a1-4caa-b685-27b3ee946037", () => {

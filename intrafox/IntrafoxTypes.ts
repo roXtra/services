@@ -1,10 +1,10 @@
-export interface IntraFoxRequest extends RequestInit {
+export interface IIntraFoxRequest extends RequestInit {
   method: "POST";
   body: string; // JSON.stringify(IntraFoxBody)
   headers: any;
 }
 
-export interface GetGlobalActivityListResponse {
+export interface IGetGlobalActivityListResponse {
   "ACTIVITY_ACTIVITYNUMBER": string;
   "ACTIVITY_ABBREVIATION": string;
   "ACTIVITY_DESCRIPTION": string;
@@ -12,34 +12,34 @@ export interface GetGlobalActivityListResponse {
   "ORGANIZATIONUNIT_NAMES": string[][];
 }
 
-export interface IntraFoxErrorResponse extends IntraFoxRequest {
+export interface IIntraFoxErrorResponse extends IIntraFoxRequest {
   "ERRORCODE": string;
   "REASON": string;
   "MESSAGE": string;
 }
 
-export interface IntraFoxHeader {
+export interface IIntraFoxHeader {
   "X-INTRAFOX-ROXTRA-TOKEN": string;
 }
 
-export interface IntraFoxBody {
+export interface IIntraFoxBody {
   "FUNCTION": string;
   "USERNAME": string;
-  "ARGS": CreateActivityARGS | SetGlobalActivityARGS;
+  "ARGS": ICreateActivityARGS | ISetGlobalActivityARGS;
 }
 
-export interface CreateActivityARGS {
+export interface ICreateActivityARGS {
   "ACTIVITY_ABBREVIATION"?: string;
   "ACTIVITY_DESCRIPTION"?: string;
   "ACTIVITY_EXPIRATIONDATE"?: string;
 }
 
-export interface SetGlobalActivityARGS {
+export interface ISetGlobalActivityARGS {
   "ACTIVITYIDENTIFIER": string;
-  "SIMPLE_DATASOURCES": SimpleDatasources;
+  "SIMPLE_DATASOURCES": ISimpleDatasources;
 }
 
-interface SimpleDatasources {
+interface ISimpleDatasources {
   "ACTIVITY_ABBREVIATION"?: string;
   "ACTIVITY_DESCRIPTION"?: string;
   "ACTIVITY_EXPIRATIONDATE"?: Date;

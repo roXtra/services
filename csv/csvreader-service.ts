@@ -4,7 +4,7 @@ import { CSVServiceMethods, ErrorStates } from "./csvServiceMethods";
 
 let errorState = ErrorStates.NOERROR;
 
-function errorHandling(instance: PH.Instance.InstanceDetails, table: string): void {
+function errorHandling(instance: PH.Instance.IInstanceDetails, table: string): void {
   switch (errorState) {
     case ErrorStates.NOERROR:
       instance.extras.fieldContents["Ergebnis"] = {
@@ -28,7 +28,7 @@ function errorHandling(instance: PH.Instance.InstanceDetails, table: string): vo
   }
 }
 
-export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<void> {
+export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<void> {
   errorState = ErrorStates.NOERROR;
   const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
@@ -62,7 +62,7 @@ export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnviro
   errorHandling(instance, table);
 }
 
-export async function csvreader(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<boolean> {
+export async function csvreader(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
   await serviceLogic(environment);
 
   await environment.instances.updateInstance(environment.instanceDetails);

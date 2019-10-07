@@ -22,7 +22,7 @@ const serviceTaskIDs = ["ServiceTask_C479EDB7D2E3D038", // Addition-service id
 describe("services", () => {
   describe("math", () => {
 
-    function createEnvironment(bpmnXmlPath: string, bpmnTaskId: string, number1: number, number2: number): PH.ServiceTask.ServiceTaskEnvironment {
+    function createEnvironment(bpmnXmlPath: string, bpmnTaskId: string, number1: number, number2: number): PH.ServiceTask.IServiceTaskEnvironment {
       const env = PH.Test.createEmptyTestServiceEnvironment(fs.readFileSync(bpmnXmlPath, "utf8"));
       env.bpmnTaskId = bpmnTaskId;
       env.fieldContents = { "Feld_1": { type: "ProcessHubNumber", value: number1 }, "Feld_2": { type: "ProcessHubNumber", value: number2 } };
@@ -50,13 +50,13 @@ describe("services", () => {
       }
 
       if (operator === operators.DIVISION && num2 === 0) {
-        assert.equal((env.instanceDetails.extras.fieldContents.Feld_1 as PH.Data.FieldValue).value as number, num1);
-        assert.equal((env.instanceDetails.extras.fieldContents.Feld_2 as PH.Data.FieldValue).value as number, num2);
-        assert.isUndefined((env.instanceDetails.extras.fieldContents.Ergebnis as PH.Data.FieldValue));
+        assert.equal((env.instanceDetails.extras.fieldContents.Feld_1 as PH.Data.IFieldValue).value as number, num1);
+        assert.equal((env.instanceDetails.extras.fieldContents.Feld_2 as PH.Data.IFieldValue).value as number, num2);
+        assert.isUndefined((env.instanceDetails.extras.fieldContents.Ergebnis as PH.Data.IFieldValue));
       } else {
-        assert.equal((env.instanceDetails.extras.fieldContents.Feld_1 as PH.Data.FieldValue).value as number, num1);
-        assert.equal((env.instanceDetails.extras.fieldContents.Feld_2 as PH.Data.FieldValue).value as number, num2);
-        assert.closeTo((env.instanceDetails.extras.fieldContents.Ergebnis as PH.Data.FieldValue).value as number, expResult, 0.0001);
+        assert.equal((env.instanceDetails.extras.fieldContents.Feld_1 as PH.Data.IFieldValue).value as number, num1);
+        assert.equal((env.instanceDetails.extras.fieldContents.Feld_2 as PH.Data.IFieldValue).value as number, num2);
+        assert.closeTo((env.instanceDetails.extras.fieldContents.Ergebnis as PH.Data.IFieldValue).value as number, expResult, 0.0001);
       }
     }
 

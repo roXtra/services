@@ -7,7 +7,7 @@ function getDateFormatted(date: Date, start: boolean): string {
   return date.getFullYear().toString() + monthString + endDay; // + "T" + time;
 }
 
-export async function generate(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<boolean> {
+export async function generate(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
   try {
     const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
     await processObject.loadXml(environment.bpmnXml);
@@ -44,10 +44,10 @@ export async function generate(environment: PH.ServiceTask.ServiceTaskEnvironmen
     icsString += "BEGIN:VEVENT\n";
 
     // With time zone specified
-    const fromValue = (instance.extras.fieldContents[fromField] as PH.Data.FieldValue).value;
+    const fromValue = (instance.extras.fieldContents[fromField] as PH.Data.IFieldValue).value;
     const fromDate = new Date(fromValue as string);
 
-    const tillValue = (instance.extras.fieldContents[tillField] as PH.Data.FieldValue).value;
+    const tillValue = (instance.extras.fieldContents[tillField] as PH.Data.IFieldValue).value;
     const tillDate = new Date(tillValue as string);
 
     // Timezone
@@ -63,7 +63,7 @@ export async function generate(environment: PH.ServiceTask.ServiceTaskEnvironmen
     // Location
     // icsString += "LOCATION:" + Location + "";
 
-    const descriptionValue = instance.extras.fieldContents[descriptionField] != null ? (instance.extras.fieldContents[descriptionField] as PH.Data.FieldValue).value : "";
+    const descriptionValue = instance.extras.fieldContents[descriptionField] != null ? (instance.extras.fieldContents[descriptionField] as PH.Data.IFieldValue).value : "";
     icsString += "DESCRIPTION:" + descriptionValue + "\n";
     // Priority
     // icsString += "PRIORITY:3\n";
@@ -81,9 +81,9 @@ export async function generate(environment: PH.ServiceTask.ServiceTaskEnvironmen
 
     if (url) {
       if (instance.extras.fieldContents[targetField] == null) {
-        instance.extras.fieldContents[targetField] = { type: "ProcessHubFileUpload", value: null } as PH.Data.FieldValue;
+        instance.extras.fieldContents[targetField] = { type: "ProcessHubFileUpload", value: null } as PH.Data.IFieldValue;
       }
-      (instance.extras.fieldContents[targetField] as PH.Data.FieldValue).value = [url];
+      (instance.extras.fieldContents[targetField] as PH.Data.IFieldValue).value = [url];
       await environment.instances.updateInstance(instance);
 
       return true;

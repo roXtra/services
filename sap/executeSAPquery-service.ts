@@ -1,7 +1,7 @@
 import * as PH from "processhub-sdk";
 import Methods from "./sapServiceMethods";
 
-export async function executeSAPQuery(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<boolean> {
+export async function executeSAPQuery(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
   const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
@@ -29,7 +29,7 @@ export async function executeSAPQuery(environment: PH.ServiceTask.ServiceTaskEnv
     databaseName: tenant
   };
 
-  const newValue: PH.Data.FieldValue = {
+  const newValue: PH.Data.IFieldValue = {
     value: "",
     type: "ProcessHubTextArea"
   };

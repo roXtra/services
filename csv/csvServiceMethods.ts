@@ -52,7 +52,7 @@ export class CSVServiceMethods {
     return table += "</table>";
   }
 
-  public static parseFieldsOfQuery(query: string, instance: PH.Instance.InstanceDetails): string {
+  public static parseFieldsOfQuery(query: string, instance: PH.Instance.IInstanceDetails): string {
     let modifiedQuery = query;
 
     while (modifiedQuery.includes("@@")) {
@@ -61,7 +61,7 @@ export class CSVServiceMethods {
       const pos2 = pos1 + subString.search("@@");
       const fieldName = modifiedQuery.substring(pos1, pos2);
 
-      modifiedQuery = modifiedQuery.replace("@@" + fieldName + "@@", (instance.extras.fieldContents[fieldName] as PH.Data.FieldValue).value as string);
+      modifiedQuery = modifiedQuery.replace("@@" + fieldName + "@@", (instance.extras.fieldContents[fieldName] as PH.Data.IFieldValue).value as string);
     }
     return modifiedQuery;
   }

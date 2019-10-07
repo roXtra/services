@@ -2,8 +2,8 @@ import * as PH from "processhub-sdk";
 import { setError } from "./errorhelper";
 import { ProcessExtras } from "processhub-sdk/lib/process";
 
-function getNumberOfInstancesOfSpecificYear(instances: PH.Instance.InstanceDetails[], year: number): number {
-  const instancesOfTheYear: PH.Instance.InstanceDetails[] = [];
+function getNumberOfInstancesOfSpecificYear(instances: PH.Instance.IInstanceDetails[], year: number): number {
+  const instancesOfTheYear: PH.Instance.IInstanceDetails[] = [];
 
   for (let i = 0; i < instances.length; i++) {
     const instanceYear = new Date(instances[i].createdAt).getFullYear();
@@ -15,13 +15,13 @@ function getNumberOfInstancesOfSpecificYear(instances: PH.Instance.InstanceDetai
   return instancesOfTheYear.length;
 }
 
-export function serviceLogic(processDetails: PH.Process.ProcessDetails, environment: PH.ServiceTask.ServiceTaskEnvironment, targetField: string): void {
-  const instances: PH.Instance.InstanceDetails[] = processDetails.extras.instances;
+export function serviceLogic(processDetails: PH.Process.IProcessDetails, environment: PH.ServiceTask.IServiceTaskEnvironment, targetField: string): void {
+  const instances: PH.Instance.IInstanceDetails[] = processDetails.extras.instances;
   const instanceYear = environment.instanceDetails.createdAt.getFullYear();
   const numberOfInstances = getNumberOfInstancesOfSpecificYear(instances, instanceYear);
   const nr: string = (numberOfInstances < 10) ? instanceYear.toString() + "/0" + numberOfInstances : instanceYear.toString() + "/" + numberOfInstances;
 
-  const newValue: PH.Data.FieldValue = {
+  const newValue: PH.Data.IFieldValue = {
     value: nr,
     type: "ProcessHubTextInput",
   };
@@ -29,7 +29,7 @@ export function serviceLogic(processDetails: PH.Process.ProcessDetails, environm
   environment.instanceDetails.extras.fieldContents[targetField] = newValue;
 }
 
-export async function antragsnrAction(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<boolean> {
+export async function antragsnrAction(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
   try {
     const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
     await processObject.loadXml(environment.bpmnXml);

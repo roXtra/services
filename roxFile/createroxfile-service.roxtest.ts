@@ -2,7 +2,7 @@ import * as PH from "processhub-sdk";
 import * as fs from "fs";
 import { expect } from "chai";
 import { IRoXtraFileApi } from "./iroxtrafileapi";
-import { CreateFileRequestBody } from "./roxtrafileapitypes";
+import { ICreateFileRequestBody } from "./roxtrafileapitypes";
 import { serviceLogic } from "./createroxfile-service";
 
 describe("services", () => {
@@ -19,7 +19,7 @@ describe("services", () => {
             // eslint-disable-next-line @typescript-eslint/require-await
             getSelectionsCall: async () => [],
             // eslint-disable-next-line @typescript-eslint/require-await
-            createRoxFileCall: async (APIUrl: string, body: CreateFileRequestBody) => {
+            createRoxFileCall: async (APIUrl: string, body: ICreateFileRequestBody) => {
               expect(body.DestinationID).to.equal("100");
               expect(body.DestinationType).to.equal("1");
               expect(body.DocTypeID).to.equal("105");
@@ -30,7 +30,7 @@ describe("services", () => {
               };
             }
           };
-          const environment: PH.ServiceTask.ServiceTaskEnvironment = PH.Test.createEmptyTestServiceEnvironment(
+          const environment: PH.ServiceTask.IServiceTaskEnvironment = PH.Test.createEmptyTestServiceEnvironment(
             fs.readFileSync("./testfiles/createroxfile-service.bpmn", "utf8")
           );
           environment.bpmnTaskName = "createroxfile";
@@ -55,7 +55,7 @@ describe("services", () => {
           environment.fileStore.getPhysicalPath = () => "./testfiles/doc.docx";
           const instance = await serviceLogic(environment, testApi);
           expect(PH.Data.isFieldValue(instance.extras.fieldContents["CreatedRoxFileId"])).to.equal(true);
-          expect((instance.extras.fieldContents["CreatedRoxFileId"] as PH.Data.FieldValue).value).to.equal(newRoxFileId);
+          expect((instance.extras.fieldContents["CreatedRoxFileId"] as PH.Data.IFieldValue).value).to.equal(newRoxFileId);
         });
       });
 

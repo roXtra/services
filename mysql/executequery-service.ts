@@ -1,7 +1,7 @@
 import * as mysql from "mysql";
 import * as PH from "processhub-sdk";
 
-export async function executeQuery(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<boolean> {
+export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
   const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
@@ -38,7 +38,7 @@ export async function executeQuery(environment: PH.ServiceTask.ServiceTaskEnviro
     });
 
     if (res.length > 0) {
-      (environment.instanceDetails.extras.fieldContents[targetField] as PH.Data.FieldValue).value = res[0]["result"];
+      (environment.instanceDetails.extras.fieldContents[targetField] as PH.Data.IFieldValue).value = res[0]["result"];
       await environment.instances.updateInstance(environment.instanceDetails);
     }
     connection.end();

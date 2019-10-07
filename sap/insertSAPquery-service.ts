@@ -1,7 +1,7 @@
 import * as PH from "processhub-sdk";
 import Methods from "./sapServiceMethods";
 
-export async function insertSAPQuery(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<boolean> {
+export async function insertSAPQuery(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
   const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);

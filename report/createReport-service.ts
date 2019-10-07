@@ -8,7 +8,7 @@ const ERRORCODES = {
 
 let error = ERRORCODES.NOERROR;
 
-async function getReport(environment: PH.ServiceTask.ServiceTaskEnvironment, reportDraftID: string, reportType: "docx" | "pdf"): Promise<string> {
+async function getReport(environment: PH.ServiceTask.IServiceTaskEnvironment, reportDraftID: string, reportType: "docx" | "pdf"): Promise<string> {
   const instance = environment.instanceDetails;
 
 
@@ -18,17 +18,17 @@ async function getReport(environment: PH.ServiceTask.ServiceTaskEnvironment, rep
   return url;
 }
 
-export function initReportUploadField(url: string, instance: PH.Instance.InstanceDetails, reportFieldName: string): void {
+export function initReportUploadField(url: string, instance: PH.Instance.IInstanceDetails, reportFieldName: string): void {
   if (url && url.length > 0) {
     if (instance.extras.fieldContents[reportFieldName] == null) {
-      instance.extras.fieldContents[reportFieldName] = { type: "ProcessHubFileUpload", value: null } as PH.Data.FieldValue;
+      instance.extras.fieldContents[reportFieldName] = { type: "ProcessHubFileUpload", value: null } as PH.Data.IFieldValue;
     }
-    (instance.extras.fieldContents[reportFieldName] as PH.Data.FieldValue).value = [url];
+    (instance.extras.fieldContents[reportFieldName] as PH.Data.IFieldValue).value = [url];
   }
 }
 
 // Extract the serviceLogic that testing is possible
-export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<PH.Instance.InstanceDetails> {
+export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<PH.Instance.IInstanceDetails> {
   const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
@@ -56,23 +56,23 @@ export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnviro
   return instance;
 }
 
-function errorHandling(instance: PH.Instance.InstanceDetails): void {
+function errorHandling(instance: PH.Instance.IInstanceDetails): void {
   switch (error) {
     case ERRORCODES.NOERROR: {
       break;
     }
     case ERRORCODES.NOSELECTEDTEMPLATE: {
-      instance.extras.fieldContents["Fehler"] = { type: "ProcessHubTextArea", value: "Es wurde keine Berichtsvorlage ausgewählt." } as PH.Data.FieldValue;
+      instance.extras.fieldContents["Fehler"] = { type: "ProcessHubTextArea", value: "Es wurde keine Berichtsvorlage ausgewählt." } as PH.Data.IFieldValue;
       break;
     }
     case ERRORCODES.SERVERERROR: {
-      instance.extras.fieldContents["Fehler"] = { type: "ProcessHubTextArea", value: "Der Server konnte keinen Bericht erstellen." } as PH.Data.FieldValue;
+      instance.extras.fieldContents["Fehler"] = { type: "ProcessHubTextArea", value: "Der Server konnte keinen Bericht erstellen." } as PH.Data.IFieldValue;
       break;
     }
   }
 }
 
-export async function createReport(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<boolean> {
+export async function createReport(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
   error = ERRORCODES.NOERROR;
 
   // Get the instance to manipulate and add fields

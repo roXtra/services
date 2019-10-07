@@ -49,7 +49,7 @@
 //             });
 
 //             async function performSAPProcessTest(rows: any, targetFieldName1: string, targetFieldName2: string) {
-//               let newValue: PH.Data.FieldValue = {
+//               let newValue: PH.Data.IFieldValue = {
 //                 value: "",
 //                 type: "ProcessHubTextArea"
 //               };
@@ -71,8 +71,8 @@
 
 //               assert.equal(keys[0], targetFieldName1);
 //               assert.equal(keys[1], targetFieldName2);
-//               assert((instance.extras.fieldContents[targetFieldName2] as PH.Data.FieldValue).value.toString().endsWith("results.csv"));
-//               assert.equal((instance.extras.fieldContents[targetFieldName1] as PH.Data.FieldValue).value.toString(), generateTable(rows));
+//               assert((instance.extras.fieldContents[targetFieldName2] as PH.Data.IFieldValue).value.toString().endsWith("results.csv"));
+//               assert.equal((instance.extras.fieldContents[targetFieldName1] as PH.Data.IFieldValue).value.toString(), generateTable(rows));
 //             }
 
 //             function generateTable(rows: any): string {

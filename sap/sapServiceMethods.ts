@@ -2,7 +2,7 @@ import * as PH from "processhub-sdk";
 import * as hanaClient from "@sap/hana-client";
 
 export default class SAPServiceMethods {
-  static parseFieldsOfQuery(query: string, instance: PH.Instance.InstanceDetails): string {
+  static parseFieldsOfQuery(query: string, instance: PH.Instance.IInstanceDetails): string {
     let modifiedQuery = query;
 
     while (modifiedQuery.includes("@@")) {
@@ -11,12 +11,12 @@ export default class SAPServiceMethods {
       const pos2 = pos1 + subString.search("@@");
       const fieldName = modifiedQuery.substring(pos1, pos2);
 
-      modifiedQuery = modifiedQuery.replace("@@" + fieldName + "@@", (instance.extras.fieldContents[fieldName] as PH.Data.FieldValue).value as string);
+      modifiedQuery = modifiedQuery.replace("@@" + fieldName + "@@", (instance.extras.fieldContents[fieldName] as PH.Data.IFieldValue).value as string);
     }
     return modifiedQuery;
   }
 
-  static buildInsertQuery(tableName: string, columns: string, values: string, instance: PH.Instance.InstanceDetails): string {
+  static buildInsertQuery(tableName: string, columns: string, values: string, instance: PH.Instance.IInstanceDetails): string {
     let query: string = "INSERT INTO " + tableName
       + " (" + columns + ") "
       + "VALUES (" + values + ");";
@@ -26,7 +26,7 @@ export default class SAPServiceMethods {
     return query;
   }
 
-  static buildSelectQuery(tableName: string, columns: string, where: string, instance: PH.Instance.InstanceDetails): string {
+  static buildSelectQuery(tableName: string, columns: string, where: string, instance: PH.Instance.IInstanceDetails): string {
     let selectQuery = "SELECT " + columns
       + " FROM " + tableName
       + " WHERE " + where + ";";
@@ -41,7 +41,7 @@ export default class SAPServiceMethods {
     return selectQuery;
   }
 
-  static buildDeleteQuery(tableName: string, where: string, instance: PH.Instance.InstanceDetails): string {
+  static buildDeleteQuery(tableName: string, where: string, instance: PH.Instance.IInstanceDetails): string {
     let deleteQuery = "DELETE FROM " + tableName
       + " WHERE " + where + ";";
 
@@ -82,7 +82,7 @@ export default class SAPServiceMethods {
     return currentErrorState;
   }
 
-  static async serviceOutputLogic(rows: Array<any>, newValue: any, environment: PH.ServiceTask.ServiceTaskEnvironment, instance: any, targetFieldTable: string, targetFieldCSV: string): Promise<boolean> {
+  static async serviceOutputLogic(rows: Array<any>, newValue: any, environment: PH.ServiceTask.IServiceTaskEnvironment, instance: any, targetFieldTable: string, targetFieldCSV: string): Promise<boolean> {
     let url: string;
 
     if (rows && rows.length) {
@@ -94,9 +94,9 @@ export default class SAPServiceMethods {
 
     if (url && url.length > 0) {
       if (instance.extras.fieldContents[targetFieldCSV] == null) {
-        instance.extras.fieldContents[targetFieldCSV] = { type: "ProcessHubFileUpload", value: null } as PH.Data.FieldValue;
+        instance.extras.fieldContents[targetFieldCSV] = { type: "ProcessHubFileUpload", value: null } as PH.Data.IFieldValue;
       }
-      (instance.extras.fieldContents[targetFieldCSV] as PH.Data.FieldValue).value = [url];
+      (instance.extras.fieldContents[targetFieldCSV] as PH.Data.IFieldValue).value = [url];
     }
 
     await environment.instances.updateInstance(environment.instanceDetails);

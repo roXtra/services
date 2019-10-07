@@ -27,7 +27,7 @@ describe("services", () => {
     });
 
     // Create a mock service environment
-    function createEnvironment(bpmnXmlPath: string, bpmnTaskId: string, username: string, abbreation: string, describtion: string, expirationDate: Date): PH.ServiceTask.ServiceTaskEnvironment {
+    function createEnvironment(bpmnXmlPath: string, bpmnTaskId: string, username: string, abbreation: string, describtion: string, expirationDate: Date): PH.ServiceTask.IServiceTaskEnvironment {
       const env = PH.Test.createEmptyTestServiceEnvironment(fs.readFileSync(bpmnXmlPath, "utf8"));
       env.bpmnTaskId = bpmnTaskId;
       env.fieldContents = {
@@ -41,7 +41,7 @@ describe("services", () => {
       return env;
     }
 
-    async function performCreateActivityTest(testGuid: string, bpmnXmlPath: string, bpmnTaskId: string, username: string, abbreation: string, describtion: string, expirationDate: Date): Promise<PH.ServiceTask.ServiceTaskEnvironment> {
+    async function performCreateActivityTest(testGuid: string, bpmnXmlPath: string, bpmnTaskId: string, username: string, abbreation: string, describtion: string, expirationDate: Date): Promise<PH.ServiceTask.IServiceTaskEnvironment> {
       const env = createEnvironment(bpmnXmlPath, bpmnTaskId, username, abbreation, describtion, expirationDate);
 
       await CreateActivity.serviceLogic("http://localhost:1080/" + testGuid, env);
@@ -83,11 +83,11 @@ describe("services", () => {
       );
 
       const env = await performCreateActivityTest(testGuid, "./testfiles/create-activity.bpmn", "ServiceTask_16C58B2F292DE836", username, abbreation, describtion, expirationDate);
-      assert.equal(((env.instanceDetails.extras.fieldContents["Info"] as PH.Data.FieldValue).value as string), "Maßnahme wurde erstellt");
-      assert.equal(((env.instanceDetails.extras.fieldContents["Abb"] as PH.Data.FieldValue).value as string), abbreation);
-      assert.equal(((env.instanceDetails.extras.fieldContents["Desc"] as PH.Data.FieldValue).value as string), describtion);
-      assert.equal(((env.instanceDetails.extras.fieldContents["Date"] as PH.Data.FieldValue).value as Date), expirationDate);
-      assert.isUndefined((env.instanceDetails.extras.fieldContents["ERROR"] as PH.Data.FieldValue));
+      assert.equal(((env.instanceDetails.extras.fieldContents["Info"] as PH.Data.IFieldValue).value as string), "Maßnahme wurde erstellt");
+      assert.equal(((env.instanceDetails.extras.fieldContents["Abb"] as PH.Data.IFieldValue).value as string), abbreation);
+      assert.equal(((env.instanceDetails.extras.fieldContents["Desc"] as PH.Data.IFieldValue).value as string), describtion);
+      assert.equal(((env.instanceDetails.extras.fieldContents["Date"] as PH.Data.IFieldValue).value as Date), expirationDate);
+      assert.isUndefined((env.instanceDetails.extras.fieldContents["ERROR"] as PH.Data.IFieldValue));
     });
 
     it("execute intrafox createActivity with wrong username_6a439a53-9c1b-4e31-969b-2be89b2ebb95", async () => {
@@ -129,11 +129,11 @@ describe("services", () => {
       );
 
       const env = await performCreateActivityTest(testGuid, "./testfiles/create-activity.bpmn", "ServiceTask_16C58B2F292DE836", username, abbreation, describtion, expirationDate);
-      assert.equal(((env.instanceDetails.extras.fieldContents["ERROR"] as PH.Data.FieldValue).value as string), "Ein Fehler ist aufgetreten, ARGS wurden falsch gesetzt.");
-      assert.equal(((env.instanceDetails.extras.fieldContents["Abb"] as PH.Data.FieldValue).value as string), abbreation);
-      assert.equal(((env.instanceDetails.extras.fieldContents["Desc"] as PH.Data.FieldValue).value as string), describtion);
-      assert.equal(((env.instanceDetails.extras.fieldContents["Date"] as PH.Data.FieldValue).value as Date), expirationDate);
-      assert.isUndefined((env.instanceDetails.extras.fieldContents["Info"] as PH.Data.FieldValue));
+      assert.equal(((env.instanceDetails.extras.fieldContents["ERROR"] as PH.Data.IFieldValue).value as string), "Ein Fehler ist aufgetreten, ARGS wurden falsch gesetzt.");
+      assert.equal(((env.instanceDetails.extras.fieldContents["Abb"] as PH.Data.IFieldValue).value as string), abbreation);
+      assert.equal(((env.instanceDetails.extras.fieldContents["Desc"] as PH.Data.IFieldValue).value as string), describtion);
+      assert.equal(((env.instanceDetails.extras.fieldContents["Date"] as PH.Data.IFieldValue).value as Date), expirationDate);
+      assert.isUndefined((env.instanceDetails.extras.fieldContents["Info"] as PH.Data.IFieldValue));
     });
 
     it("execute intrafox createActivity with wrong token_d7dabc0a-85bb-4877-863d-7c565dcff90a", async () => {
@@ -175,11 +175,11 @@ describe("services", () => {
       );
 
       const env = await performCreateActivityTest(testGuid, "./testfiles/create-activity.bpmn", "ServiceTask_16C58B2F292DE836", username, abbreation, describtion, expirationDate);
-      assert.equal(((env.instanceDetails.extras.fieldContents["ERROR"] as PH.Data.FieldValue).value as string), "Ein Fehler ist aufgetreten, Authentifizierungstoken ist ungültig.");
-      assert.equal(((env.instanceDetails.extras.fieldContents["Abb"] as PH.Data.FieldValue).value as string), abbreation);
-      assert.equal(((env.instanceDetails.extras.fieldContents["Desc"] as PH.Data.FieldValue).value as string), describtion);
-      assert.equal(((env.instanceDetails.extras.fieldContents["Date"] as PH.Data.FieldValue).value as Date), expirationDate);
-      assert.isUndefined((env.instanceDetails.extras.fieldContents["Info"] as PH.Data.FieldValue));
+      assert.equal(((env.instanceDetails.extras.fieldContents["ERROR"] as PH.Data.IFieldValue).value as string), "Ein Fehler ist aufgetreten, Authentifizierungstoken ist ungültig.");
+      assert.equal(((env.instanceDetails.extras.fieldContents["Abb"] as PH.Data.IFieldValue).value as string), abbreation);
+      assert.equal(((env.instanceDetails.extras.fieldContents["Desc"] as PH.Data.IFieldValue).value as string), describtion);
+      assert.equal(((env.instanceDetails.extras.fieldContents["Date"] as PH.Data.IFieldValue).value as Date), expirationDate);
+      assert.isUndefined((env.instanceDetails.extras.fieldContents["Info"] as PH.Data.IFieldValue));
     });
   });
 });
