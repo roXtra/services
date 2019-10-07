@@ -2,12 +2,12 @@ import * as IntrafoxTypes from "./IntrafoxTypes";
 import * as DateFormat from "dateformat";
 import * as PH from "processhub-sdk";
 
-async function post(url: string, requestBody: IntrafoxTypes.IntraFoxBody, token: string): Promise<any> {
-  const headers: IntrafoxTypes.IntraFoxHeader = {
+async function post(url: string, requestBody: IntrafoxTypes.IIntraFoxBody, token: string): Promise<any> {
+  const headers: IntrafoxTypes.IIntraFoxHeader = {
     "X-INTRAFOX-ROXTRA-TOKEN": token
   };
 
-  const req: IntrafoxTypes.IntraFoxRequest = {
+  const req: IntrafoxTypes.IIntraFoxRequest = {
     method: "POST",
     body: JSON.stringify(requestBody),
     headers: headers,
@@ -28,15 +28,15 @@ async function post(url: string, requestBody: IntrafoxTypes.IntraFoxBody, token:
  * @param username the username of the user in the Intrafox instance
  * @param token the access token of the Intrafox API
 */
-export async function getActivityByNumber(url: string, activityNumber: string, username: string, token: string): Promise<IntrafoxTypes.GetGlobalActivityListResponse | IntrafoxTypes.IntraFoxErrorResponse> {
-  const body: IntrafoxTypes.IntraFoxBody = {
+export async function getActivityByNumber(url: string, activityNumber: string, username: string, token: string): Promise<IntrafoxTypes.IGetGlobalActivityListResponse | IntrafoxTypes.IIntraFoxErrorResponse> {
+  const body: IntrafoxTypes.IIntraFoxBody = {
     "FUNCTION": "GetGlobalActivityList",
     "USERNAME": username,
     "ARGS": {}
   };
 
   const result = await post(url, body, token);
-  const activities: IntrafoxTypes.GetGlobalActivityListResponse[] = result.ACTIVITIES;
+  const activities: IntrafoxTypes.IGetGlobalActivityListResponse[] = result.ACTIVITIES;
 
   for (let i = 0; i < activities.length; i++) {
     if (activities[i].ACTIVITY_ACTIVITYNUMBER === activityNumber) {
@@ -55,14 +55,14 @@ export async function getActivityByNumber(url: string, activityNumber: string, u
  * @param activityExpirationdate the date when the activity will be expired
  * @param token the access token of the Intrafox API
 */
-export async function createGlobalActivity(url: string, username: string, activityAbbrevation: string, activityDescription: string, activityExpirationdate: Date, token: string): Promise<string | IntrafoxTypes.IntraFoxErrorResponse> {
-  const args: IntrafoxTypes.CreateActivityARGS = {
+export async function createGlobalActivity(url: string, username: string, activityAbbrevation: string, activityDescription: string, activityExpirationdate: Date, token: string): Promise<string | IntrafoxTypes.IIntraFoxErrorResponse> {
+  const args: IntrafoxTypes.ICreateActivityARGS = {
     "ACTIVITY_ABBREVIATION": activityAbbrevation,
     "ACTIVITY_DESCRIPTION": activityDescription,
     "ACTIVITY_EXPIRATIONDATE": DateFormat(activityExpirationdate, "yyyy-mm-dd")
   };
 
-  const body: IntrafoxTypes.IntraFoxBody = {
+  const body: IntrafoxTypes.IIntraFoxBody = {
     "FUNCTION": "CreateGlobalActivity",
     "USERNAME": username,
     "ARGS": args
@@ -73,8 +73,8 @@ export async function createGlobalActivity(url: string, username: string, activi
   return await post(url, body, token);
 }
 
-export async function setGlobalActivityValues(url: string, username: string, token: string): Promise<string | IntrafoxTypes.IntraFoxErrorResponse> {
-  const args: IntrafoxTypes.SetGlobalActivityARGS = {
+export async function setGlobalActivityValues(url: string, username: string, token: string): Promise<string | IntrafoxTypes.IIntraFoxErrorResponse> {
+  const args: IntrafoxTypes.ISetGlobalActivityARGS = {
     "ACTIVITYIDENTIFIER": "32qKep2gQa",
     "SIMPLE_DATASOURCES": {
       "ACTIVITY_ABBREVIATION": "Kurzbezeichnung",
@@ -92,7 +92,7 @@ export async function setGlobalActivityValues(url: string, username: string, tok
     }
   };
 
-  const body: IntrafoxTypes.IntraFoxBody = {
+  const body: IntrafoxTypes.IIntraFoxBody = {
     "FUNCTION": "SetGlobalActivityValues",
     "USERNAME": username,
     "ARGS": args
@@ -109,7 +109,7 @@ export async function setGlobalActivityValues(url: string, username: string, tok
    * @param instance current process instance
    * @param errorCode error code of the Intrafox API response
    */
-export function errorHandling(instance: PH.Instance.InstanceDetails, errorCode: string): void {
+export function errorHandling(instance: PH.Instance.IInstanceDetails, errorCode: string): void {
   switch (errorCode) {
     case (""): {
       // No Errors

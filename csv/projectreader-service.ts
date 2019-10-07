@@ -4,8 +4,8 @@ import { ErrorStates } from "./csvServiceMethods";
 
 let errorState = 0;
 
-function getValueFromFieldName(environment: PH.ServiceTask.ServiceTaskEnvironment, fieldName: string): string {
-  return ((environment.instanceDetails.extras.fieldContents[fieldName] as PH.Data.FieldValue).value as string).trim();
+function getValueFromFieldName(environment: PH.ServiceTask.IServiceTaskEnvironment, fieldName: string): string {
+  return ((environment.instanceDetails.extras.fieldContents[fieldName] as PH.Data.IFieldValue).value as string).trim();
 }
 
 function getProjectFromXLSX(filePath: string, keyword: string): any {
@@ -51,7 +51,7 @@ function errorHandling(instance: any, normalBehavior: Function): void {
   }
 }
 
-function initFields(instance: PH.Instance.InstanceDetails, project: any): void {
+function initFields(instance: PH.Instance.IInstanceDetails, project: any): void {
   const keys = Object.keys(project);
   keys.forEach((key: any) => {
     instance.extras.fieldContents[key] = {
@@ -61,7 +61,7 @@ function initFields(instance: PH.Instance.InstanceDetails, project: any): void {
   });
 }
 
-export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<void> {
+export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<void> {
   errorState = ErrorStates.NOERROR;
   const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
@@ -81,7 +81,7 @@ export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnviro
   errorHandling(instance, () => initFields(instance, project));
 }
 
-export async function projectreader(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<boolean> {
+export async function projectreader(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
   await serviceLogic(environment);
 
   await environment.instances.updateInstance(environment.instanceDetails);

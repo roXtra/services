@@ -2,7 +2,7 @@ import * as PH from "processhub-sdk";
 import * as IntrafoxAPI from "./IntrafoxAPI";
 import * as IntrafoxTypes from "./IntrafoxTypes";
 
-export async function serviceLogic(url: string, environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<PH.Instance.InstanceDetails> {
+export async function serviceLogic(url: string, environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<PH.Instance.IInstanceDetails> {
   const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
@@ -15,14 +15,14 @@ export async function serviceLogic(url: string, environment: PH.ServiceTask.Serv
   const activityNumberField = fields.find(f => f.key === "activityNumber").value;
   const usernameField = fields.find(f => f.key === "username").value;
 
-  const activityNumber = ((instance.extras.fieldContents[activityNumberField] as PH.Data.FieldValue).value as string).trim();
-  const username = ((instance.extras.fieldContents[usernameField] as PH.Data.FieldValue).value as string).trim();
+  const activityNumber = ((instance.extras.fieldContents[activityNumberField] as PH.Data.IFieldValue).value as string).trim();
+  const username = ((instance.extras.fieldContents[usernameField] as PH.Data.IFieldValue).value as string).trim();
 
   await IntrafoxAPI.setGlobalActivityValues(url, username, token);
 
   const response = await IntrafoxAPI.getActivityByNumber(url, activityNumber, username, token);
-  const activity = response as IntrafoxTypes.GetGlobalActivityListResponse;
-  const error = response as IntrafoxTypes.IntraFoxErrorResponse;
+  const activity = response as IntrafoxTypes.IGetGlobalActivityListResponse;
+  const error = response as IntrafoxTypes.IIntraFoxErrorResponse;
 
   if (activity) {
     instance.extras.fieldContents["Abkürzung"] = {
@@ -41,7 +41,7 @@ export async function serviceLogic(url: string, environment: PH.ServiceTask.Serv
   return instance;
 }
 
-export async function getActivityByNumber(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<boolean> {
+export async function getActivityByNumber(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
   await serviceLogic("https://asp3.intrafox.net/cgi-bin/ws.app?D=P32zdyNCFcIwZ40HE1RY", environment);
   await environment.instances.updateInstance(environment.instanceDetails);
   return true;

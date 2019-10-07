@@ -7,7 +7,7 @@ export let errorState: number = Types.ERRORCODES.NOERROR;
 let APIUrl: string;
 let efAccessToken: string;
 
-function createFileIDField(fileIDFieldName: string, response: any, instance: PH.Instance.InstanceDetails) {
+function createFileIDField(fileIDFieldName: string, response: any, instance: PH.Instance.IInstanceDetails) {
   if (fileIDFieldName) {
     instance.extras.fieldContents[fileIDFieldName] = {
       value: response.Fields[0].Value,
@@ -44,7 +44,7 @@ function errorHandlingMissingField(key: string): number {
 }
 
 // Extract the serviceLogic that testing is possible
-export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnvironment, roxtraFileAPI: IRoXtraFileApi) {
+export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvironment, roxtraFileAPI: IRoXtraFileApi) {
   errorState = Types.ERRORCODES.NOERROR;
   const fields = await PH.ServiceTask.getFields(environment);
   const instance = environment.instanceDetails;
@@ -68,9 +68,9 @@ export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnviro
   const fileIDFieldName = fields.find(f => f.key === "fileIDFieldName").value;
 
   // Get the value of a selected field
-  const roxFile = ((environment.instanceDetails.extras.fieldContents[roxFileField] as PH.Data.FieldValue).value as string);
-  let title = ((environment.instanceDetails.extras.fieldContents[titleField] as PH.Data.FieldValue).value as string);
-  const description = ((environment.instanceDetails.extras.fieldContents[descritionField] as PH.Data.FieldValue).value as string);
+  const roxFile = ((environment.instanceDetails.extras.fieldContents[roxFileField] as PH.Data.IFieldValue).value as string);
+  let title = ((environment.instanceDetails.extras.fieldContents[titleField] as PH.Data.IFieldValue).value as string);
+  const description = ((environment.instanceDetails.extras.fieldContents[descritionField] as PH.Data.IFieldValue).value as string);
 
   try {
     const relativePath = roxFile[0].split("eformulare/files/")[1];
@@ -81,7 +81,7 @@ export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnviro
 
     const fileData = await readFileBase64Async(filePath);
 
-    const body: Types.CreateFileRequestBody = {
+    const body: Types.ICreateFileRequestBody = {
       "DestinationID": destinationID,
       "DestinationType": destinationType,
       "DocTypeID": docType,
@@ -112,7 +112,7 @@ export async function serviceLogic(environment: PH.ServiceTask.ServiceTaskEnviro
   }
 }
 
-export async function createRoxFile(environment: PH.ServiceTask.ServiceTaskEnvironment) {
+export async function createRoxFile(environment: PH.ServiceTask.IServiceTaskEnvironment) {
   APIUrl = environment.serverConfig.roXtra.efApiEndpoint;
   efAccessToken = await environment.roxApi.getEfApiToken();
 

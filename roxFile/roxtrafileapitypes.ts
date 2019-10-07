@@ -18,36 +18,36 @@ export const ERRORCODES = {
   APICALLERROR: 9
 };
 
-export interface RequestHeader extends Record<string, string> {
+export interface IRequestHeader extends Record<string, string> {
   "Accept": "application/json";
   "Content-Type": "application/json";
   "ef-authtoken": string;
   "authtoken": string;
 }
 
-export interface PostRequest extends RequestInit {
+export interface IPostRequest extends RequestInit {
   method: "POST";
   body: string;
-  headers: RequestHeader;
+  headers: IRequestHeader;
 }
 
-export interface GetRequest extends RequestInit {
+export interface IGetRequest extends RequestInit {
   method: "GET";
   headers: any;
 }
 
-export interface CreateFileRequestBody {
+export interface ICreateFileRequestBody {
   "DestinationID": string;
   "DestinationType": string;
   "DocTypeID": string;
-  "Fields"?: SetFileFieldsObject[];
+  "Fields"?: ISetFileFieldsObject[];
   "FileData": {
     "Base64EncodedData": string;
     "Filename": string;
   };
 }
 
-export interface SetFileFieldsObject {
+export interface ISetFileFieldsObject {
   "FieldCaption"?: string;
   "Id": string;
   "IsWFWritable"?: string;
@@ -59,16 +59,16 @@ export interface SetFileFieldsObject {
   "ValueIds"?: string;
 }
 
-export interface Selection {
+export interface ISelection {
   "Id": string;
   "SelectionCaption": string;
   "SelectionType": number;
-  "SelectionsList": SelectionsListObject[];
-  "SimpleSelectionsList": SimpleSelectionsListObject[];
-  "TreeSelectionsList": TreeSelectionsListObject[];
+  "SelectionsList": ISelectionsListObject[];
+  "SimpleSelectionsList": ISimpleSelectionsListObject[];
+  "TreeSelectionsList": ITreeSelectionsListObject[];
 }
 
-interface SelectionsListObject {
+interface ISelectionsListObject {
   "Deleted": boolean;
   "GUID": string;
   "ID": number;
@@ -76,19 +76,19 @@ interface SelectionsListObject {
   "Value": string;
 }
 
-interface SimpleSelectionsListObject {
+interface ISimpleSelectionsListObject {
   "ID": string;
   "Value": string;
 }
 
-interface TreeSelectionsListObject {
+interface ITreeSelectionsListObject {
   "ID": number;
   "ListID": string;
   "ParentID": number;
   "Text": string;
 }
 
-export interface MissingField {
+export interface IMissingField {
   "isMissing": boolean;
   "key"?: string;
 }

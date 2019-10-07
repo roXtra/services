@@ -15,7 +15,7 @@ describe("services", () => {
           const testAccessToken = "token";
           let executeWasCalled = false;
 
-          const environment: PH.ServiceTask.ServiceTaskEnvironment = PH.Test.createEmptyTestServiceEnvironment(
+          const environment: PH.ServiceTask.IServiceTaskEnvironment = PH.Test.createEmptyTestServiceEnvironment(
             fs.readFileSync("./testfiles/startservice.bpmn", "utf8")
           );
           environment.bpmnTaskName = "Start";
@@ -45,8 +45,8 @@ describe("services", () => {
             // Must match the value defined in startservice.bpmn
             expect(processId).to.equal("E431DD73D9B0EDEB");
             // Make sure field contents were set
-            expect((instance.extras.fieldContents["Feld_1"] as PH.Data.FieldValue).value).to.equal(valueFeld1);
-            expect((instance.extras.fieldContents["Feld_2"] as PH.Data.FieldValue).value).to.equal(valueFeld2);
+            expect((instance.extras.fieldContents["Feld_1"] as PH.Data.IFieldValue).value).to.equal(valueFeld1);
+            expect((instance.extras.fieldContents["Feld_2"] as PH.Data.IFieldValue).value).to.equal(valueFeld2);
             return instance.instanceId;
           };
 

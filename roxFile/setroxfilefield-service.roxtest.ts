@@ -2,7 +2,7 @@ import { serviceLogic, errorState } from "./setroxfilefield-service";
 import * as PH from "processhub-sdk";
 import * as fs from "fs";
 import { expect } from "chai";
-import { ERRORCODES, SetFileFieldsObject } from "./roxtrafileapitypes";
+import { ERRORCODES, ISetFileFieldsObject } from "./roxtrafileapitypes";
 import { IRoXtraFileApi } from "./iroxtrafileapi";
 
 describe("services", () => {
@@ -12,7 +12,7 @@ describe("services", () => {
       describe("serviceLogic", () => {
 
         it("sets a rox file field", async () => {
-          let bodyFromSetCall: SetFileFieldsObject[];
+          let bodyFromSetCall: ISetFileFieldsObject[];
 
           const testApi: IRoXtraFileApi = {
             createRoxFileCall: async () => {},
@@ -61,7 +61,7 @@ describe("services", () => {
               }];
             },
           };
-          const environment: PH.ServiceTask.ServiceTaskEnvironment = PH.Test.createEmptyTestServiceEnvironment(
+          const environment: PH.ServiceTask.IServiceTaskEnvironment = PH.Test.createEmptyTestServiceEnvironment(
             fs.readFileSync("./testfiles/setroxfilefield-service.bpmn", "utf8")
           );
           environment.bpmnTaskName = "SetFields";

@@ -1,7 +1,7 @@
 import * as sql from "mssql";
 import * as PH from "processhub-sdk";
 
-export async function executeQuery(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<boolean> {
+export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
   const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
@@ -37,7 +37,7 @@ export async function executeQuery(environment: PH.ServiceTask.ServiceTaskEnviro
     // Res.setHeader("Access-Control-Allow-Origin", "*");
     // res.status(200).json(rows);
     if (rows.length > 0) {
-      (environment.instanceDetails.extras.fieldContents[targetField] as PH.Data.FieldValue).value = rows[0].result;
+      (environment.instanceDetails.extras.fieldContents[targetField] as PH.Data.IFieldValue).value = rows[0].result;
       await environment.instances.updateInstance(environment.instanceDetails);
     }
   } catch (ex) {

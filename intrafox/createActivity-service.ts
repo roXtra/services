@@ -2,7 +2,7 @@ import * as PH from "processhub-sdk";
 import * as IntrafoxAPI from "./IntrafoxAPI";
 import * as IntrafoxTypes from "./IntrafoxTypes";
 
-export async function serviceLogic(url: string, environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<PH.Instance.InstanceDetails> {
+export async function serviceLogic(url: string, environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<PH.Instance.IInstanceDetails> {
   const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
@@ -18,14 +18,14 @@ export async function serviceLogic(url: string, environment: PH.ServiceTask.Serv
   const activityExpirationdateField = fields.find(f => f.key === "activityExpirationdate").value;
   const usernameField = fields.find(f => f.key === "username").value;
 
-  const activityAbbrevation = ((instance.extras.fieldContents[activityAbbrevationField] as PH.Data.FieldValue).value as string).trim();
-  const activityDescription = ((instance.extras.fieldContents[activityDescriptionField] as PH.Data.FieldValue).value as string).trim();
-  const activityExpirationdate = ((instance.extras.fieldContents[activityExpirationdateField] as PH.Data.FieldValue).value as Date);
-  const username = ((instance.extras.fieldContents[usernameField] as PH.Data.FieldValue).value as string).trim();
+  const activityAbbrevation = ((instance.extras.fieldContents[activityAbbrevationField] as PH.Data.IFieldValue).value as string).trim();
+  const activityDescription = ((instance.extras.fieldContents[activityDescriptionField] as PH.Data.IFieldValue).value as string).trim();
+  const activityExpirationdate = ((instance.extras.fieldContents[activityExpirationdateField] as PH.Data.IFieldValue).value as Date);
+  const username = ((instance.extras.fieldContents[usernameField] as PH.Data.IFieldValue).value as string).trim();
 
   const response = await IntrafoxAPI.createGlobalActivity(url, username, activityAbbrevation, activityDescription, activityExpirationdate, token);
   const responseOK = response as string;
-  const error = response as IntrafoxTypes.IntraFoxErrorResponse;
+  const error = response as IntrafoxTypes.IIntraFoxErrorResponse;
 
   if (responseOK === "ok") {
     instance.extras.fieldContents["Info"] = {
@@ -39,7 +39,7 @@ export async function serviceLogic(url: string, environment: PH.ServiceTask.Serv
   return instance;
 }
 
-export async function createActivity(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<boolean> {
+export async function createActivity(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
   await serviceLogic("https://asp3.intrafox.net/cgi-bin/ws.app?D=P32zdyNCFcIwZ40HE1RY", environment);
   await environment.instances.updateInstance(environment.instanceDetails);
   return true;

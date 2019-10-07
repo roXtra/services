@@ -1,6 +1,6 @@
 import * as PH from "processhub-sdk";
 
-async function getServiceTaskConfig(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<{
+async function getServiceTaskConfig(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<{
   workspaceAndProcessId: string;
   fields: string[];
   executingUserId: string;
@@ -21,7 +21,7 @@ async function getServiceTaskConfig(environment: PH.ServiceTask.ServiceTaskEnvir
   };
 }
 
-export async function startinstance(environment: PH.ServiceTask.ServiceTaskEnvironment): Promise<boolean> {
+export async function startinstance(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
 
   try {
     const { workspaceAndProcessId, fields, executingUserId } = await getServiceTaskConfig(environment);
@@ -31,12 +31,12 @@ export async function startinstance(environment: PH.ServiceTask.ServiceTaskEnvir
     const accessToken = await environment.roxApi.getRoxtraTokenByUserId(executingUserId);
 
     const oldFieldContents = environment.instanceDetails.extras.fieldContents;
-    const newFieldContents: PH.Data.FieldContentMap = {};
+    const newFieldContents: PH.Data.IFieldContentMap = {};
     for (const fieldName of fields) {
       newFieldContents[fieldName] = oldFieldContents[fieldName];
     }
 
-    const newInstance: PH.Instance.InstanceDetails = {
+    const newInstance: PH.Instance.IInstanceDetails = {
       instanceId: PH.Tools.createId(),
       workspaceId,
       processId,
