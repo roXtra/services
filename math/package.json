@@ -16,15 +16,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v8.10.0-7/release.tgz",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v8.10.0-13/release.tgz",
     "react": "^16.8.6",
     "semantic-ui-react": "^0.87.2"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
     "@types/graphql": "^14.2.2",
-    "@types/hapi": "^18.0.2",
+    "@types/hapi__hapi": "^18.2.5",
     "@types/mocha": "^5.2.7",
+    "@types/node": "^12.7.12",
     "@types/react": "^16.8.23",
     "@typescript-eslint/eslint-plugin": "^2.3.0",
     "bestzip": "^2.1.4",
