@@ -22,7 +22,6 @@
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
-    "@types/graphql": "^14.2.2",
     "@types/hapi__hapi": "^18.2.5",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.7.12",
