@@ -18,13 +18,12 @@
   "dependencies": {
     "@types/dateformat": "^3.0.0",
     "dateformat": "^3.0.3",
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v8.10.0-13/release.tgz",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v8.10.0-15/release.tgz",
     "react": "^16.8.6",
     "semantic-ui-react": "^0.87.2"
   },
   "devDependencies": {
     "@types/chai": "^4.2.3",
-    "@types/graphql": "^14.2.2",
     "@types/hapi__hapi": "^18.2.5",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.7.12",

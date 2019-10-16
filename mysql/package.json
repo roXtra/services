@@ -16,12 +16,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v8.10.0-13/release.tgz",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v8.10.0-15/release.tgz",
     "react": "^16.8.6",
     "semantic-ui-react": "^0.87.2"
   },
   "devDependencies": {
-    "@types/graphql": "^14.2.2",
     "@types/hapi__hapi": "^18.2.5",
     "@types/mysql": "^2.15.7",
     "@types/node": "^12.7.12",

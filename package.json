@@ -22,9 +22,7 @@
     "url": "https://github.com/roXtra/services/issues"
   },
   "homepage": "https://github.com/roXtra/services#readme",
-  "dependencies": {
-    "@types/graphql": "^14.2.2"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.7",
