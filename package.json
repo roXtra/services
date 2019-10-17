@@ -24,14 +24,14 @@
   "homepage": "https://github.com/roXtra/services#readme",
   "dependencies": {},
   "devDependencies": {
-    "@types/chai": "^4.1.7",
+    "@types/chai": "^4.2.3",
     "@types/mocha": "^5.2.7",
-    "@typescript-eslint/parser": "^2.3.2",
+    "@typescript-eslint/parser": "^2.4.0",
     "directory-tree": "^2.2.4",
     "eslint": "^6.5.1",
     "eslint-plugin-react": "^7.16.0",
-    "mocha": "^6.2.0",
+    "mocha": "^6.2.1",
     "rimraf": "^3.0.0",
-    "typescript": "^3.6.3"
+    "typescript": "^3.6.4"
   }
 }
