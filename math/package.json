@@ -22,9 +22,8 @@
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
-    "@types/hapi__hapi": "^18.2.5",
+    "@types/hapi": "^18.0.2",
     "@types/mocha": "^5.2.7",
-    "@types/node": "^12.7.12",
     "@types/react": "^16.8.23",
     "@typescript-eslint/eslint-plugin": "^2.3.0",
     "bestzip": "^2.1.4",

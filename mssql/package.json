@@ -21,9 +21,8 @@
     "semantic-ui-react": "^0.87.2"
   },
   "devDependencies": {
-    "@types/hapi__hapi": "^18.2.5",
+    "@types/hapi": "^18.0.2",
     "@types/mssql": "^4.3.1",
-    "@types/node": "^12.7.12",
     "@types/react": "^16.8.23",
     "@typescript-eslint/eslint-plugin": "^2.3.0",
     "bestzip": "^2.1.4",
