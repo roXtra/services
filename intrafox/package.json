@@ -18,7 +18,7 @@
   "dependencies": {
     "@types/dateformat": "^3.0.1",
     "dateformat": "^3.0.3",
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v8.12.0/release.tgz",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v8.12.1/release.tgz",
     "react": "^16.10.2",
     "semantic-ui-react": "^0.88.1"
   },
