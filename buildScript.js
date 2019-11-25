@@ -63,6 +63,10 @@ function buildService(directoryPath) {
         execSync('npm test', childProcessOptions);
         console.log("Executed npm tests (if present) for " + directoryPath);
 
+        // Audit
+        execSync('npm audit', childProcessOptions);
+        console.log("Executed npm audit for " + directoryPath);
+
         if (runMode === 'bundle') {
             // npm pack
             execSync('npm pack', childProcessOptions);
