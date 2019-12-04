@@ -1,7 +1,7 @@
 const dirTree = require('directory-tree');
 const { execSync } = require('child_process');
 
-const processHubSDKVersion = 'v8.13.0';
+const processHubSDKVersion = 'v8.14.0-0';
 
 const childProcessStdioOptions = [0, 1, 2];
 const childProcessTimeout = 300000;
@@ -62,6 +62,10 @@ function buildService(directoryPath) {
         // Run tests
         execSync('npm test', childProcessOptions);
         console.log("Executed npm tests (if present) for " + directoryPath);
+
+        // Audit
+        execSync('npm audit', childProcessOptions);
+        console.log("Executed npm audit for " + directoryPath);
 
         if (runMode === 'bundle') {
             // npm pack
