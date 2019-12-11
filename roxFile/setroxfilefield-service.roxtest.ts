@@ -15,7 +15,9 @@ describe("services", () => {
           let bodyFromSetCall: ISetFileFieldsObject[];
 
           const testApi: IRoXtraFileApi = {
-            createRoxFileCall: async () => {},
+            createRoxFileCall: async () => {
+              // Do nothing
+            },
             // eslint-disable-next-line @typescript-eslint/require-await
             setFileFieldsCall: async (_url, body) => {
               bodyFromSetCall = body;
