@@ -14,8 +14,12 @@ describe("services", () => {
           const newRoxFileId = "1000";
 
           const testApi: IRoXtraFileApi = {
-            setFileFieldsCall: async () => { },
-            getFileDetailsCall: async () => { },
+            setFileFieldsCall: async () => {
+              // Do nothing
+            },
+            getFileDetailsCall: async () => {
+              // Do nothing
+            },
             // eslint-disable-next-line @typescript-eslint/require-await
             getSelectionsCall: async () => [],
             // eslint-disable-next-line @typescript-eslint/require-await
