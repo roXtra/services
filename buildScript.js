@@ -1,7 +1,11 @@
 const dirTree = require('directory-tree');
 const { execSync } = require('child_process');
 
-const processHubSDKVersion = 'v8.15.0';
+const processHubSDKVersion = 'v8.16.0-node12-7';
+// Put in the react version that is also used in the SDK
+const processHubSDKVersion_React = '16.9.0'
+// Put in the @types/react version that is also used in the SDK
+const processHubSDKVersion_ReactTypes = '16.9.15'
 
 const childProcessStdioOptions = [0, 1, 2];
 const childProcessTimeout = 300000;
@@ -46,6 +50,11 @@ function buildService(directoryPath) {
         // Install current processhub-sdk for child
         execSync('npm i --save https://github.com/roXtra/processhub-sdk/releases/download/' + processHubSDKVersion + '/release.tgz', childProcessOptions);
         console.log("Installed current processhub SDK for " + directoryPath);
+
+        // Install SDK react versions
+        execSync('npm i react@' + processHubSDKVersion_React, childProcessOptions);
+        execSync('npm i -D @types/react@' + processHubSDKVersion_ReactTypes, childProcessOptions);
+        console.log("Installed react versions according to SDK for " + directoryPath);
 
         // npm install
         execSync('npm install', childProcessOptions);
