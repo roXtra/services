@@ -17,15 +17,15 @@
   "license": "ISC",
   "dependencies": {
     "mssql": "^6.0.0",
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v8.15.0/release.tgz",
-    "react": "^16.10.2",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v8.16.0-node12-7/release.tgz",
+    "react": "^16.9.0",
     "semantic-ui-react": "^0.88.1"
   },
   "devDependencies": {
     "@types/hapi__hapi": "^18.2.6",
     "@types/mssql": "^4.3.1",
     "@types/node": "^12.11.1",
-    "@types/react": "^16.9.9",
+    "@types/react": "^16.9.15",
     "@typescript-eslint/eslint-plugin": "^2.10.0",
     "bestzip": "^2.1.4",
     "copyfiles": "^2.1.1",
