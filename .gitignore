@@ -5,3 +5,4 @@
 /zipped_services
 /intrafox/mockserver.log
 /**/*.tgz
+/intrafox/*.log
