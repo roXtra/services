@@ -49,7 +49,7 @@
         "id-blacklist": "error",
         "camelcase": "error",
         "no-underscore-dangle": "error",
-        "require-atomic-updates": "warn",
+        "require-atomic-updates": "off",
         "@typescript-eslint/no-unused-vars": [
             "error",
             {
