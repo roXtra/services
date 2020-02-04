@@ -5,19 +5,19 @@ export const ErrorField = "ErrorField";
 export async function resetError(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<void> {
   if (environment.fieldContents[ErrorField] && environment.fieldContents[ErrorField] !== "") {
     environment.fieldContents[ErrorField] = "";
-    await PH.Instance.updateInstance(environment.instanceDetails);
+    await environment.instances.updateInstance(environment.instanceDetails);
   }
 }
 
 export async function setError(environment: PH.ServiceTask.IServiceTaskEnvironment, error: string): Promise<void> {
   if (environment.fieldContents[ErrorField]) {
     environment.fieldContents[ErrorField] = error;
-    await PH.Instance.updateInstance(environment.instanceDetails);
+    await environment.instances.updateInstance(environment.instanceDetails);
   } else {
     environment.instanceDetails.extras.fieldContents[ErrorField] = {
       type: "ProcessHubTextInput",
       value: error,
     };
-    await PH.Instance.updateInstance(environment.instanceDetails);
+    await environment.instances.updateInstance(environment.instanceDetails);
   }
 }
