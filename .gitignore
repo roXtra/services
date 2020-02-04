@@ -6,3 +6,4 @@
 /intrafox/mockserver.log
 /**/*.tgz
 /intrafox/*.log
+/intrafox/CertificateAuthorityCertificate.pem
