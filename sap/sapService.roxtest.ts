@@ -1,5 +1,5 @@
 // Import { assert } from "chai";
-// import fs = require("fs");
+// import * as fs from "fs";
 // import * as PH from "processhub-sdk";
 // import { createTestObjects, getTestApiContext, testWorkspace } from "../../test/roxtestobjects";
 // import { getFileStore } from "../../server/sfilestore/filestore";

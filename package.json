@@ -22,10 +22,23 @@
     "url": "https://github.com/roXtra/services/issues"
   },
   "homepage": "https://github.com/roXtra/services#readme",
-  "dependencies": {},
+  "dependencies": {
+    "@babel/core": "^7.8.6",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v8.19.0-2-ESNEXT-1/release.tgz",
+    "react": "^16.9.0"
+  },
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-proposal-decorators": "^7.8.3",
+    "@babel/plugin-proposal-object-rest-spread": "^7.8.3",
+    "@babel/plugin-transform-arrow-functions": "^7.8.3",
+    "@babel/preset-env": "^7.8.6",
+    "@babel/preset-react": "^7.8.3",
+    "@babel/preset-typescript": "^7.8.3",
+    "@babel/register": "^7.8.6",
     "@types/chai": "^4.2.3",
     "@types/mocha": "^5.2.7",
+    "@types/react": "^16.9.15",
     "@typescript-eslint/parser": "^2.10.0",
     "directory-tree": "^2.2.4",
     "eslint": "^6.7.2",

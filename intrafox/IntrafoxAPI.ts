@@ -1,5 +1,5 @@
 import * as IntrafoxTypes from "./IntrafoxTypes";
-import * as DateFormat from "dateformat";
+import DateFormat from "dateformat";
 import * as PH from "processhub-sdk";
 
 async function post(url: string, requestBody: IntrafoxTypes.IIntraFoxBody, token: string): Promise<any> {
