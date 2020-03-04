@@ -1,10 +1,10 @@
 import { assert } from "chai";
 import * as PH from "processhub-sdk";
-import fs = require("fs");
+import * as fs from "fs";
 import * as CreateActivity from "./createActivity-service";
 import * as mockserver from "mockserver-node";
 import * as mockServerClient from "mockserver-client";
-import * as DateFormat from "dateformat";
+import DateFormat from "dateformat";
 
 describe("services", () => {
   describe("intrafox", () => {

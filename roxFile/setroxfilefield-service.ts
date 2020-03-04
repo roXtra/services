@@ -1,7 +1,7 @@
 import * as PH from "processhub-sdk";
 import { missingRequiredField, initRequiredFields, RoXtraFileApi, errorHandling } from "./roxtrafileapi";
 import { ISetFileFieldsObject, ISelection, SelectTypes, ERRORCODES } from "./roxtrafileapitypes";
-import * as JSONQuery from "json-query";
+import JSONQuery from "json-query";
 import { IRoXtraFileApi } from "./iroxtrafileapi";
 
 export let errorState: number = ERRORCODES.NOERROR;

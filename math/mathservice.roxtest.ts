@@ -4,7 +4,7 @@ import * as Addition from "./addition-service";
 import * as Subtraktion from "./subtraktion-service";
 import * as Multiplikation from "./multiplikation-service";
 import * as Division from "./division-service";
-import fs = require("fs");
+import * as fs from "fs";
 
 const operators = {
   ADDITION: 0,

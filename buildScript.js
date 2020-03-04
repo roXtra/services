@@ -1,7 +1,7 @@
 const dirTree = require('directory-tree');
 const { execSync } = require('child_process');
 
-const processHubSDKVersion = 'v8.19.0';
+const processHubSDKVersion = 'v8.20.0-1';
 // Put in the react version that is also used in the SDK
 const processHubSDKVersion_React = '16.9.0'
   // Put in the @types/react version that is also used in the SDK
@@ -19,6 +19,7 @@ const directoryTree = dirTree("./", {
   exclude: [
     /node_modules/,
     /zipped_services/,
+    /commontestfiles/,
     /resources/,
     /\.git/
   ]
