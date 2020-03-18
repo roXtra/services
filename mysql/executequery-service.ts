@@ -16,7 +16,6 @@ export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvir
   let query = fields.find(f => f.key === "query").value;
   const targetField = fields.find(f => f.key === "targetField").value;
 
-  // Config for your database
   const connection = mysql.createConnection({
     user: user,
     password: password,
@@ -24,29 +23,32 @@ export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvir
     database: database
   });
 
-  // Connect to your database
   try {
+    query = PH.Data.parseAndInsertStringWithFieldContent(query, environment.fieldContents, processObject, environment.instanceDetails.extras.roleOwners);
+    console.log(`MySQL service: executing ${query}`);
 
     connection.connect();
-
-    query = PH.Data.parseAndInsertStringWithFieldContent(query, environment.fieldContents, processObject, environment.instanceDetails.extras.roleOwners);
     const res = await new Promise<any[]>((resolve, reject) => {
-      connection.query(query, function (error: mysql.MysqlError | null, results: any[]) {
+      connection.query(query, function (error: mysql.MysqlError | null, results) {
         if (error) reject(error);
         resolve(results);
       });
     });
+    connection.end();
+    console.log("MySQL service: connection closed.");
 
     if (res.length > 0) {
       (environment.instanceDetails.extras.fieldContents[targetField] as PH.Data.IFieldValue).value = res[0]["result"];
       await environment.instances.updateInstance(environment.instanceDetails);
     }
-    connection.end();
   } catch (ex) {
-    // Res.status(500).send({ message: "${err}" });
+    console.error(`MySQL service error: ${JSON.stringify(ex)}`);
+    environment.instanceDetails.extras.fieldContents["MySQL error"] = {
+      type: "ProcessHubTextInput",
+      value: JSON.stringify(ex)
+    };
+    await environment.instances.updateInstance(environment.instanceDetails);
     return false;
-  } finally {
-    connection.end();
   }
   return true;
 }
