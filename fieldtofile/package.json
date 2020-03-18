@@ -36,7 +36,6 @@
     "mocha": "^6.2.2",
     "regenerator-runtime": "^0.13.3",
     "rimraf": "^3.0.0",
-    "ts-mocha": "^6.0.0",
     "typescript": "^3.6.4"
   }
 }
