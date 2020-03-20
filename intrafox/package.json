@@ -20,7 +20,7 @@
   "dependencies": {
     "@types/dateformat": "^3.0.1",
     "dateformat": "^3.0.3",
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v8.20.0/release.tgz",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v8.21.0-3/release.tgz",
     "react": "^16.9.0",
     "semantic-ui-react": "^0.88.1"
   },
@@ -38,7 +38,7 @@
     "cross-env": "^6.0.3",
     "cross-var": "^1.1.0",
     "eslint": "^6.7.2",
-    "mocha": "^6.2.2",
+    "mocha": "^7.1.1",
     "mockserver-client": "^5.9.0",
     "mockserver-node": "^5.9.0",
     "regenerator-runtime": "^0.13.3",
