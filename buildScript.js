@@ -1,7 +1,7 @@
 const dirTree = require('directory-tree');
 const { execSync } = require('child_process');
 
-const processHubSDKVersion = 'v8.20.0';
+const processHubSDKVersion = 'v8.21.0-3';
 // Put in the react version that is also used in the SDK
 const processHubSDKVersion_React = '16.9.0'
   // Put in the @types/react version that is also used in the SDK
@@ -74,7 +74,7 @@ function buildService(directoryPath) {
     console.log("Executed npm tests (if present) for " + directoryPath);
 
     // Audit
-    execSync('npm audit --audit-level=high', childProcessOptions);
+    execSync('npm audit', childProcessOptions);
     console.log("Executed npm audit for " + directoryPath);
 
     if (runMode === 'bundle') {
