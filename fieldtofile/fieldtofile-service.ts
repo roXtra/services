@@ -1,5 +1,22 @@
 import * as fs from "fs";
 import * as PH from "processhub-sdk";
+import http from "http";
+
+async function writeFile(downloadUrl: string, targetpath: string): Promise<void> {
+  const file = fs.createWriteStream(targetpath);
+
+  return await new Promise<void>((resolve, reject) => {
+    http.get(downloadUrl, function (response) {
+      if (response.statusCode === 200) {
+        response.pipe(file);
+        resolve();
+      } else {
+        file.end();
+        reject(response.statusCode);
+      }
+    });
+  });
+}
 
 export async function executeFieldToFile(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
   const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
@@ -12,70 +29,17 @@ export async function executeFieldToFile(environment: PH.ServiceTask.IServiceTas
   const targetPath = fields.find(f => f.key === "targetPath").value;
   const sourceField = fields.find(f => f.key === "sourceField").value;
 
-  // Connect to your database
   try {
-
-    let baseDir = null;
-    if (fs.existsSync(process.cwd() + "/roxtra-config-custom.json")) {
-      const customConfigString = fs.readFileSync(process.cwd() + "/roxtra-config-custom.json", "utf8");
-      const configObj = JSON.parse(customConfigString);
-      if (configObj["Filestore"] != null && configObj["Filestore"]["baseDir"] != null && configObj["Filestore"]["baseDir"] !== "") {
-        baseDir = configObj["Filestore"]["baseDir"];
-      }
-    }
-
-    if (baseDir == null && fs.existsSync(process.cwd() + "/roxtra-config.json")) {
-      const customConfigString = fs.readFileSync(process.cwd() + "/roxtra-config.json", "utf8");
-      const configObj = JSON.parse(customConfigString);
-      if (configObj["Filestore"] != null && configObj["Filestore"]["baseDir"] != null && configObj["Filestore"]["baseDir"] !== "") {
-        baseDir = configObj["Filestore"]["baseDir"];
-      }
-    }
-
-    if (baseDir == null) {
-      return false;
-    }
-
-    const fileUrls: string[] = (environment.instanceDetails.extras.fieldContents[sourceField] as PH.Data.IFieldValue).value as string[];
+    const fileUrls: string[] = (environment.fieldContents[sourceField] as PH.Data.IFieldValue).value as string[];
     for (const fileUrl of fileUrls) {
-      if (fileUrl != null && fileUrl !== "") {
-
-        const url = fileUrl;
-        const downloadRoutPrefix = "modules/files/";
-        const downloadRoutePrefixIdx: number = url.indexOf(downloadRoutPrefix);
-        const draftFileKey: string = url.substr(downloadRoutePrefixIdx + downloadRoutPrefix.length);
-        const filePath = baseDir + "/" + draftFileKey;
-
+      if (fileUrl) {
         const filename = fileUrl.split("/").last();
 
-        // eslint-disable-next-line capitalized-comments
-        /* let dir = "tmp";
+        const filepath = targetPath + "/" + filename;
 
-        if (!fs.existsSync(dir)) {
-          fs.mkdirSync(dir);
-        }*/
-        // + environment.instanceDetails.instanceId + "/"
-        fs.createReadStream(filePath).pipe(fs.createWriteStream(targetPath + "/" + filename));
-        // eslint-disable-next-line capitalized-comments
-        // let promise = new Promise<void>((resolve, reject) => {
-        //   try {
-        //     http.get(fileUrl, (response: any) => {
-        //       let filename = fileUrl.split("/").last();
-        //       console.log(filename);
-        //       console.log(targetPath + "/" + filename);
-        //       const file = fs.createWriteStream(targetPath + "/" + filename);
-        //       response.pipe(file);
-        //       resolve();
-        //     });
-        //   } catch (ex) {
-        //     reject();
-        //     return false;
-        //   }
-        // });
-        // await promise;
+        await writeFile(fileUrl, filepath);
       }
     }
-
   } catch (ex) {
     console.log(ex);
     return false;

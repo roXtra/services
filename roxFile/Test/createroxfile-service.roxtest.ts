@@ -1,15 +1,24 @@
 import * as PH from "processhub-sdk";
 import * as fs from "fs";
 import { expect } from "chai";
-import { IRoXtraFileApi } from "./iroxtrafileapi";
-import { ICreateFileRequestBody } from "./roxtrafileapitypes";
-import { serviceLogic } from "./createroxfile-service";
+import { IRoXtraFileApi } from "../iroxtrafileapi";
+import { ICreateFileRequestBody } from "../roxtrafileapitypes";
+import { serviceLogic } from "../createroxfile-service";
+import { MockServer } from "./mockServer";
 
 describe("services", () => {
   describe("roxfile", () => {
     describe("createroxfile-service", () => {
-
       describe("serviceLogic", () => {
+
+        before(async function () {
+          await MockServer.initMockServer();
+        });
+
+        after(async function () {
+          await MockServer.stopMockServer();
+        });
+
         it("creates a roxFile", async () => {
           const newRoxFileId = "1000";
 
@@ -35,14 +44,14 @@ describe("services", () => {
             }
           };
           const environment: PH.ServiceTask.IServiceTaskEnvironment = PH.Test.createEmptyTestServiceEnvironment(
-            fs.readFileSync("./testfiles/createroxfile-service.bpmn", "utf8")
+            fs.readFileSync("./Test/Testfiles/createroxfile-service.bpmn", "utf8")
           );
           environment.bpmnTaskName = "createroxfile";
           environment.bpmnTaskId = "ServiceTask_712C1B34834A21B9";
           environment.fieldContents = {
             "Anlagen": {
               type: "ProcessHubFileUpload",
-              value: ["http://localhost/modules/files/doc.docx"],
+              value: ["http://localhost:1080/modules/files/doc.docx"],
             },
             "Titel": {
               type: "ProcessHubTextInput",
@@ -54,9 +63,7 @@ describe("services", () => {
             }
           };
           environment.instanceDetails.extras.fieldContents = environment.fieldContents;
-          environment.fileStore = {} as PH.FileStore.IFileStore;
-          // eslint-disable-next-line @typescript-eslint/unbound-method
-          environment.fileStore.getPhysicalPath = () => "./testfiles/doc.docx";
+
           const instance = await serviceLogic(environment, testApi);
           expect(PH.Data.isFieldValue(instance.extras.fieldContents["CreatedRoxFileId"])).to.equal(true);
           expect((instance.extras.fieldContents["CreatedRoxFileId"] as PH.Data.IFieldValue).value).to.equal(newRoxFileId);
