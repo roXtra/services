@@ -107,7 +107,7 @@ export function createRoxFileConfig(): JSX.Element {
           </div>
           <h3>Erklärung Dokumenttyp</h3>
           <div>
-            <p>Geben Sie den Dokumententypen an.</p>
+            <p>Geben Sie die ID des Dokumententyps an (z.B. 50).</p>
           </div>
           <h3>Erklärung Beschreibungfeld</h3>
           <div>
