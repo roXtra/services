@@ -41,7 +41,7 @@ export async function executeFieldToFile(environment: PH.ServiceTask.IServiceTas
       if (fileUrl != null && fileUrl !== "") {
 
         const url = fileUrl;
-        const downloadRoutPrefix = "eformulare/files/";
+        const downloadRoutPrefix = "modules/files/";
         const downloadRoutePrefixIdx: number = url.indexOf(downloadRoutPrefix);
         const draftFileKey: string = url.substr(downloadRoutePrefixIdx + downloadRoutPrefix.length);
         const filePath = baseDir + "/" + draftFileKey;

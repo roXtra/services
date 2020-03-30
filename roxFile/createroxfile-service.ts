@@ -73,7 +73,7 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
   const description = ((environment.instanceDetails.extras.fieldContents[descritionField] as PH.Data.IFieldValue).value as string);
 
   try {
-    const relativePath = roxFile[0].split("eformulare/files/")[1];
+    const relativePath = roxFile[0].split("modules/files/")[1];
 
     title = generateTitleWithDataType(title, relativePath);
 

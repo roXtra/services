@@ -42,7 +42,7 @@ describe("services", () => {
           environment.fieldContents = {
             "Anlagen": {
               type: "ProcessHubFileUpload",
-              value: ["http://localhost/eformulare/files/doc.docx"],
+              value: ["http://localhost/modules/files/doc.docx"],
             },
             "Titel": {
               type: "ProcessHubTextInput",
