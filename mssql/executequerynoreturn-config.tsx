@@ -1,6 +1,7 @@
 import React from "react";
 import * as Semantic from "semantic-ui-react";
 import * as PH from "processhub-sdk";
+import { queryHint } from "./executequery-config";
 
 export function executeQueryNoReturnConfig(): JSX.Element {
   return <Semantic.Modal.Content>
@@ -69,15 +70,11 @@ export function executeQueryNoReturnConfig(): JSX.Element {
             </Semantic.Table.Cell>
           </Semantic.Table.Row>
 
-          <Semantic.Table.Row>
-            <Semantic.Table.Cell>
-            </Semantic.Table.Cell>
-            <Semantic.Table.Cell>
-            </Semantic.Table.Cell>
-          </Semantic.Table.Row>
         </Semantic.Table.Body>
       </Semantic.Table>
-
+      <Semantic.Table.Row>
+        {queryHint}
+      </Semantic.Table.Row>
     </div>
   </Semantic.Modal.Content>;
 }

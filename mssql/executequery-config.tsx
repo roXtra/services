@@ -2,6 +2,16 @@ import React from "react";
 import * as Semantic from "semantic-ui-react";
 import * as PH from "processhub-sdk";
 
+export const queryHint =
+  <Semantic.Table.Cell colSpan="2">
+    <h3>{PH.tl("Abfrage")}</h3>
+    <div>
+      <p>{PH.tl("Die SQL-Abfrage, die ausgeführt werden soll. Felder können mit field['Feldname'] in die Abfrage eingefügt werden, Rollen mit role['Lane'].")}</p>
+      <br />
+      <p>{PH.tl("Beispiel: ") + "UPDATE table SET abteilung='field['Abteilung']', name='role['Ersteller']' WHERE id='field['id']'"}</p>
+    </div>
+  </Semantic.Table.Cell>;
+
 export function executeQueryConfig(): JSX.Element {
   return <Semantic.Modal.Content>
     <div id="service-form" className="ui form center">
@@ -89,6 +99,9 @@ export function executeQueryConfig(): JSX.Element {
         </Semantic.Table.Body>
       </Semantic.Table>
 
+      <Semantic.Table.Row>
+        {queryHint}
+      </Semantic.Table.Row>
     </div>
   </Semantic.Modal.Content>;
 }
