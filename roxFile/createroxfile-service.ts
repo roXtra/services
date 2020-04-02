@@ -1,11 +1,29 @@
 import * as PH from "processhub-sdk";
 import * as Types from "./roxtrafileapitypes";
-import { readFileBase64Async, missingRequiredField, initRequiredFields, RoXtraFileApi, errorHandling } from "./roxtrafileapi";
+import { missingRequiredField, initRequiredFields, RoXtraFileApi, errorHandling } from "./roxtrafileapi";
 import { IRoXtraFileApi } from "./iroxtrafileapi";
+import http from "http";
 
 export let errorState: number = Types.ERRORCODES.NOERROR;
 let APIUrl: string;
 let efAccessToken: string;
+
+async function getFileContent(downloadUrl: string): Promise<string> {
+  return await new Promise<string>((resolve, reject) => {
+    http.get(downloadUrl, function (response) {
+      response.on("data", (chunk: Buffer) => {
+        if (response.statusCode === 200) {
+          resolve(chunk.toString("base64"));
+        }
+        reject(response.statusCode);
+      });
+
+      response.on("error", (err: Error) => {
+        reject(err + ": " + response.statusCode);
+      });
+    });
+  });
+}
 
 function createFileIDField(fileIDFieldName: string, response: any, instance: PH.Instance.IInstanceDetails) {
   if (fileIDFieldName) {
@@ -16,19 +34,15 @@ function createFileIDField(fileIDFieldName: string, response: any, instance: PH.
   }
 }
 
-function generateTitleWithDataType(title: string, dataPath: string): string {
-  if (!title.trim()) {
-    const dataPathSegments = dataPath.split("/");
-    return dataPathSegments[dataPathSegments.length - 1];
-  }
+function generateTitleWithDataType(title: string, fileName: string): string {
+  if (!title.trim()) return fileName;
 
-  const splittedTitle = title.trim().split(".");
+  const titlePart = title.trim().split(".")[0];
 
-  for (const titlePart of splittedTitle) {
-    if (titlePart) {
-      return titlePart.trim() + dataPath.substring(dataPath.lastIndexOf("."), dataPath.length);
-    }
-  }
+  const splittedFileName = fileName.trim().split(".");
+  splittedFileName[0] = titlePart;
+
+  return splittedFileName.join(".");
 }
 
 function errorHandlingMissingField(key: string): number {
@@ -69,29 +83,27 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
 
   // Get the value of a selected field
   const roxFile = ((environment.instanceDetails.extras.fieldContents[roxFileField] as PH.Data.IFieldValue).value as string);
-  let title = ((environment.instanceDetails.extras.fieldContents[titleField] as PH.Data.IFieldValue).value as string);
+  const title = ((environment.instanceDetails.extras.fieldContents[titleField] as PH.Data.IFieldValue).value as string);
   const description = ((environment.instanceDetails.extras.fieldContents[descritionField] as PH.Data.IFieldValue).value as string);
 
   try {
-    const relativePath = roxFile[0].split("modules/files/")[1];
+    const titleWithEnding = generateTitleWithDataType(title, roxFile[0].split("/").last());
 
-    title = generateTitleWithDataType(title, relativePath);
-
-    const filePath = environment.fileStore.getPhysicalPath(relativePath);
-
-    const fileData = await readFileBase64Async(filePath);
+    const fileDataBase64 = await getFileContent(roxFile[0]);
 
     const body: Types.ICreateFileRequestBody = {
       "DestinationID": destinationID,
       "DestinationType": destinationType,
       "DocTypeID": docType,
-      "Fields": [{
-        "Id": "Description",
-        "Value": description
-      }],
+      "Fields": [
+        {
+          "Id": "Description",
+          "Value": description
+        }
+      ],
       "FileData": {
-        "Base64EncodedData": fileData,
-        "Filename": title
+        "Base64EncodedData": fileDataBase64,
+        "Filename": titleWithEnding
       }
     };
 

@@ -39,6 +39,8 @@
     "cross-var": "^1.1.0",
     "eslint": "^6.7.2",
     "mocha": "^7.1.1",
+    "mockserver-client": "^5.10.0",
+    "mockserver-node": "^5.10.0",
     "regenerator-runtime": "^0.13.3",
     "rimraf": "^3.0.0",
     "typescript": "^3.6.4"
