@@ -14,7 +14,8 @@ export async function executeQueryNoReturn(environment: PH.ServiceTask.IServiceT
   const user = fields.find((f: IServiceActionConfigField) => f.key === "username").value;
   const password = fields.find((f: IServiceActionConfigField) => f.key === "password").value;
   const database = fields.find((f: IServiceActionConfigField) => f.key === "database").value;
-  const query = fields.find((f: IServiceActionConfigField) => f.key === "query").value;
+  let query = fields.find((f: IServiceActionConfigField) => f.key === "query").value;
+  query = PH.Data.parseAndInsertStringWithFieldContent(query, environment.fieldContents, processObject, environment.instanceDetails.extras.roleOwners);
 
   // Config for your database
   const dbConfig = {
@@ -25,13 +26,10 @@ export async function executeQueryNoReturn(environment: PH.ServiceTask.IServiceT
   };
   const pool = new sql.ConnectionPool(dbConfig);
   try {
-    // Connect to your database
     await pool.connect();
     await pool.request().query(query);
-
-    // Res.setHeader("Access-Control-Allow-Origin", "*");
-    // res.status(200).json(rows);
-  } catch (err) {
+  } catch (ex) {
+    console.error(`mssql service error: ${JSON.stringify(ex)}`);
     return false;
   } finally {
     await pool.close();
