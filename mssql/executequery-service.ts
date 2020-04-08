@@ -37,6 +37,15 @@ export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvir
     // Res.setHeader("Access-Control-Allow-Origin", "*");
     // res.status(200).json(rows);
     if (rows.length > 0) {
+      if (!environment.instanceDetails.extras.fieldContents[targetField]) {
+        const fields = processObject.getFieldDefinitions();
+        const field = fields.find(f => f.name === targetField);
+        const targetFieldType: PH.Data.FieldType = field ? field.type : "ProcessHubTextInput";
+        environment.instanceDetails.extras.fieldContents[targetField] = {
+          value: undefined,
+          type: targetFieldType
+        };
+      }
       (environment.instanceDetails.extras.fieldContents[targetField] as PH.Data.IFieldValue).value = rows[0].result;
       await environment.instances.updateInstance(environment.instanceDetails);
     }
