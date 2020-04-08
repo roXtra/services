@@ -8,7 +8,7 @@ const queryHint =
     <div>
       <p>{PH.tl("Die SQL-Abfrage, die ausgeführt werden soll. Felder können mit field['Feldname'] in die Abfrage eingefügt werden, Rollen mit role['Lane'].")}</p>
       <br />
-      <p>{PH.tl("Beispiel: ") + "UPDATE table SET abteilung='field['Abteilung']', name='role['Ersteller']' WHERE id='field['id']'"}</p>
+      <p>{PH.tl("Beispiel: ") + "UPDATE test_table SET abteilung='field['Abteilung']', name='role['Ersteller']' WHERE id='field['id']'"}</p>
     </div>
   </Semantic.Table.Cell>;
 
