@@ -1,0 +1,85 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 2015,
+        "sourceType": "module",
+        "project": "./tsconfig.json"
+    },
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "env": {
+        "browser": true,
+        "node": true,
+        "es6": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking"
+    ],
+    "rules": {
+        "no-cond-assign": "error",
+        "capitalized-comments": [
+            "error",
+            "always",
+            {
+                "ignoreInlineComments": true,
+                "ignoreConsecutiveComments": true
+            }
+        ],
+        "spaced-comment": "error",
+        "no-eval": "error",
+        "no-trailing-spaces": "error",
+        "no-unsafe-finally": "error",
+        "no-var": "error",
+        "quotes": [
+            "error",
+            "double"
+        ],
+        "eqeqeq": [
+            "error",
+            "always",
+            {
+                "null": "ignore"
+            }
+        ],
+        "id-blacklist": "error",
+        "camelcase": "error",
+        "no-underscore-dangle": "error",
+        "require-atomic-updates": "off",
+        "@typescript-eslint/no-unused-vars": [
+            "error",
+            {
+                "varsIgnorePattern": ""
+            }
+        ],
+        "@typescript-eslint/indent": [
+            "error",
+            2
+        ],
+        "@typescript-eslint/no-floating-promises": "error",
+        "@typescript-eslint/prefer-namespace-keyword": "error",
+        "semi": "off",
+        "@typescript-eslint/semi": [
+            "error",
+            "always"
+        ],
+        "@typescript-eslint/type-annotation-spacing": [
+            "error"
+        ],
+        "@typescript-eslint/interface-name-prefix": [
+            "error",
+            {
+                "prefixWithI": "always"
+            }
+        ]
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    }
+}

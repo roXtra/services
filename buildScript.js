@@ -1,7 +1,7 @@
 const dirTree = require('directory-tree');
 const { execSync } = require('child_process');
 
-const processHubSDKVersion = 'v8.22.0';
+const processHubSDKVersion = 'v8.23.0-0';
 // Put in the react version that is also used in the SDK
 const processHubSDKVersion_React = '16.9.0'
   // Put in the @types/react version that is also used in the SDK
@@ -48,18 +48,21 @@ function buildService(directoryPath) {
       timeout: childProcessTimeout
     }
 
-    // Install current processhub-sdk for child
-    execSync('npm i --save https://github.com/roXtra/processhub-sdk/releases/download/' + processHubSDKVersion + '/release.tgz', childProcessOptions);
-    console.log("Installed current processhub SDK for " + directoryPath);
+    // Install current processhub-sdk and react version from SDK for child
+    execSync(`npm i --save https://github.com/roXtra/processhub-sdk/releases/download/${processHubSDKVersion}/release.tgz react@${processHubSDKVersion_React}`, childProcessOptions);
+    console.log("Installed current processhub SDK and react for " + directoryPath);
 
-    // Install SDK react versions
-    execSync('npm i react@' + processHubSDKVersion_React, childProcessOptions);
+    // Install SDK react types version
     execSync('npm i -D @types/react@' + processHubSDKVersion_ReactTypes, childProcessOptions);
-    console.log("Installed react versions according to SDK for " + directoryPath);
+    console.log("Installed react types version according to SDK for " + directoryPath);
 
     // npm install
     execSync('npm install', childProcessOptions);
     console.log("Executed npm install for " + directoryPath);
+
+    // Audit
+    execSync('npm audit', childProcessOptions);
+    console.log("Executed npm audit for " + directoryPath);
 
     // Lint
     execSync('npm run lint', childProcessOptions);
@@ -72,10 +75,6 @@ function buildService(directoryPath) {
     // Run tests
     execSync('npm test', childProcessOptions);
     console.log("Executed npm tests (if present) for " + directoryPath);
-
-    // Audit
-    execSync('npm audit', childProcessOptions);
-    console.log("Executed npm audit for " + directoryPath);
 
     if (runMode === 'bundle') {
       // npm pack
