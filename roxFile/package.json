@@ -20,29 +20,30 @@
   "dependencies": {
     "@types/json-query": "^2.2.0",
     "json-query": "^2.2.2",
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v8.22.0/release.tgz",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v8.23.0-0/release.tgz",
     "react": "^16.9.0",
     "semantic-ui-react": "^0.88.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
-    "@types/chai": "^4.2.3",
+    "@types/chai": "^4.2.11",
     "@types/hapi__hapi": "^18.2.6",
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^12.11.1",
+    "@types/mocha": "^7.0.2",
+    "@types/node": "^12.12.35",
     "@types/react": "^16.9.15",
-    "@typescript-eslint/eslint-plugin": "^2.10.0",
-    "bestzip": "^2.1.4",
+    "@typescript-eslint/eslint-plugin": "^2.28.0",
+    "@typescript-eslint/parser": "^2.28.0",
+    "bestzip": "^2.1.5",
     "chai": "^4.2.0",
-    "copyfiles": "^2.1.1",
+    "copyfiles": "^2.2.0",
     "cross-env": "^6.0.3",
     "cross-var": "^1.1.0",
-    "eslint": "^6.7.2",
+    "eslint": "^6.8.0",
     "mocha": "^7.1.1",
     "mockserver-client": "^5.10.0",
     "mockserver-node": "^5.10.0",
-    "regenerator-runtime": "^0.13.3",
-    "rimraf": "^3.0.0",
-    "typescript": "^3.6.4"
+    "regenerator-runtime": "^0.13.5",
+    "rimraf": "^3.0.2",
+    "typescript": "^3.8.3"
   }
 }
