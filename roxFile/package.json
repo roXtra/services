@@ -20,7 +20,7 @@
   "dependencies": {
     "@types/json-query": "^2.2.0",
     "json-query": "^2.2.2",
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v8.21.0/release.tgz",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v8.22.0/release.tgz",
     "react": "^16.9.0",
     "semantic-ui-react": "^0.88.1"
   },
