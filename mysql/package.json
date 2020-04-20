@@ -25,7 +25,6 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
-    "@types/hapi__hapi": "^18.2.6",
     "@types/mocha": "^7.0.2",
     "@types/mysql": "^2.15.7",
     "@types/node": "^12.12.35",
