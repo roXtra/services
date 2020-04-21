@@ -57,7 +57,8 @@ export async function generate(environment: PH.ServiceTask.IServiceTaskEnvironme
     icsString += "DTSTART:" + getDateFormatted(fromDate, true) + "\n";
     icsString += "DTEND:" + getDateFormatted(tillDate, false) + "\n";
 
-    const parsedSummary = PH.Data.parseAndInsertStringWithFieldContent(title, instance.extras.fieldContents, processObject, instance.extras.roleOwners);
+    const process = await environment.processes.getProcessDetails(instance.processId, PH.Process.ProcessExtras.ExtrasProcessRolesWithMemberNames);
+    const parsedSummary = PH.Data.parseAndInsertStringWithFieldContent(title, instance.extras.fieldContents, process.extras.processRoles, instance.extras.roleOwners);
 
     icsString += "SUMMARY:" + parsedSummary + "\n";
     // Location
