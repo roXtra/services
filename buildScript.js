@@ -1,11 +1,11 @@
 const dirTree = require('directory-tree');
 const { execSync } = require('child_process');
 
-const processHubSDKVersion = 'v8.23.0-4';
+const processHubSDKVersion = 'v8.23.0-11';
 // Put in the react version that is also used in the SDK
-const processHubSDKVersion_React = '16.9.0'
+const processHubSDKVersion_React = '16.13.1'
   // Put in the @types/react version that is also used in the SDK
-const processHubSDKVersion_ReactTypes = '16.9.15'
+const processHubSDKVersion_ReactTypes = '16.9.34'
 
 const childProcessStdioOptions = [0, 1, 2];
 const childProcessTimeout = 300000;
