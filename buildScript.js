@@ -4,7 +4,7 @@ const { execSync } = require('child_process');
 const processHubSDKVersion = 'v8.23.0-11';
 // Put in the react version that is also used in the SDK
 const processHubSDKVersion_React = '16.13.1'
-  // Put in the @types/react version that is also used in the SDK
+// Put in the @types/react version that is also used in the SDK
 const processHubSDKVersion_ReactTypes = '16.9.34'
 
 const childProcessStdioOptions = [0, 1, 2];
@@ -15,30 +15,66 @@ const runMode = args[0];
 
 let errorOccurred = false;
 
-const directoryTree = dirTree("./", {
-  exclude: [
-    /node_modules/,
-    /zipped_services/,
-    /commontestfiles/,
-    /resources/,
-    /\.git/
-  ]
-}, null, (item, path, stats) => {
-  if (errorOccurred) {
-    // Abort building of further services
-    return;
+// Script Procedure
+doForEachService(auditService);
+doForEachService(buildService);
+if (runMode === 'bundle') {
+  doForEachService(bundleService);
+}
+
+if (errorOccurred) {
+  process.exit(1);
+} else {
+  process.exit(0);
+}
+
+// Functions
+function doForEachService(func) {
+  dirTree("./", {
+    exclude: [
+      /node_modules/,
+      /zipped_services/,
+      /commontestfiles/,
+      /resources/,
+      /\.git/
+    ]
+  }, null, (item, path, stats) => {
+    if (errorOccurred) {
+      // Abort building of further services
+      return;
+    }
+
+    const pathString = item.path.toString();
+    if (pathString.includes("/") || pathString.includes("\\")) {
+      //console.log("Skipped path " + item.path);
+    } else {
+      console.log("Processing service " + pathString);
+      const buildReturnCode = func(pathString);
+      if (buildReturnCode !== 0)
+        errorOccurred = true;
+    }
+  });
+}
+
+function auditService(directoryPath) {
+  try {
+    const childProcessOptions = {
+      cwd: directoryPath,
+      stdio: childProcessStdioOptions,
+      timeout: childProcessTimeout
+    }
+    // Audit
+    execSync('npm audit', childProcessOptions);
+    console.log("Executed npm audit for " + directoryPath);
+  } catch (error) {
+    console.log("Error occurred: " + error);
+    console.log("stdout: " + error.stdout);
+    console.log("stderr: " + error.stderr);
+    return 1;
   }
 
-  const pathString = item.path.toString();
-  if (pathString.includes("/") || pathString.includes("\\")) {
-    //console.log("Skipped path " + item.path);
-  } else {
-    console.log("Processing service " + pathString);
-    const buildReturnCode = buildService(pathString);
-    if (buildReturnCode !== 0)
-      errorOccurred = true;
-  }
-});
+  return 0;
+}
 
 function buildService(directoryPath) {
   try {
@@ -60,10 +96,6 @@ function buildService(directoryPath) {
     execSync('npm install', childProcessOptions);
     console.log("Executed npm install for " + directoryPath);
 
-    // Audit
-    execSync('npm audit', childProcessOptions);
-    console.log("Executed npm audit for " + directoryPath);
-
     // Lint
     execSync('npm run lint', childProcessOptions);
     console.log("Executed linter for " + directoryPath);
@@ -75,16 +107,6 @@ function buildService(directoryPath) {
     // Run tests
     execSync('npm test', childProcessOptions);
     console.log("Executed npm tests (if present) for " + directoryPath);
-
-    if (runMode === 'bundle') {
-      // npm pack
-      execSync('npm pack', childProcessOptions);
-      console.log("Executed npm pack for " + directoryPath);
-
-      // npm run copyandzip
-      execSync('npm run copyandzip', childProcessOptions);
-      console.log("Executed npm run copyandzip for " + directoryPath);
-    }
   } catch (error) {
     console.log("Error occurred: " + error);
     console.log("stdout: " + error.stdout);
@@ -95,8 +117,26 @@ function buildService(directoryPath) {
   return 0;
 }
 
-if (errorOccurred) {
-  process.exit(1);
-} else {
-  process.exit(0);
+function bundleService(directoryPath) {
+  try {
+    const childProcessOptions = {
+      cwd: directoryPath,
+      stdio: childProcessStdioOptions,
+      timeout: childProcessTimeout
+    }
+    // npm pack
+    execSync('npm pack', childProcessOptions);
+    console.log("Executed npm pack for " + directoryPath);
+
+    // npm run copyandzip
+    execSync('npm run copyandzip', childProcessOptions);
+    console.log("Executed npm run copyandzip for " + directoryPath);
+  } catch (error) {
+    console.log("Error occurred: " + error);
+    console.log("stdout: " + error.stdout);
+    console.log("stderr: " + error.stderr);
+    return 1;
+  }
+
+  return 0;
 }
