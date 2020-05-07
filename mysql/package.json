@@ -18,25 +18,25 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "mysql": "^2.17.1",
+    "mysql": "^2.18.1",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v8.23.0/release.tgz",
     "react": "^16.13.1",
-    "semantic-ui-react": "^0.88.1"
+    "semantic-ui-react": "^0.88.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@types/mocha": "^7.0.2",
-    "@types/mysql": "^2.15.7",
-    "@types/node": "^12.12.35",
+    "@types/mysql": "^2.15.10",
+    "@types/node": "^12.12.38",
     "@types/react": "^16.9.34",
-    "@typescript-eslint/eslint-plugin": "^2.29.0",
-    "@typescript-eslint/parser": "^2.29.0",
+    "@typescript-eslint/eslint-plugin": "^2.31.0",
+    "@typescript-eslint/parser": "^2.31.0",
     "bestzip": "^2.1.5",
     "copyfiles": "^2.2.0",
-    "cross-env": "^6.0.3",
+    "cross-env": "^7.0.2",
     "cross-var": "^1.1.0",
     "eslint": "^6.8.0",
-    "mocha": "^7.1.1",
+    "mocha": "^7.1.2",
     "regenerator-runtime": "^0.13.5",
     "rimraf": "^3.0.2",
     "typescript": "^3.8.3"
