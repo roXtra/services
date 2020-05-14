@@ -5,7 +5,7 @@ const processHubSDKVersion = 'v8.24.0';
 // Put in the react version that is also used in the SDK
 const processHubSDKVersion_React = '16.13.1'
 // Put in the @types/react version that is also used in the SDK
-const processHubSDKVersion_ReactTypes = '16.9.34'
+const processHubSDKVersion_ReactTypes = '16.9.35'
 
 const childProcessStdioOptions = [0, 1, 2];
 const childProcessTimeout = 300000;
