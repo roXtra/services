@@ -4,19 +4,20 @@ import { expect } from "chai";
 import { IRoXtraFileApi } from "../iroxtrafileapi";
 import { ICreateFileRequestBody } from "../roxtrafileapitypes";
 import { serviceLogic } from "../createroxfile-service";
-import { MockServer } from "./mockServer";
+import { NockServer } from "./nockServer";
 
 describe("services", () => {
   describe("roxfile", () => {
     describe("createroxfile-service", () => {
       describe("serviceLogic", () => {
+        const nockServer = new NockServer("http://localhost:1080");
 
-        before(async function () {
-          await MockServer.initMockServer();
+        before(function () {
+          nockServer.createRoxFileResponses();
         });
 
-        after(async function () {
-          await MockServer.stopMockServer();
+        after(function () {
+          NockServer.stopNock();
         });
 
         it("creates a roxFile", async () => {

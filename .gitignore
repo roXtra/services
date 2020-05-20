@@ -3,7 +3,6 @@
 /**/node_modules
 /**/dist
 /zipped_services
-/intrafox/mockserver.log
 /**/*.tgz
 /intrafox/*.log
 /intrafox/CertificateAuthorityCertificate.pem

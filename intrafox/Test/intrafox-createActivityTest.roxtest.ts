@@ -1,29 +1,13 @@
 import { assert } from "chai";
 import * as PH from "processhub-sdk";
 import * as fs from "fs";
-import * as CreateActivity from "./createActivity-service";
-import * as mockserver from "mockserver-node";
-import * as mockServerClient from "mockserver-client";
-import DateFormat from "dateformat";
+import * as CreateActivity from "../createActivity-service";
+import { NockServer } from "./nockServer";
 
 describe("services", () => {
   describe("intrafox", () => {
-
-    before(async function () {
-      console.log("Start Mockserver");
-      await mockserver.start_mockserver({
-        serverPort: 1080,
-        trace: true
-      });
-      console.log("Started Mockserver");
-    });
-
-    after(async function () {
-      console.log("Shut down Mockserver");
-      await mockserver.stop_mockserver({
-        serverPort: 1080
-      });
-      console.log("Mockserver is offline");
+    after(function () {
+      NockServer.stopNock();
     });
 
     // Create a mock service environment
@@ -54,35 +38,11 @@ describe("services", () => {
       const abbreation = "test";
       const describtion = "test";
       const expirationDate = new Date("2019-08-07T13:11:43.078Z");
-      const testToken = "123";
+      const nockServer = new NockServer("http://localhost:1080");
 
-      await mockServerClient.mockServerClient("localhost", 1080).mockAnyResponse({
-        "httpRequest": {
-          "method": "POST",
-          "path": "/" + testGuid,
-          "body": JSON.stringify({
-            "FUNCTION": "CreateGlobalActivity",
-            "USERNAME": username,
-            "ARGS": {
-              "ACTIVITY_ABBREVIATION": abbreation,
-              "ACTIVITY_DESCRIPTION": describtion,
-              "ACTIVITY_EXPIRATIONDATE": DateFormat(expirationDate, "yyyy-mm-dd")
-            },
-          }),
-          "headers": {
-            "X-INTRAFOX-ROXTRA-TOKEN": [testToken]
-          }
-        },
-        "httpResponse": {
-          "body": JSON.stringify("ok"),
-        },
-      }).then(
-        function (error: any) {
-          console.log(error);
-        }
-      );
+      nockServer.createResponse(testGuid, JSON.stringify("ok"));
 
-      const env = await performCreateActivityTest(testGuid, "./testfiles/create-activity.bpmn", "ServiceTask_16C58B2F292DE836", username, abbreation, describtion, expirationDate);
+      const env = await performCreateActivityTest(testGuid, "./Test/testfiles/create-activity.bpmn", "ServiceTask_16C58B2F292DE836", username, abbreation, describtion, expirationDate);
       assert.equal(((env.instanceDetails.extras.fieldContents["Info"] as PH.Data.IFieldValue).value as string), "Maßnahme wurde erstellt");
       assert.equal(((env.instanceDetails.extras.fieldContents["Abb"] as PH.Data.IFieldValue).value as string), abbreation);
       assert.equal(((env.instanceDetails.extras.fieldContents["Desc"] as PH.Data.IFieldValue).value as string), describtion);
@@ -96,39 +56,15 @@ describe("services", () => {
       const abbreation = "test";
       const describtion = "test";
       const expirationDate = new Date("2019-08-07T13:11:43.078Z");
-      const testToken = "123";
+      const nockServer = new NockServer("http://localhost:1080");
 
-      await mockServerClient.mockServerClient("localhost", 1080).mockAnyResponse({
-        "httpRequest": {
-          "method": "POST",
-          "path": "/" + testGuid,
-          "body": JSON.stringify({
-            "FUNCTION": "CreateGlobalActivity",
-            "USERNAME": username,
-            "ARGS": {
-              "ACTIVITY_ABBREVIATION": abbreation,
-              "ACTIVITY_DESCRIPTION": describtion,
-              "ACTIVITY_EXPIRATIONDATE": DateFormat(expirationDate, "yyyy-mm-dd")
-            },
-          }),
-          "headers": {
-            "X-INTRAFOX-ROXTRA-TOKEN": [testToken]
-          }
-        },
-        "httpResponse": {
-          "body": JSON.stringify({
-            "ERRORCODE": "ERRORCODE_ARGUMENTS",
-            "REASON": "function args error",
-            "MESSAGE": "no user with username \"" + username + " found\""
-          }),
-        },
-      }).then(
-        function (error: any) {
-          console.log(error);
-        }
-      );
+      nockServer.createResponse(testGuid, JSON.stringify({
+        "ERRORCODE": "ERRORCODE_ARGUMENTS",
+        "REASON": "function args error",
+        "MESSAGE": "no user with username \"" + username + " found\""
+      }));
 
-      const env = await performCreateActivityTest(testGuid, "./testfiles/create-activity.bpmn", "ServiceTask_16C58B2F292DE836", username, abbreation, describtion, expirationDate);
+      const env = await performCreateActivityTest(testGuid, "./Test/testfiles/create-activity.bpmn", "ServiceTask_16C58B2F292DE836", username, abbreation, describtion, expirationDate);
       assert.equal(((env.instanceDetails.extras.fieldContents["ERROR"] as PH.Data.IFieldValue).value as string), "Ein Fehler ist aufgetreten, ARGS wurden falsch gesetzt.");
       assert.equal(((env.instanceDetails.extras.fieldContents["Abb"] as PH.Data.IFieldValue).value as string), abbreation);
       assert.equal(((env.instanceDetails.extras.fieldContents["Desc"] as PH.Data.IFieldValue).value as string), describtion);
@@ -142,39 +78,15 @@ describe("services", () => {
       const abbreation = "test";
       const describtion = "test";
       const expirationDate = new Date("2019-08-07T13:11:43.078Z");
-      const testToken = "123";
+      const nockServer = new NockServer("http://localhost:1080");
 
-      await mockServerClient.mockServerClient("localhost", 1080).mockAnyResponse({
-        "httpRequest": {
-          "method": "POST",
-          "path": "/" + testGuid,
-          "body": JSON.stringify({
-            "FUNCTION": "CreateGlobalActivity",
-            "USERNAME": username,
-            "ARGS": {
-              "ACTIVITY_ABBREVIATION": abbreation,
-              "ACTIVITY_DESCRIPTION": describtion,
-              "ACTIVITY_EXPIRATIONDATE": DateFormat(expirationDate, "yyyy-mm-dd")
-            },
-          }),
-          "headers": {
-            "X-INTRAFOX-ROXTRA-TOKEN": [testToken]
-          }
-        },
-        "httpResponse": {
-          "body": JSON.stringify({
-            "ERRORCODE": "ERRORCODE_A2",
-            "REASON": "unauthorized",
-            "MESSAGE": ""
-          }),
-        },
-      }).then(
-        function (error: any) {
-          console.log(error);
-        }
-      );
+      nockServer.createResponse(testGuid, JSON.stringify({
+        "ERRORCODE": "ERRORCODE_A2",
+        "REASON": "unauthorized",
+        "MESSAGE": ""
+      }));
 
-      const env = await performCreateActivityTest(testGuid, "./testfiles/create-activity.bpmn", "ServiceTask_16C58B2F292DE836", username, abbreation, describtion, expirationDate);
+      const env = await performCreateActivityTest(testGuid, "./Test/testfiles/create-activity.bpmn", "ServiceTask_16C58B2F292DE836", username, abbreation, describtion, expirationDate);
       assert.equal(((env.instanceDetails.extras.fieldContents["ERROR"] as PH.Data.IFieldValue).value as string), "Ein Fehler ist aufgetreten, Authentifizierungstoken ist ungültig.");
       assert.equal(((env.instanceDetails.extras.fieldContents["Abb"] as PH.Data.IFieldValue).value as string), abbreation);
       assert.equal(((env.instanceDetails.extras.fieldContents["Desc"] as PH.Data.IFieldValue).value as string), describtion);
