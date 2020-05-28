@@ -15,6 +15,7 @@
         { "name": "username", "type": "text" }, 
         { "name": "password", "type": "text" }, 
         { "name": "database", "type": "text" }, 
+        { "name": "port", "type": "text" }, 
         { "name": "query", "type": "text" }, 
         { "name": "targetField", "type": "select", "onload": "fields" } 
       ]
