@@ -13,6 +13,7 @@ export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvir
   const user = fields.find(f => f.key === "username").value;
   const password = fields.find(f => f.key === "password").value;
   const database = fields.find(f => f.key === "database").value;
+  const port = fields.find(f => f.key === "port").value;
   let query = fields.find(f => f.key === "query").value;
   const targetField = fields.find(f => f.key === "targetField").value;
 
@@ -20,7 +21,8 @@ export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvir
     user: user,
     password: password,
     host: server,
-    database: database
+    database: database,
+    port: parseInt(port)
   });
 
   try {

@@ -69,6 +69,18 @@ export function executeQueryConfig(): JSX.Element {
 
           <Semantic.Table.Row>
             <Semantic.Table.Cell>
+              <PH.TL text={"Port"} />
+            </Semantic.Table.Cell>
+            <Semantic.Table.Cell>
+              <Semantic.Input
+                id="port"
+                fluid
+              />
+            </Semantic.Table.Cell>
+          </Semantic.Table.Row>
+
+          <Semantic.Table.Row>
+            <Semantic.Table.Cell>
               <PH.TL text={"Abfrage"} />
             </Semantic.Table.Cell>
             <Semantic.Table.Cell>
