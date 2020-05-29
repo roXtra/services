@@ -2,9 +2,9 @@ import * as PH from "processhub-sdk";
 
 function getDateFormatted(date: Date, start: boolean): string {
   const month = (date.getMonth() + 1);
-  const monthString = month < 10 ? "0" + month : month;
+  const monthString = month < 10 ? "0" + String(month) : String(month);
   const endDay = start ? date.getDate() : +date.getDate() + 1;
-  return date.getFullYear().toString() + monthString + endDay; // + "T" + time;
+  return date.getFullYear().toString() + monthString + String(endDay); // + "T" + time;
 }
 
 export async function generate(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
@@ -65,7 +65,7 @@ export async function generate(environment: PH.ServiceTask.IServiceTaskEnvironme
     // icsString += "LOCATION:" + Location + "";
 
     const descriptionValue = instance.extras.fieldContents[descriptionField] != null ? (instance.extras.fieldContents[descriptionField] as PH.Data.IFieldValue).value : "";
-    icsString += "DESCRIPTION:" + descriptionValue + "\n";
+    icsString += "DESCRIPTION:" + String(descriptionValue) + "\n";
     // Priority
     // icsString += "PRIORITY:3\n";
     icsString += "END:VEVENT\n";

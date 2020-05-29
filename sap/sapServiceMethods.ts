@@ -107,13 +107,13 @@ export default class SAPServiceMethods {
     const keys = Object.keys(rows[0]);
     let table = "<table><tr>";
     keys.forEach((key: any) => {
-      table += "<th>" + key + "</th>";
+      table += "<th>" + String(key) + "</th>";
     });
     table += "</tr>";
     rows.forEach((row: any) => {
       table += "<tr>";
       keys.forEach(key => {
-        table += "<th>" + row[key] + "</th>";
+        table += "<th>" + String(row[key]) + "</th>";
       });
       table += "</tr>";
     });
@@ -124,13 +124,13 @@ export default class SAPServiceMethods {
     const keys = Object.keys(rows[0]);
     let data = "";
     keys.forEach((key: any) => {
-      data += key + ",";
+      data += String(key) + ",";
     });
     data = data.substring(0, data.length - 1);
     data += "\r\n";
     rows.forEach((row: any) => {
       keys.forEach(key => {
-        data += row[key] + ",";
+        data += String(row[key]) + ",";
       });
       data = data.substring(0, data.length - 1);
       data += "\r\n";

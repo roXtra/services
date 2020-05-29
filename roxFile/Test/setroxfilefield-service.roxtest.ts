@@ -19,7 +19,7 @@ describe("services", () => {
               // Do nothing
             },
             // eslint-disable-next-line @typescript-eslint/require-await
-            setFileFieldsCall: async (_url, body) => {
+            setFileFieldsCall: async (url, body) => {
               bodyFromSetCall = body;
             },
             // eslint-disable-next-line @typescript-eslint/require-await
@@ -69,6 +69,7 @@ describe("services", () => {
           environment.bpmnTaskName = "SetFields";
           environment.bpmnTaskId = "ServiceTask_6FAF8F7973EF56FA";
           environment.fieldContents = {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             "Feld_1": {
               type: "ProcessHubTextInput",
               value: "Hello",

@@ -39,13 +39,13 @@ export class CSVServiceMethods {
 
     let table = "<table><tr>";
     keys.forEach((key: any) => {
-      table += "<th>" + key + "</th>";
+      table += "<th>" + String(key) + "</th>";
     });
     table += "</tr>";
     rows.forEach((row: any) => {
       table += "<tr>";
       keys.forEach(key => {
-        table += "<th>" + row[key] + "</th>";
+        table += "<th>" + String(row[key]) + "</th>";
       });
       table += "</tr>";
     });

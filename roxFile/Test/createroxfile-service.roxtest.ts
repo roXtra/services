@@ -33,7 +33,7 @@ describe("services", () => {
             // eslint-disable-next-line @typescript-eslint/require-await
             getSelectionsCall: async () => [],
             // eslint-disable-next-line @typescript-eslint/require-await
-            createRoxFileCall: async (APIUrl: string, body: ICreateFileRequestBody) => {
+            createRoxFileCall: async (apiUrl: string, body: ICreateFileRequestBody) => {
               expect(body.DestinationID).to.equal("100");
               expect(body.DestinationType).to.equal("1");
               expect(body.DocTypeID).to.equal("105");
@@ -58,6 +58,7 @@ describe("services", () => {
               type: "ProcessHubTextInput",
               value: "Das ist ein Titel",
             },
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             "Feld_1": {
               type: "ProcessHubTextInput",
               value: "Beschreibung",

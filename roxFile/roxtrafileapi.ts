@@ -3,7 +3,7 @@ import * as fs from "fs";
 import * as PH from "processhub-sdk";
 import { IRoXtraFileApi } from "./iroxtrafileapi";
 
-async function post(APIUrl: string, requestBody: Types.ICreateFileRequestBody | Types.ISetFileFieldsObject[], eftoken: string, token: string) {
+async function post(apiUrl: string, requestBody: Types.ICreateFileRequestBody | Types.ISetFileFieldsObject[], eftoken: string, token: string): Promise<Response> {
   const headers: Types.IRequestHeader = {
     "Accept": "application/json",
     "Content-Type": "application/json",
@@ -17,10 +17,10 @@ async function post(APIUrl: string, requestBody: Types.ICreateFileRequestBody | 
     headers: headers,
   };
 
-  return await fetch(APIUrl, req);
+  return await fetch(apiUrl, req);
 }
 
-async function get(APIUrl: string, eftoken: string, token: string) {
+async function get(apiUrl: string, eftoken: string, token: string): Promise<Response> {
   const headers: Types.IRequestHeader = {
     "Accept": "application/json",
     "Content-Type": "application/json",
@@ -32,34 +32,34 @@ async function get(APIUrl: string, eftoken: string, token: string) {
     method: "GET",
     headers: headers,
   };
-  return await fetch(APIUrl, req);
+  return await fetch(apiUrl, req);
 }
 
 export class RoXtraFileApi implements IRoXtraFileApi {
 
-  public async createRoxFileCall(APIUrl: string, body: Types.ICreateFileRequestBody, eftoken: string, token: string): Promise<any> {
-    const response = await post(APIUrl + "CreateNewDocument", body, eftoken, token);
+  public async createRoxFileCall(apiUrl: string, body: Types.ICreateFileRequestBody, eftoken: string, token: string): Promise<any> {
+    const response = await post(apiUrl + "CreateNewDocument", body, eftoken, token);
     if (response.status === 200) {
       return await response.json();
     }
   }
 
-  public async setFileFieldsCall(APIUrl: string, body: Types.ISetFileFieldsObject[], fileId: string, eftoken: string, token: string): Promise<any> {
-    const response = await post(APIUrl + "SetFileFields/" + fileId, body, eftoken, token);
+  public async setFileFieldsCall(apiUrl: string, body: Types.ISetFileFieldsObject[], fileId: string, eftoken: string, token: string): Promise<any> {
+    const response = await post(apiUrl + "SetFileFields/" + fileId, body, eftoken, token);
     if (response.status === 200) {
       return await response.json();
     }
   }
 
-  public async getSelectionsCall(APIUrl: string, eftoken: string, token: string): Promise<Types.ISelection[]> {
-    const response = await get(APIUrl + "GetSelections", eftoken, token);
+  public async getSelectionsCall(apiUrl: string, eftoken: string, token: string): Promise<Types.ISelection[]> {
+    const response = await get(apiUrl + "GetSelections", eftoken, token);
     if (response.status === 200) {
       return await response.json();
     }
   }
 
-  public async getFileDetailsCall(APIUrl: string, fileID: string, eftoken: string, token: string): Promise<any> {
-    const response = await get(APIUrl + "GetFileDetails/" + fileID, eftoken, token);
+  public async getFileDetailsCall(apiUrl: string, fileID: string, eftoken: string, token: string): Promise<any> {
+    const response = await get(apiUrl + "GetFileDetails/" + fileID, eftoken, token);
     if (response.status === 200) {
       return await response.json();
     }
@@ -131,7 +131,7 @@ function errorHandlingCreateRoxFile(errorState: number, errorField: PH.Data.IFie
   return errorField;
 }
 
-function errorHandlingSetRoxFileField(errorState: number, errorField: PH.Data.IFieldValue) {
+function errorHandlingSetRoxFileField(errorState: number, errorField: PH.Data.IFieldValue): PH.Data.IFieldValue {
   switch (errorState) {
 
     case Types.ERRORCODES.MISSING_FILEID: {
@@ -157,7 +157,7 @@ function errorHandlingSetRoxFileField(errorState: number, errorField: PH.Data.IF
   return errorField;
 }
 
-function errorHandlingAPICall(errorState: number, errorField: PH.Data.IFieldValue) {
+function errorHandlingAPICall(errorState: number, errorField: PH.Data.IFieldValue): PH.Data.IFieldValue {
   switch (errorState) {
 
     case Types.ERRORCODES.APICALLERROR: {
@@ -168,7 +168,7 @@ function errorHandlingAPICall(errorState: number, errorField: PH.Data.IFieldValu
   return errorField;
 }
 
-export function errorHandling(errorState: number, instance: PH.Instance.IInstanceDetails) {
+export function errorHandling(errorState: number, instance: PH.Instance.IInstanceDetails): PH.Instance.IInstanceDetails {
   let errorField: PH.Data.IFieldValue = {
     value: "",
     type: "ProcessHubTextArea"

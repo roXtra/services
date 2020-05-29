@@ -19,13 +19,13 @@ async function getFileContent(downloadUrl: string): Promise<string> {
       });
 
       response.on("error", (err: Error) => {
-        reject(err + ": " + response.statusCode);
+        reject(String(err) + ": " + String(response.statusCode));
       });
     });
   });
 }
 
-function createFileIDField(fileIDFieldName: string, response: any, instance: PH.Instance.IInstanceDetails) {
+function createFileIDField(fileIDFieldName: string, response: any, instance: PH.Instance.IInstanceDetails): void {
   if (fileIDFieldName) {
     instance.extras.fieldContents[fileIDFieldName] = {
       value: response.Fields[0].Value,
@@ -58,7 +58,7 @@ function errorHandlingMissingField(key: string): number {
 }
 
 // Extract the serviceLogic that testing is possible
-export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvironment, roxtraFileAPI: IRoXtraFileApi) {
+export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvironment, roxtraFileAPI: IRoXtraFileApi): Promise<PH.Instance.IInstanceDetails> {
   errorState = Types.ERRORCODES.NOERROR;
   const fields = await PH.ServiceTask.getFields(environment);
   const instance = environment.instanceDetails;
@@ -124,7 +124,7 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
   }
 }
 
-export async function createRoxFile(environment: PH.ServiceTask.IServiceTaskEnvironment) {
+export async function createRoxFile(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
   APIUrl = environment.serverConfig.roXtra.efApiEndpoint;
   efAccessToken = await environment.roxApi.getEfApiToken();
 
