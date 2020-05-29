@@ -17,7 +17,7 @@ function handleSelectField(selectID: string, value: string, selection: ISelectio
     case SelectTypes.MULTISELECT: {
       let multiGUIDString = "";
       value.split(",").forEach(val => {
-        multiGUIDString += JSONQuery("SelectionsList[Value = " + val.trim() + "].GUID", { data: selection }).value + ",";
+        multiGUIDString += String(JSONQuery("SelectionsList[Value = " + val.trim() + "].GUID", { data: selection }).value) + ",";
       });
       return multiGUIDString.substring(0, multiGUIDString.length - 1);
     }

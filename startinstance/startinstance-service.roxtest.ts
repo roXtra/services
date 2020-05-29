@@ -21,10 +21,12 @@ describe("services", () => {
           environment.bpmnTaskName = "Start";
           environment.bpmnTaskId = "ServiceTask_960AFDE95A570BF3";
           environment.instanceDetails.extras.fieldContents = {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             "Feld_1": {
               type: "ProcessHubTextInput",
               value: valueFeld1,
             },
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             "Feld_2": {
               type: "ProcessHubNumber",
               value: valueFeld2,
@@ -39,7 +41,7 @@ describe("services", () => {
           };
 
           // eslint-disable-next-line @typescript-eslint/unbound-method, @typescript-eslint/require-await
-          environment.instances.executeInstance = async (processId, instance, _startEventId, accessToken): Promise<string> => {
+          environment.instances.executeInstance = async (processId, instance, startEventId, accessToken): Promise<string> => {
             executeWasCalled = true;
             expect(accessToken).to.equal(testAccessToken);
             // Must match the value defined in startservice.bpmn

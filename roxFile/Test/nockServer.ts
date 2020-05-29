@@ -13,7 +13,7 @@ export class NockServer {
     nock.cleanAll();
   }
 
-  public createRoxFileResponses() {
+  public createRoxFileResponses(): void {
     NockServer.stopNock();
 
     this.scope

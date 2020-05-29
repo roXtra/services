@@ -21,12 +21,12 @@ describe("services", () => {
         const j = i + 1;
         const env: PH.ServiceTask.IServiceTaskEnvironment = createEnvironment("./testfiles/csvprojectreader.bpmn", "ServiceTask_EF35559B7A880A91", column1[i]);
         await ProjectReaderService.serviceLogic(env);
-        assert.equal((env.instanceDetails.extras.fieldContents.ID as PH.Data.IFieldValue).value as string, "A" + j);
-        assert.equal((env.instanceDetails.extras.fieldContents.column1 as PH.Data.IFieldValue).value as string, "A" + j);
-        assert.equal((env.instanceDetails.extras.fieldContents.column2 as PH.Data.IFieldValue).value as string, "B" + j);
-        assert.equal((env.instanceDetails.extras.fieldContents.column3 as PH.Data.IFieldValue).value as string, "C" + j);
-        assert.equal((env.instanceDetails.extras.fieldContents.column4 as PH.Data.IFieldValue).value as string, "D" + j);
-        assert.equal((env.instanceDetails.extras.fieldContents.column5 as PH.Data.IFieldValue).value as string, "E" + j);
+        assert.equal((env.instanceDetails.extras.fieldContents.ID as PH.Data.IFieldValue).value as string, "A" + String(j));
+        assert.equal((env.instanceDetails.extras.fieldContents.column1 as PH.Data.IFieldValue).value as string, "A" + String(j));
+        assert.equal((env.instanceDetails.extras.fieldContents.column2 as PH.Data.IFieldValue).value as string, "B" + String(j));
+        assert.equal((env.instanceDetails.extras.fieldContents.column3 as PH.Data.IFieldValue).value as string, "C" + String(j));
+        assert.equal((env.instanceDetails.extras.fieldContents.column4 as PH.Data.IFieldValue).value as string, "D" + String(j));
+        assert.equal((env.instanceDetails.extras.fieldContents.column5 as PH.Data.IFieldValue).value as string, "E" + String(j));
         assert.isUndefined(env.instanceDetails.extras.fieldContents["Info"] as PH.Data.IFieldValue);
       }
     });
