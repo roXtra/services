@@ -37,6 +37,7 @@ export async function startinstance(environment: PH.ServiceTask.IServiceTaskEnvi
     }
 
     const newInstance: PH.Instance.IInstanceDetails = {
+      title: "",
       instanceId: PH.Tools.createId(),
       workspaceId,
       processId,

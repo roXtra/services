@@ -38,6 +38,7 @@ describe("services", () => {
       const instances: PH.Instance.IInstanceDetails[] = [
         // Current instance
         {
+          title: "",
           instanceId: "",
           workspaceId: "",
           processId: "",
@@ -49,6 +50,7 @@ describe("services", () => {
 
         // Older instances
         {
+          title: "",
           instanceId: "",
           workspaceId: "",
           processId: "",
@@ -58,6 +60,7 @@ describe("services", () => {
           createdAt: new Date("October 13, 2014 11:13:00"),
         },
         {
+          title: "",
           instanceId: "",
           workspaceId: "",
           processId: "",
@@ -79,6 +82,7 @@ describe("services", () => {
       const instances: PH.Instance.IInstanceDetails[] = [
         // Current instance
         {
+          title: "",
           instanceId: "",
           workspaceId: "",
           processId: "",
@@ -90,6 +94,7 @@ describe("services", () => {
 
         // Older instances
         {
+          title: "",
           instanceId: "",
           workspaceId: "",
           processId: "",
@@ -99,6 +104,7 @@ describe("services", () => {
           createdAt: new Date("October 12, 2018 11:13:00"),
         },
         {
+          title: "",
           instanceId: "",
           workspaceId: "",
           processId: "",
@@ -120,6 +126,7 @@ describe("services", () => {
       const instances: PH.Instance.IInstanceDetails[] = [
         // Current instance
         {
+          title: "",
           instanceId: "",
           workspaceId: "",
           processId: "",
@@ -131,6 +138,7 @@ describe("services", () => {
 
         // Older instances
         {
+          title: "",
           instanceId: "",
           workspaceId: "",
           processId: "",
@@ -140,6 +148,7 @@ describe("services", () => {
           createdAt: new Date("October 12, 2018 11:13:00"),
         },
         {
+          title: "",
           instanceId: "",
           workspaceId: "",
           processId: "",

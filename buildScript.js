@@ -1,7 +1,7 @@
 const dirTree = require('directory-tree');
 const { execSync } = require('child_process');
 
-const processHubSDKVersion = 'v8.25.0';
+const processHubSDKVersion = 'v8.26.0';
 // Put in the react version that is also used in the SDK
 const processHubSDKVersion_React = '16.13.1'
 // Put in the @types/react version that is also used in the SDK
