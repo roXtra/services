@@ -28,7 +28,7 @@
     "@types/mocha": "^7.0.2",
     "@types/mysql": "^2.15.14",
     "@types/node": "^12.12.38",
-    "@types/react": "^16.9.35",
+    "@types/react": "^16.9.41",
     "bestzip": "^2.1.5",
     "copyfiles": "^2.3.0",
     "cross-env": "^7.0.2",
