@@ -26,7 +26,7 @@
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@types/mocha": "^7.0.2",
-    "@types/mssql": "^6.0.0",
+    "@types/mssql": "^6.0.2",
     "@types/node": "^12.12.38",
     "@types/react": "^16.9.35",
     "bestzip": "^2.1.5",
