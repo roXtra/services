@@ -8,7 +8,7 @@ module.exports = {
   onboarding: true,
   onboardingBranch: `${branchName}/configure`,
   platform: 'github',
-  schedule: ["every weekday"],
+  schedule: ["after 6am and before 5pm on Wednesday"],
   regexManagers: [
     {
       datasourceTemplate: 'github-tags',
