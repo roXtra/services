@@ -1,0 +1,21 @@
+{
+  "extends": [
+    "config:base",
+    ":timezone(Europe/Amsterdam)"
+  ],
+  "ignorePresets": [
+    ":prHourlyLimit2"
+  ],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["every weekday"]
+  },
+  "major": {
+    "stabilityDays": 3
+  },
+  "rangeStrategy": "bump",
+  "prCreation": "not-pending",
+  "assignees": [
+    "@ceisele-r"
+  ]
+}
