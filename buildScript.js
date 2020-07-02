@@ -60,7 +60,7 @@ function auditService(directoryPath) {
       timeout: childProcessTimeout
     }
     // Audit
-    execSync('npm audit', childProcessOptions);
+    execSync('npm audit --audit-level=moderate', childProcessOptions);
     console.log("Executed npm audit for " + directoryPath);
   } catch (error) {
     console.log("Error occurred: " + error);
