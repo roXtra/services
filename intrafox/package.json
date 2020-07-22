@@ -40,6 +40,6 @@
     "nock": "^13.0.2",
     "regenerator-runtime": "^0.13.5",
     "rimraf": "^3.0.2",
-    "typescript": "^3.9.6"
+    "typescript": "^3.9.7"
   }
 }
