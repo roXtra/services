@@ -20,7 +20,7 @@
   "dependencies": {
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v8.29.0/release.tgz",
     "react": "^16.13.1",
-    "semantic-ui-react": "^0.88.2",
+    "semantic-ui-react": "^1.0.0",
     "xlsx": "^0.16.4"
   },
   "devDependencies": {
