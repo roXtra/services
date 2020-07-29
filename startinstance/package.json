@@ -26,7 +26,7 @@
     "@babel/cli": "^7.10.5",
     "@types/chai": "^4.2.12",
     "@types/mocha": "^8.0.0",
-    "@types/node": "^12.12.51",
+    "@types/node": "^12.12.53",
     "@types/react": "^16.9.43",
     "acorn": "^7.3.1",
     "bestzip": "^2.1.5",
