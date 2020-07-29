@@ -16,6 +16,10 @@
   "rangeStrategy": "bump",
   "prCreation": "not-pending",
   "assignees": [
-    "@ceisele-r"
-  ]
+    "@ceisele-r",
+    "@BCaspari",
+    "@REggebrecht",
+    "@sschuerle"
+  ],
+  "assigneesSampleSize": 1
 }
