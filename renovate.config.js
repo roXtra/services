@@ -25,6 +25,10 @@ module.exports = {
     {
       packageNames: ["@types/node"],
       allowedVersions: "^12.0.0"
+    },
+    {
+      packageNames: ["semantic-ui-react"],
+      allowedVersions: "0.88.2"
     }
   ]
 };
