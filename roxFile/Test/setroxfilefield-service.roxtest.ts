@@ -76,6 +76,7 @@ describe("services", () => {
             }
           };
           environment.instanceDetails.extras.fieldContents = environment.fieldContents;
+          environment.roxApi.getApiToken = () => "";
           environment.serverConfig = {
             roXtra: {
               efApiEndpoint: undefined,

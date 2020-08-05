@@ -49,6 +49,7 @@ describe("services", () => {
           );
           environment.bpmnTaskName = "createroxfile";
           environment.bpmnTaskId = "ServiceTask_712C1B34834A21B9";
+          environment.roxApi.getApiToken = () => "";
           environment.fieldContents = {
             "Anlagen": {
               type: "ProcessHubFileUpload",

@@ -1,7 +1,7 @@
 const dirTree = require('directory-tree');
 const { execSync } = require('child_process');
 
-const processHubSDKVersion = 'v8.29.0';
+const processHubSDKVersion = 'v8.30.0';
 
 const childProcessStdioOptions = [0, 1, 2];
 const childProcessTimeout = 300000;
@@ -55,11 +55,11 @@ function doForEachService(func) {
 function auditService(directoryPath) {
   try {
     const childProcessOptions = {
-      cwd: directoryPath,
-      stdio: childProcessStdioOptions,
-      timeout: childProcessTimeout
-    }
-    // Audit
+        cwd: directoryPath,
+        stdio: childProcessStdioOptions,
+        timeout: childProcessTimeout
+      }
+      // Audit
     execSync('npm audit --audit-level=moderate', childProcessOptions);
     console.log("Executed npm audit for " + directoryPath);
   } catch (error) {
@@ -112,11 +112,11 @@ function buildService(directoryPath) {
 function bundleService(directoryPath) {
   try {
     const childProcessOptions = {
-      cwd: directoryPath,
-      stdio: childProcessStdioOptions,
-      timeout: childProcessTimeout
-    }
-    // npm pack
+        cwd: directoryPath,
+        stdio: childProcessStdioOptions,
+        timeout: childProcessTimeout
+      }
+      // npm pack
     execSync('npm pack', childProcessOptions);
     console.log("Executed npm pack for " + directoryPath);
 
