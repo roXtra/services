@@ -27,7 +27,7 @@
     "@babel/cli": "^7.10.5",
     "@types/mocha": "^8.0.2",
     "@types/mssql": "^6.0.3",
-    "@types/node": "^12.12.53",
+    "@types/node": "^12.12.54",
     "@types/react": "^16.9.46",
     "bestzip": "^2.1.6",
     "copyfiles": "^2.3.0",

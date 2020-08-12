@@ -26,8 +26,8 @@
   "devDependencies": {
     "@babel/cli": "^7.10.5",
     "@types/chai": "^4.2.12",
-    "@types/mocha": "^8.0.2",
-    "@types/node": "^12.12.53",
+    "@types/mocha": "^8.0.1",
+    "@types/node": "^12.12.54",
     "@types/react": "^16.9.46",
     "bestzip": "^2.1.6",
     "chai": "^4.2.0",
