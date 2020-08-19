@@ -21,7 +21,7 @@
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v8.30.0/release.tgz",
     "react": "^16.13.1",
     "semantic-ui-react": "^0.88.2",
-    "xlsx": "^0.16.5"
+    "xlsx": "^0.16.6"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.5",
