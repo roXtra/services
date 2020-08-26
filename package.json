@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/roXtra/services#readme",
   "dependencies": {
-    "@babel/core": "^7.11.1",
+    "@babel/core": "^7.11.4",
     "react": "^16.13.1"
   },
   "devDependencies": {
