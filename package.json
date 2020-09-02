@@ -43,7 +43,7 @@
     "directory-tree": "^2.2.4",
     "eslint": "^7.8.1",
     "eslint-plugin-react": "^7.20.6",
-    "mocha": "^8.1.2",
+    "mocha": "^8.1.3",
     "rimraf": "^3.0.2",
     "typescript": "^4.0.2"
   }
