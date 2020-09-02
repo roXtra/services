@@ -38,6 +38,6 @@ jobs:
           files: |
             services.zip
             eformservice-*.tgz
-          prerelease: ${{ true }}
+          prerelease: ${{ contains(github.ref, '-') }} # If tag contains -, it's a prerelease (e.g. /refs/tags/v8.30.0-0)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
