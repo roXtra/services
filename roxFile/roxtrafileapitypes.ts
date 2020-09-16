@@ -1,3 +1,5 @@
+import { RequestInit } from "node-fetch";
+
 export const SelectTypes = {
   SELECT: "select",
   COMPLEXSELECT: "complexselect",

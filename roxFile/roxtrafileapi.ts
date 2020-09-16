@@ -2,6 +2,7 @@ import * as Types from "./roxtrafileapitypes";
 import * as fs from "fs";
 import * as PH from "processhub-sdk";
 import { IRoXtraFileApi } from "./iroxtrafileapi";
+import fetch, { Response } from "node-fetch";
 
 async function post(apiUrl: string, requestBody: Types.ICreateFileRequestBody | Types.ISetFileFieldsObject[], eftoken: string, token: string): Promise<Response> {
   const headers: Types.IRequestHeader = {
