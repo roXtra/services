@@ -4,21 +4,11 @@ import { expect } from "chai";
 import { IRoXtraFileApi } from "../iroxtrafileapi";
 import { ICreateFileRequestBody } from "../roxtrafileapitypes";
 import { serviceLogic } from "../createroxfile-service";
-import { NockServer } from "./nockServer";
 
 describe("services", () => {
   describe("roxfile", () => {
     describe("createroxfile-service", () => {
       describe("serviceLogic", () => {
-        const nockServer = new NockServer("http://localhost:1080");
-
-        before(function () {
-          nockServer.createRoxFileResponses();
-        });
-
-        after(function () {
-          NockServer.stopNock();
-        });
 
         it("creates a roxFile", async () => {
           const newRoxFileId = "1000";
@@ -49,8 +39,13 @@ describe("services", () => {
           );
           environment.bpmnTaskName = "createroxfile";
           environment.bpmnTaskId = "ServiceTask_712C1B34834A21B9";
+
+          environment.fileStore.getPhysicalPath = () => {
+            return "./Test/Testfiles/doc.docx";
+          };
+
           environment.roxApi.getApiToken = () => "";
-          environment.fieldContents = {
+          environment.instanceDetails.extras.fieldContents = {
             "Anlagen": {
               type: "ProcessHubFileUpload",
               value: ["http://localhost:1080/modules/files/doc.docx"],
@@ -65,7 +60,6 @@ describe("services", () => {
               value: "Beschreibung",
             }
           };
-          environment.instanceDetails.extras.fieldContents = environment.fieldContents;
 
           const instance = await serviceLogic(environment, testApi);
           expect(PH.Data.isFieldValue(instance.extras.fieldContents["CreatedRoxFileId"])).to.equal(true);

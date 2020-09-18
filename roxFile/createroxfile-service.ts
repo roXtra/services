@@ -1,29 +1,11 @@
 import * as PH from "processhub-sdk";
 import * as Types from "./roxtrafileapitypes";
-import { missingRequiredField, initRequiredFields, RoXtraFileApi, errorHandling } from "./roxtrafileapi";
+import { missingRequiredField, initRequiredFields, RoXtraFileApi, errorHandling, readFileBase64Async } from "./roxtrafileapi";
 import { IRoXtraFileApi } from "./iroxtrafileapi";
-import http from "http";
 
 export let errorState: number = Types.ERRORCODES.NOERROR;
 let APIUrl: string;
 let efAccessToken: string;
-
-async function getFileContent(downloadUrl: string): Promise<string> {
-  return await new Promise<string>((resolve, reject) => {
-    http.get(downloadUrl, function (response) {
-      response.on("data", (chunk: Buffer) => {
-        if (response.statusCode === 200) {
-          resolve(chunk.toString("base64"));
-        }
-        reject(response.statusCode);
-      });
-
-      response.on("error", (err: Error) => {
-        reject(String(err) + ": " + String(response.statusCode));
-      });
-    });
-  });
-}
 
 function createFileIDField(fileIDFieldName: string, response: any, instance: PH.Instance.IInstanceDetails): void {
   if (fileIDFieldName) {
@@ -89,7 +71,10 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
   try {
     const titleWithEnding = generateTitleWithDataType(title, roxFile[0].split("/").last());
 
-    const fileDataBase64 = await getFileContent(roxFile[0]);
+    const relativePath = roxFile[0].split("modules/files/")[1];
+    const filePath = decodeURIComponent(environment.fileStore.getPhysicalPath(relativePath));
+
+    const fileData = await readFileBase64Async(filePath);
 
     const body: Types.ICreateFileRequestBody = {
       "DestinationID": destinationID,
@@ -102,7 +87,7 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
         }
       ],
       "FileData": {
-        "Base64EncodedData": fileDataBase64,
+        "Base64EncodedData": fileData,
         "Filename": titleWithEnding
       }
     };
