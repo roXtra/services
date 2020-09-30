@@ -6,10 +6,10 @@ import fetch, { Response } from "node-fetch";
 
 async function post(apiUrl: string, requestBody: Types.ICreateFileRequestBody | Types.ISetFileFieldsObject[], eftoken: string, token: string): Promise<Response> {
   const headers: Types.IRequestHeader = {
-    "Accept": "application/json",
+    Accept: "application/json",
     "Content-Type": "application/json",
     "ef-authtoken": eftoken,
-    "authtoken": token
+    authtoken: token,
   };
 
   const req: Types.IPostRequest = {
@@ -23,10 +23,10 @@ async function post(apiUrl: string, requestBody: Types.ICreateFileRequestBody | 
 
 async function get(apiUrl: string, eftoken: string, token: string): Promise<Response> {
   const headers: Types.IRequestHeader = {
-    "Accept": "application/json",
+    Accept: "application/json",
     "Content-Type": "application/json",
     "ef-authtoken": eftoken,
-    "authtoken": token
+    authtoken: token,
   };
 
   const req: Types.IGetRequest = {
@@ -37,7 +37,6 @@ async function get(apiUrl: string, eftoken: string, token: string): Promise<Resp
 }
 
 export class RoXtraFileApi implements IRoXtraFileApi {
-
   public async createRoxFileCall(apiUrl: string, body: Types.ICreateFileRequestBody, eftoken: string, token: string): Promise<any> {
     const response = await post(apiUrl + "CreateNewDocument", body, eftoken, token);
     if (response.status === 200) {
@@ -65,7 +64,6 @@ export class RoXtraFileApi implements IRoXtraFileApi {
       return await response.json();
     }
   }
-
 }
 
 export async function readFileBase64Async(path: string): Promise<string> {
@@ -73,8 +71,7 @@ export async function readFileBase64Async(path: string): Promise<string> {
     fs.readFile(path, "base64", (err: any, buf: any) => {
       if (err) {
         reject(err);
-      }
-      else {
+      } else {
         resolve(buf.toString());
       }
     });
@@ -85,7 +82,10 @@ export function initRequiredFields(keys: string[], fields: PH.Data.IServiceActio
   const requiredFields: Map<string, PH.Data.IServiceActionConfigField> = new Map();
 
   for (const key of keys) {
-    requiredFields.set(key, fields.find(f => f.key === key));
+    requiredFields.set(
+      key,
+      fields.find((f) => f.key === key),
+    );
   }
 
   return requiredFields;
@@ -96,14 +96,14 @@ export function missingRequiredField(requiredFields: Map<string, PH.Data.IServic
   for (const key of keys) {
     if (!requiredFields.get(key) || !requiredFields.get(key).value) {
       return {
-        "isMissing": true,
-        "key": key
+        isMissing: true,
+        key: key,
       };
     }
   }
 
   return {
-    "isMissing": false
+    isMissing: false,
   };
 }
 
@@ -134,7 +134,6 @@ function errorHandlingCreateRoxFile(errorState: number, errorField: PH.Data.IFie
 
 function errorHandlingSetRoxFileField(errorState: number, errorField: PH.Data.IFieldValue): PH.Data.IFieldValue {
   switch (errorState) {
-
     case Types.ERRORCODES.MISSING_FILEID: {
       errorField.value = PH.tl("Die ID des Dokuments wurde nicht gefunden");
       return errorField;
@@ -160,7 +159,6 @@ function errorHandlingSetRoxFileField(errorState: number, errorField: PH.Data.IF
 
 function errorHandlingAPICall(errorState: number, errorField: PH.Data.IFieldValue): PH.Data.IFieldValue {
   switch (errorState) {
-
     case Types.ERRORCODES.APICALLERROR: {
       errorField.value = PH.tl("Es ist etwas beim Aufruf der roXtra-Schnittstelle schief gelaufen, bitte überprüfen Sie Ihre Eingaben.");
       return errorField;
@@ -172,7 +170,7 @@ function errorHandlingAPICall(errorState: number, errorField: PH.Data.IFieldValu
 export function errorHandling(errorState: number, instance: PH.Instance.IInstanceDetails): PH.Instance.IInstanceDetails {
   let errorField: PH.Data.IFieldValue = {
     value: "",
-    type: "ProcessHubTextArea"
+    type: "ProcessHubTextArea",
   };
 
   if (errorState === Types.ERRORCODES.NOERROR) {

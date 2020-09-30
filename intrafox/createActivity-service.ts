@@ -11,16 +11,16 @@ export async function serviceLogic(url: string, environment: PH.ServiceTask.ISer
   const fields = config.fields;
   const instance = environment.instanceDetails;
 
-  const token = fields.find(f => f.key === "token").value;
+  const token = fields.find((f) => f.key === "token").value;
 
-  const activityAbbrevationField = fields.find(f => f.key === "activityAbbrevation").value;
-  const activityDescriptionField = fields.find(f => f.key === "activityDescription").value;
-  const activityExpirationdateField = fields.find(f => f.key === "activityExpirationdate").value;
-  const usernameField = fields.find(f => f.key === "username").value;
+  const activityAbbrevationField = fields.find((f) => f.key === "activityAbbrevation").value;
+  const activityDescriptionField = fields.find((f) => f.key === "activityDescription").value;
+  const activityExpirationdateField = fields.find((f) => f.key === "activityExpirationdate").value;
+  const usernameField = fields.find((f) => f.key === "username").value;
 
   const activityAbbrevation = ((instance.extras.fieldContents[activityAbbrevationField] as PH.Data.IFieldValue).value as string).trim();
   const activityDescription = ((instance.extras.fieldContents[activityDescriptionField] as PH.Data.IFieldValue).value as string).trim();
-  const activityExpirationdate = ((instance.extras.fieldContents[activityExpirationdateField] as PH.Data.IFieldValue).value as Date);
+  const activityExpirationdate = (instance.extras.fieldContents[activityExpirationdateField] as PH.Data.IFieldValue).value as Date;
   const username = ((instance.extras.fieldContents[usernameField] as PH.Data.IFieldValue).value as string).trim();
 
   const response = await IntrafoxAPI.createGlobalActivity(url, username, activityAbbrevation, activityDescription, activityExpirationdate, token);
@@ -30,7 +30,7 @@ export async function serviceLogic(url: string, environment: PH.ServiceTask.ISer
   if (responseOK === "ok") {
     instance.extras.fieldContents["Info"] = {
       value: "Maßnahme wurde erstellt",
-      type: "ProcessHubTextArea"
+      type: "ProcessHubTextArea",
     };
   } else {
     IntrafoxAPI.errorHandling(instance, error.ERRORCODE);

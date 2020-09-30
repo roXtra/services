@@ -10,23 +10,23 @@ const operators = {
   ADDITION: 0,
   SUBTRAKTION: 1,
   MULTIPLIKATION: 2,
-  DIVISION: 3
+  DIVISION: 3,
 };
 
-const serviceTaskIDs = ["ServiceTask_C479EDB7D2E3D038", // Addition-service id
+const serviceTaskIDs = [
+  "ServiceTask_C479EDB7D2E3D038", // Addition-service id
   "ServiceTask_7E48F9F434FFC8E0", // Subtraktion-service id
   "ServiceTask_8A0A4BACC8498EBA", // Multiplikation-service id
-  "ServiceTask_134D60764565E6B9" // Division-service id
+  "ServiceTask_134D60764565E6B9", // Division-service id
 ];
 
 describe("services", () => {
   describe("math", () => {
-
     function createEnvironment(bpmnXmlPath: string, bpmnTaskId: string, number1: number, number2: number): PH.ServiceTask.IServiceTaskEnvironment {
       const env = PH.Test.createEmptyTestServiceEnvironment(fs.readFileSync(bpmnXmlPath, "utf8"));
       env.bpmnTaskId = bpmnTaskId;
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      env.fieldContents = { "Feld_1": { type: "ProcessHubNumber", value: number1 }, "Feld_2": { type: "ProcessHubNumber", value: number2 } };
+      env.fieldContents = { Feld_1: { type: "ProcessHubNumber", value: number1 }, Feld_2: { type: "ProcessHubNumber", value: number2 } };
       env.instanceDetails.extras.fieldContents = env.fieldContents;
 
       return env;
@@ -53,7 +53,7 @@ describe("services", () => {
       if (operator === operators.DIVISION && num2 === 0) {
         assert.equal((env.instanceDetails.extras.fieldContents.Feld_1 as PH.Data.IFieldValue).value as number, num1);
         assert.equal((env.instanceDetails.extras.fieldContents.Feld_2 as PH.Data.IFieldValue).value as number, num2);
-        assert.isUndefined((env.instanceDetails.extras.fieldContents.Ergebnis as PH.Data.IFieldValue));
+        assert.isUndefined(env.instanceDetails.extras.fieldContents.Ergebnis as PH.Data.IFieldValue);
       } else {
         assert.equal((env.instanceDetails.extras.fieldContents.Feld_1 as PH.Data.IFieldValue).value as number, num1);
         assert.equal((env.instanceDetails.extras.fieldContents.Feld_2 as PH.Data.IFieldValue).value as number, num2);

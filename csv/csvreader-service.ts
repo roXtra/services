@@ -9,20 +9,20 @@ function errorHandling(instance: PH.Instance.IInstanceDetails, table: string): v
     case ErrorStates.NOERROR:
       instance.extras.fieldContents["Ergebnis"] = {
         value: table,
-        type: "ProcessHubTextArea"
+        type: "ProcessHubTextArea",
       };
 
       break;
     case ErrorStates.ERRORCODE_NORESULTS:
       instance.extras.fieldContents["Info"] = {
         value: "Keine Übereinstimmung",
-        type: "ProcessHubTextArea"
+        type: "ProcessHubTextArea",
       };
       break;
     case ErrorStates.ERRORCODE_NOSUCHFILE:
       instance.extras.fieldContents["Info"] = {
         value: "Keine Datei mit diesem Namen gefunden",
-        type: "ProcessHubTextArea"
+        type: "ProcessHubTextArea",
       };
       break;
   }
@@ -38,16 +38,15 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
   const fields = config.fields;
   const instance = environment.instanceDetails;
 
-  const filePath = fields.find(f => f.key === "filePath").value;
-  const sheetName = fields.find(f => f.key === "sheetName").value;
-  let query = fields.find(f => f.key === "query").value;
+  const filePath = fields.find((f) => f.key === "filePath").value;
+  const sheetName = fields.find((f) => f.key === "sheetName").value;
+  let query = fields.find((f) => f.key === "query").value;
   let xlsxfile;
   let table;
 
   try {
     xlsxfile = XLSX.readFile(filePath);
-  }
-  catch {
+  } catch {
     errorState = ErrorStates.ERRORCODE_NOSUCHFILE;
   }
   if (errorState === ErrorStates.NOERROR) {

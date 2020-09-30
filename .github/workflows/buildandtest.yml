@@ -21,5 +21,9 @@ jobs:
         sudo apt install openjdk-8-jdk
     - name: Install dependencies
       run: npm install
+    - name: Run Format Checker
+      run: npm run check:format
+      working-directory: ./
+      timeout-minutes: 10
     - name: Build and Test services
       run: npm run buildonly

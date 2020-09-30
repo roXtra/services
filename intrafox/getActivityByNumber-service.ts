@@ -11,9 +11,9 @@ export async function serviceLogic(url: string, environment: PH.ServiceTask.ISer
   const fields = config.fields;
   const instance = environment.instanceDetails;
 
-  const token = fields.find(f => f.key === "token").value;
-  const activityNumberField = fields.find(f => f.key === "activityNumber").value;
-  const usernameField = fields.find(f => f.key === "username").value;
+  const token = fields.find((f) => f.key === "token").value;
+  const activityNumberField = fields.find((f) => f.key === "activityNumber").value;
+  const usernameField = fields.find((f) => f.key === "username").value;
 
   const activityNumber = ((instance.extras.fieldContents[activityNumberField] as PH.Data.IFieldValue).value as string).trim();
   const username = ((instance.extras.fieldContents[usernameField] as PH.Data.IFieldValue).value as string).trim();
@@ -27,12 +27,12 @@ export async function serviceLogic(url: string, environment: PH.ServiceTask.ISer
   if (activity) {
     instance.extras.fieldContents["Abkürzung"] = {
       value: activity.ACTIVITY_ABBREVIATION,
-      type: "ProcessHubTextArea"
+      type: "ProcessHubTextArea",
     };
 
     instance.extras.fieldContents["Beschreibung"] = {
       value: activity.ACTIVITY_DESCRIPTION,
-      type: "ProcessHubTextArea"
+      type: "ProcessHubTextArea",
     };
   } else {
     IntrafoxAPI.errorHandling(instance, error.ERRORCODE);

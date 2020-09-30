@@ -1,4 +1,3 @@
-
 import * as PH from "processhub-sdk";
 import * as Antragsnr from "./antragsnr-service";
 import * as fs from "fs";
@@ -6,7 +5,6 @@ import { assert } from "chai";
 
 describe("services", () => {
   describe("servicetemplate", () => {
-
     // Create a mock service environment
     function createEnvironment(bpmnXmlPath: string, bpmnTaskId: string): PH.ServiceTask.IServiceTaskEnvironment {
       const env = PH.Test.createEmptyTestServiceEnvironment(fs.readFileSync(bpmnXmlPath, "utf8"));
@@ -17,7 +15,12 @@ describe("services", () => {
       return env;
     }
 
-    function performAntragsnrTest(bpmnXmlPath: string, bpmnTaskId: string, instances: PH.Instance.IInstanceDetails[], tragetField: string): PH.ServiceTask.IServiceTaskEnvironment {
+    function performAntragsnrTest(
+      bpmnXmlPath: string,
+      bpmnTaskId: string,
+      instances: PH.Instance.IInstanceDetails[],
+      tragetField: string,
+    ): PH.ServiceTask.IServiceTaskEnvironment {
       const env = createEnvironment(bpmnXmlPath, bpmnTaskId);
       const processDetails: PH.Process.IProcessDetails = {
         processId: "",
@@ -43,7 +46,7 @@ describe("services", () => {
           workspaceId: "",
           processId: "",
           extras: {
-            instanceState: null
+            instanceState: null,
           },
           createdAt: new Date("October 13, 2018 11:13:00"),
         },
@@ -55,7 +58,7 @@ describe("services", () => {
           workspaceId: "",
           processId: "",
           extras: {
-            instanceState: null
+            instanceState: null,
           },
           createdAt: new Date("October 13, 2014 11:13:00"),
         },
@@ -65,15 +68,15 @@ describe("services", () => {
           workspaceId: "",
           processId: "",
           extras: {
-            instanceState: null
+            instanceState: null,
           },
           createdAt: new Date("October 13, 2015 11:13:00"),
-        }
+        },
       ];
 
       const env = performAntragsnrTest("./testfiles/antragsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName);
 
-      assert.equal(((env.fieldContents[targetFieldName] as PH.Data.IFieldValue).value as string), "2018/01");
+      assert.equal((env.fieldContents[targetFieldName] as PH.Data.IFieldValue).value as string, "2018/01");
     });
 
     it("execute antragsnr service test_8fd1ba08-f8a1-4caa-b685-27b3ee946038", () => {
@@ -87,7 +90,7 @@ describe("services", () => {
           workspaceId: "",
           processId: "",
           extras: {
-            instanceState: null
+            instanceState: null,
           },
           createdAt: new Date("October 13, 2018 11:13:00"),
         },
@@ -99,7 +102,7 @@ describe("services", () => {
           workspaceId: "",
           processId: "",
           extras: {
-            instanceState: null
+            instanceState: null,
           },
           createdAt: new Date("October 12, 2018 11:13:00"),
         },
@@ -109,15 +112,15 @@ describe("services", () => {
           workspaceId: "",
           processId: "",
           extras: {
-            instanceState: null
+            instanceState: null,
           },
           createdAt: new Date("October 13, 2015 11:13:00"),
-        }
+        },
       ];
 
       const env = performAntragsnrTest("./testfiles/antragsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName);
 
-      assert.equal(((env.fieldContents[targetFieldName] as PH.Data.IFieldValue).value as string), "2018/02");
+      assert.equal((env.fieldContents[targetFieldName] as PH.Data.IFieldValue).value as string, "2018/02");
     });
 
     it("execute antragsnr service test_8fd1ba08-f8a1-4caa-b685-27b3ee946038", () => {
@@ -131,7 +134,7 @@ describe("services", () => {
           workspaceId: "",
           processId: "",
           extras: {
-            instanceState: null
+            instanceState: null,
           },
           createdAt: new Date("October 13, 2018 11:13:00"),
         },
@@ -143,7 +146,7 @@ describe("services", () => {
           workspaceId: "",
           processId: "",
           extras: {
-            instanceState: null
+            instanceState: null,
           },
           createdAt: new Date("October 12, 2018 11:13:00"),
         },
@@ -153,15 +156,15 @@ describe("services", () => {
           workspaceId: "",
           processId: "",
           extras: {
-            instanceState: null
+            instanceState: null,
           },
           createdAt: new Date("October 11, 2018 11:13:00"),
-        }
+        },
       ];
 
       const env = performAntragsnrTest("./testfiles/antragsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName);
 
-      assert.equal(((env.fieldContents[targetFieldName] as PH.Data.IFieldValue).value as string), "2018/03");
+      assert.equal((env.fieldContents[targetFieldName] as PH.Data.IFieldValue).value as string, "2018/03");
     });
   });
 });

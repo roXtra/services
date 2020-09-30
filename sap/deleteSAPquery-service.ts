@@ -10,20 +10,20 @@ export async function deleteSAPQuery(environment: PH.ServiceTask.IServiceTaskEnv
   const fields = config.fields;
   const instance = environment.instanceDetails;
 
-  const ipAddress = fields.find(f => f.key === "ipAddress").value;
-  const port = fields.find(f => f.key === "port").value;
-  const databaseUsername = fields.find(f => f.key === "databaseUsername").value;
-  const password = fields.find(f => f.key === "password").value;
-  const tenant = fields.find(f => f.key === "tenant").value;
-  const tableName = fields.find(f => f.key === "tableName").value;
-  const where = fields.find(f => f.key === "where").value;
+  const ipAddress = fields.find((f) => f.key === "ipAddress").value;
+  const port = fields.find((f) => f.key === "port").value;
+  const databaseUsername = fields.find((f) => f.key === "databaseUsername").value;
+  const password = fields.find((f) => f.key === "password").value;
+  const tenant = fields.find((f) => f.key === "tenant").value;
+  const tableName = fields.find((f) => f.key === "tableName").value;
+  const where = fields.find((f) => f.key === "where").value;
 
   const connectionParams = {
     host: ipAddress,
     port: port,
     uid: databaseUsername,
     pwd: password,
-    databaseName: tenant
+    databaseName: tenant,
   };
 
   const insertQuery = Methods.buildDeleteQuery(tableName, where, instance);

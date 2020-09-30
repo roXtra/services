@@ -9,7 +9,6 @@ describe("services", () => {
   describe("roxfile", () => {
     describe("createroxfile-service", () => {
       describe("serviceLogic", () => {
-
         it("creates a roxFile", async () => {
           const newRoxFileId = "1000";
 
@@ -30,12 +29,12 @@ describe("services", () => {
               expect(body.FileData.Filename).to.equal("Das ist ein Titel.docx");
               expect(body.FileData.Base64EncodedData.length).to.be.greaterThan(0);
               return {
-                Fields: [{ Value: newRoxFileId }]
+                Fields: [{ Value: newRoxFileId }],
               };
-            }
+            },
           };
           const environment: PH.ServiceTask.IServiceTaskEnvironment = PH.Test.createEmptyTestServiceEnvironment(
-            fs.readFileSync("./Test/Testfiles/createroxfile-service.bpmn", "utf8")
+            fs.readFileSync("./Test/Testfiles/createroxfile-service.bpmn", "utf8"),
           );
           environment.bpmnTaskName = "createroxfile";
           environment.bpmnTaskId = "ServiceTask_712C1B34834A21B9";
@@ -46,19 +45,19 @@ describe("services", () => {
 
           environment.roxApi.getApiToken = () => "";
           environment.instanceDetails.extras.fieldContents = {
-            "Anlagen": {
+            Anlagen: {
               type: "ProcessHubFileUpload",
               value: ["http://localhost:1080/modules/files/doc.docx"],
             },
-            "Titel": {
+            Titel: {
               type: "ProcessHubTextInput",
               value: "Das ist ein Titel",
             },
             // eslint-disable-next-line @typescript-eslint/naming-convention
-            "Feld_1": {
+            Feld_1: {
               type: "ProcessHubTextInput",
               value: "Beschreibung",
-            }
+            },
           };
 
           const instance = await serviceLogic(environment, testApi);
@@ -66,7 +65,6 @@ describe("services", () => {
           expect((instance.extras.fieldContents["CreatedRoxFileId"] as PH.Data.IFieldValue).value).to.equal(newRoxFileId);
         });
       });
-
     });
   });
 });

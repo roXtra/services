@@ -22,7 +22,7 @@ export async function executeQueryNoReturn(environment: PH.ServiceTask.IServiceT
     user: user,
     password: password,
     server: server,
-    database: database
+    database: database,
   };
   const pool = new sql.ConnectionPool(dbConfig);
   try {

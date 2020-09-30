@@ -10,14 +10,14 @@ export async function executeSAPQuery(environment: PH.ServiceTask.IServiceTaskEn
   const fields = config.fields;
   const instance = environment.instanceDetails;
 
-  const ipAddress = fields.find(f => f.key === "ipAddress").value;
-  const port = fields.find(f => f.key === "port").value;
-  const databaseUsername = fields.find(f => f.key === "databaseUsername").value;
-  const password = fields.find(f => f.key === "password").value;
-  const tenant = fields.find(f => f.key === "tenant").value;
-  let query = fields.find(f => f.key === "query").value;
-  const targetFieldTable = fields.find(f => f.key === "targetFieldTable").value;
-  const targetFieldCSV = fields.find(f => f.key === "targetFieldCSV").value;
+  const ipAddress = fields.find((f) => f.key === "ipAddress").value;
+  const port = fields.find((f) => f.key === "port").value;
+  const databaseUsername = fields.find((f) => f.key === "databaseUsername").value;
+  const password = fields.find((f) => f.key === "password").value;
+  const tenant = fields.find((f) => f.key === "tenant").value;
+  let query = fields.find((f) => f.key === "query").value;
+  const targetFieldTable = fields.find((f) => f.key === "targetFieldTable").value;
+  const targetFieldCSV = fields.find((f) => f.key === "targetFieldCSV").value;
 
   query = Methods.parseFieldsOfQuery(query, instance);
 
@@ -26,12 +26,12 @@ export async function executeSAPQuery(environment: PH.ServiceTask.IServiceTaskEn
     port: port,
     uid: databaseUsername,
     pwd: password,
-    databaseName: tenant
+    databaseName: tenant,
   };
 
   const newValue: PH.Data.IFieldValue = {
     value: "",
-    type: "ProcessHubTextArea"
+    type: "ProcessHubTextArea",
   };
 
   return await Methods.execQuery(connectionParams, query, async (rows: Array<any>) => {

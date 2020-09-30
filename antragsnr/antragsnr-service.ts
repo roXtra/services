@@ -19,7 +19,7 @@ export function serviceLogic(processDetails: PH.Process.IProcessDetails, environ
   const instances: PH.Instance.IInstanceDetails[] = processDetails.extras.instances;
   const instanceYear = environment.instanceDetails.createdAt.getFullYear();
   const numberOfInstances = getNumberOfInstancesOfSpecificYear(instances, instanceYear);
-  const nr: string = (numberOfInstances < 10) ? instanceYear.toString() + "/0" + numberOfInstances.toString() : instanceYear.toString() + "/" + numberOfInstances.toString();
+  const nr: string = numberOfInstances < 10 ? instanceYear.toString() + "/0" + numberOfInstances.toString() : instanceYear.toString() + "/" + numberOfInstances.toString();
 
   const newValue: PH.Data.IFieldValue = {
     value: nr,
@@ -38,7 +38,7 @@ export async function antragsnrAction(environment: PH.ServiceTask.IServiceTaskEn
 
     const config = extensionValues.serviceTaskConfigObject;
     const fields = config.fields;
-    const targetField = fields.find(f => f.key === "targetfield").value;
+    const targetField = fields.find((f) => f.key === "targetfield").value;
 
     const processDetails = await environment.processes.getProcessDetails(environment.instanceDetails.processId, ProcessExtras.ExtrasInstances);
     serviceLogic(processDetails, environment, targetField);

@@ -1,6 +1,8 @@
 import * as PH from "processhub-sdk";
 
-async function getServiceTaskConfig(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<{
+async function getServiceTaskConfig(
+  environment: PH.ServiceTask.IServiceTaskEnvironment,
+): Promise<{
   workspaceAndProcessId: string;
   fields: string[];
   executingUserId: string;
@@ -11,18 +13,17 @@ async function getServiceTaskConfig(environment: PH.ServiceTask.IServiceTaskEnvi
   const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
   const config = extensionValues.serviceTaskConfigObject;
   const fields = config.fields;
-  const workspaceAndProcessId = fields.find(f => f.key === "processId").value;
-  const fieldsString = fields.find(f => f.key === "fields");
-  const executingUserId = fields.find(f => f.key === "executingUserId").value;
+  const workspaceAndProcessId = fields.find((f) => f.key === "processId").value;
+  const fieldsString = fields.find((f) => f.key === "fields");
+  const executingUserId = fields.find((f) => f.key === "executingUserId").value;
   return {
     executingUserId,
     workspaceAndProcessId,
-    fields: (fieldsString.value && fieldsString.value.length > 0) ? JSON.parse(fieldsString.value) : []
+    fields: fieldsString.value && fieldsString.value.length > 0 ? JSON.parse(fieldsString.value) : [],
   };
 }
 
 export async function startinstance(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
-
   try {
     const { workspaceAndProcessId, fields, executingUserId } = await getServiceTaskConfig(environment);
     const workspaceId = workspaceAndProcessId.split("/")[0];
@@ -44,7 +45,7 @@ export async function startinstance(environment: PH.ServiceTask.IServiceTaskEnvi
       extras: {
         instanceState: undefined,
         fieldContents: newFieldContents,
-      }
+      },
     };
 
     await environment.instances.executeInstance(processId, newInstance, undefined, accessToken);
