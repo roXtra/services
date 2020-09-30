@@ -18,7 +18,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "mssql": "6.2.2",
+    "mssql": "6.2.3",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v8.34.0/release.tgz",
     "react": "^16.13.1",
     "semantic-ui-react": "^0.88.2"
