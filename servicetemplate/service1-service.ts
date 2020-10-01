@@ -10,11 +10,11 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
   const fields = config.fields;
   const instance = environment.instanceDetails;
   // Get field name of the corresponding field ID
-  const inputField = fields.find(f => f.key === "inputField").value;
+  const inputField = fields.find((f) => f.key === "inputField").value;
   console.log(inputField);
-  const selectField = fields.find(f => f.key === "selectField").value;
+  const selectField = fields.find((f) => f.key === "selectField").value;
   // Get the value of a selected field
-  const selectFieldValue = ((environment.instanceDetails.extras.fieldContents[selectField] as PH.Data.IFieldValue).value as string);
+  const selectFieldValue = (environment.instanceDetails.extras.fieldContents[selectField] as PH.Data.IFieldValue).value as string;
   console.log(selectFieldValue);
   return instance;
 }
@@ -26,7 +26,7 @@ export async function service1(environment: PH.ServiceTask.IServiceTaskEnvironme
   // Init new field
   instance.extras.fieldContents["Neues Feld"] = {
     value: "Ich bin neu",
-    type: "ProcessHubTextArea"
+    type: "ProcessHubTextArea",
   };
 
   // Update the Instance with changes

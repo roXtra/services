@@ -5,17 +5,17 @@ export interface IIntraFoxRequest extends RequestInit {
 }
 
 export interface IGetGlobalActivityListResponse {
-  "ACTIVITY_ACTIVITYNUMBER": string;
-  "ACTIVITY_ABBREVIATION": string;
-  "ACTIVITY_DESCRIPTION": string;
-  "ORGANIZATIONUNIT_IDENTIFIERS": string[][];
-  "ORGANIZATIONUNIT_NAMES": string[][];
+  ACTIVITY_ACTIVITYNUMBER: string;
+  ACTIVITY_ABBREVIATION: string;
+  ACTIVITY_DESCRIPTION: string;
+  ORGANIZATIONUNIT_IDENTIFIERS: string[][];
+  ORGANIZATIONUNIT_NAMES: string[][];
 }
 
 export interface IIntraFoxErrorResponse extends IIntraFoxRequest {
-  "ERRORCODE": string;
-  "REASON": string;
-  "MESSAGE": string;
+  ERRORCODE: string;
+  REASON: string;
+  MESSAGE: string;
 }
 
 export interface IIntraFoxHeader {
@@ -23,33 +23,33 @@ export interface IIntraFoxHeader {
 }
 
 export interface IIntraFoxBody {
-  "FUNCTION": string;
-  "USERNAME": string;
-  "ARGS": ICreateActivityARGS | ISetGlobalActivityARGS;
+  FUNCTION: string;
+  USERNAME: string;
+  ARGS: ICreateActivityARGS | ISetGlobalActivityARGS;
 }
 
 export interface ICreateActivityARGS {
-  "ACTIVITY_ABBREVIATION"?: string;
-  "ACTIVITY_DESCRIPTION"?: string;
-  "ACTIVITY_EXPIRATIONDATE"?: string;
+  ACTIVITY_ABBREVIATION?: string;
+  ACTIVITY_DESCRIPTION?: string;
+  ACTIVITY_EXPIRATIONDATE?: string;
 }
 
 export interface ISetGlobalActivityARGS {
-  "ACTIVITYIDENTIFIER": string;
-  "SIMPLE_DATASOURCES": ISimpleDatasources;
+  ACTIVITYIDENTIFIER: string;
+  SIMPLE_DATASOURCES: ISimpleDatasources;
 }
 
 interface ISimpleDatasources {
-  "ACTIVITY_ABBREVIATION"?: string;
-  "ACTIVITY_DESCRIPTION"?: string;
-  "ACTIVITY_EXPIRATIONDATE"?: Date;
-  "ACTIVITY_USERMEMO01"?: string;
-  "ACTIVITY_USERMEMO05"?: string;
-  "ACTIVITY_USERFLAG01"?: string;
-  "ACTIVITY_USERFLAG10"?: string;
-  "ACTIVITY_USERTEXT01"?: string;
-  "ACTIVITY_USERTEXT10"?: string;
-  "ACTIVITY_USERDATE01"?: Date;
-  "ACTIVITY_USERNUMBER01"?: string;
-  "ACTIVITY_USERNUMBER99"?: string;
+  ACTIVITY_ABBREVIATION?: string;
+  ACTIVITY_DESCRIPTION?: string;
+  ACTIVITY_EXPIRATIONDATE?: Date;
+  ACTIVITY_USERMEMO01?: string;
+  ACTIVITY_USERMEMO05?: string;
+  ACTIVITY_USERFLAG01?: string;
+  ACTIVITY_USERFLAG10?: string;
+  ACTIVITY_USERTEXT01?: string;
+  ACTIVITY_USERTEXT10?: string;
+  ACTIVITY_USERDATE01?: Date;
+  ACTIVITY_USERNUMBER01?: string;
+  ACTIVITY_USERNUMBER99?: string;
 }

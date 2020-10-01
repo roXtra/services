@@ -8,12 +8,11 @@ import * as fs from "fs";
 
 describe("services", () => {
   describe("servicetemplate", () => {
-
     // Create a mock service environment
     function createEnvironment(bpmnXmlPath: string, bpmnTaskId: string, field1Value: string, field2Value: string): PH.ServiceTask.IServiceTaskEnvironment {
       const env = PH.Test.createEmptyTestServiceEnvironment(fs.readFileSync(bpmnXmlPath, "utf8"));
       env.bpmnTaskId = bpmnTaskId;
-      env.fieldContents = { "Field1": { type: "ProcessHubNumber", value: field1Value }, "Field2": { type: "ProcessHubNumber", value: field2Value } };
+      env.fieldContents = { Field1: { type: "ProcessHubNumber", value: field1Value }, Field2: { type: "ProcessHubNumber", value: field2Value } };
       env.instanceDetails.extras.fieldContents = env.fieldContents;
 
       return env;

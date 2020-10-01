@@ -1,7 +1,7 @@
 const dirTree = require('directory-tree');
 const { execSync } = require('child_process');
 
-const processHubSDKVersion = 'v8.34.0';
+const processHubSDKVersion = 'v8.35.0-1';
 
 const childProcessStdioOptions = [0, 1, 2];
 const childProcessTimeout = 300000;
@@ -32,7 +32,8 @@ function doForEachService(func) {
       /zipped_services/,
       /commontestfiles/,
       /resources/,
-      /\.git/
+      /\.git/,
+      /\.idea/
     ]
   }, null, (item, path, stats) => {
     if (errorOccurred) {

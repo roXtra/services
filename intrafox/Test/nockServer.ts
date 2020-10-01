@@ -14,8 +14,6 @@ export class NockServer {
 
   public createResponse(testGuid: string, response: string): void {
     NockServer.stopNock();
-    this.scope
-      .post("/" + testGuid)
-      .reply(200, response);
+    this.scope.post("/" + testGuid).reply(200, response);
   }
 }
