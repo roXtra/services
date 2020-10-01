@@ -10,13 +10,12 @@ let efAccessToken: string;
 
 function handleSelectField(selectID: string, value: string, selection: ISelection): any {
   switch (selectID) {
-
     case SelectTypes.COMPLEXSELECT: {
       return JSONQuery("SelectionsList[Value = " + value.split(",")[0].trim() + "].GUID", { data: selection }).value;
     }
     case SelectTypes.MULTISELECT: {
       let multiGUIDString = "";
-      value.split(",").forEach(val => {
+      value.split(",").forEach((val) => {
         multiGUIDString += String(JSONQuery("SelectionsList[Value = " + val.trim() + "].GUID", { data: selection }).value) + ",";
       });
       return multiGUIDString.substring(0, multiGUIDString.length - 1);
@@ -40,11 +39,17 @@ function errorHandlingMissingField(key: string): number {
   return errorState;
 }
 
-async function selectionValueIDMapping(body: ISetFileFieldsObject, selectionID: string, selectID: string, environment: PH.ServiceTask.IServiceTaskEnvironment, roxFileApi: IRoXtraFileApi): Promise<any> {
+async function selectionValueIDMapping(
+  body: ISetFileFieldsObject,
+  selectionID: string,
+  selectID: string,
+  environment: PH.ServiceTask.IServiceTaskEnvironment,
+  roxFileApi: IRoXtraFileApi,
+): Promise<any> {
   const selections: ISelection[] = await roxFileApi.getSelectionsCall(APIUrl, efAccessToken, environment.roxApi.getApiToken());
   const data = {
     body: body,
-    selections: selections
+    selections: selections,
   };
 
   const selection: ISelection = JSONQuery("selections[Id = " + selectionID + "]", { data: data }).value;
@@ -58,7 +63,7 @@ function parseFileID(fieldID: string, environment: PH.ServiceTask.IServiceTaskEn
   if (fieldIDSplit.length > 1) {
     fieldID = fieldIDSplit[1].trim();
     try {
-      return ((environment.instanceDetails.extras.fieldContents[fieldID] as PH.Data.IFieldValue).value as string);
+      return (environment.instanceDetails.extras.fieldContents[fieldID] as PH.Data.IFieldValue).value as string;
     } catch (e) {
       errorState = ERRORCODES.NO_FILEIDFIELD;
     }
@@ -72,7 +77,7 @@ async function getFieldDetails(fileID: string, fieldID: string, environment: PH.
 
   const data = {
     fieldID: fieldID,
-    fields: fileDetails.Fields
+    fields: fileDetails.Fields,
   };
 
   return JSONQuery("fields[Id = {fieldID}]", { data: data }).value;
@@ -95,19 +100,20 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
   let fileId = requiredFields.get("fileId").value;
   const fieldId = requiredFields.get("fieldId").value;
 
-  const valueField = fields.find(f => f.key === "value").value;
+  const valueField = fields.find((f) => f.key === "value").value;
 
   // Get the value of a selected field
-  const value = ((environment.instanceDetails.extras.fieldContents[valueField] as PH.Data.IFieldValue).value as string);
+  const value = (environment.instanceDetails.extras.fieldContents[valueField] as PH.Data.IFieldValue).value as string;
 
   try {
-
     fileId = parseFileID(fileId, environment);
 
-    const body: ISetFileFieldsObject[] = [{
-      "Id": fieldId,
-      "Value": value
-    }];
+    const body: ISetFileFieldsObject[] = [
+      {
+        Id: fieldId,
+        Value: value,
+      },
+    ];
 
     if (value) {
       const fieldDetails = await getFieldDetails(fileId, fieldId, environment, roxFileApi);

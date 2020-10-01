@@ -3,14 +3,13 @@ import * as PH from "processhub-sdk";
 const ERRORCODES = {
   NOERROR: 0,
   NOSELECTEDTEMPLATE: 1,
-  SERVERERROR: 2
+  SERVERERROR: 2,
 };
 
 let error = ERRORCODES.NOERROR;
 
 async function getReport(environment: PH.ServiceTask.IServiceTaskEnvironment, reportDraftID: string, reportType: "docx" | "pdf"): Promise<string> {
   const instance = environment.instanceDetails;
-
 
   const reply = await environment.instances.generateInstanceReport(instance.instanceId, reportDraftID, reportType);
   const url = await environment.instances.uploadAttachment(instance.processId, instance.instanceId, reply.fileName, Buffer.from(reply.doc).toString("base64"));
@@ -37,9 +36,9 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
   const fields = config.fields;
   const instance = environment.instanceDetails;
 
-  const reportDraftID = fields.find(f => f.key === "selectReportDraft").value;
-  const reportType = fields.find(f => f.key === "selectReportType").value;
-  const reportFieldName = fields.find(f => f.key === "selectReportField").value;
+  const reportDraftID = fields.find((f) => f.key === "selectReportDraft").value;
+  const reportType = fields.find((f) => f.key === "selectReportType").value;
+  const reportFieldName = fields.find((f) => f.key === "selectReportField").value;
 
   if (!reportDraftID) {
     error = ERRORCODES.NOSELECTEDTEMPLATE;

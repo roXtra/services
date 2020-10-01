@@ -1,7 +1,7 @@
 import * as PH from "processhub-sdk";
 
 function getDateFormatted(date: Date, start: boolean): string {
-  const month = (date.getMonth() + 1);
+  const month = date.getMonth() + 1;
   const monthString = month < 10 ? "0" + String(month) : String(month);
   const endDay = start ? date.getDate() : +date.getDate() + 1;
   return date.getFullYear().toString() + monthString + String(endDay); // + "T" + time;
@@ -17,13 +17,11 @@ export async function generate(environment: PH.ServiceTask.IServiceTaskEnvironme
     const fields = config.fields;
     const instance = environment.instanceDetails;
 
-    const title = fields.find(f => f.key === "titleField").value;
-    const fromField = fields.find(f => f.key === "fromField").value;
-    const tillField = fields.find(f => f.key === "tillField").value;
-    const targetField = fields.find(f => f.key === "targetField").value;
-    const descriptionField = fields.find(f => f.key === "descriptionField") != null ? fields.find(f => f.key === "descriptionField").value : null;
-
-
+    const title = fields.find((f) => f.key === "titleField").value;
+    const fromField = fields.find((f) => f.key === "fromField").value;
+    const tillField = fields.find((f) => f.key === "tillField").value;
+    const targetField = fields.find((f) => f.key === "targetField").value;
+    const descriptionField = fields.find((f) => f.key === "descriptionField") != null ? fields.find((f) => f.key === "descriptionField").value : null;
 
     let icsString = "";
     icsString += "BEGIN:VCALENDAR\n";
@@ -77,8 +75,8 @@ export async function generate(environment: PH.ServiceTask.IServiceTaskEnvironme
       instance.processId,
       instance.instanceId,
       "ics_import_file.ics",
-      Buffer.from(icsString).toString("base64"));
-
+      Buffer.from(icsString).toString("base64"),
+    );
 
     if (url) {
       if (instance.extras.fieldContents[targetField] == null) {

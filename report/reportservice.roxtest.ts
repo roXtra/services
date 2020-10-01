@@ -1,4 +1,3 @@
-
 import * as PH from "processhub-sdk";
 import * as CreateReport from "./createReport-service";
 import * as fs from "fs";
@@ -6,12 +5,11 @@ import { assert } from "chai";
 
 describe("services", () => {
   describe("servicetemplate", () => {
-
     // Create a mock service environment
     function createEnvironment(bpmnXmlPath: string, bpmnTaskId: string): PH.ServiceTask.IServiceTaskEnvironment {
       const env = PH.Test.createEmptyTestServiceEnvironment(fs.readFileSync(bpmnXmlPath, "utf8"));
       env.bpmnTaskId = bpmnTaskId;
-      env.fieldContents = { "UploadField": { type: "ProcessHubFileUpload", value: null }};
+      env.fieldContents = { UploadField: { type: "ProcessHubFileUpload", value: null } };
       env.instanceDetails.extras.fieldContents = env.fieldContents;
 
       return env;

@@ -38,14 +38,14 @@ function errorHandling(instance: any, normalBehavior: Function): void {
     case ErrorStates.ERRORCODE_FILEPATHNOTFOUND:
       instance.extras.fieldContents["Info"] = {
         value: "Keine Datei mit diesem Pfad gefunden",
-        type: "ProcessHubTextArea"
+        type: "ProcessHubTextArea",
       };
       break;
 
     case ErrorStates.ERRORCODE_NOSUCHPROJECT:
       instance.extras.fieldContents["Info"] = {
         value: "Kein Projekt mit diesem Suchbegriff gefunden",
-        type: "ProcessHubTextArea"
+        type: "ProcessHubTextArea",
       };
       break;
   }
@@ -56,7 +56,7 @@ function initFields(instance: PH.Instance.IInstanceDetails, project: any): void 
   keys.forEach((key: any) => {
     instance.extras.fieldContents[key] = {
       value: project[key],
-      type: "ProcessHubTextArea"
+      type: "ProcessHubTextArea",
     };
   });
 }
@@ -71,8 +71,8 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
   const fields = config.fields;
   const instance = environment.instanceDetails;
 
-  const filePath = fields.find(f => f.key === "filePath").value;
-  const searchField = fields.find(f => f.key === "searchField").value;
+  const filePath = fields.find((f) => f.key === "filePath").value;
+  const searchField = fields.find((f) => f.key === "searchField").value;
 
   const keyword = getValueFromFieldName(environment, searchField);
 

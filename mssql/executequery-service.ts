@@ -9,19 +9,19 @@ export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvir
   const config = extensionValues.serviceTaskConfigObject;
   const fields = config.fields;
 
-  const server = fields.find(f => f.key === "server").value;
-  const user = fields.find(f => f.key === "username").value;
-  const password = fields.find(f => f.key === "password").value;
-  const database = fields.find(f => f.key === "database").value;
-  let query = fields.find(f => f.key === "query").value;
-  const targetField = fields.find(f => f.key === "targetField").value;
+  const server = fields.find((f) => f.key === "server").value;
+  const user = fields.find((f) => f.key === "username").value;
+  const password = fields.find((f) => f.key === "password").value;
+  const database = fields.find((f) => f.key === "database").value;
+  let query = fields.find((f) => f.key === "query").value;
+  const targetField = fields.find((f) => f.key === "targetField").value;
 
   // Config for your database
   const dbConfig = {
     user: user,
     password: password,
     server: server,
-    database: database
+    database: database,
   };
   const pool = new sql.ConnectionPool(dbConfig);
 
@@ -39,11 +39,11 @@ export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvir
     if (rows.length > 0) {
       if (!environment.instanceDetails.extras.fieldContents[targetField]) {
         const fields = processObject.getFieldDefinitions();
-        const field = fields.find(f => f.name === targetField);
+        const field = fields.find((f) => f.name === targetField);
         const targetFieldType: PH.Data.FieldType = field ? field.type : "ProcessHubTextInput";
         environment.instanceDetails.extras.fieldContents[targetField] = {
           value: undefined,
-          type: targetFieldType
+          type: targetFieldType,
         };
       }
       (environment.instanceDetails.extras.fieldContents[targetField] as PH.Data.IFieldValue).value = rows[0].result;

@@ -12,9 +12,9 @@ export class CSVServiceMethods {
   public static query(objectArray: any[], queryString: string): any[] {
     const result: any[] = [];
     const queryArray = queryString.split("&");
-    objectArray.forEach(object => {
+    objectArray.forEach((object) => {
       let isCandidate = true;
-      queryArray.forEach(query => {
+      queryArray.forEach((query) => {
         const arr = query.split("=");
         const key = arr[0];
         const value = arr[1];
@@ -44,12 +44,12 @@ export class CSVServiceMethods {
     table += "</tr>";
     rows.forEach((row: any) => {
       table += "<tr>";
-      keys.forEach(key => {
+      keys.forEach((key) => {
         table += "<th>" + String(row[key]) + "</th>";
       });
       table += "</tr>";
     });
-    return table += "</table>";
+    return (table += "</table>");
   }
 
   public static parseFieldsOfQuery(query: string, instance: PH.Instance.IInstanceDetails): string {

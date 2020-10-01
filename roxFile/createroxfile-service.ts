@@ -11,7 +11,7 @@ function createFileIDField(fileIDFieldName: string, response: any, instance: PH.
   if (fileIDFieldName) {
     instance.extras.fieldContents[fileIDFieldName] = {
       value: response.Fields[0].Value,
-      type: "ProcessHubTextArea"
+      type: "ProcessHubTextArea",
     };
   }
 }
@@ -58,15 +58,15 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
   const destinationID = requiredFields.get("destinationID").value;
   const destinationType = requiredFields.get("destinationType").value;
 
-  const roxFileField = fields.find(f => f.key === "roxFile").value;
-  const titleField = fields.find(f => f.key === "title").value;
-  const descritionField = fields.find(f => f.key === "description").value;
-  const fileIDFieldName = fields.find(f => f.key === "fileIDFieldName").value;
+  const roxFileField = fields.find((f) => f.key === "roxFile").value;
+  const titleField = fields.find((f) => f.key === "title").value;
+  const descritionField = fields.find((f) => f.key === "description").value;
+  const fileIDFieldName = fields.find((f) => f.key === "fileIDFieldName").value;
 
   // Get the value of a selected field
-  const roxFile = ((environment.instanceDetails.extras.fieldContents[roxFileField] as PH.Data.IFieldValue).value as string);
-  const title = ((environment.instanceDetails.extras.fieldContents[titleField] as PH.Data.IFieldValue).value as string);
-  const description = ((environment.instanceDetails.extras.fieldContents[descritionField] as PH.Data.IFieldValue).value as string);
+  const roxFile = (environment.instanceDetails.extras.fieldContents[roxFileField] as PH.Data.IFieldValue).value as string;
+  const title = (environment.instanceDetails.extras.fieldContents[titleField] as PH.Data.IFieldValue).value as string;
+  const description = (environment.instanceDetails.extras.fieldContents[descritionField] as PH.Data.IFieldValue).value as string;
 
   try {
     const titleWithEnding = generateTitleWithDataType(title, roxFile[0].split("/").last());
@@ -77,19 +77,19 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
     const fileData = await readFileBase64Async(filePath);
 
     const body: Types.ICreateFileRequestBody = {
-      "DestinationID": destinationID,
-      "DestinationType": destinationType,
-      "DocTypeID": docType,
-      "Fields": [
+      DestinationID: destinationID,
+      DestinationType: destinationType,
+      DocTypeID: docType,
+      Fields: [
         {
-          "Id": "Description",
-          "Value": description
-        }
+          Id: "Description",
+          Value: description,
+        },
       ],
-      "FileData": {
-        "Base64EncodedData": fileData,
-        "Filename": titleWithEnding
-      }
+      FileData: {
+        Base64EncodedData: fileData,
+        Filename: titleWithEnding,
+      },
     };
 
     // Code for Post Request
@@ -101,8 +101,7 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
       errorState = Types.ERRORCODES.APICALLERROR;
       return instance;
     }
-  }
-  catch (e) {
+  } catch (e) {
     console.error(e);
     errorState = Types.ERRORCODES.UNKNOWNERROR_CREATE;
     return instance;

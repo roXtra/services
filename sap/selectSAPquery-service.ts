@@ -10,26 +10,26 @@ export async function selectSAPQuery(environment: PH.ServiceTask.IServiceTaskEnv
   const fields = config.fields;
   const instance = environment.instanceDetails;
 
-  const ipAddress = fields.find(f => f.key === "ipAddress").value;
-  const port = fields.find(f => f.key === "port").value;
-  const databaseUsername = fields.find(f => f.key === "databaseUsername").value;
-  const password = fields.find(f => f.key === "password").value;
-  const tenant = fields.find(f => f.key === "tenant").value;
-  const tableName = fields.find(f => f.key === "tableName").value;
-  const columns = fields.find(f => f.key === "columns").value;
-  const where = fields.find(f => f.key === "where").value;
+  const ipAddress = fields.find((f) => f.key === "ipAddress").value;
+  const port = fields.find((f) => f.key === "port").value;
+  const databaseUsername = fields.find((f) => f.key === "databaseUsername").value;
+  const password = fields.find((f) => f.key === "password").value;
+  const tenant = fields.find((f) => f.key === "tenant").value;
+  const tableName = fields.find((f) => f.key === "tableName").value;
+  const columns = fields.find((f) => f.key === "columns").value;
+  const where = fields.find((f) => f.key === "where").value;
 
   const connectionParams = {
     host: ipAddress,
     port: port,
     uid: databaseUsername,
     pwd: password,
-    databaseName: tenant
+    databaseName: tenant,
   };
 
   const newValue: PH.Data.IFieldValue = {
     value: "",
-    type: "ProcessHubTextArea"
+    type: "ProcessHubTextArea",
   };
 
   const selectQuery = Methods.buildSelectQuery(tableName, columns, where, instance);

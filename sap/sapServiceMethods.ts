@@ -17,9 +17,7 @@ export default class SAPServiceMethods {
   }
 
   static buildInsertQuery(tableName: string, columns: string, values: string, instance: PH.Instance.IInstanceDetails): string {
-    let query: string = "INSERT INTO " + tableName
-      + " (" + columns + ") "
-      + "VALUES (" + values + ");";
+    let query: string = "INSERT INTO " + tableName + " (" + columns + ") " + "VALUES (" + values + ");";
 
     query = SAPServiceMethods.parseFieldsOfQuery(query, instance);
 
@@ -27,9 +25,7 @@ export default class SAPServiceMethods {
   }
 
   static buildSelectQuery(tableName: string, columns: string, where: string, instance: PH.Instance.IInstanceDetails): string {
-    let selectQuery = "SELECT " + columns
-      + " FROM " + tableName
-      + " WHERE " + where + ";";
+    let selectQuery = "SELECT " + columns + " FROM " + tableName + " WHERE " + where + ";";
 
     selectQuery = SAPServiceMethods.parseFieldsOfQuery(selectQuery, instance);
     selectQuery = selectQuery.replace(/\s{2,}/g, " ");
@@ -42,8 +38,7 @@ export default class SAPServiceMethods {
   }
 
   static buildDeleteQuery(tableName: string, where: string, instance: PH.Instance.IInstanceDetails): string {
-    let deleteQuery = "DELETE FROM " + tableName
-      + " WHERE " + where + ";";
+    let deleteQuery = "DELETE FROM " + tableName + " WHERE " + where + ";";
 
     deleteQuery = SAPServiceMethods.parseFieldsOfQuery(deleteQuery, instance);
 
@@ -55,7 +50,6 @@ export default class SAPServiceMethods {
 
     const connection = await hanaClient.createConnection();
     await connection.connect(connectionParams, async (err: any) => {
-
       noErrors = this.errorOutput(err, "Connection error", noErrors);
 
       await connection.exec(query, async (err: any, rows: Array<any>) => {
@@ -82,7 +76,14 @@ export default class SAPServiceMethods {
     return currentErrorState;
   }
 
-  static async serviceOutputLogic(rows: Array<any>, newValue: any, environment: PH.ServiceTask.IServiceTaskEnvironment, instance: any, targetFieldTable: string, targetFieldCSV: string): Promise<boolean> {
+  static async serviceOutputLogic(
+    rows: Array<any>,
+    newValue: any,
+    environment: PH.ServiceTask.IServiceTaskEnvironment,
+    instance: any,
+    targetFieldTable: string,
+    targetFieldCSV: string,
+  ): Promise<boolean> {
     let url: string;
 
     if (rows && rows.length) {
@@ -112,12 +113,12 @@ export default class SAPServiceMethods {
     table += "</tr>";
     rows.forEach((row: any) => {
       table += "<tr>";
-      keys.forEach(key => {
+      keys.forEach((key) => {
         table += "<th>" + String(row[key]) + "</th>";
       });
       table += "</tr>";
     });
-    return table += "</table>";
+    return (table += "</table>");
   }
 
   private static generateCSV(rows: Array<any>): string {
@@ -129,7 +130,7 @@ export default class SAPServiceMethods {
     data = data.substring(0, data.length - 1);
     data += "\r\n";
     rows.forEach((row: any) => {
-      keys.forEach(key => {
+      keys.forEach((key) => {
         data += String(row[key]) + ",";
       });
       data = data.substring(0, data.length - 1);
