@@ -28,7 +28,7 @@
     "@types/mocha": "^8.0.3",
     "@types/node": "^12.12.62",
     "@types/react": "^16.9.51",
-    "acorn": "^8.0.2",
+    "acorn": "^8.0.4",
     "bestzip": "^2.1.7",
     "chai": "^4.2.0",
     "copyfiles": "^2.3.0",
