@@ -19,7 +19,7 @@
   "license": "ISC",
   "dependencies": {
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v8.35.0/release.tgz",
-    "react": "^16.13.1",
+    "react": "^16.14.0",
     "semantic-ui-react": "^0.88.2"
   },
   "devDependencies": {
