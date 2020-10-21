@@ -18,7 +18,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@sap/hana-client": "^2.6.54",
+    "@sap/hana-client": "^2.6.58",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v8.35.0/release.tgz",
     "react": "^16.14.0",
     "semantic-ui-react": "^0.88.2"
