@@ -26,7 +26,7 @@ export async function deleteSAPQuery(environment: PH.ServiceTask.IServiceTaskEnv
     databaseName: tenant,
   };
 
-  const insertQuery = Methods.buildDeleteQuery(tableName, where, instance);
+  const insertQuery = Methods.buildDeleteQuery(tableName, where, instance, processObject);
 
   return await Methods.execQuery(connectionParams, insertQuery, async () => {
     return await environment.instances.updateInstance(environment.instanceDetails);

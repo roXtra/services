@@ -26,7 +26,13 @@ export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvir
   });
 
   try {
-    query = PH.Data.parseAndInsertStringWithFieldContent(query, environment.fieldContents, processObject, environment.instanceDetails.extras.roleOwners);
+    query = PH.Data.parseAndInsertStringWithFieldContent(
+      query,
+      environment.instanceDetails.extras.fieldContents,
+      processObject,
+      environment.instanceDetails.extras.roleOwners,
+      true,
+    );
     console.log(`MySQL service: executing ${query}`);
 
     connection.connect();
