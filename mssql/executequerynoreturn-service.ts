@@ -15,7 +15,13 @@ export async function executeQueryNoReturn(environment: PH.ServiceTask.IServiceT
   const password = fields.find((f: IServiceActionConfigField) => f.key === "password").value;
   const database = fields.find((f: IServiceActionConfigField) => f.key === "database").value;
   let query = fields.find((f: IServiceActionConfigField) => f.key === "query").value;
-  query = PH.Data.parseAndInsertStringWithFieldContent(query, environment.fieldContents, processObject, environment.instanceDetails.extras.roleOwners);
+  query = PH.Data.parseAndInsertStringWithFieldContent(
+    query,
+    environment.instanceDetails.extras.fieldContents,
+    processObject,
+    environment.instanceDetails.extras.roleOwners,
+    true,
+  );
 
   // Config for your database
   const dbConfig = {

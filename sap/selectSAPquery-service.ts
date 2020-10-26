@@ -32,7 +32,7 @@ export async function selectSAPQuery(environment: PH.ServiceTask.IServiceTaskEnv
     type: "ProcessHubTextArea",
   };
 
-  const selectQuery = Methods.buildSelectQuery(tableName, columns, where, instance);
+  const selectQuery = Methods.buildSelectQuery(tableName, columns, where, instance, processObject);
 
   const result = await Methods.execQuery(connectionParams, selectQuery, async (rows: Array<any>) => {
     return await Methods.serviceOutputLogic(rows, newValue, environment, instance, "Ergebnis", "CSV Export");

@@ -29,7 +29,13 @@ export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvir
   try {
     await pool.connect();
 
-    query = PH.Data.parseAndInsertStringWithFieldContent(query, environment.fieldContents, processObject, environment.instanceDetails.extras.roleOwners);
+    query = PH.Data.parseAndInsertStringWithFieldContent(
+      query,
+      environment.instanceDetails.extras.fieldContents,
+      processObject,
+      environment.instanceDetails.extras.roleOwners,
+      true,
+    );
 
     const result = await pool.request().query(query);
 

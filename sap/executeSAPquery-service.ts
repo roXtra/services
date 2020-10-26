@@ -19,7 +19,7 @@ export async function executeSAPQuery(environment: PH.ServiceTask.IServiceTaskEn
   const targetFieldTable = fields.find((f) => f.key === "targetFieldTable").value;
   const targetFieldCSV = fields.find((f) => f.key === "targetFieldCSV").value;
 
-  query = Methods.parseFieldsOfQuery(query, instance);
+  query = PH.Data.parseAndInsertStringWithFieldContent(query, instance.extras.fieldContents, processObject, instance.extras.roleOwners, true);
 
   const connectionParams = {
     host: ipAddress,

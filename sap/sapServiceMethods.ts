@@ -2,32 +2,18 @@ import * as PH from "processhub-sdk";
 import * as hanaClient from "@sap/hana-client";
 
 export default class SAPServiceMethods {
-  static parseFieldsOfQuery(query: string, instance: PH.Instance.IInstanceDetails): string {
-    let modifiedQuery = query;
-
-    while (modifiedQuery.includes("@@")) {
-      const pos1 = modifiedQuery.search("@@") + 2;
-      const subString = modifiedQuery.substring(pos1, modifiedQuery.length);
-      const pos2 = pos1 + subString.search("@@");
-      const fieldName = modifiedQuery.substring(pos1, pos2);
-
-      modifiedQuery = modifiedQuery.replace("@@" + fieldName + "@@", (instance.extras.fieldContents[fieldName] as PH.Data.IFieldValue).value as string);
-    }
-    return modifiedQuery;
-  }
-
-  static buildInsertQuery(tableName: string, columns: string, values: string, instance: PH.Instance.IInstanceDetails): string {
+  static buildInsertQuery(tableName: string, columns: string, values: string, instance: PH.Instance.IInstanceDetails, processObject: PH.Process.BpmnProcess): string {
     let query: string = "INSERT INTO " + tableName + " (" + columns + ") " + "VALUES (" + values + ");";
 
-    query = SAPServiceMethods.parseFieldsOfQuery(query, instance);
+    query = PH.Data.parseAndInsertStringWithFieldContent(query, instance.extras.fieldContents, processObject, instance.extras.roleOwners, true);
 
     return query;
   }
 
-  static buildSelectQuery(tableName: string, columns: string, where: string, instance: PH.Instance.IInstanceDetails): string {
+  static buildSelectQuery(tableName: string, columns: string, where: string, instance: PH.Instance.IInstanceDetails, processObject: PH.Process.BpmnProcess): string {
     let selectQuery = "SELECT " + columns + " FROM " + tableName + " WHERE " + where + ";";
 
-    selectQuery = SAPServiceMethods.parseFieldsOfQuery(selectQuery, instance);
+    selectQuery = PH.Data.parseAndInsertStringWithFieldContent(selectQuery, instance.extras.fieldContents, processObject, instance.extras.roleOwners, true);
     selectQuery = selectQuery.replace(/\s{2,}/g, " ");
 
     if (selectQuery.endsWith("WHERE ;")) {
@@ -37,10 +23,10 @@ export default class SAPServiceMethods {
     return selectQuery;
   }
 
-  static buildDeleteQuery(tableName: string, where: string, instance: PH.Instance.IInstanceDetails): string {
+  static buildDeleteQuery(tableName: string, where: string, instance: PH.Instance.IInstanceDetails, processObject: PH.Process.BpmnProcess): string {
     let deleteQuery = "DELETE FROM " + tableName + " WHERE " + where + ";";
 
-    deleteQuery = SAPServiceMethods.parseFieldsOfQuery(deleteQuery, instance);
+    deleteQuery = PH.Data.parseAndInsertStringWithFieldContent(deleteQuery, instance.extras.fieldContents, processObject, instance.extras.roleOwners, true);
 
     return deleteQuery;
   }

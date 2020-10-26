@@ -27,7 +27,7 @@ export async function insertSAPQuery(environment: PH.ServiceTask.IServiceTaskEnv
     databaseName: tenant,
   };
 
-  const insertQuery = Methods.buildInsertQuery(tableName, columns, values, instance);
+  const insertQuery = Methods.buildInsertQuery(tableName, columns, values, instance, processObject);
 
   return await Methods.execQuery(connectionParams, insertQuery, async () => {
     return await environment.instances.updateInstance(environment.instanceDetails);
