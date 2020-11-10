@@ -1,7 +1,7 @@
 const dirTree = require('directory-tree');
 const { execSync } = require('child_process');
 
-const processHubSDKVersion = 'v9.0.0';
+const processHubSDKVersion = 'v9.1.0';
 
 const childProcessStdioOptions = [0, 1, 2];
 const childProcessTimeout = 300000;
