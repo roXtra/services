@@ -9,6 +9,10 @@ let efAccessToken: string;
 
 function createFileIDField(fileIDFieldName: string, response: any, instance: PH.Instance.IInstanceDetails): void {
   if (fileIDFieldName) {
+    if (instance.extras.fieldContents === undefined) {
+      throw new Error("instance.extras.fieldContents are undefined, cannot proceed with service!");
+    }
+
     instance.extras.fieldContents[fileIDFieldName] = {
       value: response.Fields[0].Value,
       type: "ProcessHubTextArea",
@@ -49,24 +53,50 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
   const missingField = missingRequiredField(requiredFields);
 
   if (missingField.isMissing) {
+    if (missingField.key === undefined) {
+      throw new Error("missingField.isMissing is true but missingField.key is undefined! This must not happen!");
+    }
+
     errorState = errorHandlingMissingField(missingField.key);
     return instance;
   }
 
   // Get field name of the corresponding field ID
-  const docType = requiredFields.get("docType").value;
-  const destinationID = requiredFields.get("destinationID").value;
-  const destinationType = requiredFields.get("destinationType").value;
+  const docType = requiredFields.get("docType")?.value;
+  const destinationID = requiredFields.get("destinationID")?.value;
+  const destinationType = requiredFields.get("destinationType")?.value;
 
-  const roxFileField = fields.find((f) => f.key === "roxFile").value;
-  const titleField = fields.find((f) => f.key === "title").value;
-  const descritionField = fields.find((f) => f.key === "description").value;
-  const fileIDFieldName = fields.find((f) => f.key === "fileIDFieldName").value;
+  const roxFileField = fields.find((f) => f.key === "roxFile")?.value;
+  const titleField = fields.find((f) => f.key === "title")?.value;
+  const descriptionField = fields.find((f) => f.key === "description")?.value;
+  const fileIDFieldName = fields.find((f) => f.key === "fileIDFieldName")?.value;
+
+  if (docType === undefined) {
+    throw new Error("docType is undefined, cannot proceed!");
+  }
+  if (destinationID === undefined) {
+    throw new Error("destinationID is undefined, cannot proceed!");
+  }
+  if (destinationType === undefined) {
+    throw new Error("destinationType is undefined, cannot proceed!");
+  }
+  if (roxFileField === undefined) {
+    throw new Error("roxFileField is undefined, cannot proceed!");
+  }
+  if (titleField === undefined) {
+    throw new Error("titleField is undefined, cannot proceed!");
+  }
+  if (descriptionField === undefined) {
+    throw new Error("descriptionField is undefined, cannot proceed!");
+  }
+  if (fileIDFieldName === undefined) {
+    throw new Error("fileIDFieldName is undefined, cannot proceed!");
+  }
 
   // Get the value of a selected field
-  const roxFile = (environment.instanceDetails.extras.fieldContents[roxFileField] as PH.Data.IFieldValue).value as string;
-  const title = (environment.instanceDetails.extras.fieldContents[titleField] as PH.Data.IFieldValue).value as string;
-  const description = (environment.instanceDetails.extras.fieldContents[descritionField] as PH.Data.IFieldValue).value as string;
+  const roxFile = (environment.instanceDetails.extras.fieldContents?.[roxFileField] as PH.Data.IFieldValue).value as string;
+  const title = (environment.instanceDetails.extras.fieldContents?.[titleField] as PH.Data.IFieldValue).value as string;
+  const description = (environment.instanceDetails.extras.fieldContents?.[descriptionField] as PH.Data.IFieldValue).value as string;
 
   try {
     const titleWithEnding = generateTitleWithDataType(title, roxFile[0].split("/").last());

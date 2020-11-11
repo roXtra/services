@@ -56,6 +56,8 @@ export class RoXtraFileApi implements IRoXtraFileApi {
     if (response.status === 200) {
       return await response.json();
     }
+
+    throw new Error(`Error occurred in getSelectionsCall, response status was ${response.status}`);
   }
 
   public async getFileDetailsCall(apiUrl: string, fileID: string, eftoken: string, token: string): Promise<any> {
@@ -82,10 +84,12 @@ export function initRequiredFields(keys: string[], fields: PH.Data.IServiceActio
   const requiredFields: Map<string, PH.Data.IServiceActionConfigField> = new Map();
 
   for (const key of keys) {
-    requiredFields.set(
-      key,
-      fields.find((f) => f.key === key),
-    );
+    const field = fields.find((f) => f.key === key);
+    if (field === undefined) {
+      throw new Error(`Error in initRequiredFields: Could not find field for key ${key}, aborting!`);
+    }
+
+    requiredFields.set(key, field);
   }
 
   return requiredFields;
@@ -94,7 +98,7 @@ export function initRequiredFields(keys: string[], fields: PH.Data.IServiceActio
 export function missingRequiredField(requiredFields: Map<string, PH.Data.IServiceActionConfigField>): Types.IMissingField {
   const keys = requiredFields.keys();
   for (const key of keys) {
-    if (!requiredFields.get(key) || !requiredFields.get(key).value) {
+    if (!requiredFields.get(key) || !requiredFields.get(key)?.value) {
       return {
         isMissing: true,
         key: key,
@@ -167,7 +171,7 @@ function errorHandlingAPICall(errorState: number, errorField: PH.Data.IFieldValu
   return errorField;
 }
 
-export function errorHandling(errorState: number, instance: PH.Instance.IInstanceDetails): PH.Instance.IInstanceDetails {
+export function errorHandling(errorState: number, instance: PH.Instance.IInstanceDetails): PH.Instance.IInstanceDetails | undefined {
   let errorField: PH.Data.IFieldValue = {
     value: "",
     type: "ProcessHubTextArea",
@@ -179,18 +183,27 @@ export function errorHandling(errorState: number, instance: PH.Instance.IInstanc
 
   errorField = errorHandlingCreateRoxFile(errorState, errorField);
   if (errorField.value) {
+    if (instance.extras.fieldContents === undefined) {
+      throw new Error(`instance.extras.fieldContents are undefined, cannot set error field with error: ${String(errorField)}!`);
+    }
     instance.extras.fieldContents[PH.tl("ERROR beim Erstellen einer Datei")] = errorField;
     return instance;
   }
 
   errorField = errorHandlingSetRoxFileField(errorState, errorField);
   if (errorField.value) {
+    if (instance.extras.fieldContents === undefined) {
+      throw new Error(`instance.extras.fieldContents are undefined, cannot set error field with error: ${String(errorField)}!`);
+    }
     instance.extras.fieldContents[PH.tl("ERROR beim Bearbeiten eines Dokumentenfeldes")] = errorField;
     return instance;
   }
 
   errorField = errorHandlingAPICall(errorState, errorField);
   if (errorField.value) {
+    if (instance.extras.fieldContents === undefined) {
+      throw new Error(`instance.extras.fieldContents are undefined, cannot set error field with error: ${String(errorField)}!`);
+    }
     instance.extras.fieldContents[PH.tl("ERROR beim Aufruf der roXtra-Schnittstelle")] = errorField;
     return instance;
   }
