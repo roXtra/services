@@ -14,6 +14,8 @@ module.exports = {
     'roXtra/services',
   ],
   rebaseWhen: "behind-base-branch",
+  stabilityDays: 14,
+  prCreation: "not-pending",
   ignoreDeps: [],
   packageRules: [
     {
