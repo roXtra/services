@@ -7,17 +7,28 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
   const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
   const config = extensionValues.serviceTaskConfigObject;
+
+  if (config === undefined) {
+    throw new Error("Config is undefined, cannot proceed with service!");
+  }
+
   const fields = config.fields;
   const instance = environment.instanceDetails;
 
   // Get field name of the corresponding field ID
-  const inputField = fields.find((f) => f.key === "inputField").value;
+  const inputField = fields.find((f) => f.key === "inputField")?.value;
   console.log(inputField);
-  const selectField = fields.find((f) => f.key === "selectField").value;
+  const selectField = fields.find((f) => f.key === "selectField")?.value;
 
-  // Get the value of a selected field
-  const selectFieldValue = (environment.instanceDetails.extras.fieldContents[selectField] as PH.Data.IFieldValue).value as string;
-  console.log(selectFieldValue);
+  if (selectField !== undefined) {
+    // Get the value of a selected field
+    const selectFieldValue = (environment.instanceDetails.extras.fieldContents?.[selectField] as PH.Data.IFieldValue).value as string;
+    console.log(selectFieldValue);
+  }
+
+  if (instance.extras.fieldContents === undefined) {
+    instance.extras.fieldContents = {};
+  }
 
   // Init new field
   instance.extras.fieldContents["Neues Feld"] = {
