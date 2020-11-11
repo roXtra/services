@@ -2,29 +2,53 @@ import * as PH from "processhub-sdk";
 import * as hanaClient from "@sap/hana-client";
 
 export default class SAPServiceMethods {
-  static buildInsertQuery(tableName: string, columns: string, values: string, instance: PH.Instance.IInstanceDetails, processObject: PH.Process.BpmnProcess): string {
-    let query: string = "INSERT INTO " + tableName + " (" + columns + ") " + "VALUES (" + values + ");";
+  static buildInsertQuery(
+    tableName: string,
+    columns: string,
+    values: string,
+    instance: PH.Instance.IInstanceDetails,
+    processObject: PH.Process.BpmnProcess,
+  ): string | undefined {
+    let query: string | undefined = "INSERT INTO " + tableName + " (" + columns + ") " + "VALUES (" + values + ");";
+
+    if (instance.extras.roleOwners === undefined) {
+      throw new Error("instance.extras.roleOwners is undefined, cannot proceed!");
+    }
 
     query = PH.Data.parseAndInsertStringWithFieldContent(query, instance.extras.fieldContents, processObject, instance.extras.roleOwners, true);
 
     return query;
   }
 
-  static buildSelectQuery(tableName: string, columns: string, where: string, instance: PH.Instance.IInstanceDetails, processObject: PH.Process.BpmnProcess): string {
-    let selectQuery = "SELECT " + columns + " FROM " + tableName + " WHERE " + where + ";";
+  static buildSelectQuery(
+    tableName: string,
+    columns: string,
+    where: string,
+    instance: PH.Instance.IInstanceDetails,
+    processObject: PH.Process.BpmnProcess,
+  ): string | undefined {
+    let selectQuery: string | undefined = "SELECT " + columns + " FROM " + tableName + " WHERE " + where + ";";
+
+    if (instance.extras.roleOwners === undefined) {
+      throw new Error("instance.extras.roleOwners is undefined, cannot proceed!");
+    }
 
     selectQuery = PH.Data.parseAndInsertStringWithFieldContent(selectQuery, instance.extras.fieldContents, processObject, instance.extras.roleOwners, true);
-    selectQuery = selectQuery.replace(/\s{2,}/g, " ");
+    selectQuery = selectQuery?.replace(/\s{2,}/g, " ");
 
-    if (selectQuery.endsWith("WHERE ;")) {
+    if (selectQuery !== undefined && selectQuery.endsWith("WHERE ;")) {
       selectQuery = selectQuery.substring(0, selectQuery.length - 8) + ";";
     }
 
     return selectQuery;
   }
 
-  static buildDeleteQuery(tableName: string, where: string, instance: PH.Instance.IInstanceDetails, processObject: PH.Process.BpmnProcess): string {
-    let deleteQuery = "DELETE FROM " + tableName + " WHERE " + where + ";";
+  static buildDeleteQuery(tableName: string, where: string, instance: PH.Instance.IInstanceDetails, processObject: PH.Process.BpmnProcess): string | undefined {
+    let deleteQuery: string | undefined = "DELETE FROM " + tableName + " WHERE " + where + ";";
+
+    if (instance.extras.roleOwners === undefined) {
+      throw new Error("instance.extras.roleOwners is undefined, cannot proceed!");
+    }
 
     deleteQuery = PH.Data.parseAndInsertStringWithFieldContent(deleteQuery, instance.extras.fieldContents, processObject, instance.extras.roleOwners, true);
 
@@ -70,7 +94,7 @@ export default class SAPServiceMethods {
     targetFieldTable: string,
     targetFieldCSV: string,
   ): Promise<boolean> {
-    let url: string;
+    let url: string | undefined = undefined;
 
     if (rows && rows.length) {
       newValue.value = this.generateTable(rows);
@@ -81,7 +105,7 @@ export default class SAPServiceMethods {
 
     if (url && url.length > 0) {
       if (instance.extras.fieldContents[targetFieldCSV] == null) {
-        instance.extras.fieldContents[targetFieldCSV] = { type: "ProcessHubFileUpload", value: null } as PH.Data.IFieldValue;
+        instance.extras.fieldContents[targetFieldCSV] = { type: "ProcessHubFileUpload", value: undefined } as PH.Data.IFieldValue;
       }
       (instance.extras.fieldContents[targetFieldCSV] as PH.Data.IFieldValue).value = [url];
     }
