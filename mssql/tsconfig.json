@@ -11,6 +11,7 @@
     "noEmit": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
+    "strictNullChecks": true,
     "lib": [
       "esnext",
       "dom"

@@ -8,13 +8,39 @@ export async function executeQueryNoReturn(environment: PH.ServiceTask.IServiceT
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
   const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
   const config = extensionValues.serviceTaskConfigObject;
+
+  if (config === undefined) {
+    throw new Error("Config is undefined, cannot proceed with service!");
+  }
+
   const fields = config.fields;
 
-  const server = fields.find((f: IServiceActionConfigField) => f.key === "server").value;
-  const user = fields.find((f: IServiceActionConfigField) => f.key === "username").value;
-  const password = fields.find((f: IServiceActionConfigField) => f.key === "password").value;
-  const database = fields.find((f: IServiceActionConfigField) => f.key === "database").value;
-  let query = fields.find((f: IServiceActionConfigField) => f.key === "query").value;
+  const server = fields.find((f: IServiceActionConfigField) => f.key === "server")?.value;
+  const user = fields.find((f: IServiceActionConfigField) => f.key === "username")?.value;
+  const password = fields.find((f: IServiceActionConfigField) => f.key === "password")?.value;
+  const database = fields.find((f: IServiceActionConfigField) => f.key === "database")?.value;
+  let query = fields.find((f: IServiceActionConfigField) => f.key === "query")?.value;
+
+  if (server === undefined) {
+    throw new Error("server is undefined, cannot proceed with service!");
+  }
+  if (user === undefined) {
+    throw new Error("user is undefined, cannot proceed with service!");
+  }
+  if (password === undefined) {
+    throw new Error("password is undefined, cannot proceed with service!");
+  }
+  if (database === undefined) {
+    throw new Error("database is undefined, cannot proceed with service!");
+  }
+  if (query === undefined) {
+    throw new Error("query is undefined, cannot proceed with service!");
+  }
+
+  if (environment.instanceDetails.extras.roleOwners === undefined) {
+    throw new Error("environment.instanceDetails.extras.roleOwners is undefined, cannot proceed with service!");
+  }
+
   query = PH.Data.parseAndInsertStringWithFieldContent(
     query,
     environment.instanceDetails.extras.fieldContents,
@@ -22,6 +48,10 @@ export async function executeQueryNoReturn(environment: PH.ServiceTask.IServiceT
     environment.instanceDetails.extras.roleOwners,
     true,
   );
+
+  if (query === undefined) {
+    throw new Error("query is undefined after parseAndInsertStringWithFieldContent, cannot proceed with service!");
+  }
 
   // Config for your database
   const dbConfig = {
