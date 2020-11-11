@@ -39,7 +39,7 @@
     "cross-var": "^1.1.0",
     "eslint": "^7.12.1",
     "mocha": "^8.2.1",
-    "nock": "^13.0.4",
+    "nock": "^13.0.5",
     "regenerator-runtime": "^0.13.7",
     "rimraf": "^3.0.2",
     "typescript": "^4.0.5"
