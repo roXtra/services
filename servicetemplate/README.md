@@ -17,17 +17,15 @@ Below you can see which files have to be modified
 #### package.json
 Inside the package.json you have multiple places which *must* be modified
 
-1. author - insert your name and email so others can contact you in case of questions
-2. customer - change this to your roXtra customer number
-3. name - the package name must follow the scheme @eformservice/{service-name}
-4. servicename - this will later be shown inside the UI change it to your {service-name}
-5. version - use semantic versioning here (e.g. 1.0.0)
-6. description - add some text here which describes your service and its use cases it operates on
+1. name - the package name must follow the scheme @eformservice/{service-name}
+2. servicename - this will later be shown inside the UI change it to your {service-name}
+3. version - use semantic versioning here (e.g. 1.0.0)
+4. description - add some text here which describes your service and its use cases it operates on
 
 #### service.json
 Inside the service.json you have multiple places which *must* be modified
 
-1. id - insert here {roXtra-customer-number}-{service-name}
+1. id - insert here {roXtra-customer-number}-{service-name}-service . This must not change over time.
 2. name - insert this Services Name no schema necessary
 3. minRoxtraVersion - preferably insert your installed roXtra version. This field is being used to check compatibility.
 4. actions - under actions you define the possible actions your service can perform 
@@ -42,8 +40,25 @@ for each defined action you will need two files defining the action:
 1. {action}-config.tsx - defines the UI of the service which will later be embedded into Processes
 2. {action}-service.ts - defines the functional code which gets fired when the service will be executed
 
+## Building
+
+When you have finished development and want to build the services including this service, you should execute the 
+"buildbundle" script inside the package.json in the root of this repo. 
+
+If you want to build this single service, just execute following scripts inside the package.json related to this service
+in a specific order:
+1. lint
+2. build
+3. copyandzip
+
+After that there should be a zip file named like the service's directory name. 
+This is your ready-to-install bundled service.
+
 ## Debugging
-As for now debugging your service code is not possible. We suggest to use "console.log" to output debug information to the browser console.
+As for now debugging your service code is not possible. 
+We suggest to use "console.log" to output debug information to the browser console.
+Nevertheless there are no console statements allowed when this service is being sent to us, 
+so do not forget to delete or comment out these statements before sending this service to us.
 
 ## Testing
 For testing, we highly recommend that you go for mocking where possible, so you do not depend on a running roXtra server 
@@ -56,7 +71,19 @@ The package.json consists of three sections you should handle carefully. Down be
 you should be aware of.
 
 #### scripts
-The section "scripts" contains our building scripts. Modifications are not allowed!
+The section "scripts" contains our building scripts. The following scripts must be executable for service acceptance 
+so modifications for the below mentioned scripts are not allowed:
+- lint - for checking if there are any linter or code formatting errors in the code
+- build - shortcut for building this package
+- build:server - building this service
+- build:test - building the tests for this service
+- test - testing this service
+- copyproduction - installs production dependencies and copies the compiled production files into a seperate folder for packaging
+- copyfiles - prepares the compiled production files for further processing
+- zip - Zip the build package
+- copyandzip - this script bundles the production code into a service zip file
+- installlocadependencies - install local packaged dependencies (e.g. roxtraapi.tgz)
+- check:format - checking whether the code conforms to our coding standards
 
 #### dependencies / dev-dependencies
 Do not remove any of the contained dependencies or dev-dependencies.
