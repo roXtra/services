@@ -55,6 +55,10 @@ export class CSVServiceMethods {
   public static parseFieldsOfQuery(query: string, instance: PH.Instance.IInstanceDetails): string {
     let modifiedQuery = query;
 
+    if (instance.extras.fieldContents === undefined) {
+      throw new Error("fieldContents are undefined, cannot proceed!");
+    }
+
     while (modifiedQuery.includes("@@")) {
       const pos1 = modifiedQuery.search("@@") + 2;
       const subString = modifiedQuery.substring(pos1, modifiedQuery.length);
