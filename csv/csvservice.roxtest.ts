@@ -20,38 +20,38 @@ describe("services", () => {
         const j = i + 1;
         const env: PH.ServiceTask.IServiceTaskEnvironment = createEnvironment("./testfiles/csvprojectreader.bpmn", "ServiceTask_EF35559B7A880A91", column1[i]);
         await ProjectReaderService.serviceLogic(env);
-        assert.equal((env.instanceDetails.extras.fieldContents.ID as PH.Data.IFieldValue).value as string, "A" + String(j));
-        assert.equal((env.instanceDetails.extras.fieldContents.column1 as PH.Data.IFieldValue).value as string, "A" + String(j));
-        assert.equal((env.instanceDetails.extras.fieldContents.column2 as PH.Data.IFieldValue).value as string, "B" + String(j));
-        assert.equal((env.instanceDetails.extras.fieldContents.column3 as PH.Data.IFieldValue).value as string, "C" + String(j));
-        assert.equal((env.instanceDetails.extras.fieldContents.column4 as PH.Data.IFieldValue).value as string, "D" + String(j));
-        assert.equal((env.instanceDetails.extras.fieldContents.column5 as PH.Data.IFieldValue).value as string, "E" + String(j));
-        assert.isUndefined(env.instanceDetails.extras.fieldContents["Info"] as PH.Data.IFieldValue);
+        assert.equal((env.instanceDetails.extras.fieldContents?.ID as PH.Data.IFieldValue).value as string, "A" + String(j));
+        assert.equal((env.instanceDetails.extras.fieldContents?.column1 as PH.Data.IFieldValue).value as string, "A" + String(j));
+        assert.equal((env.instanceDetails.extras.fieldContents?.column2 as PH.Data.IFieldValue).value as string, "B" + String(j));
+        assert.equal((env.instanceDetails.extras.fieldContents?.column3 as PH.Data.IFieldValue).value as string, "C" + String(j));
+        assert.equal((env.instanceDetails.extras.fieldContents?.column4 as PH.Data.IFieldValue).value as string, "D" + String(j));
+        assert.equal((env.instanceDetails.extras.fieldContents?.column5 as PH.Data.IFieldValue).value as string, "E" + String(j));
+        assert.isUndefined(env.instanceDetails.extras.fieldContents?.["Info"] as PH.Data.IFieldValue);
       }
     });
 
     it("executes CSV ProjectReader service test with wrong ID_82f44d87-4535-4bdd-8735-e15fb3a57a63", async () => {
       const env: PH.ServiceTask.IServiceTaskEnvironment = createEnvironment("./testfiles/csvprojectreader.bpmn", "ServiceTask_EF35559B7A880A91", "Z");
       await ProjectReaderService.serviceLogic(env);
-      assert.equal((env.instanceDetails.extras.fieldContents.ID as PH.Data.IFieldValue).value as string, "Z");
-      assert.isUndefined(env.instanceDetails.extras.fieldContents.column1 as PH.Data.IFieldValue);
-      assert.isUndefined(env.instanceDetails.extras.fieldContents.column2 as PH.Data.IFieldValue);
-      assert.isUndefined(env.instanceDetails.extras.fieldContents.column3 as PH.Data.IFieldValue);
-      assert.isUndefined(env.instanceDetails.extras.fieldContents.column4 as PH.Data.IFieldValue);
-      assert.isUndefined(env.instanceDetails.extras.fieldContents.column5 as PH.Data.IFieldValue);
-      assert.equal((env.instanceDetails.extras.fieldContents["Info"] as PH.Data.IFieldValue).value as string, "Kein Projekt mit diesem Suchbegriff gefunden");
+      assert.equal((env.instanceDetails.extras.fieldContents?.ID as PH.Data.IFieldValue).value as string, "Z");
+      assert.isUndefined(env.instanceDetails.extras.fieldContents?.column1 as PH.Data.IFieldValue);
+      assert.isUndefined(env.instanceDetails.extras.fieldContents?.column2 as PH.Data.IFieldValue);
+      assert.isUndefined(env.instanceDetails.extras.fieldContents?.column3 as PH.Data.IFieldValue);
+      assert.isUndefined(env.instanceDetails.extras.fieldContents?.column4 as PH.Data.IFieldValue);
+      assert.isUndefined(env.instanceDetails.extras.fieldContents?.column5 as PH.Data.IFieldValue);
+      assert.equal((env.instanceDetails.extras.fieldContents?.["Info"] as PH.Data.IFieldValue).value as string, "Kein Projekt mit diesem Suchbegriff gefunden");
     });
 
     it("executes CSV ProjectReader service test with wrong path_1aea29df-8a3c-4163-b86c-19bcb028a452", async () => {
       const env: PH.ServiceTask.IServiceTaskEnvironment = createEnvironment("./testfiles/csvprojectreader.bpmn", "ServiceTask_355880496663D62A", "Z");
       await ProjectReaderService.serviceLogic(env);
-      assert.equal((env.instanceDetails.extras.fieldContents.ID as PH.Data.IFieldValue).value as string, "Z");
-      assert.isUndefined(env.instanceDetails.extras.fieldContents.column1 as PH.Data.IFieldValue);
-      assert.isUndefined(env.instanceDetails.extras.fieldContents.column2 as PH.Data.IFieldValue);
-      assert.isUndefined(env.instanceDetails.extras.fieldContents.column3 as PH.Data.IFieldValue);
-      assert.isUndefined(env.instanceDetails.extras.fieldContents.column4 as PH.Data.IFieldValue);
-      assert.isUndefined(env.instanceDetails.extras.fieldContents.column5 as PH.Data.IFieldValue);
-      assert.equal((env.instanceDetails.extras.fieldContents["Info"] as PH.Data.IFieldValue).value as string, "Keine Datei mit diesem Pfad gefunden");
+      assert.equal((env.instanceDetails.extras.fieldContents?.ID as PH.Data.IFieldValue).value as string, "Z");
+      assert.isUndefined(env.instanceDetails.extras.fieldContents?.column1 as PH.Data.IFieldValue);
+      assert.isUndefined(env.instanceDetails.extras.fieldContents?.column2 as PH.Data.IFieldValue);
+      assert.isUndefined(env.instanceDetails.extras.fieldContents?.column3 as PH.Data.IFieldValue);
+      assert.isUndefined(env.instanceDetails.extras.fieldContents?.column4 as PH.Data.IFieldValue);
+      assert.isUndefined(env.instanceDetails.extras.fieldContents?.column5 as PH.Data.IFieldValue);
+      assert.equal((env.instanceDetails.extras.fieldContents?.["Info"] as PH.Data.IFieldValue).value as string, "Keine Datei mit diesem Pfad gefunden");
     });
   });
 });

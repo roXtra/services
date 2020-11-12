@@ -5,6 +5,9 @@ import { ErrorStates } from "./csvServiceMethods";
 let errorState = 0;
 
 function getValueFromFieldName(environment: PH.ServiceTask.IServiceTaskEnvironment, fieldName: string): string {
+  if (environment.instanceDetails.extras.fieldContents === undefined) {
+    throw new Error("fieldContents are undefined, cannot proceed!");
+  }
   return ((environment.instanceDetails.extras.fieldContents[fieldName] as PH.Data.IFieldValue).value as string).trim();
 }
 
@@ -54,6 +57,9 @@ function errorHandling(instance: any, normalBehavior: Function): void {
 function initFields(instance: PH.Instance.IInstanceDetails, project: any): void {
   const keys = Object.keys(project);
   keys.forEach((key: any) => {
+    if (instance.extras.fieldContents === undefined) {
+      throw new Error("fieldContents are undefined, cannot proceed!");
+    }
     instance.extras.fieldContents[key] = {
       value: project[key],
       type: "ProcessHubTextArea",
@@ -68,11 +74,23 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
   const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
   const config = extensionValues.serviceTaskConfigObject;
+
+  if (config === undefined) {
+    throw new Error("Config is undefined, cannot proceed with service!");
+  }
+
   const fields = config.fields;
   const instance = environment.instanceDetails;
 
-  const filePath = fields.find((f) => f.key === "filePath").value;
-  const searchField = fields.find((f) => f.key === "searchField").value;
+  const filePath = fields.find((f) => f.key === "filePath")?.value;
+  const searchField = fields.find((f) => f.key === "searchField")?.value;
+
+  if (filePath === undefined) {
+    throw new Error("filePath is undefined, cannot proceed!");
+  }
+  if (searchField === undefined) {
+    throw new Error("searchField is undefined, cannot proceed!");
+  }
 
   const keyword = getValueFromFieldName(environment, searchField);
 
