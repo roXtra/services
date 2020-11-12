@@ -7,15 +7,42 @@ export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvir
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
   const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
   const config = extensionValues.serviceTaskConfigObject;
+
+  if (config === undefined) {
+    throw new Error("Config is undefined, cannot proceed with service!");
+  }
+
   const fields = config.fields;
 
-  const server = fields.find((f) => f.key === "server").value;
-  const user = fields.find((f) => f.key === "username").value;
-  const password = fields.find((f) => f.key === "password").value;
-  const database = fields.find((f) => f.key === "database").value;
-  const port = fields.find((f) => f.key === "port").value;
-  let query = fields.find((f) => f.key === "query").value;
-  const targetField = fields.find((f) => f.key === "targetField").value;
+  const server = fields.find((f) => f.key === "server")?.value;
+  const user = fields.find((f) => f.key === "username")?.value;
+  const password = fields.find((f) => f.key === "password")?.value;
+  const database = fields.find((f) => f.key === "database")?.value;
+  const port = fields.find((f) => f.key === "port")?.value;
+  let query = fields.find((f) => f.key === "query")?.value;
+  const targetField = fields.find((f) => f.key === "targetField")?.value;
+
+  if (server === undefined) {
+    throw new Error("server is undefined, cannot proceed with service!");
+  }
+  if (user === undefined) {
+    throw new Error("user is undefined, cannot proceed with service!");
+  }
+  if (password === undefined) {
+    throw new Error("password is undefined, cannot proceed with service!");
+  }
+  if (database === undefined) {
+    throw new Error("database is undefined, cannot proceed with service!");
+  }
+  if (port === undefined) {
+    throw new Error("port is undefined, cannot proceed with service!");
+  }
+  if (query === undefined) {
+    throw new Error("query is undefined, cannot proceed with service!");
+  }
+  if (targetField === undefined) {
+    throw new Error("targetField is undefined, cannot proceed with service!");
+  }
 
   const connection = mysql.createConnection({
     user: user,
@@ -25,6 +52,10 @@ export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvir
     port: parseInt(port),
   });
 
+  if (environment.instanceDetails.extras.roleOwners === undefined) {
+    throw new Error("environment.instanceDetails.extras.roleOwners is undefined, cannot proceed with service!");
+  }
+
   try {
     query = PH.Data.parseAndInsertStringWithFieldContent(
       query,
@@ -33,10 +64,14 @@ export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvir
       environment.instanceDetails.extras.roleOwners,
       true,
     );
-    console.log(`MySQL service: executing ${query}`);
+
+    console.log(`MySQL service: executing ${String(query)}`);
 
     connection.connect();
     const res = await new Promise<any[]>((resolve, reject) => {
+      if (query === undefined) {
+        throw new Error("query is undefined after parseAndInsertStringWithFieldContent, cannot proceed with service!");
+      }
       connection.query(query, function (error: mysql.MysqlError | null, results) {
         if (error) reject(error);
         resolve(results);
@@ -46,10 +81,15 @@ export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvir
     console.log("MySQL service: connection closed.");
 
     if (res.length > 0) {
-      if (!environment.instanceDetails.extras.fieldContents[targetField]) {
+      if (!environment.instanceDetails.extras.fieldContents?.[targetField]) {
         const fields = processObject.getFieldDefinitions();
         const field = fields.find((f) => f.name === targetField);
         const targetFieldType: PH.Data.FieldType = field ? field.type : "ProcessHubTextInput";
+
+        if (environment.instanceDetails.extras.fieldContents === undefined) {
+          environment.instanceDetails.extras.fieldContents = {};
+        }
+
         environment.instanceDetails.extras.fieldContents[targetField] = {
           value: undefined,
           type: targetFieldType,
@@ -60,6 +100,11 @@ export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvir
     }
   } catch (ex) {
     console.error(`MySQL service error: ${JSON.stringify(ex)}`);
+
+    if (environment.instanceDetails.extras.fieldContents === undefined) {
+      environment.instanceDetails.extras.fieldContents = {};
+    }
+
     environment.instanceDetails.extras.fieldContents["MySQL error"] = {
       type: "ProcessHubTextInput",
       value: JSON.stringify(ex),
