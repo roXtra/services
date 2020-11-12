@@ -66,7 +66,7 @@ export async function startinstance(environment: PH.ServiceTask.IServiceTaskEnvi
     console.error(ex);
 
     if (environment.instanceDetails.extras.fieldContents === undefined) {
-      environment.instanceDetails.extras.fieldContents = {};
+      throw new Error(`fieldContents are undefined, cannot log error that occurred in service: ${JSON.stringify(ex)}`);
     }
 
     environment.instanceDetails.extras.fieldContents["ErrorField"] = {

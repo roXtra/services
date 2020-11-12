@@ -27,7 +27,7 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
   }
 
   if (instance.extras.fieldContents === undefined) {
-    instance.extras.fieldContents = {};
+    throw new Error("fieldContents are undefined, cannot proceed with service!");
   }
 
   // Init new field
