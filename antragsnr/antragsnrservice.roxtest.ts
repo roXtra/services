@@ -46,7 +46,7 @@ describe("services", () => {
           workspaceId: "",
           processId: "",
           extras: {
-            instanceState: null,
+            instanceState: undefined,
           },
           createdAt: new Date("October 13, 2018 11:13:00"),
         },
@@ -58,7 +58,7 @@ describe("services", () => {
           workspaceId: "",
           processId: "",
           extras: {
-            instanceState: null,
+            instanceState: undefined,
           },
           createdAt: new Date("October 13, 2014 11:13:00"),
         },
@@ -68,7 +68,7 @@ describe("services", () => {
           workspaceId: "",
           processId: "",
           extras: {
-            instanceState: null,
+            instanceState: undefined,
           },
           createdAt: new Date("October 13, 2015 11:13:00"),
         },
@@ -90,7 +90,7 @@ describe("services", () => {
           workspaceId: "",
           processId: "",
           extras: {
-            instanceState: null,
+            instanceState: undefined,
           },
           createdAt: new Date("October 13, 2018 11:13:00"),
         },
@@ -102,7 +102,7 @@ describe("services", () => {
           workspaceId: "",
           processId: "",
           extras: {
-            instanceState: null,
+            instanceState: undefined,
           },
           createdAt: new Date("October 12, 2018 11:13:00"),
         },
@@ -112,7 +112,7 @@ describe("services", () => {
           workspaceId: "",
           processId: "",
           extras: {
-            instanceState: null,
+            instanceState: undefined,
           },
           createdAt: new Date("October 13, 2015 11:13:00"),
         },
@@ -134,7 +134,7 @@ describe("services", () => {
           workspaceId: "",
           processId: "",
           extras: {
-            instanceState: null,
+            instanceState: undefined,
           },
           createdAt: new Date("October 13, 2018 11:13:00"),
         },
@@ -146,7 +146,7 @@ describe("services", () => {
           workspaceId: "",
           processId: "",
           extras: {
-            instanceState: null,
+            instanceState: undefined,
           },
           createdAt: new Date("October 12, 2018 11:13:00"),
         },
@@ -156,7 +156,7 @@ describe("services", () => {
           workspaceId: "",
           processId: "",
           extras: {
-            instanceState: null,
+            instanceState: undefined,
           },
           createdAt: new Date("October 11, 2018 11:13:00"),
         },

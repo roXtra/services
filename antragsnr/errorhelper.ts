@@ -14,6 +14,10 @@ export async function setError(environment: PH.ServiceTask.IServiceTaskEnvironme
     environment.fieldContents[ErrorField] = error;
     await environment.instances.updateInstance(environment.instanceDetails);
   } else {
+    if (environment.instanceDetails.extras.fieldContents === undefined) {
+      throw new Error(`fieldContents are undefined, cannot log error to error field: ${error}`);
+    }
+
     environment.instanceDetails.extras.fieldContents[ErrorField] = {
       type: "ProcessHubTextInput",
       value: error,
