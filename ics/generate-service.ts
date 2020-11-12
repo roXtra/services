@@ -14,14 +14,41 @@ export async function generate(environment: PH.ServiceTask.IServiceTaskEnvironme
     const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
     const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
     const config = extensionValues.serviceTaskConfigObject;
+
+    if (config === undefined) {
+      throw new Error("Config is undefined, cannot proceed with service!");
+    }
+
     const fields = config.fields;
     const instance = environment.instanceDetails;
 
-    const title = fields.find((f) => f.key === "titleField").value;
-    const fromField = fields.find((f) => f.key === "fromField").value;
-    const tillField = fields.find((f) => f.key === "tillField").value;
-    const targetField = fields.find((f) => f.key === "targetField").value;
-    const descriptionField = fields.find((f) => f.key === "descriptionField") != null ? fields.find((f) => f.key === "descriptionField").value : null;
+    const title = fields.find((f) => f.key === "titleField")?.value;
+    const fromField = fields.find((f) => f.key === "fromField")?.value;
+    const tillField = fields.find((f) => f.key === "tillField")?.value;
+    const targetField = fields.find((f) => f.key === "targetField")?.value;
+    const descriptionField = fields.find((f) => f.key === "descriptionField")?.value;
+
+    if (title === undefined) {
+      throw new Error("title is undefined, cannot proceed!");
+    }
+    if (fromField === undefined) {
+      throw new Error("fromField is undefined, cannot proceed!");
+    }
+    if (tillField === undefined) {
+      throw new Error("tillField is undefined, cannot proceed!");
+    }
+    if (targetField === undefined) {
+      throw new Error("targetField is undefined, cannot proceed!");
+    }
+    if (targetField === undefined) {
+      throw new Error("targetField is undefined, cannot proceed!");
+    }
+    if (descriptionField === undefined) {
+      throw new Error("descriptionField is undefined, cannot proceed!");
+    }
+    if (instance.extras.fieldContents === undefined) {
+      throw new Error("fieldContents are undefined, cannot proceed!");
+    }
 
     let icsString = "";
     icsString += "BEGIN:VCALENDAR\n";
@@ -56,7 +83,19 @@ export async function generate(environment: PH.ServiceTask.IServiceTaskEnvironme
     icsString += "DTEND:" + getDateFormatted(tillDate, false) + "\n";
 
     const process = await environment.processes.getProcessDetails(instance.processId, PH.Process.ProcessExtras.ExtrasProcessRolesWithMemberNames);
+
+    if (process.extras.processRoles === undefined) {
+      throw new Error("processRoles are undefined, cannot proceed!");
+    }
+    if (instance.extras.roleOwners === undefined) {
+      throw new Error("roleOwners are undefined, cannot proceed!");
+    }
+
     const parsedSummary = PH.Data.parseAndInsertStringWithFieldContent(title, instance.extras.fieldContents, process.extras.processRoles, instance.extras.roleOwners);
+
+    if (parsedSummary === undefined) {
+      throw new Error("parsedSummary is undefined, cannot proceed!");
+    }
 
     icsString += "SUMMARY:" + parsedSummary + "\n";
     // Location
@@ -80,7 +119,7 @@ export async function generate(environment: PH.ServiceTask.IServiceTaskEnvironme
 
     if (url) {
       if (instance.extras.fieldContents[targetField] == null) {
-        instance.extras.fieldContents[targetField] = { type: "ProcessHubFileUpload", value: null } as PH.Data.IFieldValue;
+        instance.extras.fieldContents[targetField] = { type: "ProcessHubFileUpload", value: undefined };
       }
       (instance.extras.fieldContents[targetField] as PH.Data.IFieldValue).value = [url];
       await environment.instances.updateInstance(instance);
