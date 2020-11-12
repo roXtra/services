@@ -51,13 +51,13 @@ describe("services", () => {
       }
 
       if (operator === operators.DIVISION && num2 === 0) {
-        assert.equal((env.instanceDetails.extras.fieldContents.Feld_1 as PH.Data.IFieldValue).value as number, num1);
-        assert.equal((env.instanceDetails.extras.fieldContents.Feld_2 as PH.Data.IFieldValue).value as number, num2);
-        assert.isUndefined(env.instanceDetails.extras.fieldContents.Ergebnis as PH.Data.IFieldValue);
+        assert.equal((env.instanceDetails.extras.fieldContents?.Feld_1 as PH.Data.IFieldValue).value as number, num1);
+        assert.equal((env.instanceDetails.extras.fieldContents?.Feld_2 as PH.Data.IFieldValue).value as number, num2);
+        assert.isUndefined(env.instanceDetails.extras.fieldContents?.Ergebnis as PH.Data.IFieldValue);
       } else {
-        assert.equal((env.instanceDetails.extras.fieldContents.Feld_1 as PH.Data.IFieldValue).value as number, num1);
-        assert.equal((env.instanceDetails.extras.fieldContents.Feld_2 as PH.Data.IFieldValue).value as number, num2);
-        assert.closeTo((env.instanceDetails.extras.fieldContents.Ergebnis as PH.Data.IFieldValue).value as number, expResult, 0.0001);
+        assert.equal((env.instanceDetails.extras.fieldContents?.Feld_1 as PH.Data.IFieldValue).value as number, num1);
+        assert.equal((env.instanceDetails.extras.fieldContents?.Feld_2 as PH.Data.IFieldValue).value as number, num2);
+        assert.closeTo((env.instanceDetails.extras.fieldContents?.Ergebnis as PH.Data.IFieldValue).value as number, expResult, 0.0001);
       }
     }
 
