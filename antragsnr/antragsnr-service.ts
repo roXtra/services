@@ -6,7 +6,13 @@ function getNumberOfInstancesOfSpecificYear(instances: PH.Instance.IInstanceDeta
   const instancesOfTheYear: PH.Instance.IInstanceDetails[] = [];
 
   for (let i = 0; i < instances.length; i++) {
-    const instanceYear = new Date(instances[i].createdAt).getFullYear();
+    const currentInstance = instances[i];
+    const { createdAt } = currentInstance;
+    if (createdAt === undefined) {
+      throw new Error(`createdAt is undefined for instance ${currentInstance.instanceId}, cannot proceed with service!`);
+    }
+
+    const instanceYear = new Date(createdAt).getFullYear();
 
     if (year === instanceYear) {
       instancesOfTheYear.push(instances[i]);
@@ -16,7 +22,18 @@ function getNumberOfInstancesOfSpecificYear(instances: PH.Instance.IInstanceDeta
 }
 
 export function serviceLogic(processDetails: PH.Process.IProcessDetails, environment: PH.ServiceTask.IServiceTaskEnvironment, targetField: string): void {
-  const instances: PH.Instance.IInstanceDetails[] = processDetails.extras.instances;
+  const instances = processDetails.extras.instances;
+
+  if (instances === undefined) {
+    throw new Error("instances are undefined, cannot proceed with service!");
+  }
+  if (environment.instanceDetails.createdAt === undefined) {
+    throw new Error("instanceDetails.createdAt is undefined, cannot proceed with service!");
+  }
+  if (environment.instanceDetails.extras.fieldContents === undefined) {
+    throw new Error("fieldContents are undefined, cannot proceed with service!");
+  }
+
   const instanceYear = environment.instanceDetails.createdAt.getFullYear();
   const numberOfInstances = getNumberOfInstancesOfSpecificYear(instances, instanceYear);
   const nr: string = numberOfInstances < 10 ? instanceYear.toString() + "/0" + numberOfInstances.toString() : instanceYear.toString() + "/" + numberOfInstances.toString();
@@ -37,8 +54,17 @@ export async function antragsnrAction(environment: PH.ServiceTask.IServiceTaskEn
     const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
 
     const config = extensionValues.serviceTaskConfigObject;
+
+    if (config === undefined) {
+      throw new Error("Config is undefined, cannot proceed with service!");
+    }
+
     const fields = config.fields;
-    const targetField = fields.find((f) => f.key === "targetfield").value;
+    const targetField = fields.find((f) => f.key === "targetfield")?.value;
+
+    if (targetField === undefined) {
+      throw new Error("targetField is undefined, cannot proceed with service!");
+    }
 
     const processDetails = await environment.processes.getProcessDetails(environment.instanceDetails.processId, ProcessExtras.ExtrasInstances);
     serviceLogic(processDetails, environment, targetField);
