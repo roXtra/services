@@ -57,13 +57,13 @@ async function selectionValueIDMapping(
   return handleSelectField(selectID, body.Value, selection);
 }
 
-function parseFileID(fieldID: string, environment: PH.ServiceTask.IServiceTaskEnvironment): string {
+function parseFileID(fieldID: string, environment: PH.ServiceTask.IServiceTaskEnvironment): string | undefined {
   const fieldIDSplit = fieldID.split("@@");
 
   if (fieldIDSplit.length > 1) {
     fieldID = fieldIDSplit[1].trim();
     try {
-      return (environment.instanceDetails.extras.fieldContents[fieldID] as PH.Data.IFieldValue).value as string;
+      return (environment.instanceDetails.extras.fieldContents?.[fieldID] as PH.Data.IFieldValue).value as string;
     } catch (e) {
       errorState = ERRORCODES.NO_FILEIDFIELD;
     }
@@ -92,21 +92,40 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
   const missingField = missingRequiredField(requiredFields);
 
   if (missingField.isMissing) {
+    if (missingField.key === undefined) {
+      if (missingField.key === undefined) {
+        throw new Error("missingField.isMissing is true but missingField.key is undefined! This must not happen!");
+      }
+    }
     errorState = errorHandlingMissingField(missingField.key);
     return instance;
   }
 
   // Get field name of the corresponding field ID
-  let fileId = requiredFields.get("fileId").value;
-  const fieldId = requiredFields.get("fieldId").value;
+  let fileId = requiredFields.get("fileId")?.value;
+  const fieldId = requiredFields.get("fieldId")?.value;
 
-  const valueField = fields.find((f) => f.key === "value").value;
+  const valueField = fields.find((f) => f.key === "value")?.value;
+
+  if (fileId === undefined) {
+    throw new Error("fileId is undefined, cannot proceed!");
+  }
+  if (fieldId === undefined) {
+    throw new Error("fieldId is undefined, cannot proceed!");
+  }
+  if (valueField === undefined) {
+    throw new Error("valueField is undefined, cannot proceed!");
+  }
 
   // Get the value of a selected field
-  const value = (environment.instanceDetails.extras.fieldContents[valueField] as PH.Data.IFieldValue).value as string;
+  const value = (environment.instanceDetails.extras.fieldContents?.[valueField] as PH.Data.IFieldValue).value as string;
 
   try {
     fileId = parseFileID(fileId, environment);
+
+    if (fileId === undefined) {
+      throw new Error("fileId is undefined after parseFileID, cannot proceed!");
+    }
 
     const body: ISetFileFieldsObject[] = [
       {

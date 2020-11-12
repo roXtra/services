@@ -10,7 +10,7 @@ describe("services", () => {
     describe("setroxfilefield-service", () => {
       describe("serviceLogic", () => {
         it("sets a rox file field", async () => {
-          let bodyFromSetCall: ISetFileFieldsObject[];
+          let bodyFromSetCall: ISetFileFieldsObject[] | undefined;
 
           const testApi: IRoXtraFileApi = {
             createRoxFileCall: async () => {
@@ -88,9 +88,9 @@ describe("services", () => {
           await serviceLogic(environment, testApi);
           expect(errorState).to.equal(ERRORCODES.NOERROR);
           // Make sure setFileFieldsCall was called with the right values
-          expect(bodyFromSetCall.length).to.equal(1);
-          expect(bodyFromSetCall[0].Id).to.equal("roXtraFeld");
-          expect(bodyFromSetCall[0].Value).to.equal("Hello");
+          expect(bodyFromSetCall?.length).to.equal(1);
+          expect(bodyFromSetCall?.[0].Id).to.equal("roXtraFeld");
+          expect(bodyFromSetCall?.[0].Value).to.equal("Hello");
         });
       });
     });

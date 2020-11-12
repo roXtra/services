@@ -61,8 +61,8 @@ describe("services", () => {
           };
 
           const instance = await serviceLogic(environment, testApi);
-          expect(PH.Data.isFieldValue(instance.extras.fieldContents["CreatedRoxFileId"])).to.equal(true);
-          expect((instance.extras.fieldContents["CreatedRoxFileId"] as PH.Data.IFieldValue).value).to.equal(newRoxFileId);
+          expect(PH.Data.isFieldValue(instance.extras.fieldContents?.["CreatedRoxFileId"])).to.equal(true);
+          expect((instance.extras.fieldContents?.["CreatedRoxFileId"] as PH.Data.IFieldValue).value).to.equal(newRoxFileId);
         });
       });
     });
