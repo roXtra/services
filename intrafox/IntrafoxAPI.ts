@@ -34,7 +34,7 @@ export async function getActivityByNumber(
   activityNumber: string,
   username: string,
   token: string,
-): Promise<IntrafoxTypes.IGetGlobalActivityListResponse | IntrafoxTypes.IIntraFoxErrorResponse> {
+): Promise<IntrafoxTypes.IGetGlobalActivityListResponse | IntrafoxTypes.IIntraFoxErrorResponse | undefined> {
   const body: IntrafoxTypes.IIntraFoxBody = {
     FUNCTION: "GetGlobalActivityList",
     USERNAME: username,
@@ -119,6 +119,10 @@ export async function setGlobalActivityValues(url: string, username: string, tok
  * @param errorCode error code of the Intrafox API response
  */
 export function errorHandling(instance: PH.Instance.IInstanceDetails, errorCode: string): void {
+  if (instance.extras.fieldContents === undefined) {
+    throw new Error("fieldContents are undefined, cannot proceed!");
+  }
+
   switch (errorCode) {
     case "": {
       // No Errors

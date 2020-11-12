@@ -8,12 +8,30 @@ export async function serviceLogic(url: string, environment: PH.ServiceTask.ISer
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
   const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
   const config = extensionValues.serviceTaskConfigObject;
+
+  if (config === undefined) {
+    throw new Error("Config is undefined, cannot proceed with service!");
+  }
+
   const fields = config.fields;
   const instance = environment.instanceDetails;
 
-  const token = fields.find((f) => f.key === "token").value;
-  const activityNumberField = fields.find((f) => f.key === "activityNumber").value;
-  const usernameField = fields.find((f) => f.key === "username").value;
+  const token = fields.find((f) => f.key === "token")?.value;
+  const activityNumberField = fields.find((f) => f.key === "activityNumber")?.value;
+  const usernameField = fields.find((f) => f.key === "username")?.value;
+
+  if (token === undefined) {
+    throw new Error("token is undefined, cannot proceed!");
+  }
+  if (activityNumberField === undefined) {
+    throw new Error("activityNumberField is undefined, cannot proceed!");
+  }
+  if (usernameField === undefined) {
+    throw new Error("usernameField is undefined, cannot proceed!");
+  }
+  if (instance.extras.fieldContents === undefined) {
+    throw new Error("fieldContents are undefined, cannot proceed!");
+  }
 
   const activityNumber = ((instance.extras.fieldContents[activityNumberField] as PH.Data.IFieldValue).value as string).trim();
   const username = ((instance.extras.fieldContents[usernameField] as PH.Data.IFieldValue).value as string).trim();

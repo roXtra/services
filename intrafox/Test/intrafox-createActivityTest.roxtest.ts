@@ -66,11 +66,11 @@ describe("services", () => {
         describtion,
         expirationDate,
       );
-      assert.equal((env.instanceDetails.extras.fieldContents["Info"] as PH.Data.IFieldValue).value as string, "Maßnahme wurde erstellt");
-      assert.equal((env.instanceDetails.extras.fieldContents["Abb"] as PH.Data.IFieldValue).value as string, abbreation);
-      assert.equal((env.instanceDetails.extras.fieldContents["Desc"] as PH.Data.IFieldValue).value as string, describtion);
-      assert.equal((env.instanceDetails.extras.fieldContents["Date"] as PH.Data.IFieldValue).value as Date, expirationDate);
-      assert.isUndefined(env.instanceDetails.extras.fieldContents["ERROR"] as PH.Data.IFieldValue);
+      assert.equal((env.instanceDetails.extras.fieldContents?.["Info"] as PH.Data.IFieldValue).value as string, "Maßnahme wurde erstellt");
+      assert.equal((env.instanceDetails.extras.fieldContents?.["Abb"] as PH.Data.IFieldValue).value as string, abbreation);
+      assert.equal((env.instanceDetails.extras.fieldContents?.["Desc"] as PH.Data.IFieldValue).value as string, describtion);
+      assert.equal((env.instanceDetails.extras.fieldContents?.["Date"] as PH.Data.IFieldValue).value as Date, expirationDate);
+      assert.isUndefined(env.instanceDetails.extras.fieldContents?.["ERROR"] as PH.Data.IFieldValue);
     });
 
     it("execute intrafox createActivity with wrong username_6a439a53-9c1b-4e31-969b-2be89b2ebb95", async () => {
@@ -99,11 +99,11 @@ describe("services", () => {
         describtion,
         expirationDate,
       );
-      assert.equal((env.instanceDetails.extras.fieldContents["ERROR"] as PH.Data.IFieldValue).value as string, "Ein Fehler ist aufgetreten, ARGS wurden falsch gesetzt.");
-      assert.equal((env.instanceDetails.extras.fieldContents["Abb"] as PH.Data.IFieldValue).value as string, abbreation);
-      assert.equal((env.instanceDetails.extras.fieldContents["Desc"] as PH.Data.IFieldValue).value as string, describtion);
-      assert.equal((env.instanceDetails.extras.fieldContents["Date"] as PH.Data.IFieldValue).value as Date, expirationDate);
-      assert.isUndefined(env.instanceDetails.extras.fieldContents["Info"] as PH.Data.IFieldValue);
+      assert.equal((env.instanceDetails.extras.fieldContents?.["ERROR"] as PH.Data.IFieldValue).value as string, "Ein Fehler ist aufgetreten, ARGS wurden falsch gesetzt.");
+      assert.equal((env.instanceDetails.extras.fieldContents?.["Abb"] as PH.Data.IFieldValue).value as string, abbreation);
+      assert.equal((env.instanceDetails.extras.fieldContents?.["Desc"] as PH.Data.IFieldValue).value as string, describtion);
+      assert.equal((env.instanceDetails.extras.fieldContents?.["Date"] as PH.Data.IFieldValue).value as Date, expirationDate);
+      assert.isUndefined(env.instanceDetails.extras.fieldContents?.["Info"] as PH.Data.IFieldValue);
     });
 
     it("execute intrafox createActivity with wrong token_d7dabc0a-85bb-4877-863d-7c565dcff90a", async () => {
@@ -133,13 +133,13 @@ describe("services", () => {
         expirationDate,
       );
       assert.equal(
-        (env.instanceDetails.extras.fieldContents["ERROR"] as PH.Data.IFieldValue).value as string,
+        (env.instanceDetails.extras.fieldContents?.["ERROR"] as PH.Data.IFieldValue).value as string,
         "Ein Fehler ist aufgetreten, Authentifizierungstoken ist ungültig.",
       );
-      assert.equal((env.instanceDetails.extras.fieldContents["Abb"] as PH.Data.IFieldValue).value as string, abbreation);
-      assert.equal((env.instanceDetails.extras.fieldContents["Desc"] as PH.Data.IFieldValue).value as string, describtion);
-      assert.equal((env.instanceDetails.extras.fieldContents["Date"] as PH.Data.IFieldValue).value as Date, expirationDate);
-      assert.isUndefined(env.instanceDetails.extras.fieldContents["Info"] as PH.Data.IFieldValue);
+      assert.equal((env.instanceDetails.extras.fieldContents?.["Abb"] as PH.Data.IFieldValue).value as string, abbreation);
+      assert.equal((env.instanceDetails.extras.fieldContents?.["Desc"] as PH.Data.IFieldValue).value as string, describtion);
+      assert.equal((env.instanceDetails.extras.fieldContents?.["Date"] as PH.Data.IFieldValue).value as Date, expirationDate);
+      assert.isUndefined(env.instanceDetails.extras.fieldContents?.["Info"] as PH.Data.IFieldValue);
     });
   });
 });
