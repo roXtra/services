@@ -31,9 +31,8 @@ export async function service1(environment: PH.ServiceTask.IServiceTaskEnvironme
   // Get the instance to manipulate and add fields
   const instance = await serviceLogic(environment);
 
-  // Init new field
   if (instance.extras.fieldContents === undefined) {
-    instance.extras.fieldContents = {};
+    throw new Error("fieldContents are undefined, cannot proceed with service!");
   }
 
   instance.extras.fieldContents["Neues Feld"] = {
