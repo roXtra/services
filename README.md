@@ -30,7 +30,7 @@ To run your new service you have to restart your roXtraEFormulare Windows Servic
 
 ### Getting Started
 - Clone the repository
-- Open it in VSCode or in your prefered IDE
+- Open it in VSCode or in your preferred IDE
 - Install all dependencies via 
   ```javascript
   npm install
@@ -54,7 +54,8 @@ The following files contain code for the service you want to develop:
 - \<myservicename\>-config.tsx, contains React code that defines the appearance of the service
 - \<myservicename\>-service.ts, defines the behavior of the service
 
-To get a basic understanding for developing services, feel free to look into our existing services in the repository. 
+To get a basic understanding for developing services, feel free to look into our existing services in the repository.
+We should have you covered with a template service under ./servicetemplate. 
 
 ## Benutzen von bereits vorhandenen Services
 
