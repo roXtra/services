@@ -25,7 +25,6 @@
   "homepage": "https://github.com/roXtra/services#readme",
   "dependencies": {
     "@babel/core": "^7.12.10",
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v8.36.0-9/release.tgz",
     "react": "^17.0.1"
   },
   "devDependencies": {
