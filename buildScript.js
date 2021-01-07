@@ -28,7 +28,7 @@ function doForEachService(func) {
   dirTree(
     "./",
     {
-      exclude: [/node_modules/, /zipped_services/, /commontestfiles/, /resources/, /\.git/, /\.idea/],
+      exclude: [/node_modules/, /zipped_services/, /commontestfiles/, /resources/, /\.git/, /\.vscode/, /\.idea/],
     },
     null,
     (item, path, stats) => {
