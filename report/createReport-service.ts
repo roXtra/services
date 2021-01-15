@@ -8,11 +8,11 @@ const ERRORCODES = {
 
 let error = ERRORCODES.NOERROR;
 
-async function getReport(environment: PH.ServiceTask.IServiceTaskEnvironment, reportDraftID: string, reportType: "docx" | "pdf"): Promise<string> {
+async function getReport(environment: PH.ServiceTask.IServiceTaskEnvironment, reportDraftID: string, reportType: PH.Instance.IGenerateReportRequestType): Promise<string> {
   const instance = environment.instanceDetails;
 
-  const reply = await environment.instances.generateInstanceReport(instance.instanceId, reportDraftID, reportType);
-  const url = await environment.instances.uploadAttachment(instance.processId, instance.instanceId, reply.fileName, Buffer.from(reply.doc).toString("base64"));
+  const reply = await environment.instances.generateInstanceReport([instance.instanceId], reportDraftID, reportType);
+  const url = await environment.instances.uploadAttachment(instance.processId, instance.instanceId, reply.fileName, reply.doc);
 
   return url;
 }
