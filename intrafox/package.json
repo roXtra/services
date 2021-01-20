@@ -37,7 +37,7 @@
     "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
     "cross-var": "^1.1.0",
-    "eslint": "^7.17.0",
+    "eslint": "^7.18.0",
     "mocha": "^8.2.1",
     "nock": "^13.0.5",
     "regenerator-runtime": "^0.13.7",
