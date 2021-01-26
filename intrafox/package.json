@@ -21,7 +21,7 @@
     "@types/dateformat": "^3.0.1",
     "dateformat": "^3.0.3",
     "node-fetch": "^2.6.1",
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.6.0-4/release.tgz",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.6.0/release.tgz",
     "react": "^17.0.1",
     "semantic-ui-react": "^0.88.2"
   },
