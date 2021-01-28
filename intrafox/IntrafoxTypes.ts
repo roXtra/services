@@ -1,8 +1,4 @@
-export interface IIntraFoxRequest extends RequestInit {
-  method: "POST";
-  body: string; // JSON.stringify(IntraFoxBody)
-  headers: any;
-}
+import { RequestInit } from "node-fetch";
 
 export interface IGetGlobalActivityListResponse {
   ACTIVITY_ACTIVITYNUMBER: string;
@@ -12,14 +8,10 @@ export interface IGetGlobalActivityListResponse {
   ORGANIZATIONUNIT_NAMES: string[][];
 }
 
-export interface IIntraFoxErrorResponse extends IIntraFoxRequest {
+export interface IIntraFoxErrorResponse extends RequestInit {
   ERRORCODE: string;
   REASON: string;
   MESSAGE: string;
-}
-
-export interface IIntraFoxHeader {
-  "X-INTRAFOX-ROXTRA-TOKEN": string;
 }
 
 export interface IIntraFoxBody {
