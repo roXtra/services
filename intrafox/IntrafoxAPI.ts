@@ -4,11 +4,9 @@ import * as PH from "processhub-sdk";
 import fetch from "node-fetch";
 
 async function post(url: string, requestBody: IntrafoxTypes.IIntraFoxBody, token: string): Promise<any> {
-  const headers: IntrafoxTypes.IIntraFoxHeader = {
-    "X-INTRAFOX-ROXTRA-TOKEN": token,
-  };
+  const headers = { "X-INTRAFOX-ROXTRA-TOKEN": token };
 
-  const req: IntrafoxTypes.IIntraFoxRequest = {
+  const req = {
     method: "POST",
     body: JSON.stringify(requestBody),
     headers: headers,
