@@ -1,5 +1,5 @@
 import * as PH from "processhub-sdk";
-import { setError } from "./errorhelper";
+import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance";
 import { ProcessExtras } from "processhub-sdk/lib/process";
 
 function getNumberOfInstancesOfSpecificYear(instances: PH.Instance.IInstanceDetails[], year: number): number {
@@ -47,31 +47,26 @@ export function serviceLogic(processDetails: PH.Process.IProcessDetails, environ
 }
 
 export async function antragsnrAction(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
-  try {
-    const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
-    await processObject.loadXml(environment.bpmnXml);
-    const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
-    const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
+  const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
+  await processObject.loadXml(environment.bpmnXml);
+  const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
+  const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
 
-    const config = extensionValues.serviceTaskConfigObject;
+  const config = extensionValues.serviceTaskConfigObject;
 
-    if (config === undefined) {
-      throw new Error("Config is undefined, cannot proceed with service!");
-    }
-
-    const fields = config.fields;
-    const targetField = fields.find((f) => f.key === "targetfield")?.value;
-
-    if (targetField === undefined) {
-      throw new Error("targetField is undefined, cannot proceed with service!");
-    }
-
-    const processDetails = await environment.processes.getProcessDetails(environment.instanceDetails.processId, ProcessExtras.ExtrasInstances);
-    serviceLogic(processDetails, environment, targetField);
-    await environment.instances.updateInstance(environment.instanceDetails);
-  } catch (ex) {
-    await setError(environment, "(StartUpdateProcess): " + String(ex));
-    return false;
+  if (config === undefined) {
+    throw new BpmnError(ErrorCode.ConfigInvalid, PH.tl("Der Service ist nicht korrekt konfiguiriert, die Konfiguration konnte nicht geladen werden."));
   }
+
+  const fields = config.fields;
+  const targetField = fields.find((f) => f.key === "targetfield")?.value;
+
+  if (targetField === undefined) {
+    throw new BpmnError(ErrorCode.ConfigInvalid, PH.tl("Der Service ist nicht korrekt konfiguiriert, das Zielfeld wurde nicht ausgefüllt."));
+  }
+
+  const processDetails = await environment.processes.getProcessDetails(environment.instanceDetails.processId, ProcessExtras.ExtrasInstances);
+  serviceLogic(processDetails, environment, targetField);
+  await environment.instances.updateInstance(environment.instanceDetails);
   return true;
 }
