@@ -24,25 +24,6 @@
           "type": "text"
         }
       ]
-    },
-    {
-      "id": "projectreader",
-      "label": "Projekt aus CSV Datei lesen",
-      "configMethod": "projectreaderConfig",
-      "settings": "projectreader-config.js",
-      "serviceFile": "projectreader-service.js",
-      "serviceMethod": "projectreader",
-      "fields": [
-        {
-          "name": "filePath",
-          "type": "text"
-        },
-        {
-          "name": "searchField",
-          "type": "select",
-          "onload": "fields"
-        }
-      ]
     }
   ]
 }
