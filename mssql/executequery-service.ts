@@ -1,5 +1,10 @@
 import * as sql from "mssql";
 import * as PH from "processhub-sdk";
+import { BpmnError } from "processhub-sdk/lib/instance";
+
+export enum ErrorCodes {
+  DB_ERROR = "DB_ERROR",
+}
 
 export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
   const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
@@ -92,8 +97,7 @@ export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvir
       await environment.instances.updateInstance(environment.instanceDetails);
     }
   } catch (ex) {
-    // Res.status(500).send({ message: "${err}" });
-    return false;
+    throw new BpmnError(ErrorCodes.DB_ERROR, String(ex));
   } finally {
     await pool.close();
   }
