@@ -1,5 +1,10 @@
 import * as mysql from "mysql";
 import * as PH from "processhub-sdk";
+import { BpmnError } from "processhub-sdk/lib/instance";
+
+enum ErrorCodes {
+  DB_ERROR = "DB_ERROR",
+}
 
 export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
   const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
@@ -100,17 +105,7 @@ export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvir
     }
   } catch (ex) {
     console.error(`MySQL service error: ${JSON.stringify(ex)}`);
-
-    if (environment.instanceDetails.extras.fieldContents === undefined) {
-      environment.instanceDetails.extras.fieldContents = {};
-    }
-
-    environment.instanceDetails.extras.fieldContents["MySQL error"] = {
-      type: "ProcessHubTextInput",
-      value: JSON.stringify(ex),
-    };
-    await environment.instances.updateInstance(environment.instanceDetails);
-    return false;
+    throw new BpmnError(ErrorCodes.DB_ERROR, String(ex));
   }
   return true;
 }

@@ -90,6 +90,15 @@ export function executeQueryConfig(): JSX.Element {
         </Semantic.Table>
 
         <Semantic.Table.Row>{queryHint}</Semantic.Table.Row>
+
+        <Semantic.Table.Row>
+          <Semantic.Table.Cell colSpan="2">
+            <h3>Mögliche Service Fehler</h3>
+            <div>
+              <p>DB_ERROR: Tritt dieser Fehler auf, konnte die Abfrage von der Datenbank nicht richtig verarbeitet werden.</p>
+            </div>
+          </Semantic.Table.Cell>
+        </Semantic.Table.Row>
       </div>
     </Semantic.Modal.Content>
   );

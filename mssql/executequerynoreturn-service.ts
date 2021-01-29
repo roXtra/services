@@ -1,6 +1,8 @@
 import * as sql from "mssql";
 import * as PH from "processhub-sdk";
 import { IServiceActionConfigField } from "processhub-sdk/lib/data";
+import { BpmnError } from "processhub-sdk/lib/instance";
+import { ErrorCodes } from "./executequery-service";
 
 export async function executeQueryNoReturn(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
   const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
@@ -66,7 +68,7 @@ export async function executeQueryNoReturn(environment: PH.ServiceTask.IServiceT
     await pool.request().query(query);
   } catch (ex) {
     console.error(`mssql service error: ${JSON.stringify(ex)}`);
-    return false;
+    throw new BpmnError(ErrorCodes.DB_ERROR, String(ex));
   } finally {
     await pool.close();
   }
