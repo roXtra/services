@@ -1,10 +1,10 @@
 import * as PH from "processhub-sdk";
-import { missingRequiredField, initRequiredFields, RoXtraFileApi, errorHandling } from "./roxtrafileapi";
-import { ISetFileFieldsObject, ISelection, SelectTypes, ERRORCODES } from "./roxtrafileapitypes";
+import { missingRequiredField, initRequiredFields, RoXtraFileApi } from "./roxtrafileapi";
+import { ISetFileFieldsObject, ISelection, SelectTypes } from "./roxtrafileapitypes";
 import JSONQuery from "json-query";
 import { IRoXtraFileApi } from "./iroxtrafileapi";
+import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance";
 
-export let errorState: number = ERRORCODES.NOERROR;
 let APIUrl: string;
 let efAccessToken: string;
 
@@ -27,16 +27,6 @@ function handleSelectField(selectID: string, value: string, selection: ISelectio
       return JSONQuery("SimpleSelectionsList[Value = " + value + "].ID", { data: selection }).value;
     }
   }
-}
-
-function errorHandlingMissingField(key: string): number {
-  if (key === "fileId") {
-    return ERRORCODES.MISSING_FILEID;
-  } else if (key === "fieldId") {
-    return ERRORCODES.MISSING_FIELDID;
-  }
-
-  return errorState;
 }
 
 async function selectionValueIDMapping(
@@ -62,11 +52,7 @@ function parseFileID(fieldID: string, environment: PH.ServiceTask.IServiceTaskEn
 
   if (fieldIDSplit.length > 1) {
     fieldID = fieldIDSplit[1].trim();
-    try {
-      return (environment.instanceDetails.extras.fieldContents?.[fieldID] as PH.Data.IFieldValue).value as string;
-    } catch (e) {
-      errorState = ERRORCODES.NO_FILEIDFIELD;
-    }
+    return (environment.instanceDetails.extras.fieldContents?.[fieldID] as PH.Data.IFieldValue).value as string;
   } else {
     return fieldID.trim();
   }
@@ -84,7 +70,6 @@ async function getFieldDetails(fileID: string, fieldID: string, environment: PH.
 }
 
 export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvironment, roxFileApi: IRoXtraFileApi): Promise<PH.Instance.IInstanceDetails> {
-  errorState = ERRORCODES.NOERROR;
   const fields = await PH.ServiceTask.getFields(environment);
   const instance = environment.instanceDetails;
 
@@ -92,13 +77,7 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
   const missingField = missingRequiredField(requiredFields);
 
   if (missingField.isMissing) {
-    if (missingField.key === undefined) {
-      if (missingField.key === undefined) {
-        throw new Error("missingField.isMissing is true but missingField.key is undefined! This must not happen!");
-      }
-    }
-    errorState = errorHandlingMissingField(missingField.key);
-    return instance;
+    throw new BpmnError(ErrorCode.ConfigInvalid, `Ein Feld in der Konfiguration wurde nicht gesetzt: ${String(missingField.key)}`);
   }
 
   // Get field name of the corresponding field ID
@@ -120,48 +99,34 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
   // Get the value of a selected field
   const value = (environment.instanceDetails.extras.fieldContents?.[valueField] as PH.Data.IFieldValue).value as string;
 
-  try {
-    fileId = parseFileID(fileId, environment);
+  fileId = parseFileID(fileId, environment);
 
-    if (fileId === undefined) {
-      throw new Error("fileId is undefined after parseFileID, cannot proceed!");
-    }
-
-    const body: ISetFileFieldsObject[] = [
-      {
-        Id: fieldId,
-        Value: value,
-      },
-    ];
-
-    if (value) {
-      const fieldDetails = await getFieldDetails(fileId, fieldId, environment, roxFileApi);
-      body[0].ValueIds = await selectionValueIDMapping(body[0], fieldDetails.RoxSelection, fieldDetails.RoxType, environment, roxFileApi);
-      await roxFileApi.setFileFieldsCall(APIUrl, body, fileId, efAccessToken, environment.roxApi.getApiToken());
-    }
-
-    return instance;
-  } catch (e) {
-    console.log(e);
-    errorState = ERRORCODES.UNKNOWNERROR_SET;
-    return instance;
+  if (fileId === undefined) {
+    throw new Error("fileId is undefined after parseFileID, cannot proceed!");
   }
+
+  const body: ISetFileFieldsObject[] = [
+    {
+      Id: fieldId,
+      Value: value,
+    },
+  ];
+
+  if (value) {
+    const fieldDetails = await getFieldDetails(fileId, fieldId, environment, roxFileApi);
+    body[0].ValueIds = await selectionValueIDMapping(body[0], fieldDetails.RoxSelection, fieldDetails.RoxType, environment, roxFileApi);
+    await roxFileApi.setFileFieldsCall(APIUrl, body, fileId, efAccessToken, environment.roxApi.getApiToken());
+  }
+
+  return instance;
 }
 
 export async function setRoxFileField(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
-  errorState = ERRORCODES.NOERROR;
   APIUrl = environment.serverConfig.roXtra.efApiEndpoint;
   efAccessToken = await environment.roxApi.getEfApiToken();
 
-  // Get the instance to manipulate and add fields
-  const instance = await serviceLogic(environment, new RoXtraFileApi());
-
-  // Update the Instance with changes
-  if (errorState) {
-    errorHandling(errorState, instance);
-  }
-
+  await serviceLogic(environment, new RoXtraFileApi());
   await environment.instances.updateInstance(environment.instanceDetails);
 
-  return !errorState;
+  return true;
 }

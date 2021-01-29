@@ -1,9 +1,9 @@
 import * as PH from "processhub-sdk";
-import * as Types from "./roxtrafileapitypes";
-import { missingRequiredField, initRequiredFields, RoXtraFileApi, errorHandling, readFileBase64Async } from "./roxtrafileapi";
+import { ICreateFileRequestBody } from "./roxtrafileapitypes";
+import { missingRequiredField, initRequiredFields, RoXtraFileApi, readFileBase64Async } from "./roxtrafileapi";
 import { IRoXtraFileApi } from "./iroxtrafileapi";
+import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance";
 
-export let errorState: number = Types.ERRORCODES.NOERROR;
 let APIUrl: string;
 let efAccessToken: string;
 
@@ -31,21 +31,8 @@ function generateTitleWithDataType(title: string, fileName: string): string {
   return splittedFileName.join(".");
 }
 
-function errorHandlingMissingField(key: string): number {
-  if (key === "docType") {
-    return Types.ERRORCODES.MISSING_DOCTYPE;
-  } else if (key === "destinationID") {
-    return Types.ERRORCODES.MISSING_DESTINATIONID;
-  } else if (key === "destinationType") {
-    return Types.ERRORCODES.MISSING_DESTINATIONTYPE;
-  }
-
-  return errorState;
-}
-
 // Extract the serviceLogic that testing is possible
 export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvironment, roxtraFileAPI: IRoXtraFileApi): Promise<PH.Instance.IInstanceDetails> {
-  errorState = Types.ERRORCODES.NOERROR;
   const fields = await PH.ServiceTask.getFields(environment);
   const instance = environment.instanceDetails;
 
@@ -53,12 +40,7 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
   const missingField = missingRequiredField(requiredFields);
 
   if (missingField.isMissing) {
-    if (missingField.key === undefined) {
-      throw new Error("missingField.isMissing is true but missingField.key is undefined! This must not happen!");
-    }
-
-    errorState = errorHandlingMissingField(missingField.key);
-    return instance;
+    throw new BpmnError(ErrorCode.ConfigInvalid, `Ein Feld in der Konfiguration wurde nicht gesetzt: ${String(missingField.key)}`);
   }
 
   // Get field name of the corresponding field ID
@@ -98,59 +80,41 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
   const title = (environment.instanceDetails.extras.fieldContents?.[titleField] as PH.Data.IFieldValue).value as string;
   const description = (environment.instanceDetails.extras.fieldContents?.[descriptionField] as PH.Data.IFieldValue).value as string;
 
-  try {
-    const titleWithEnding = generateTitleWithDataType(title, roxFile[0].split("/").last());
+  const titleWithEnding = generateTitleWithDataType(title, roxFile[0].split("/").last());
 
-    const relativePath = roxFile[0].split("modules/files/")[1];
-    const filePath = decodeURIComponent(environment.fileStore.getPhysicalPath(relativePath));
+  const relativePath = roxFile[0].split("modules/files/")[1];
+  const filePath = decodeURIComponent(environment.fileStore.getPhysicalPath(relativePath));
 
-    const fileData = await readFileBase64Async(filePath);
+  const fileData = await readFileBase64Async(filePath);
 
-    const body: Types.ICreateFileRequestBody = {
-      DestinationID: destinationID,
-      DestinationType: destinationType,
-      DocTypeID: docType,
-      Fields: [
-        {
-          Id: "Description",
-          Value: description,
-        },
-      ],
-      FileData: {
-        Base64EncodedData: fileData,
-        Filename: titleWithEnding,
+  const body: ICreateFileRequestBody = {
+    DestinationID: destinationID,
+    DestinationType: destinationType,
+    DocTypeID: docType,
+    Fields: [
+      {
+        Id: "Description",
+        Value: description,
       },
-    };
+    ],
+    FileData: {
+      Base64EncodedData: fileData,
+      Filename: titleWithEnding,
+    },
+  };
 
-    // Code for Post Request
-    const response = await roxtraFileAPI.createRoxFileCall(APIUrl, body, efAccessToken, environment.roxApi.getApiToken());
-    if (response) {
-      createFileIDField(fileIDFieldName, response, instance);
-      return instance;
-    } else {
-      errorState = Types.ERRORCODES.APICALLERROR;
-      return instance;
-    }
-  } catch (e) {
-    console.error(e);
-    errorState = Types.ERRORCODES.UNKNOWNERROR_CREATE;
-    return instance;
-  }
+  // Code for Post Request
+  const response = await roxtraFileAPI.createRoxFileCall(APIUrl, body, efAccessToken, environment.roxApi.getApiToken());
+  createFileIDField(fileIDFieldName, response, instance);
+  return instance;
 }
 
 export async function createRoxFile(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
   APIUrl = environment.serverConfig.roXtra.efApiEndpoint;
   efAccessToken = await environment.roxApi.getEfApiToken();
 
-  // Get the instance to manipulate and add fields
-  const instance = await serviceLogic(environment, new RoXtraFileApi());
-
-  // Update the Instance with changes
-  if (errorState) {
-    errorHandling(errorState, instance);
-  }
-
+  await serviceLogic(environment, new RoXtraFileApi());
   await environment.instances.updateInstance(environment.instanceDetails);
 
-  return !errorState;
+  return true;
 }

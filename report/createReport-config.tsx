@@ -57,6 +57,15 @@ export function createReportConfig(): JSX.Element {
             </div>
           </Semantic.Table.Cell>
         </Semantic.Table.Row>
+
+        <Semantic.Table.Row>
+          <Semantic.Table.Cell colSpan="2">
+            <h3>Mögliche Service Fehler</h3>
+            <div>
+              <p>ATTACHMENT_ERROR: Tritt dieser Fehler auf, konnte der Bericht nicht an den Vorgang angehängt werden.</p>
+            </div>
+          </Semantic.Table.Cell>
+        </Semantic.Table.Row>
       </div>
     </Semantic.Modal.Content>
   );

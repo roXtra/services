@@ -1,23 +1,14 @@
 import { RequestInit } from "node-fetch";
 
+export enum ErrorCodes {
+  API_ERROR = "API_ERROR",
+}
+
 export const SelectTypes = {
   SELECT: "select",
   COMPLEXSELECT: "complexselect",
   MULTISELECT: "multiselect",
   TREESELECT: "treeselect",
-};
-
-export const ERRORCODES = {
-  NOERROR: 0,
-  MISSING_DOCTYPE: 1,
-  MISSING_DESTINATIONID: 2,
-  MISSING_DESTINATIONTYPE: 3,
-  MISSING_FILEID: 4,
-  MISSING_FIELDID: 5,
-  NO_FILEIDFIELD: 6,
-  UNKNOWNERROR_CREATE: 7,
-  UNKNOWNERROR_SET: 8,
-  APICALLERROR: 9,
 };
 
 export interface IRequestHeader extends Record<string, string> {
