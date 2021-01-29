@@ -34,46 +34,31 @@ async function getServiceTaskConfig(
 }
 
 export async function startinstance(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
-  try {
-    const { workspaceAndProcessId, fields, executingUserId } = await getServiceTaskConfig(environment);
-    const workspaceId = workspaceAndProcessId.split("/")[0];
-    const processId = workspaceAndProcessId.split("/")[1];
+  const { workspaceAndProcessId, fields, executingUserId } = await getServiceTaskConfig(environment);
+  const workspaceId = workspaceAndProcessId.split("/")[0];
+  const processId = workspaceAndProcessId.split("/")[1];
 
-    const accessToken = await environment.roxApi.getRoxtraTokenByUserId(executingUserId);
+  const accessToken = await environment.roxApi.getRoxtraTokenByUserId(executingUserId);
 
-    const oldFieldContents = environment.instanceDetails.extras.fieldContents;
-    const newFieldContents: PH.Data.IFieldContentMap = {};
-    if (oldFieldContents !== undefined) {
-      for (const fieldName of fields) {
-        newFieldContents[fieldName] = oldFieldContents[fieldName];
-      }
+  const oldFieldContents = environment.instanceDetails.extras.fieldContents;
+  const newFieldContents: PH.Data.IFieldContentMap = {};
+  if (oldFieldContents !== undefined) {
+    for (const fieldName of fields) {
+      newFieldContents[fieldName] = oldFieldContents[fieldName];
     }
-
-    const newInstance: PH.Instance.IInstanceDetails = {
-      title: "",
-      instanceId: PH.Tools.createId(),
-      workspaceId,
-      processId,
-      extras: {
-        instanceState: undefined,
-        fieldContents: newFieldContents,
-      },
-    };
-
-    await environment.instances.executeInstance(processId, newInstance, undefined, accessToken);
-    return true;
-  } catch (ex) {
-    console.error(ex);
-
-    if (environment.instanceDetails.extras.fieldContents === undefined) {
-      throw new Error(`fieldContents are undefined, cannot log error that occurred in service: ${JSON.stringify(ex)}`);
-    }
-
-    environment.instanceDetails.extras.fieldContents["ErrorField"] = {
-      type: "ProcessHubTextInput",
-      value: PH.tl("Fehler beim Ausführen des Services: ") + JSON.stringify(ex),
-    };
-    await environment.instances.updateInstance(environment.instanceDetails);
-    return false;
   }
+
+  const newInstance: PH.Instance.IInstanceDetails = {
+    title: "",
+    instanceId: PH.Tools.createId(),
+    workspaceId,
+    processId,
+    extras: {
+      instanceState: undefined,
+      fieldContents: newFieldContents,
+    },
+  };
+
+  await environment.instances.executeInstance(processId, newInstance, undefined, accessToken);
+  return true;
 }
