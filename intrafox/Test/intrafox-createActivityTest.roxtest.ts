@@ -1,8 +1,10 @@
-import { assert } from "chai";
+import { assert, expect } from "chai";
 import * as PH from "processhub-sdk";
 import * as fs from "fs";
 import * as CreateActivity from "../createActivity-service";
 import { NockServer } from "./nockServer";
+import { BpmnError } from "processhub-sdk/lib/instance";
+import { ErrorCodes } from "../IntrafoxTypes";
 
 describe("services", () => {
   describe("intrafox", () => {
@@ -21,13 +23,12 @@ describe("services", () => {
     ): PH.ServiceTask.IServiceTaskEnvironment {
       const env = PH.Test.createEmptyTestServiceEnvironment(fs.readFileSync(bpmnXmlPath, "utf8"));
       env.bpmnTaskId = bpmnTaskId;
-      env.fieldContents = {
+      env.instanceDetails.extras.fieldContents = {
         Username: { type: "ProcessHubNumber", value: username },
         Abb: { type: "ProcessHubNumber", value: abbreation },
         Desc: { type: "ProcessHubNumber", value: describtion },
         Date: { type: "ProcessHubNumber", value: expirationDate },
       };
-      env.instanceDetails.extras.fieldContents = env.fieldContents;
 
       return env;
     }
@@ -90,7 +91,7 @@ describe("services", () => {
         }),
       );
 
-      const env = await performCreateActivityTest(
+      const rejectionError = await performCreateActivityTest(
         testGuid,
         "./Test/testfiles/create-activity.bpmn",
         "ServiceTask_16C58B2F292DE836",
@@ -98,12 +99,9 @@ describe("services", () => {
         abbreation,
         describtion,
         expirationDate,
-      );
-      assert.equal((env.instanceDetails.extras.fieldContents?.["ERROR"] as PH.Data.IFieldValue).value as string, "Ein Fehler ist aufgetreten, ARGS wurden falsch gesetzt.");
-      assert.equal((env.instanceDetails.extras.fieldContents?.["Abb"] as PH.Data.IFieldValue).value as string, abbreation);
-      assert.equal((env.instanceDetails.extras.fieldContents?.["Desc"] as PH.Data.IFieldValue).value as string, describtion);
-      assert.equal((env.instanceDetails.extras.fieldContents?.["Date"] as PH.Data.IFieldValue).value as Date, expirationDate);
-      assert.isUndefined(env.instanceDetails.extras.fieldContents?.["Info"] as PH.Data.IFieldValue);
+      ).catch((err: BpmnError) => err);
+
+      expect(rejectionError).to.deep.equal(new BpmnError(ErrorCodes.API_ERROR, "Ein Fehler ist aufgetreten, ARGS wurden falsch gesetzt."));
     });
 
     it("execute intrafox createActivity with wrong token_d7dabc0a-85bb-4877-863d-7c565dcff90a", async () => {
@@ -123,7 +121,7 @@ describe("services", () => {
         }),
       );
 
-      const env = await performCreateActivityTest(
+      const rejectionError = await performCreateActivityTest(
         testGuid,
         "./Test/testfiles/create-activity.bpmn",
         "ServiceTask_16C58B2F292DE836",
@@ -131,15 +129,9 @@ describe("services", () => {
         abbreation,
         describtion,
         expirationDate,
-      );
-      assert.equal(
-        (env.instanceDetails.extras.fieldContents?.["ERROR"] as PH.Data.IFieldValue).value as string,
-        "Ein Fehler ist aufgetreten, Authentifizierungstoken ist ungültig.",
-      );
-      assert.equal((env.instanceDetails.extras.fieldContents?.["Abb"] as PH.Data.IFieldValue).value as string, abbreation);
-      assert.equal((env.instanceDetails.extras.fieldContents?.["Desc"] as PH.Data.IFieldValue).value as string, describtion);
-      assert.equal((env.instanceDetails.extras.fieldContents?.["Date"] as PH.Data.IFieldValue).value as Date, expirationDate);
-      assert.isUndefined(env.instanceDetails.extras.fieldContents?.["Info"] as PH.Data.IFieldValue);
+      ).catch((err: BpmnError) => err);
+
+      expect(rejectionError).to.deep.equal(new BpmnError(ErrorCodes.API_ERROR, "Ein Fehler ist aufgetreten, Authentifizierungstoken ist ungültig."));
     });
   });
 });

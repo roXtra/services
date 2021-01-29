@@ -42,7 +42,7 @@ export async function serviceLogic(url: string, environment: PH.ServiceTask.ISer
   const activity = response as IntrafoxTypes.IGetGlobalActivityListResponse;
   const error = response as IntrafoxTypes.IIntraFoxErrorResponse;
 
-  if (activity) {
+  if (activity && !error.ERRORCODE) {
     instance.extras.fieldContents["Abkürzung"] = {
       value: activity.ACTIVITY_ABBREVIATION,
       type: "ProcessHubTextArea",

@@ -2,6 +2,7 @@ import * as IntrafoxTypes from "./IntrafoxTypes";
 import DateFormat from "dateformat";
 import * as PH from "processhub-sdk";
 import fetch from "node-fetch";
+import { BpmnError } from "processhub-sdk/lib/instance";
 
 async function post(url: string, requestBody: IntrafoxTypes.IIntraFoxBody, token: string): Promise<any> {
   const headers = { "X-INTRAFOX-ROXTRA-TOKEN": token };
@@ -127,60 +128,28 @@ export function errorHandling(instance: PH.Instance.IInstanceDetails, errorCode:
       break;
     }
     case "ERRORCODE_REQUESTMETHOD": {
-      instance.extras.fieldContents["ERROR"] = {
-        value: "Ein Fehler ist aufgetreten, falsche HTTP Methode benutzt. Zur Zeit wird nur POST untersützt.",
-        type: "ProcessHubTextArea",
-      };
-      break;
+      throw new BpmnError(IntrafoxTypes.ErrorCodes.API_ERROR, PH.tl("Ein Fehler ist aufgetreten, falsche HTTP Methode benutzt. Zur Zeit wird nur POST untersützt."));
     }
     case "ERRORCODE_A1": {
-      instance.extras.fieldContents["ERROR"] = {
-        value: "Ein Fehler ist aufgetreten, Authentifizierungstoken fehlt im Header.",
-        type: "ProcessHubTextArea",
-      };
-      break;
+      throw new BpmnError(IntrafoxTypes.ErrorCodes.API_ERROR, PH.tl("Ein Fehler ist aufgetreten, Authentifizierungstoken fehlt im Header."));
     }
     case "ERRORCODE_A2": {
-      instance.extras.fieldContents["ERROR"] = {
-        value: "Ein Fehler ist aufgetreten, Authentifizierungstoken ist ungültig.",
-        type: "ProcessHubTextArea",
-      };
-      break;
+      throw new BpmnError(IntrafoxTypes.ErrorCodes.API_ERROR, PH.tl("Ein Fehler ist aufgetreten, Authentifizierungstoken ist ungültig."));
     }
     case "ERRORCODE_INVALID_BODY": {
-      instance.extras.fieldContents["ERROR"] = {
-        value: "Ein Fehler ist aufgetreten, der Body ist falsch.",
-        type: "ProcessHubTextArea",
-      };
-      break;
+      throw new BpmnError(IntrafoxTypes.ErrorCodes.API_ERROR, PH.tl("Ein Fehler ist aufgetreten, der Body ist falsch."));
     }
     case "ERRORCODE_INVALID_JSON": {
-      instance.extras.fieldContents["ERROR"] = {
-        value: "Ein Fehler ist aufgetreten, falsches JSON Format.",
-        type: "ProcessHubTextArea",
-      };
-      break;
+      throw new BpmnError(IntrafoxTypes.ErrorCodes.API_ERROR, PH.tl("Ein Fehler ist aufgetreten, falsches JSON Format."));
     }
     case "ERRORCODE_ARGUMENTS": {
-      instance.extras.fieldContents["ERROR"] = {
-        value: "Ein Fehler ist aufgetreten, ARGS wurden falsch gesetzt.",
-        type: "ProcessHubTextArea",
-      };
-      break;
+      throw new BpmnError(IntrafoxTypes.ErrorCodes.API_ERROR, PH.tl("Ein Fehler ist aufgetreten, ARGS wurden falsch gesetzt."));
     }
     case "ERRORCODE_FUNCTION": {
-      instance.extras.fieldContents["ERROR"] = {
-        value: "Ein Fehler ist aufgetreten, die API Funktion konnte nicht ausgeführt werden.",
-        type: "ProcessHubTextArea",
-      };
-      break;
+      throw new BpmnError(IntrafoxTypes.ErrorCodes.API_ERROR, PH.tl("Ein Fehler ist aufgetreten, die API Funktion konnte nicht ausgeführt werden."));
     }
     default: {
-      instance.extras.fieldContents["ERROR"] = {
-        value: "Ein Fehler ist aufgetreten, Activity konnte nicht erstellt werden.",
-        type: "ProcessHubTextArea",
-      };
-      break;
+      throw new BpmnError(IntrafoxTypes.ErrorCodes.API_ERROR, PH.tl("Ein Fehler ist aufgetreten, Activity konnte nicht erstellt werden."));
     }
   }
 }
