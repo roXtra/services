@@ -77,6 +77,11 @@ export function createActivityConfig(): JSX.Element {
             <div>
               <p>Geben Sie das Feld an, über das das Auslaufdatum der Maßnahme eingegeben werden kann.</p>
             </div>
+
+            <h3>Mögliche Service Fehler</h3>
+            <div>
+              <p>API_ERROR: Tritt dieser Fehler auf, ist bei der Intrafox Schnittstelle ein Fehler aufgetreten und es konnte keine Activity erstellt werden.</p>
+            </div>
           </Semantic.Table.Cell>
         </Semantic.Table.Row>
       </div>

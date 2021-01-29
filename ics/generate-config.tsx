@@ -57,6 +57,15 @@ export function generateConfig(): JSX.Element {
                 <select id="targetField" />
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
+
+            <Semantic.Table.Row>
+              <Semantic.Table.Cell colSpan="2">
+                <h3>Mögliche Service Fehler</h3>
+                <div>
+                  <p>ATTACHMENT_ERROR: Tritt dieser Fehler auf, konnte die ICS Datei nicht an den Vorgang angehängt werden.</p>
+                </div>
+              </Semantic.Table.Cell>
+            </Semantic.Table.Row>
           </Semantic.Table.Body>
         </Semantic.Table>
       </div>

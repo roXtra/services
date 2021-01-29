@@ -1,5 +1,9 @@
 import { RequestInit } from "node-fetch";
 
+export enum ErrorCodes {
+  API_ERROR = "API_ERROR",
+}
+
 export interface IGetGlobalActivityListResponse {
   ACTIVITY_ACTIVITYNUMBER: string;
   ACTIVITY_ABBREVIATION: string;
