@@ -15,6 +15,23 @@ export function antragsnrconfig(): JSX.Element {
               <Semantic.Input id="targetfield" fluid={true} />
             </Semantic.Table.Cell>
           </Semantic.Table.Row>
+
+          <Semantic.Table.Row>
+            <Semantic.Table.Cell colSpan="2">
+              <h3>Erklärung Eingabefeld Zielfeld</h3>
+              <div>
+                <p>Im Zielfeld kann der Name des Feldes angegeben werden, in dem die Antragsnummer gespeichert werden soll.</p>
+              </div>
+
+              <h3>Mögliche Service Fehler</h3>
+              <div>
+                <p>
+                  CONFIG_INVALID: Tritt dieser Fehler auf, sollte die Konfiguration nochmals überarbeitet werden. Es könnte zum Beispiel daran liegen, dass kein Zielfeld
+                  angegeben wurde.
+                </p>
+              </div>
+            </Semantic.Table.Cell>
+          </Semantic.Table.Row>
         </Semantic.Table.Body>
       </Semantic.Table>
     </Semantic.Modal.Content>
