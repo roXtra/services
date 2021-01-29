@@ -1,5 +1,6 @@
 import * as PH from "processhub-sdk";
 import * as hanaClient from "@sap/hana-client";
+import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance";
 
 export default class SAPServiceMethods {
   static buildInsertQuery(
@@ -81,7 +82,7 @@ export default class SAPServiceMethods {
   private static errorOutput(err: any, errorMessage: string, currentErrorState: boolean): boolean {
     if (err) {
       console.error(errorMessage, err);
-      return false;
+      throw new BpmnError(ErrorCode.UnknownError, `${errorMessage}: ${String(err)}`);
     }
     return currentErrorState;
   }
