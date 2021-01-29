@@ -9,8 +9,7 @@ describe("services", () => {
     function createEnvironment(bpmnXmlPath: string, bpmnTaskId: string): PH.ServiceTask.IServiceTaskEnvironment {
       const env = PH.Test.createEmptyTestServiceEnvironment(fs.readFileSync(bpmnXmlPath, "utf8"));
       env.bpmnTaskId = bpmnTaskId;
-      env.fieldContents = { UploadField: { type: "ProcessHubFileUpload", value: undefined } };
-      env.instanceDetails.extras.fieldContents = env.fieldContents;
+      env.instanceDetails.extras.fieldContents = { UploadField: { type: "ProcessHubFileUpload", value: undefined } };
 
       return env;
     }

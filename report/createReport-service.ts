@@ -1,12 +1,9 @@
 import * as PH from "processhub-sdk";
+import { BpmnError } from "processhub-sdk/lib/instance";
 
-const ERRORCODES = {
-  NOERROR: 0,
-  NOSELECTEDTEMPLATE: 1,
-  SERVERERROR: 2,
-};
-
-let error = ERRORCODES.NOERROR;
+enum ErrorCodes {
+  ATTACHMENT_ERROR = "ATTACHMENT_ERROR",
+}
 
 async function getReport(environment: PH.ServiceTask.IServiceTaskEnvironment, reportDraftID: string, reportType: PH.Instance.IGenerateReportRequestType): Promise<string> {
   const instance = environment.instanceDetails;
@@ -26,6 +23,8 @@ export function initReportUploadField(url: string, instance: PH.Instance.IInstan
       instance.extras.fieldContents[reportFieldName] = { type: "ProcessHubFileUpload", value: undefined };
     }
     (instance.extras.fieldContents[reportFieldName] as PH.Data.IFieldValue).value = [url];
+  } else {
+    throw new BpmnError(ErrorCodes.ATTACHMENT_ERROR, "Der Bericht konnte dem Vorgang nicht angehängt werden.");
   }
 }
 
@@ -52,9 +51,8 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
     throw new Error("reportFieldName is undefined, cannot proceed!");
   }
 
-  if (!reportDraftID) {
-    error = ERRORCODES.NOSELECTEDTEMPLATE;
-    return instance;
+  if (reportDraftID === undefined) {
+    throw new Error("reportDraftID is undefined, cannot proceed!");
   }
 
   if (reportType === "docx" || reportType === "pdf") {
@@ -67,36 +65,8 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
   return instance;
 }
 
-function errorHandling(instance: PH.Instance.IInstanceDetails): void {
-  switch (error) {
-    case ERRORCODES.NOERROR: {
-      break;
-    }
-    case ERRORCODES.NOSELECTEDTEMPLATE: {
-      if (instance.extras.fieldContents === undefined) {
-        instance.extras.fieldContents = {};
-      }
-      instance.extras.fieldContents["Fehler"] = { type: "ProcessHubTextArea", value: "Es wurde keine Berichtsvorlage ausgewählt." } as PH.Data.IFieldValue;
-      break;
-    }
-    case ERRORCODES.SERVERERROR: {
-      if (instance.extras.fieldContents === undefined) {
-        instance.extras.fieldContents = {};
-      }
-      instance.extras.fieldContents["Fehler"] = { type: "ProcessHubTextArea", value: "Der Server konnte keinen Bericht erstellen." } as PH.Data.IFieldValue;
-      break;
-    }
-  }
-}
-
 export async function createReport(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
-  error = ERRORCODES.NOERROR;
-
-  // Get the instance to manipulate and add fields
-  const instance = await serviceLogic(environment);
-
-  errorHandling(instance);
-  // Update the Instance with changes
+  await serviceLogic(environment);
   await environment.instances.updateInstance(environment.instanceDetails);
   return true;
 }
