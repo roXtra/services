@@ -1,13 +1,5 @@
 import * as PH from "processhub-sdk";
 
-export enum ErrorStates {
-  NOERROR = 0,
-  ERRORCODE_NORESULTS = 1,
-  ERRORCODE_NOSUCHFILE = 2,
-  ERRORCODE_FILEPATHNOTFOUND = 3,
-  ERRORCODE_NOSUCHPROJECT = 4,
-}
-
 export class CSVServiceMethods {
   public static query(objectArray: any[], queryString: string): any[] {
     const result: any[] = [];
@@ -65,7 +57,7 @@ export class CSVServiceMethods {
       const pos2 = pos1 + subString.search("@@");
       const fieldName = modifiedQuery.substring(pos1, pos2);
 
-      modifiedQuery = modifiedQuery.replace("@@" + fieldName + "@@", (instance.extras.fieldContents[fieldName] as PH.Data.IFieldValue).value as string);
+      modifiedQuery = modifiedQuery.replace("@@" + fieldName + "@@", String((instance.extras.fieldContents[fieldName] as PH.Data.IFieldValue).value));
     }
     return modifiedQuery;
   }

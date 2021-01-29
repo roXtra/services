@@ -19,7 +19,7 @@ export function csvreaderConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Sheet Name"} />
+                <PH.TL text={"Arbeitsblattname"} />
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <Semantic.Input id="sheetName" fluid />
@@ -32,6 +32,36 @@ export function csvreaderConfig(): JSX.Element {
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <Semantic.Input id="query" fluid />
+              </Semantic.Table.Cell>
+            </Semantic.Table.Row>
+
+            <Semantic.Table.Row>
+              <Semantic.Table.Cell colSpan="2">
+                <h3>Erklärung Eingabefeld Dateipfad</h3>
+                <div>
+                  <p>Im Eingabefeld Dateipfad wird der Pfad der CSV oder XLSX Datei angegeben. Diese Datei muss auf dem roXtra Server liegen.</p>
+                </div>
+
+                <h3>Erklärung Eingabefeld Arbeitsblattname</h3>
+                <div>
+                  <p>Im Eingabefeld Arbeitsblattname wird der Name des zu importierenden Arbeitsblatts angegeben.</p>
+                </div>
+
+                <h3>Erklärung Eingabefeld Abfrage</h3>
+                <div>
+                  <p>Im Eingabefeld Abfrage kann eine Abfrage hinterlegt werden um das importierte Arbeitsblatt zu filtern.</p>
+                  <p>Die Abfrage hat folgendes Schema: Spaltenname=Wert</p>
+                  <p>Feldwerte können über @@Feldname@@ eingefügt werden.</p>
+                </div>
+
+                <h3>Mögliche Service Fehler</h3>
+                <div>
+                  <p>
+                    CONFIG_INVALID: Tritt dieser Fehler auf, sollte die Konfiguration nochmals überarbeitet werden. Es könnte zum Beispiel daran liegen, dass kein Dateipfad
+                    angegeben wurde.
+                  </p>
+                  <p>FILE_ERROR: Tritt dieser Fehler auf, wurde keine Datei mit dem angegebenen Dateipfad gefunden oder enthält das Arbeitsblatt keine Daten.</p>
+                </div>
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
           </Semantic.Table.Body>
