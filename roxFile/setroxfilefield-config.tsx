@@ -53,6 +53,15 @@ export function setRoxFileFieldConfig(): JSX.Element {
             </div>
           </Semantic.Table.Cell>
         </Semantic.Table.Row>
+
+        <Semantic.Table.Row>
+          <Semantic.Table.Cell colSpan="2">
+            <h3>Mögliche Service Fehler</h3>
+            <div>
+              <p>API_ERROR: Tritt dieser Fehler auf, gab es ein Problem mit der Verbindung zu roXtra Dokumente.</p>
+            </div>
+          </Semantic.Table.Cell>
+        </Semantic.Table.Row>
       </div>
     </Semantic.Modal.Content>
   );

@@ -1,8 +1,8 @@
-import { serviceLogic, errorState } from "../setroxfilefield-service";
+import { serviceLogic } from "../setroxfilefield-service";
 import * as PH from "processhub-sdk";
 import * as fs from "fs";
 import { expect } from "chai";
-import { ERRORCODES, ISetFileFieldsObject } from "../roxtrafileapitypes";
+import { ISetFileFieldsObject } from "../roxtrafileapitypes";
 import { IRoXtraFileApi } from "../iroxtrafileapi";
 
 describe("services", () => {
@@ -68,14 +68,13 @@ describe("services", () => {
           );
           environment.bpmnTaskName = "SetFields";
           environment.bpmnTaskId = "ServiceTask_6FAF8F7973EF56FA";
-          environment.fieldContents = {
+          environment.instanceDetails.extras.fieldContents = {
             // eslint-disable-next-line @typescript-eslint/naming-convention
             Feld_1: {
               type: "ProcessHubTextInput",
               value: "Hello",
             },
           };
-          environment.instanceDetails.extras.fieldContents = environment.fieldContents;
           environment.roxApi.getApiToken = () => "";
           environment.serverConfig = {
             roXtra: {
@@ -84,9 +83,7 @@ describe("services", () => {
               clientSecret: undefined,
             },
           } as any;
-          expect(errorState).to.equal(ERRORCODES.NOERROR);
           await serviceLogic(environment, testApi);
-          expect(errorState).to.equal(ERRORCODES.NOERROR);
           // Make sure setFileFieldsCall was called with the right values
           expect(bodyFromSetCall?.length).to.equal(1);
           expect(bodyFromSetCall?.[0].Id).to.equal("roXtraFeld");
