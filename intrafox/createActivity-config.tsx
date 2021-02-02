@@ -13,7 +13,7 @@ export function createActivityConfig(): JSX.Element {
                 <PH.TL text={"Token"} />
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
-                <Semantic.Input id="token" fluid />
+                <input id="token" />
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
 

@@ -12,7 +12,7 @@ export function antragsnrconfig(): JSX.Element {
               <PH.TL text={"Zielfeld"} />
             </Semantic.Table.Cell>
             <Semantic.Table.Cell>
-              <Semantic.Input id="targetfield" fluid={true} />
+              <input id="targetfield" />
             </Semantic.Table.Cell>
           </Semantic.Table.Row>
 

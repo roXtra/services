@@ -14,7 +14,7 @@ export function executeQueryNoReturnConfig(): JSX.Element {
                 <PH.TL text={"Server"} />
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
-                <Semantic.Input id="server" fluid />
+                <input id="server" />
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
 
@@ -23,7 +23,7 @@ export function executeQueryNoReturnConfig(): JSX.Element {
                 <PH.TL text={"Benutzername"} />
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
-                <Semantic.Input id="username" fluid />
+                <input id="username" />
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
 
@@ -32,7 +32,7 @@ export function executeQueryNoReturnConfig(): JSX.Element {
                 <PH.TL text={"Passwort"} />
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
-                <Semantic.Input id="password" type="password" fluid />
+                <input id="password" type="password" />
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
 
@@ -41,7 +41,7 @@ export function executeQueryNoReturnConfig(): JSX.Element {
                 <PH.TL text={"Datenbank"} />
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
-                <Semantic.Input id="database" fluid />
+                <input id="database" />
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
 
@@ -50,7 +50,7 @@ export function executeQueryNoReturnConfig(): JSX.Element {
                 <PH.TL text={"Abfrage"} />
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
-                <Semantic.Input id="query" fluid />
+                <input id="query" />
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
           </Semantic.Table.Body>

@@ -13,7 +13,7 @@ export function setRoxFileFieldConfig(): JSX.Element {
                 <PH.TL text={"Datei ID"} />
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
-                <Semantic.Input id="fileId" fluid />
+                <input id="fileId" />
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
 
@@ -22,7 +22,7 @@ export function setRoxFileFieldConfig(): JSX.Element {
                 <PH.TL text={"Feld ID"} />
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
-                <Semantic.Input id="fieldId" fluid />
+                <input id="fieldId" />
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
 

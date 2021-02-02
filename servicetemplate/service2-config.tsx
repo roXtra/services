@@ -13,7 +13,7 @@ export function service2Config(): JSX.Element {
                 <PH.TL text={"Eingabefeld"} />
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
-                <Semantic.Input id="inputField" fluid />
+                <input id="inputField" />
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
 

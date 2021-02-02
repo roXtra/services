@@ -13,7 +13,7 @@ export function csvreaderConfig(): JSX.Element {
                 <PH.TL text={"Dateipfad"} />
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
-                <Semantic.Input id="filePath" fluid />
+                <input id="filePath" />
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
 
@@ -22,7 +22,7 @@ export function csvreaderConfig(): JSX.Element {
                 <PH.TL text={"Arbeitsblattname"} />
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
-                <Semantic.Input id="sheetName" fluid />
+                <input id="sheetName" />
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
 
@@ -31,7 +31,7 @@ export function csvreaderConfig(): JSX.Element {
                 <PH.TL text={"Abfrage"} />
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
-                <Semantic.Input id="query" fluid />
+                <input id="query" />
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
 
