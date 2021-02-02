@@ -31,7 +31,7 @@ export function additionConfig(): JSX.Element {
                 <PH.TL text={"Ergebnis"} />
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
-                <Semantic.Input id="targetField" fluid />
+                <input id="targetField" />
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
           </Semantic.Table.Body>

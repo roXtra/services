@@ -13,7 +13,7 @@ export function insertSAPQueryConfig(): JSX.Element {
                 <PH.TL text={"IP Adresse"} />
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
-                <Semantic.Input id="ipAddress" fluid />
+                <input id="ipAddress" />
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
 
@@ -22,7 +22,7 @@ export function insertSAPQueryConfig(): JSX.Element {
                 <PH.TL text={"Port"} />
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
-                <Semantic.Input id="port" fluid />
+                <input id="port" />
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
 
@@ -31,7 +31,7 @@ export function insertSAPQueryConfig(): JSX.Element {
                 <PH.TL text={"Datenbank Benutzername"} />
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
-                <Semantic.Input id="databaseUsername" fluid />
+                <input id="databaseUsername" />
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
 
@@ -40,7 +40,7 @@ export function insertSAPQueryConfig(): JSX.Element {
                 <PH.TL text={"Datenbankpasswort"} />
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
-                <Semantic.Input id="password" type="password" fluid />
+                <input id="password" type="password" />
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
 
@@ -49,7 +49,7 @@ export function insertSAPQueryConfig(): JSX.Element {
                 <PH.TL text={"Tenant"} />
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
-                <Semantic.Input id="tenant" fluid />
+                <input id="tenant" />
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
 
@@ -58,7 +58,7 @@ export function insertSAPQueryConfig(): JSX.Element {
                 <PH.TL text={"Tabellenname"} />
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
-                <Semantic.Input id="tableName" fluid />
+                <input id="tableName" />
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
 
@@ -67,7 +67,7 @@ export function insertSAPQueryConfig(): JSX.Element {
                 <PH.TL text={"Spalten"} />
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
-                <Semantic.Input id="columns" fluid />
+                <input id="columns" />
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
 
@@ -76,7 +76,7 @@ export function insertSAPQueryConfig(): JSX.Element {
                 <PH.TL text={"Werte"} />
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
-                <Semantic.Input id="values" fluid />
+                <input id="values" />
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
           </Semantic.Table.Body>

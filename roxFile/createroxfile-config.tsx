@@ -31,7 +31,7 @@ export function createRoxFileConfig(): JSX.Element {
                 <PH.TL text={"Dokumenttyp"} />
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
-                <Semantic.Input id="docType" fluid />
+                <input id="docType" />
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
 
@@ -49,7 +49,7 @@ export function createRoxFileConfig(): JSX.Element {
                 <PH.TL text={"Ziel ID"} />
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
-                <Semantic.Input id="destinationID" fluid />
+                <input id="destinationID" />
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
 
@@ -58,7 +58,7 @@ export function createRoxFileConfig(): JSX.Element {
                 <PH.TL text={"Ziel Typ"} />
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
-                <Semantic.Input id="destinationType" fluid />
+                <input id="destinationType" />
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
 
@@ -67,7 +67,7 @@ export function createRoxFileConfig(): JSX.Element {
                 <PH.TL text={"Name des Feldes für Feld ID"} />
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
-                <Semantic.Input id="fileIDFieldName" fluid />
+                <input id="fileIDFieldName" />
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
           </Semantic.Table.Body>

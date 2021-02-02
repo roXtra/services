@@ -31,7 +31,7 @@ export function startInstanceConfig(): JSX.Element {
                 <PH.TL text={"ID des ausführenden Users"} />
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
-                <Semantic.Input id="executingUserId" fluid={true} />
+                <input id="executingUserId" />
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
           </Semantic.Table.Body>

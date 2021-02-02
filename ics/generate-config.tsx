@@ -13,7 +13,7 @@ export function generateConfig(): JSX.Element {
                 <PH.TL text={"Titel Feld"} />
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
-                <Semantic.Input id="titleField" fluid />
+                <input id="titleField" />
               </Semantic.Table.Cell>
             </Semantic.Table.Row>
 
