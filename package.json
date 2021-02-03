@@ -41,7 +41,7 @@
     "@types/react": "^16.14.3",
     "@typescript-eslint/eslint-plugin": "^3.10.1",
     "@typescript-eslint/parser": "^3.10.1",
-    "directory-tree": "^2.2.5",
+    "directory-tree": "^2.2.6",
     "eslint": "^7.19.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-deprecation": "^1.2.0",
