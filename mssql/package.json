@@ -24,7 +24,7 @@
     "semantic-ui-react": "^0.88.2"
   },
   "devDependencies": {
-    "@babel/cli": "^7.12.10",
+    "@babel/cli": "^7.12.13",
     "@types/mssql": "^6.0.7",
     "@types/mocha": "^8.2.0",
     "@types/node": "^12.19.15",
