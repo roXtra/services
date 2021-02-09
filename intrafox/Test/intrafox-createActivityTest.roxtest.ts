@@ -3,7 +3,7 @@ import * as PH from "processhub-sdk";
 import * as fs from "fs";
 import * as CreateActivity from "../createActivity-service";
 import { NockServer } from "./nockServer";
-import { BpmnError } from "processhub-sdk/lib/instance";
+import { BpmnError, isBpmnError } from "processhub-sdk/lib/instance";
 import { ErrorCodes } from "../IntrafoxTypes";
 
 describe("services", () => {
@@ -101,7 +101,12 @@ describe("services", () => {
         expirationDate,
       ).catch((err: BpmnError) => err);
 
-      expect(rejectionError).to.deep.equal(new BpmnError(ErrorCodes.API_ERROR, "Ein Fehler ist aufgetreten, ARGS wurden falsch gesetzt."));
+      expect(isBpmnError(rejectionError)).to.be.true;
+      const actualError = rejectionError as BpmnError;
+      const expectedError = new BpmnError(ErrorCodes.API_ERROR, "Ein Fehler ist aufgetreten, ARGS wurden falsch gesetzt.");
+      expect(actualError.errorCode).to.equal(expectedError.errorCode);
+      expect(actualError.errorMessage).to.equal(expectedError.errorMessage);
+      expect(actualError.innerError).to.equal(expectedError.innerError);
     });
 
     it("execute intrafox createActivity with wrong token_d7dabc0a-85bb-4877-863d-7c565dcff90a", async () => {
@@ -131,7 +136,12 @@ describe("services", () => {
         expirationDate,
       ).catch((err: BpmnError) => err);
 
-      expect(rejectionError).to.deep.equal(new BpmnError(ErrorCodes.API_ERROR, "Ein Fehler ist aufgetreten, Authentifizierungstoken ist ungültig."));
+      expect(isBpmnError(rejectionError)).to.be.true;
+      const actualError = rejectionError as BpmnError;
+      const expectedError = new BpmnError(ErrorCodes.API_ERROR, "Ein Fehler ist aufgetreten, Authentifizierungstoken ist ungültig.");
+      expect(actualError.errorCode).to.equal(expectedError.errorCode);
+      expect(actualError.errorMessage).to.equal(expectedError.errorMessage);
+      expect(actualError.innerError).to.equal(expectedError.innerError);
     });
   });
 });
