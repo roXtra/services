@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:processhub="http://processhub.com/schema/1.0/bpmn" id="Definition_1052371EB0AD8892">
+  <bpmn:extensionElements>
+    <processhub:inputOutput>
+      <processhub:inputParameter name="roxtra-version">9.7.0</processhub:inputParameter>
+    </processhub:inputOutput>
+  </bpmn:extensionElements>
+  <bpmn:collaboration id="Collaboration_9FE2EF005AFD6D29">
+    <bpmn:participant id="Participant_91405069DB8198E0" name="MySQL" processRef="Process_04B9B2E2646861F9" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_04B9B2E2646861F9" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_28B232D648B6FC79">
+      <bpmn:lane id="Lane_22B9D7DB23AD41EE" name="Ersteller">
+        <bpmn:flowNodeRef>StartEvent_0514008FC323350E</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_F31005E715A8BAE3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ServiceTask_4B63FA6661D82618</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ServiceTask_37B16A7BCCB1FFE0</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ServiceTask_14289B964966CFB7</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="StartEvent_0514008FC323350E">
+      <bpmn:extensionElements>
+        <processhub:inputOutput>
+          <processhub:inputParameter name="processhub-userform">[{"name":"Result","type":"ProcessHubTextInput","isRequired":false,"config":{},"inlineEditingActive":false}]</processhub:inputParameter>
+          <processhub:inputParameter name="roleowners-editable">true</processhub:inputParameter>
+        </processhub:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>SequenceFlow_C44B80C4266FEB69</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="EndEvent_F31005E715A8BAE3">
+      <bpmn:incoming>SequenceFlow_AC70951786921194</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="ServiceTask_4B63FA6661D82618" name="Insert">
+      <bpmn:extensionElements>
+        <processhub:inputOutput>
+          <processhub:inputParameter name="service-task-config-object">{"selectedServiceId":"mysql-service","selectedActionId":"executeQuery","fields":[{"key":"server","type":"text","value":"localhost"},{"key":"username","type":"text","value":"new_user"},{"key":"password","type":"text","value":"12345"},{"key":"database","type":"text","value":"test"},{"key":"port","type":"text","value":"3306"},{"key":"query","type":"text","value":" INSERT INTO `table` (`id`, `name`) VALUES (42, 'Heino');"},{"key":"targetField","type":"select","value":"Result"}]}</processhub:inputParameter>
+        </processhub:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_85C493BA2865AB71</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_3AA7D7E20FF278DE</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="ServiceTask_37B16A7BCCB1FFE0" name="Select">
+      <bpmn:extensionElements>
+        <processhub:inputOutput>
+          <processhub:inputParameter name="service-task-config-object">{"selectedServiceId":"mysql-service","selectedActionId":"executeQuery","fields":[{"key":"server","type":"text","value":"localhost"},{"key":"username","type":"text","value":"new_user"},{"key":"password","type":"text","value":"12345"},{"key":"database","type":"text","value":"test"},{"key":"port","type":"text","value":"3306"},{"key":"query","type":"text","value":" SELECT `name` AS `result` FROM `table` WHERE `id`=42;"},{"key":"targetField","type":"select","value":"Result"}]}</processhub:inputParameter>
+        </processhub:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_3AA7D7E20FF278DE</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_AC70951786921194</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_3AA7D7E20FF278DE" sourceRef="ServiceTask_4B63FA6661D82618" targetRef="ServiceTask_37B16A7BCCB1FFE0" />
+    <bpmn:sequenceFlow id="SequenceFlow_AC70951786921194" sourceRef="ServiceTask_37B16A7BCCB1FFE0" targetRef="EndEvent_F31005E715A8BAE3" />
+    <bpmn:serviceTask id="ServiceTask_14289B964966CFB7" name="Create">
+      <bpmn:extensionElements>
+        <processhub:inputOutput>
+          <processhub:inputParameter name="service-task-config-object">{"selectedServiceId":"mysql-service","selectedActionId":"executeQuery","fields":[{"key":"server","type":"text","value":"localhost"},{"key":"username","type":"text","value":"new_user"},{"key":"password","type":"text","value":"12345"},{"key":"database","type":"text","value":"test"},{"key":"port","type":"text","value":"3306"},{"key":"query","type":"text","value":" CREATE TABLE `table` (id INT(6), name VARCHAR(20));"},{"key":"targetField","type":"select","value":"Result"}]}</processhub:inputParameter>
+        </processhub:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_C44B80C4266FEB69</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_85C493BA2865AB71</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_C44B80C4266FEB69" sourceRef="StartEvent_0514008FC323350E" targetRef="ServiceTask_14289B964966CFB7" />
+    <bpmn:sequenceFlow id="SequenceFlow_85C493BA2865AB71" sourceRef="ServiceTask_14289B964966CFB7" targetRef="ServiceTask_4B63FA6661D82618" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram name="BPMNDiagram_B62C4A6EE8923415">
+    <bpmndi:BPMNPlane bpmnElement="Collaboration_9FE2EF005AFD6D29">
+      <bpmndi:BPMNShape id="BPMNShape_DCC2E1D4DC8D0DF2" bpmnElement="Lane_22B9D7DB23AD41EE">
+        <dc:Bounds x="430" y="0" width="710" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_CCA32513EFCB1A7B" bpmnElement="Participant_91405069DB8198E0">
+        <dc:Bounds x="400" y="0" width="740" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_B86CC3F879FAC8A8" bpmnElement="StartEvent_0514008FC323350E">
+        <dc:Bounds x="500" y="42" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_EB44F2AAEF715D5F" bpmnElement="EndEvent_F31005E715A8BAE3">
+        <dc:Bounds x="1052" y="42" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_A80F0823451E9B09" bpmnElement="ServiceTask_4B63FA6661D82618">
+        <dc:Bounds x="730" y="20" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_33512317DE5A5BD0" bpmnElement="ServiceTask_37B16A7BCCB1FFE0">
+        <dc:Bounds x="890" y="20" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_2C0490A61909AE1E" bpmnElement="SequenceFlow_3AA7D7E20FF278DE" sourceElement="BPMNShape_A80F0823451E9B09" targetElement="BPMNShape_33512317DE5A5BD0">
+        <di:waypoint x="830" y="60" />
+        <di:waypoint x="890" y="60" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_5F4C48FAE4ECC6E4" bpmnElement="SequenceFlow_AC70951786921194" sourceElement="BPMNShape_33512317DE5A5BD0" targetElement="BPMNShape_EB44F2AAEF715D5F">
+        <di:waypoint x="990" y="60" />
+        <di:waypoint x="1052" y="60" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="BPMNShape_F551772BA98CA76F" bpmnElement="ServiceTask_14289B964966CFB7">
+        <dc:Bounds x="580" y="20" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_ED1269B1E4B7DBAA" bpmnElement="SequenceFlow_C44B80C4266FEB69" sourceElement="BPMNShape_B86CC3F879FAC8A8" targetElement="BPMNShape_F551772BA98CA76F">
+        <di:waypoint x="536" y="60" />
+        <di:waypoint x="580" y="60" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_3E9CFCACDF58C2E4" bpmnElement="SequenceFlow_85C493BA2865AB71" sourceElement="BPMNShape_F551772BA98CA76F" targetElement="BPMNShape_A80F0823451E9B09">
+        <di:waypoint x="680" y="60" />
+        <di:waypoint x="730" y="60" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
