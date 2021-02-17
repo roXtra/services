@@ -15,8 +15,12 @@ module.exports = {
   ignoreDeps: [],
   packageRules: [
     {
-      packageNames: ["@types/node"],
+      packageNames: ["node", "@types/node"],
       allowedVersions: "^12.0.0",
+    },
+    {
+      packageNames: ["npm"],
+      allowedVersions: "^6.0.0",
     },
     {
       packageNames: ["semantic-ui-react"],
