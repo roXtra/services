@@ -1,0 +1,68 @@
+name: Trigger Release Creation
+
+on:
+  workflow_dispatch:
+    inputs:
+      sdkversion:
+        description: 'SDK Version (e.g. "v9.8.0")'
+        required: true
+        default: 'v'
+
+jobs:
+  configure:
+    name: Configure Release Branch
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: master
+          token: ${{ secrets.DEVBOT_GH_TOKEN }}
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Configure Git
+        run: |
+          git config user.name 'Development Bot'
+          git config user.email 'devbot@roxtra.com'
+      - name: Install dependencies
+        run: npm ci
+      - name: Update SDK
+        # Replace processHubSDKVersion in buildScript.js with new version
+        # Build all services to update package-lock.json files
+        # Commit changes
+        run: |
+          sed -i -r 's/processHubSDKVersion = "v[0-9]+\.[0-9]+\.[0-9]+(-[0-9]+)?"/processHubSDKVersion = "${{ github.event.inputs.sdkversion }}"/g' buildScript.js
+          npm run buildonly
+          git commit -a -m "Update SDK"
+      - id: version-upgrade
+        name: Upgrade Version
+        # Make next RC Final
+        run: |
+          npm version minor
+          NEWVERSION=$(echo "console.log(require('./package.json').version);" | node)
+          echo "::set-output name=newversion::$(echo $NEWVERSION)"
+      - name: Create Branch and Push Branch and Tag
+        run: |
+          echo "Create Release Branch"
+          git checkout -b release-v${{ steps.version-upgrade.outputs.newversion }}
+          echo "Bump Version to next RC"
+          npm version --git-tag-version false preminor
+          git commit -a -m "Bump RC Version"
+          echo "Push branch and tag"
+          git push -u origin release-v${{ steps.version-upgrade.outputs.newversion }}
+          git push origin v${{ steps.version-upgrade.outputs.newversion }}
+      - name: Create PR for new Version
+        uses: repo-sync/pull-request@v2
+        with:
+          source_branch: 'release-v${{ steps.version-upgrade.outputs.newversion }}'
+          destination_branch: 'master'
+          pr_title: 'Release v${{ steps.version-upgrade.outputs.newversion }}'
+          pr_body: Updates version to v${{ steps.version-upgrade.outputs.newversion }}
+          github_token: ${{ secrets.DEVBOT_GH_TOKEN }}
+          pr_assignee: '${{ github.actor }}'
+          pr_draft: false
