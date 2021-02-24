@@ -41,9 +41,9 @@ jobs:
           git commit -a -m "Update SDK"
       - id: version-upgrade
         name: Upgrade Version
-        # Make next RC Final
+        # Make next RC Final or, if sdkversion is a prerelease (contains a "-"), create a prerelease
         run: |
-          npm version minor
+          if ${{ contains(github.event.inputs.sdkversion, '-') }}; then npm version prerelease; else npm version minor; fi
           NEWVERSION=$(echo "console.log(require('./package.json').version);" | node)
           echo "::set-output name=newversion::$(echo $NEWVERSION)"
       - name: Create Branch and Push Branch and Tag
