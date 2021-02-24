@@ -1,6 +1,7 @@
 const dirTree = require("directory-tree");
 const { execSync } = require("child_process");
 
+// If renamed, adjust name in trigger_release_creation.yml
 const processHubSDKVersion = "v9.8.0";
 
 const childProcessStdioOptions = [0, 1, 2];
