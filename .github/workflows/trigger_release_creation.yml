@@ -12,19 +12,18 @@ jobs:
   configure:
     name: Configure Release Branch
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [12.x]
+    env:
+      isprereleasebuild: ${{ contains(github.event.inputs.sdkversion, '-') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
         with:
           ref: master
           token: ${{ secrets.DEVBOT_GH_TOKEN }}
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 12.x
       - name: Configure Git
         run: |
           git config user.name 'Development Bot'
@@ -43,16 +42,22 @@ jobs:
         name: Upgrade Version
         # Make next RC Final or, if sdkversion is a prerelease (contains a "-"), create a prerelease
         run: |
-          if ${{ contains(github.event.inputs.sdkversion, '-') }}; then npm version prerelease; else npm version minor; fi
+          if ${{ env.isprereleasebuild }}; then npm version prerelease; else npm version minor; fi
           NEWVERSION=$(echo "console.log(require('./package.json').version);" | node)
           echo "::set-output name=newversion::$(echo $NEWVERSION)"
       - name: Create Branch and Push Branch and Tag
         run: |
           echo "Create Release Branch"
           git checkout -b release-v${{ steps.version-upgrade.outputs.newversion }}
+      - name: Bump Version to next RC
+        # Only bump version to next RC if release is non-prerelease
+        if: env.isprereleasebuild == false
+        run: |
           echo "Bump Version to next RC"
           npm version --git-tag-version false preminor
           git commit -a -m "Bump RC Version"
+      - name: Push Branch and Tag
+        run: |
           echo "Push branch and tag"
           git push -u origin release-v${{ steps.version-upgrade.outputs.newversion }}
           git push origin v${{ steps.version-upgrade.outputs.newversion }}
