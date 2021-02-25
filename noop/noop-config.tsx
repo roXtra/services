@@ -1,4 +1,3 @@
-import React from "react";
 import * as Semantic from "semantic-ui-react";
 
 export function noopConfig(): JSX.Element {
