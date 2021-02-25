@@ -4,7 +4,7 @@
       "@babel/preset-env",
       {
         "useBuiltIns": "usage",
-        "corejs": "3.6",
+        "corejs": "3.9",
         "debug": false,
         "targets": {
           "node": "12"
@@ -12,7 +12,12 @@
       }
     ],
     ["@babel/preset-typescript"],
-    "@babel/preset-react"
+    [
+      "@babel/preset-react",
+      {
+        "runtime": "automatic"
+      }
+    ]
   ],
   "plugins": [
     "@babel/plugin-transform-arrow-functions",

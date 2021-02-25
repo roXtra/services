@@ -1,4 +1,3 @@
-import React from "react";
 import * as Semantic from "semantic-ui-react";
 import * as PH from "processhub-sdk";
 import { queryHint } from "./executequery-config";
