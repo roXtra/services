@@ -33,11 +33,14 @@ jobs:
       - name: Update SDK
         # Replace processHubSDKVersion in buildScript.js with new version
         # Build all services to update package-lock.json files
-        # Commit changes
+        # Commit changes if there are changes. This works the following way:
+        # First, add all unstaged changes in the working tree if there are changes
+        # Second: if the git diff command has an exit code other than 0 (=there are changes), make the commit. Otherwise, do not commit.
         run: |
           sed -i -r 's/processHubSDKVersion = "v[0-9]+\.[0-9]+\.[0-9]+(-[0-9]+)?"/processHubSDKVersion = "${{ github.event.inputs.sdkversion }}"/g' buildScript.js
           npm run buildonly
-          git commit -a -m "Update SDK"
+          git add -A
+          git diff-index --quiet HEAD || git commit -m "Update SDK"
       - id: version-upgrade
         name: Upgrade Version
         # Make next RC Final or, if sdkversion is a prerelease (contains a "-"), create a prerelease
