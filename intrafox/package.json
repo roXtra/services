@@ -29,7 +29,7 @@
     "semantic-ui-react": "^0.88.2"
   },
   "devDependencies": {
-    "@babel/cli": "^7.13.0",
+    "@babel/cli": "^7.13.10",
     "@types/chai": "^4.2.15",
     "@types/dateformat": "^3.0.1",
     "@types/mocha": "^8.2.1",
