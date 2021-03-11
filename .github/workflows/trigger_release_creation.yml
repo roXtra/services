@@ -7,13 +7,17 @@ on:
         description: 'SDK Version (e.g. "v9.8.0")'
         required: true
         default: 'v'
+      isfinalreleasebuild:
+        description: 'Should this be a final release build (true OR false)'
+        required: true
+        default: 'false'
 
 jobs:
   configure:
     name: Configure Release Branch
     runs-on: ubuntu-latest
     env:
-      isprereleasebuild: ${{ contains(github.event.inputs.sdkversion, '-') }}
+      isprereleasebuild: ${{ github.event.inputs.isfinalreleasebuild != 'true' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -54,7 +58,7 @@ jobs:
           git checkout -b release-v${{ steps.version-upgrade.outputs.newversion }}
       - name: Bump Version to next RC
         # Only bump version to next RC if release is non-prerelease
-        if: env.isprereleasebuild == false
+        if: ${{ env.isprereleasebuild == 'false' }}
         run: |
           echo "Bump Version to next RC"
           npm version --git-tag-version false preminor
