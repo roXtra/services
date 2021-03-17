@@ -34,7 +34,7 @@
     "@types/react": "^16.14.5",
     "acorn": "^8.1.0",
     "bestzip": "^2.1.7",
-    "chai": "^4.3.3",
+    "chai": "^4.3.4",
     "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
     "cross-var": "^1.1.0",
