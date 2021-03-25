@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [14.x]
     steps:
     - name: Start MySQL Docker Container
       run: docker run -p 3306:3306 --name mysql-test -e MYSQL_ROOT_PASSWORD=12345 -e MYSQL_DATABASE=test -d mysql:latest
