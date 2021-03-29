@@ -16,7 +16,7 @@ module.exports = {
   packageRules: [
     {
       packageNames: ["node", "@types/node"],
-      allowedVersions: "^12.0.0",
+      allowedVersions: "^14.0.0",
     },
     {
       packageNames: ["npm"],
