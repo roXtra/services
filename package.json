@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/roXtra/services#readme",
   "dependencies": {
-    "@babel/core": "^7.13.15",
+    "@babel/core": "^7.13.16",
     "react": "^17.0.2"
   },
   "devDependencies": {
@@ -39,7 +39,7 @@
     "@babel/preset-env": "^7.13.15",
     "@babel/preset-react": "^7.13.13",
     "@babel/preset-typescript": "^7.13.0",
-    "@babel/register": "^7.13.14",
+    "@babel/register": "^7.13.16",
     "@types/chai": "^4.2.16",
     "@types/mocha": "^8.2.2",
     "@types/react": "^16.14.5",
