@@ -15,15 +15,15 @@ module.exports = {
   ignoreDeps: [],
   packageRules: [
     {
-      packageNames: ["node", "@types/node"],
+      matchPackageNames: ["node", "@types/node"],
       allowedVersions: "^14.0.0",
     },
     {
-      packageNames: ["npm"],
+      matchPackageNames: ["npm"],
       allowedVersions: "^6.0.0",
     },
     {
-      packageNames: ["semantic-ui-react"],
+      matchPackageNames: ["semantic-ui-react"],
       allowedVersions: "0.88.2",
     },
   ],
