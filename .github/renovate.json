@@ -1,14 +1,15 @@
 {
   "extends": [
     "config:base",
-    ":timezone(Europe/Amsterdam)"
+    ":timezone(Europe/Amsterdam)",
+    "docker:enableMajor"
   ],
   "ignorePresets": [
     ":prHourlyLimit2"
   ],
   "lockFileMaintenance": {
     "enabled": true,
-    "schedule": ["after 2pm and before 5pm on Wednesday"]
+    "schedule": ["after 1am and before 5pm on Friday"]
   },
   "major": {
     "stabilityDays": 3
