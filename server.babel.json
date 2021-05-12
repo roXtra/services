@@ -19,12 +19,6 @@
       }
     ]
   ],
-  "plugins": [
-    "@babel/plugin-transform-arrow-functions",
-    "@babel/proposal-object-rest-spread",
-    ["@babel/plugin-proposal-decorators", { "legacy": true }],
-    ["@babel/proposal-class-properties", { "loose": true }]
-  ],
   "env": {
     "debug": {
       "sourceMaps": "inline",
