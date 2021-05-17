@@ -1,0 +1,16 @@
+import { addition as additionTmp } from "./addition-service";
+export const addition = additionTmp;
+import { additionConfig as additionConfigTmp } from "./addition-config";
+export const additionConfig = additionConfigTmp;
+import { subtraktion as subtraktionTmp } from "./subtraktion-service";
+export const subtraktion = subtraktionTmp;
+import { subtraktionConfig as subtraktionConfigTmp } from "./subtraktion-config";
+export const subtraktionConfig = subtraktionConfigTmp;
+import { multiplikation as multiplikationTmp } from "./multiplikation-service";
+export const multiplikation = multiplikationTmp;
+import { multiplikationConfig as multiplikationConfigTmp } from "./multiplikation-config";
+export const multiplikationConfig = multiplikationConfigTmp;
+import { division as divisionTmp } from "./division-service";
+export const division = divisionTmp;
+import { divisionConfig as divisionConfigTmp } from "./division-config";
+export const divisionConfig = divisionConfigTmp;
