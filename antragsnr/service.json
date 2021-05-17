@@ -7,8 +7,8 @@
       "id": "antragsnr",
       "label": "Antragsnr. erzeugen", 
       "configMethod": "antragsnrconfig",
-      "settings": "antragsnr-config.js",
-      "serviceFile": "antragsnr-service.js",
+      "settings": "main.js",
+      "serviceFile": "main.js",
       "serviceMethod": "antragsnrAction",
       "fields": [
         { "name": "targetfield", "type": "text" }
