@@ -5,23 +5,14 @@
     "moduleResolution": "node",
     "noImplicitAny": true,
     "sourceMap": true,
-    "outDir": "./dist/",
+    "outDir": "./tmp/",
     "jsx": "react-jsx",
     "allowJs": true,
-    "noEmit": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
-    "lib": [
-      "esnext",
-      "dom"
-    ]
+    "lib": ["esnext", "dom"]
   },
-   "include": [
-    "./**/*"
-  ],
-  "exclude": [
-    "./dist/**/*",
-    "./node_modules"
-  ]
+  "include": ["./**/*"],
+  "exclude": ["./dist/**/*", "./node_modules"]
 }

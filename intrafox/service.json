@@ -7,8 +7,8 @@
             "id": "getActivityByNumber",
             "label": "Nummernfilter für Maßnahmen",
             "configMethod": "getActivityByNumberConfig",
-            "settings": "getActivityByNumber-config.js",
-            "serviceFile": "getActivityByNumber-service.js",
+            "settings": "main.js",
+            "serviceFile": "main.js",
             "serviceMethod": "getActivityByNumber",
             "fields": [
                 {
@@ -32,8 +32,8 @@
             "id": "createActivity",
             "label": "Erstelle Maßnahme",
             "configMethod": "createActivityConfig",
-            "settings": "createActivity-config.js",
-            "serviceFile": "createActivity-service.js",
+            "settings": "main.js",
+            "serviceFile": "main.js",
             "serviceMethod": "createActivity",
             "fields": [
                 {
