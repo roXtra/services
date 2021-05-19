@@ -8,7 +8,6 @@
     "outDir": "./tmp/",
     "jsx": "react-jsx",
     "allowJs": true,
-    "noEmit": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
