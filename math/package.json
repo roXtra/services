@@ -7,8 +7,7 @@
   "scripts": {
     "lint": "eslint --ext .ts,.tsx ./",
     "test": "cross-env HOTRELOAD=no DEBUG=bpmn-engine:123* mocha ./disttests/**/*.roxtest.js --exit --recursive --timeout 40000 --require regenerator-runtime --require source-map-support/register --require ./../commontestfiles/registerbabel.js",
-    "build": "tsc && npm run build:server && npm run build:tests && npm run webpack && rimraf tmp",
-    "build:server": "babel . --out-dir tmp --config-file ./../server.babel.json --extensions .ts,.tsx,.js --ignore \"./**/*.d.ts\",\"./**/*.roxtest.ts\",\"./**/*.roxselenium.ts\",\"./node_modules/**/*\",\"./dist/**/*\",\"./disttests/**/*\",\"./webpack.config.js\"",
+    "build": "tsc && npm run build:tests && npm run webpack && rimraf tmp",
     "build:tests": "rimraf ./disttests && cross-env BABEL_ENV=debug babel . --out-dir disttests --config-file ./../server.babel.json --extensions .ts,.tsx,.js --ignore \"./**/*.d.ts\",\"./node_modules/**/*\",\"./dist/**/*\",\"./disttests/**/*\"",
     "copyfiles": "cross-var copyfiles service.json dist/* $npm_package_servicename",
     "zip": "cross-var bestzip $npm_package_servicename.zip $npm_package_servicename",

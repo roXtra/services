@@ -2,7 +2,7 @@ const path = require("path");
 
 module.exports = (env) => {
   return {
-    target: "node",
+    target: "node14.17",
     mode: "production",
     entry: {
       main: "./tmp/main.js",
@@ -24,7 +24,7 @@ module.exports = (env) => {
                   "@babel/preset-env",
                   {
                     targets: {
-                      node: "current",
+                      node: "14.17",
                     },
                   },
                 ],
