@@ -8,8 +8,8 @@
             "id": "createRoxFile",
             "label": "Erstelle eine roXtra Datei",
             "configMethod": "createRoxFileConfig",
-            "settings": "createRoxFile-config.js",
-            "serviceFile": "createRoxFile-service.js",
+            "settings": "main.js",
+            "serviceFile": "main.js",
             "serviceMethod": "createRoxFile",
             "fields": [
                 {
@@ -55,8 +55,8 @@
             "id": "setRoxFileField",
             "label": "Setze ein Feld einer roXtra Datei",
             "configMethod": "setRoxFileFieldConfig",
-            "settings": "setRoxFileField-config.js",
-            "serviceFile": "setRoxFileField-service.js",
+            "settings": "main.js",
+            "serviceFile": "main.js",
             "serviceMethod": "setRoxFileField",
             "fields": [
                 {
