@@ -1,7 +1,7 @@
 import * as PH from "processhub-sdk";
-import * as CreateReport from "./createReport-service";
+import { initReportUploadField, createReportConfig } from "./main";
 import * as fs from "fs";
-import { assert } from "chai";
+import { assert, expect } from "chai";
 
 describe("services", () => {
   describe("servicetemplate", () => {
@@ -17,7 +17,7 @@ describe("services", () => {
     function performReportTest(bpmnXmlPath: string, bpmnTaskId: string, url: string): string {
       const env = createEnvironment(bpmnXmlPath, bpmnTaskId);
 
-      CreateReport.initReportUploadField(url, env.instanceDetails, "UploadField");
+      initReportUploadField(url, env.instanceDetails, "UploadField");
 
       return (env.instanceDetails.extras.fieldContents?.["UploadField"] as PH.Data.IFieldValue).value as string;
     }
@@ -30,6 +30,13 @@ describe("services", () => {
     it("execute report service test with incorrect result_eba2198c-e8ae-4503-addf-c4aa22253297", () => {
       const testStr = performReportTest("./testfiles/report-pdf-test.bpmn", "ServiceTask_F269D56AEDCBE5BB", "test/test");
       assert.notEqual(testStr, "not equal");
+    });
+
+    describe("bundle test", () => {
+      it("should check for bundled methods", () => {
+        expect(typeof initReportUploadField).to.equal("function");
+        expect(typeof createReportConfig).to.equal("function");
+      });
     });
   });
 });
