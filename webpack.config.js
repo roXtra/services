@@ -2,20 +2,23 @@ const path = require("path");
 
 module.exports = (env) => {
   return {
-    target: "node14.17",
+    target: "node14",
     mode: "production",
     entry: {
-      main: "./tmp/main.js",
+      main: "./main.ts",
     },
     output: {
       path: path.resolve(__dirname, env.servicename, "dist"),
       filename: "[name].js",
       libraryTarget: "commonjs2",
     },
+    resolve: {
+      extensions: [".ts", ".tsx", ".js", ".json"],
+    },
     module: {
       rules: [
         {
-          test: /\.js$/,
+          test: /\.ts(x)?$/,
           use: {
             loader: "babel-loader",
             options: {
@@ -24,8 +27,15 @@ module.exports = (env) => {
                   "@babel/preset-env",
                   {
                     targets: {
-                      node: "14.17",
+                      node: "14",
                     },
+                  },
+                ],
+                "@babel/preset-typescript",
+                [
+                  "@babel/preset-react",
+                  {
+                    runtime: "automatic",
                   },
                 ],
               ],
