@@ -7,8 +7,8 @@
             "id": "createReport",
             "label": "Bericht erstellen",
             "configMethod": "createReportConfig",
-            "settings": "createReport-config.js",
-            "serviceFile": "createReport-service.js",
+            "settings": "main.js",
+            "serviceFile": "main.js",
             "serviceMethod": "createReport",
             "fields": [
                 {
