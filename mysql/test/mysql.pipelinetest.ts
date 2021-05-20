@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import * as PH from "processhub-sdk";
 import * as fs from "fs";
-import { executeQuery } from "../executequery-service";
+import { executeQuery } from "../main";
 
 const taskIds = {
   Create: "ServiceTask_14289B964966CFB7",
