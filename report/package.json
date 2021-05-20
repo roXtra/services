@@ -6,14 +6,13 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint --ext .ts,.tsx ./",
-    "build": "tsc && npm run build:server && npm run build:tests",
-    "build:server": "babel . --out-dir dist --config-file ./../server.babel.json --extensions .ts,.tsx,.js --ignore \"./**/*.d.ts\",\"./**/*.roxtest.ts\",\"./**/*.roxselenium.ts\",\"./node_modules/**/*\",\"./dist/**/*\",\"./disttests/**/*\"",
-    "build:tests": "rimraf ./disttests && cross-env BABEL_ENV=debug babel . --out-dir disttests --config-file ./../server.babel.json --extensions .ts,.tsx,.js --ignore \"./**/*.d.ts\",\"./node_modules/**/*\",\"./dist/**/*\",\"./disttests/**/*\"",
     "test": "cross-env HOTRELOAD=no DEBUG=bpmn-engine:123* mocha ./disttests/**/*.roxtest.js --exit --recursive --timeout 40000 --require regenerator-runtime --require source-map-support/register --require ./../commontestfiles/registerbabel.js",
-    "copyproduction": "cross-var copyfiles package.json production && cd ./production && npm install --production && cd .. && cross-var copyfiles -u 1 \"./production/node_modules/**/*\" $npm_package_servicename && rimraf production/",
-    "copyfiles": "cross-var copyfiles service.json dist/* $npm_package_servicename && npm run copyproduction",
+    "build": "tsc && npm run build:tests && npm run webpack",
+    "build:tests": "rimraf ./disttests && cross-env BABEL_ENV=debug babel . --out-dir disttests --config-file ./../server.babel.json --extensions .ts,.tsx,.js --ignore \"./**/*.d.ts\",\"./node_modules/**/*\",\"./dist/**/*\",\"./disttests/**/*\"",
+    "copyfiles": "cross-var copyfiles service.json dist/* $npm_package_servicename",
     "zip": "cross-var bestzip $npm_package_servicename.zip $npm_package_servicename",
-    "copyandzip": "cross-var npm run copyfiles && npm run zip && cross-var rimraf $npm_package_servicename"
+    "copyandzip": "cross-var npm run copyfiles && npm run zip && cross-var rimraf $npm_package_servicename",
+    "webpack": "cross-var webpack --env servicename=$npm_package_servicename  --config ./../webpack.config.js"
   },
   "engines": {
     "node": "^v14.17.0",
@@ -41,6 +40,8 @@
     "mocha": "^8.4.0",
     "regenerator-runtime": "^0.13.7",
     "rimraf": "^3.0.2",
-    "typescript": "^4.2.4"
+    "typescript": "^4.2.4",
+    "webpack": "^5.37.1",
+    "webpack-cli": "^4.7.0"
   }
 }
