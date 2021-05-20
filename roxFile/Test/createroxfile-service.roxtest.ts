@@ -3,7 +3,7 @@ import * as fs from "fs";
 import { expect } from "chai";
 import { IRoXtraFileApi } from "../iroxtrafileapi";
 import { ICreateFileRequestBody } from "../roxtrafileapitypes";
-import { serviceLogic } from "../createroxfile-service";
+import { serviceLogicCreateroxfile, createRoxFile, createRoxFileConfig } from "../main";
 
 describe("services", () => {
   describe("roxfile", () => {
@@ -60,9 +60,16 @@ describe("services", () => {
             },
           };
 
-          const instance = await serviceLogic(environment, testApi);
+          const instance = await serviceLogicCreateroxfile(environment, testApi);
           expect(PH.Data.isFieldValue(instance.extras.fieldContents?.["CreatedRoxFileId"])).to.equal(true);
           expect((instance.extras.fieldContents?.["CreatedRoxFileId"] as PH.Data.IFieldValue).value).to.equal(newRoxFileId);
+        });
+      });
+
+      describe("bundle test", () => {
+        it("should check for bundled methods", () => {
+          expect(typeof createRoxFile).to.equal("function");
+          expect(typeof createRoxFileConfig).to.equal("function");
         });
       });
     });

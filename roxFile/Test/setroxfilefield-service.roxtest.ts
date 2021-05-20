@@ -1,4 +1,4 @@
-import { serviceLogic } from "../setroxfilefield-service";
+import { serviceLogicSetroxfilefield, setRoxFileField, setRoxFileFieldConfig } from "../main";
 import * as PH from "processhub-sdk";
 import * as fs from "fs";
 import { expect } from "chai";
@@ -83,11 +83,18 @@ describe("services", () => {
               clientSecret: undefined,
             },
           } as any;
-          await serviceLogic(environment, testApi);
+          await serviceLogicSetroxfilefield(environment, testApi);
           // Make sure setFileFieldsCall was called with the right values
           expect(bodyFromSetCall?.length).to.equal(1);
           expect(bodyFromSetCall?.[0].Id).to.equal("roXtraFeld");
           expect(bodyFromSetCall?.[0].Value).to.equal("Hello");
+        });
+      });
+
+      describe("bundle test", () => {
+        it("should check for bundled methods", () => {
+          expect(typeof setRoxFileField).to.equal("function");
+          expect(typeof setRoxFileFieldConfig).to.equal("function");
         });
       });
     });
