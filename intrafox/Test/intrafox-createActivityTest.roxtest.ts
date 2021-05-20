@@ -1,7 +1,7 @@
 import { assert, expect } from "chai";
 import * as PH from "processhub-sdk";
 import * as fs from "fs";
-import * as CreateActivity from "../createActivity-service";
+import { createActivityServiceLogic } from "../main";
 import { NockServer } from "./nockServer";
 import { BpmnError, isBpmnError } from "processhub-sdk/lib/instance";
 import { ErrorCodes } from "../IntrafoxTypes";
@@ -44,7 +44,7 @@ describe("services", () => {
     ): Promise<PH.ServiceTask.IServiceTaskEnvironment> {
       const env = createEnvironment(bpmnXmlPath, bpmnTaskId, username, abbreation, describtion, expirationDate);
 
-      await CreateActivity.serviceLogic("http://localhost:1080/" + testGuid, env);
+      await createActivityServiceLogic("http://localhost:1080/" + testGuid, env);
       return env;
     }
 
