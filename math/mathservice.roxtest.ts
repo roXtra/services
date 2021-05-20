@@ -1,9 +1,19 @@
-import { assert } from "chai";
+import { assert, expect } from "chai";
 import * as PH from "processhub-sdk";
-import * as Addition from "./addition-service";
-import * as Subtraktion from "./subtraktion-service";
-import * as Multiplikation from "./multiplikation-service";
-import * as Division from "./division-service";
+import {
+  addition,
+  additionConfig,
+  additionServiceLogic,
+  subtraktion,
+  subtraktionConfig,
+  subtraktionServiceLogic,
+  multiplikation,
+  multiplikationConfig,
+  multiplikationServiceLogic,
+  division,
+  divisionConfig,
+  divisionServiceLogic,
+} from "./main";
 import * as fs from "fs";
 
 const operators = {
@@ -37,16 +47,16 @@ describe("services", () => {
 
       switch (operator) {
         case operators.ADDITION:
-          await Addition.serviceLogic(env);
+          await additionServiceLogic(env);
           break;
         case operators.SUBTRAKTION:
-          await Subtraktion.serviceLogic(env);
+          await subtraktionServiceLogic(env);
           break;
         case operators.MULTIPLIKATION:
-          await Multiplikation.serviceLogic(env);
+          await multiplikationServiceLogic(env);
           break;
         case operators.DIVISION:
-          await Division.serviceLogic(env);
+          await divisionServiceLogic(env);
           break;
       }
 
@@ -179,6 +189,22 @@ describe("services", () => {
 
     it("executes division_0e3de84d-416f-4a32-ae16-eecea2953ef2", async () => {
       await executeMathTest(1, 0, 2, operators.DIVISION);
+    });
+
+    describe("bundle test", () => {
+      it("should check for bundled methods", () => {
+        expect(typeof addition).to.equal("function");
+        expect(typeof additionConfig).to.equal("function");
+
+        expect(typeof subtraktion).to.equal("function");
+        expect(typeof subtraktionConfig).to.equal("function");
+
+        expect(typeof multiplikation).to.equal("function");
+        expect(typeof multiplikationConfig).to.equal("function");
+
+        expect(typeof division).to.equal("function");
+        expect(typeof divisionConfig).to.equal("function");
+      });
     });
   });
 });
