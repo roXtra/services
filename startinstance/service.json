@@ -7,8 +7,8 @@
             "id": "startinstance",
             "label": "Vorgang starten",
             "configMethod": "startInstanceConfig",
-            "settings": "startinstance-config.js",
-            "serviceFile": "startinstance-service.js",
+            "settings": "main.js",
+            "serviceFile": "main.js",
             "serviceMethod": "startinstance",
             "fields": [
                 {

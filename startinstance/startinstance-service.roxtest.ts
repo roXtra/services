@@ -1,4 +1,4 @@
-import { startinstance } from "./startinstance-service";
+import { startinstance, startInstanceConfig } from "./main";
 import * as PH from "processhub-sdk";
 import * as fs from "fs";
 import { expect } from "chai";
@@ -51,6 +51,13 @@ describe("services", () => {
           const result = await startinstance(environment);
           expect(result).to.equal(true);
           expect(executeWasCalled).to.equal(true);
+        });
+      });
+
+      describe("bundle test", () => {
+        it("should check for bundled methods", () => {
+          expect(typeof startinstance).to.equal("function");
+          expect(typeof startInstanceConfig).to.equal("function");
         });
       });
     });
