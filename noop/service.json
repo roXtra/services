@@ -8,8 +8,8 @@
             "id": "noop",
             "label": "Does nothing",
             "configMethod": "noopConfig",
-            "settings": "noop-config.js",
-            "serviceFile": "noop-service.js",
+            "settings": "main.js",
+            "serviceFile": "main.js",
             "serviceMethod": "noop",
             "fields": [                
             ]
