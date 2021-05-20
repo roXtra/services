@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as PH from "processhub-sdk";
-import * as Antragsnr from "./antragsnr-service";
 import * as fs from "fs";
 import { assert } from "chai";
+import { serviceLogic } from "./main";
 
 describe("services", () => {
   describe("servicetemplate", () => {
@@ -9,8 +10,7 @@ describe("services", () => {
     function createEnvironment(bpmnXmlPath: string, bpmnTaskId: string): PH.ServiceTask.IServiceTaskEnvironment {
       const env = PH.Test.createEmptyTestServiceEnvironment(fs.readFileSync(bpmnXmlPath, "utf8"));
       env.bpmnTaskId = bpmnTaskId;
-      env.fieldContents = {};
-      env.instanceDetails.extras.fieldContents = env.fieldContents;
+      env.instanceDetails.extras.fieldContents = {};
       env.instanceDetails.createdAt = new Date("October 13, 2018 11:13:00");
       return env;
     }
@@ -30,7 +30,7 @@ describe("services", () => {
         extras: { instances: instances },
       };
 
-      Antragsnr.serviceLogic(processDetails, env, tragetField);
+      serviceLogic(processDetails, env, tragetField);
 
       return env;
     }
@@ -76,7 +76,7 @@ describe("services", () => {
 
       const env = performAntragsnrTest("./testfiles/antragsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName);
 
-      assert.equal((env.fieldContents[targetFieldName] as PH.Data.IFieldValue).value as string, "2018/01");
+      assert.equal((env.instanceDetails.extras.fieldContents![targetFieldName] as PH.Data.IFieldValue).value as string, "2018/01");
     });
 
     it("execute antragsnr service test_8fd1ba08-f8a1-4caa-b685-27b3ee946038", () => {
@@ -120,7 +120,7 @@ describe("services", () => {
 
       const env = performAntragsnrTest("./testfiles/antragsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName);
 
-      assert.equal((env.fieldContents[targetFieldName] as PH.Data.IFieldValue).value as string, "2018/02");
+      assert.equal((env.instanceDetails.extras.fieldContents![targetFieldName] as PH.Data.IFieldValue).value as string, "2018/02");
     });
 
     it("execute antragsnr service test_8fd1ba08-f8a1-4caa-b685-27b3ee946038", () => {
@@ -164,7 +164,7 @@ describe("services", () => {
 
       const env = performAntragsnrTest("./testfiles/antragsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName);
 
-      assert.equal((env.fieldContents[targetFieldName] as PH.Data.IFieldValue).value as string, "2018/03");
+      assert.equal((env.instanceDetails.extras.fieldContents![targetFieldName] as PH.Data.IFieldValue).value as string, "2018/03");
     });
   });
 });
