@@ -5,7 +5,6 @@
     "moduleResolution": "node",
     "noImplicitAny": true,
     "sourceMap": true,
-    "outDir": "./dist/",
     "jsx": "react-jsx",
     "allowJs": true,
     "noEmit": true,
