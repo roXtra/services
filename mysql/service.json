@@ -7,8 +7,8 @@
       "id": "executeQuery",
       "label": "Abfrage ausführen", 
       "configMethod": "executeQueryConfig",
-      "settings": "executequery-config.js",
-      "serviceFile": "executequery-service.js",
+      "settings": "main.js",
+      "serviceFile": "main.js",
       "serviceMethod": "executeQuery",
       "fields": [
         { "name": "server", "type": "text" }, 

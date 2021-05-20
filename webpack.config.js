@@ -12,6 +12,10 @@ module.exports = (env) => {
       filename: "[name].js",
       libraryTarget: "commonjs2",
     },
+    optimization: {
+      // mysql package does not support minimize: https://github.com/mysqljs/mysql/issues/1655
+      minimize: env.servicename !== "mysql"
+    },
     resolve: {
       extensions: [".ts", ".tsx", ".js", ".json"],
     },
