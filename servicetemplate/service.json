@@ -8,8 +8,8 @@
             "id": "service1",
             "label": "Service 1 von Service Template",
             "configMethod": "service1Config",
-            "settings": "service1-config.js",
-            "serviceFile": "service1-service.js",
+            "settings": "main.js",
+            "serviceFile": "main.js",
             "serviceMethod": "service1",
             "fields": [
                 {
@@ -27,8 +27,8 @@
             "id": "service2",
             "label": "Service 2 von Service Template",
             "configMethod": "service2Config",
-            "settings": "service2-config.js",
-            "serviceFile": "service2-service.js",
+            "settings": "main.js",
+            "serviceFile": "main.js",
             "serviceMethod": "service2",
             "fields": [
                 {
