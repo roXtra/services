@@ -6,13 +6,14 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint --ext .ts,.tsx ./",
-    "build": "tsc && npm run build:tests && npm run webpack",
-    "build:tests": "rimraf ./disttests && cross-env BABEL_ENV=debug babel . --out-dir disttests --config-file ./../server.babel.json --extensions .ts,.tsx,.js --ignore \"./**/*.d.ts\",\"./node_modules/**/*\",\"./dist/**/*\",\"./disttests/**/*\"",
+    "build": "tsc && npm run webpack && npm run build:tests",
+    "build:tests": "rimraf ./disttests && cross-env BABEL_ENV=debug babel . --out-dir disttests --config-file ./../server.babel.json --extensions .ts,.tsx,.js --ignore \"./**/*.d.ts\",\"./node_modules/**/*\",\"./dist/**/*\",\"./disttests/**/*\",\"./main.ts\" && npm run copymain",
     "test": "cross-env HOTRELOAD=no DEBUG=bpmn-engine:123* mocha ./disttests/**/*.roxtest.js --exit --recursive --timeout 40000 --require regenerator-runtime --require source-map-support/register --require ./../commontestfiles/registerbabel.js",
     "copyfiles": "cross-var copyfiles service.json dist/* $npm_package_servicename",
     "zip": "cross-var bestzip $npm_package_servicename.zip $npm_package_servicename",
     "copyandzip": "cross-var npm run copyfiles && npm run zip && cross-var rimraf $npm_package_servicename",
-    "webpack": "cross-var webpack --env servicename=$npm_package_servicename  --config ./../webpack.config.js"
+    "webpack": "cross-var webpack --env servicename=$npm_package_servicename --config ./../webpack.config.js",
+    "copymain": "copyfiles -u 1 dist/main.js disttests"
   },
   "engines": {
     "node": "^v14.17.0",
