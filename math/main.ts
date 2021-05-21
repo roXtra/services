@@ -1,8 +1,8 @@
-export { addition } from "./addition-service";
+export { addition, serviceLogic as additionServiceLogic } from "./addition-service";
 export * from "./addition-config";
-export { subtraktion } from "./subtraktion-service";
+export { subtraktion, serviceLogic as subtraktionServiceLogic } from "./subtraktion-service";
 export * from "./subtraktion-config";
-export { multiplikation } from "./multiplikation-service";
+export { multiplikation, serviceLogic as multiplikationServiceLogic } from "./multiplikation-service";
 export * from "./multiplikation-config";
-export { division } from "./division-service";
+export { division, serviceLogic as divisionServiceLogic } from "./division-service";
 export * from "./division-config";
