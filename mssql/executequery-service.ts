@@ -1,6 +1,6 @@
-import * as sql from "mssql";
 import * as PH from "processhub-sdk";
 import { BpmnError } from "processhub-sdk/lib/instance";
+import { getConnectionPool } from "./database";
 
 export enum ErrorCodes {
   DB_ERROR = "DB_ERROR",
@@ -19,40 +19,15 @@ export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvir
 
   const fields = config.fields;
 
-  const server = fields.find((f) => f.key === "server")?.value;
-  const user = fields.find((f) => f.key === "username")?.value;
-  const password = fields.find((f) => f.key === "password")?.value;
-  const database = fields.find((f) => f.key === "database")?.value;
   let query = fields.find((f) => f.key === "query")?.value;
   const targetField = fields.find((f) => f.key === "targetField")?.value;
 
-  if (server === undefined) {
-    throw new Error("server is undefined, cannot proceed with service!");
-  }
-  if (user === undefined) {
-    throw new Error("user is undefined, cannot proceed with service!");
-  }
-  if (password === undefined) {
-    throw new Error("password is undefined, cannot proceed with service!");
-  }
-  if (database === undefined) {
-    throw new Error("database is undefined, cannot proceed with service!");
-  }
   if (query === undefined) {
     throw new Error("query is undefined, cannot proceed with service!");
   }
   if (targetField === undefined) {
     throw new Error("targetField is undefined, cannot proceed with service!");
   }
-
-  // Config for your database
-  const dbConfig = {
-    user: user,
-    password: password,
-    server: server,
-    database: database,
-  };
-  const pool = new sql.ConnectionPool(dbConfig);
 
   if (environment.instanceDetails.extras.roleOwners === undefined) {
     throw new Error("environment.instanceDetails.extras.roleOwners is undefined, cannot proceed with service!");
@@ -61,6 +36,7 @@ export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvir
     throw new Error("fieldContents are undefined, cannot proceed with service!");
   }
 
+  const pool = getConnectionPool(fields);
   // Connect to your database
   try {
     await pool.connect();
@@ -80,8 +56,7 @@ export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvir
     const result = await pool.request().query(query);
 
     const rows = result.recordset;
-    // Res.setHeader("Access-Control-Allow-Origin", "*");
-    // res.status(200).json(rows);
+
     if (rows.length > 0) {
       if (!environment.instanceDetails.extras.fieldContents?.[targetField]) {
         const fields = processObject.getFieldDefinitions();
