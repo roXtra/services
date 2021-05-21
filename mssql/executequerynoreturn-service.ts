@@ -1,7 +1,7 @@
-import * as sql from "mssql";
 import * as PH from "processhub-sdk";
 import { IServiceActionConfigField } from "processhub-sdk/lib/data";
 import { BpmnError } from "processhub-sdk/lib/instance";
+import { getConnectionPool } from "./database";
 import { ErrorCodes } from "./executequery-service";
 
 export async function executeQueryNoReturn(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
@@ -17,24 +17,8 @@ export async function executeQueryNoReturn(environment: PH.ServiceTask.IServiceT
 
   const fields = config.fields;
 
-  const server = fields.find((f: IServiceActionConfigField) => f.key === "server")?.value;
-  const user = fields.find((f: IServiceActionConfigField) => f.key === "username")?.value;
-  const password = fields.find((f: IServiceActionConfigField) => f.key === "password")?.value;
-  const database = fields.find((f: IServiceActionConfigField) => f.key === "database")?.value;
   let query = fields.find((f: IServiceActionConfigField) => f.key === "query")?.value;
 
-  if (server === undefined) {
-    throw new Error("server is undefined, cannot proceed with service!");
-  }
-  if (user === undefined) {
-    throw new Error("user is undefined, cannot proceed with service!");
-  }
-  if (password === undefined) {
-    throw new Error("password is undefined, cannot proceed with service!");
-  }
-  if (database === undefined) {
-    throw new Error("database is undefined, cannot proceed with service!");
-  }
   if (query === undefined) {
     throw new Error("query is undefined, cannot proceed with service!");
   }
@@ -55,14 +39,7 @@ export async function executeQueryNoReturn(environment: PH.ServiceTask.IServiceT
     throw new Error("query is undefined after parseAndInsertStringWithFieldContent, cannot proceed with service!");
   }
 
-  // Config for your database
-  const dbConfig = {
-    user: user,
-    password: password,
-    server: server,
-    database: database,
-  };
-  const pool = new sql.ConnectionPool(dbConfig);
+  const pool = getConnectionPool(fields);
   try {
     await pool.connect();
     await pool.request().query(query);
