@@ -7,7 +7,7 @@
         "corejs": "3.9",
         "debug": false,
         "targets": {
-          "node": "12"
+          "node": "14"
         }
       }
     ],

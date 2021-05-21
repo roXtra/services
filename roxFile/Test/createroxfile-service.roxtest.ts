@@ -47,7 +47,7 @@ describe("services", () => {
           environment.instanceDetails.extras.fieldContents = {
             Anlagen: {
               type: "ProcessHubFileUpload",
-              value: ["http://localhost:1080/modules/files/doc.docx"],
+              value: ["http://localhost:1080/modules/files/ZG9jLmRvY3g"],
             },
             Titel: {
               type: "ProcessHubTextInput",
