@@ -38,7 +38,7 @@
     "@babel/register": "^7.13.16",
     "@types/chai": "^4.2.18",
     "@types/mocha": "^8.2.2",
-    "@types/react": "^17.0.8",
+    "@types/react": "^17.0.9",
     "@typescript-eslint/eslint-plugin": "^4.26.0",
     "@typescript-eslint/parser": "^4.26.0",
     "babel-loader": "^8.2.2",
