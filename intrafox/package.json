@@ -43,7 +43,7 @@
     "cross-var": "^1.1.0",
     "eslint": "^7.27.0",
     "mocha": "^8.4.0",
-    "nock": "^13.0.11",
+    "nock": "^13.1.0",
     "regenerator-runtime": "^0.13.7",
     "rimraf": "^3.0.2",
     "typescript": "^4.3.2",
