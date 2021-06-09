@@ -32,7 +32,7 @@
     "@types/mocha": "^8.2.2",
     "@types/mssql": "^6.0.8",
     "@types/node": "^14.17.3",
-    "@types/react": "^17.0.10",
+    "@types/react": "^17.0.11",
     "bestzip": "^2.2.0",
     "chai": "^4.3.4",
     "copyfiles": "^2.4.1",
