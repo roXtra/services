@@ -32,7 +32,7 @@
     "@babel/cli": "^7.14.5",
     "@types/mocha": "^8.2.2",
     "@types/mysql": "^2.15.18",
-    "@types/node": "^14.17.3",
+    "@types/node": "^14.17.4",
     "@types/react": "^17.0.11",
     "bestzip": "^2.2.0",
     "chai": "^4.3.4",
