@@ -36,7 +36,7 @@
     "@babel/preset-react": "^7.14.5",
     "@babel/preset-typescript": "^7.14.5",
     "@babel/register": "^7.14.5",
-    "@types/chai": "^4.2.19",
+    "@types/chai": "^4.2.20",
     "@types/mocha": "^8.2.3",
     "@types/react": "^17.0.13",
     "@typescript-eslint/eslint-plugin": "^4.28.1",
