@@ -63,7 +63,7 @@ function buildService(directoryPath) {
     console.log("Installed current processhub SDK for " + directoryPath);
 
     // npm install
-    execSync("npm install", childProcessOptions);
+    execSync("npm ci", childProcessOptions);
     console.log("Executed npm install for " + directoryPath);
 
     // Lint

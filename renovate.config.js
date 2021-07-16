@@ -22,9 +22,5 @@ module.exports = {
       matchPackageNames: ["npm"],
       allowedVersions: "^6.0.0",
     },
-    {
-      matchPackageNames: ["semantic-ui-react"],
-      allowedVersions: "0.88.2",
-    },
   ],
 };
