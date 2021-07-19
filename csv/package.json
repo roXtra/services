@@ -25,6 +25,7 @@
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.18.0/release.tgz",
     "react": "^17.0.2",
     "semantic-ui-react": "^2.0.3",
+    "regenerator-runtime": "^0.13.7",
     "xlsx": "^0.17.0"
   },
   "devDependencies": {
@@ -40,7 +41,6 @@
     "cross-var": "^1.1.0",
     "eslint": "^7.30.0",
     "mocha": "^9.0.2",
-    "regenerator-runtime": "^0.13.7",
     "rimraf": "^3.0.2",
     "typescript": "^4.3.5",
     "webpack": "^5.44.0",

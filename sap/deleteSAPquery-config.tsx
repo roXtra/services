@@ -1,3 +1,4 @@
+import "regenerator-runtime/runtime";
 import * as Semantic from "semantic-ui-react";
 import * as PH from "processhub-sdk";
 
