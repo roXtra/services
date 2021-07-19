@@ -1,3 +1,4 @@
+import "regenerator-runtime/runtime";
 export { addition, serviceLogic as additionServiceLogic } from "./addition-service";
 export * from "./addition-config";
 export { subtraktion, serviceLogic as subtraktionServiceLogic } from "./subtraktion-service";

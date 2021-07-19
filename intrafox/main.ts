@@ -1,3 +1,4 @@
+import "regenerator-runtime/runtime";
 export * from "./getActivityByNumber-config";
 export { getActivityByNumber } from "./getActivityByNumber-service";
 

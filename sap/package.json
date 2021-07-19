@@ -25,7 +25,8 @@
     "@sap/hana-client": "^2.9.23",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.18.0/release.tgz",
     "react": "^17.0.2",
-    "semantic-ui-react": "^2.0.3"
+    "semantic-ui-react": "^2.0.3",
+    "regenerator-runtime": "^0.13.7"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.5",
@@ -38,7 +39,6 @@
     "cross-var": "^1.1.0",
     "eslint": "^7.30.0",
     "mocha": "^9.0.2",
-    "regenerator-runtime": "^0.13.7",
     "rimraf": "^3.0.2",
     "typescript": "^4.3.5"
   }
