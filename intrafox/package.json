@@ -30,7 +30,7 @@
     "regenerator-runtime": "^0.13.7"
   },
   "devDependencies": {
-    "@babel/cli": "^7.14.5",
+    "@babel/cli": "^7.14.8",
     "@types/chai": "^4.2.21",
     "@types/dateformat": "^3.0.1",
     "@types/mocha": "^8.2.3",
