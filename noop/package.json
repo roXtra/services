@@ -11,7 +11,7 @@
     "copyfiles": "cross-var copyfiles service.json dist/* $npm_package_servicename",
     "zip": "cross-var bestzip $npm_package_servicename.zip $npm_package_servicename",
     "copyandzip": "cross-var npm run copyfiles && npm run zip && cross-var rimraf $npm_package_servicename",
-    "webpack": "cross-var webpack --env servicename=$npm_package_servicename --config ./webpack.config.js",
+    "webpack": "cross-var webpack --env servicename=$npm_package_servicename --config ../webpack.config.js",
     "copymain": "copyfiles -u 1 dist/main.js disttests"
   },
   "engines": {

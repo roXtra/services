@@ -5,10 +5,10 @@ module.exports = (env) => {
     target: "node14",
     mode: "production",
     entry: {
-      main: "./main.ts",
+      main: path.resolve(__dirname, env.servicename, "main.ts"),
     },
     output: {
-      path: path.resolve(__dirname, "dist"),
+      path: path.resolve(__dirname, env.servicename, "dist"),
       filename: "[name].js",
       libraryTarget: "commonjs2",
     },
@@ -28,7 +28,7 @@ module.exports = (env) => {
           use: {
             loader: "ts-loader",
             options: {
-              configFile: "./tsconfig-webpack.json",
+              configFile: path.resolve(__dirname, env.servicename, "tsconfig-webpack.json"),
             },
           },
         },
