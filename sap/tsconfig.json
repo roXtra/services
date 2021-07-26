@@ -7,7 +7,7 @@
     "sourceMap": true,
     "jsx": "react-jsx",
     "allowJs": true,
-    "outDir": "disttests",
+    "outDir": "dist",
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
