@@ -6,10 +6,8 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint --ext .ts,.tsx ./",
-    "build": "tsc && npm run build:server && npm run build:tests",
-    "build:server": "babel . --out-dir dist --config-file ./../server.babel.json --extensions .ts,.tsx,.js --ignore \"./**/*.d.ts\",\"./**/*.roxtest.ts\",\"./**/*.roxselenium.ts\",\"./node_modules/**/*\",\"./dist/**/*\",\"./disttests/**/*\"",
-    "build:tests": "rimraf ./disttests && cross-env BABEL_ENV=debug babel . --out-dir disttests --config-file ./../server.babel.json --extensions .ts,.tsx,.js --ignore \"./**/*.d.ts\",\"./node_modules/**/*\",\"./dist/**/*\",\"./disttests/**/*\"",
-    "test": "cross-env HOTRELOAD=no DEBUG=bpmn-engine:123* mocha ./disttests/**/*.roxtest.js --exit --recursive --timeout 40000 --require regenerator-runtime --require source-map-support/register --require ./../commontestfiles/registerbabel.js",
+    "build": "tsc",
+    "test": "cross-env HOTRELOAD=no DEBUG=bpmn-engine:123* mocha ./disttests/**/*.roxtest.js --exit --recursive --timeout 40000 --require source-map-support/register",
     "copyproduction": "cross-var copyfiles package.json production && copyfiles .npmrc production && cd ./production && npm install --production && cd .. && cross-var copyfiles -u 1 \"./production/node_modules/**/*\" $npm_package_servicename && rimraf production/",
     "copyfiles": "cross-var copyfiles service.json dist/* $npm_package_servicename && npm run copyproduction",
     "zip": "cross-var bestzip $npm_package_servicename.zip $npm_package_servicename",
@@ -25,11 +23,9 @@
     "@sap/hana-client": "^2.9.23",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.19.0-2/release.tgz",
     "react": "^17.0.2",
-    "regenerator-runtime": "^0.13.7",
     "semantic-ui-react": "^2.0.3"
   },
   "devDependencies": {
-    "@babel/cli": "^7.14.8",
     "@types/mocha": "^8.2.3",
     "@types/node": "^14.17.5",
     "@types/react": "^17.0.14",
@@ -40,6 +36,7 @@
     "eslint": "^7.31.0",
     "mocha": "^9.0.2",
     "rimraf": "^3.0.2",
+    "ts-loader": "^9.2.4",
     "typescript": "^4.3.5"
   }
 }

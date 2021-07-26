@@ -1,27 +1,19 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
+    "target": "es2020",
+    "module": "commonjs",
     "moduleResolution": "node",
     "noImplicitAny": true,
     "sourceMap": true,
-    "outDir": "./dist/",
     "jsx": "react-jsx",
     "allowJs": true,
-    "noEmit": true,
+    "outDir": "disttests",
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "strict": true,
-    "lib": [
-      "esnext",
-      "dom"
-    ]
+    "lib": ["es2020", "dom"]
   },
-   "include": [
-    "./**/*"
-  ],
-  "exclude": [
-    "./dist/**/*",
-    "./node_modules"
-  ]
+  "include": ["./**/*"],
+  "exclude": ["./dist/**/*", "./node_modules"]
 }
