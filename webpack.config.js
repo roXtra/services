@@ -5,7 +5,7 @@ module.exports = (env) => {
     target: "node14",
     mode: "production",
     entry: {
-      main: "./main.ts",
+      main: path.resolve(__dirname, env.servicename, "main.ts"),
     },
     output: {
       path: path.resolve(__dirname, env.servicename, "dist"),
@@ -14,7 +14,7 @@ module.exports = (env) => {
     },
     optimization: {
       // mysql package does not support minimize: https://github.com/mysqljs/mysql/issues/1655
-      minimize: env.servicename !== "mysql"
+      minimize: env.servicename !== "mysql",
     },
     resolve: {
       extensions: [".ts", ".tsx", ".js", ".json"],
@@ -22,27 +22,13 @@ module.exports = (env) => {
     module: {
       rules: [
         {
-          test: /\.ts(x)?$/,
+          test: function (modulePath) {
+            return modulePath.endsWith(".ts") || modulePath.endsWith(".tsx");
+          },
           use: {
-            loader: "babel-loader",
+            loader: "ts-loader",
             options: {
-              presets: [
-                [
-                  "@babel/preset-env",
-                  {
-                    targets: {
-                      node: "14",
-                    },
-                  },
-                ],
-                "@babel/preset-typescript",
-                [
-                  "@babel/preset-react",
-                  {
-                    runtime: "automatic",
-                  },
-                ],
-              ],
+              configFile: path.resolve(__dirname, env.servicename, "tsconfig-webpack.json"),
             },
           },
         },
