@@ -1,11 +1,14 @@
-import * as PH from "processhub-sdk";
+import { parseAndInsertStringWithFieldContent } from "processhub-sdk/lib/data/datatools";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
+import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
 import Methods from "./sapServiceMethods";
 
-export async function executeSAPQuery(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
-  const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
+export async function executeSAPQuery(environment: IServiceTaskEnvironment): Promise<boolean> {
+  const processObject: BpmnProcess = new BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
-  const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
+  const extensionValues = BpmnProcess.getExtensionValues(taskObject);
   const config = extensionValues.serviceTaskConfigObject;
 
   if (config === undefined) {
@@ -53,7 +56,7 @@ export async function executeSAPQuery(environment: PH.ServiceTask.IServiceTaskEn
     throw new Error("instance.extras.roleOwners is undefined, cannot proceed!");
   }
 
-  query = PH.Data.parseAndInsertStringWithFieldContent(query, instance.extras.fieldContents, processObject, instance.extras.roleOwners, true);
+  query = parseAndInsertStringWithFieldContent(query, instance.extras.fieldContents, processObject, instance.extras.roleOwners, true);
 
   if (query === undefined) {
     throw new Error("query is undefined, cannot proceed!");
@@ -67,7 +70,7 @@ export async function executeSAPQuery(environment: PH.ServiceTask.IServiceTaskEn
     databaseName: tenant,
   };
 
-  const newValue: PH.Data.IFieldValue = {
+  const newValue: IFieldValue = {
     value: "",
     type: "ProcessHubTextArea",
   };

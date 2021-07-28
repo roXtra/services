@@ -1,5 +1,7 @@
-import * as PH from "processhub-sdk";
 import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance";
+import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
+import { tl } from "processhub-sdk/lib/tl";
 import * as XLSX from "xlsx";
 import { CSVServiceMethods } from "./csvServiceMethods";
 
@@ -7,15 +9,15 @@ enum ErrorCodes {
   FILE_ERROR = "FILE_ERROR",
 }
 
-export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<void> {
-  const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
+export async function serviceLogic(environment: IServiceTaskEnvironment): Promise<void> {
+  const processObject: BpmnProcess = new BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
-  const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
+  const extensionValues = BpmnProcess.getExtensionValues(taskObject);
   const config = extensionValues.serviceTaskConfigObject;
 
   if (config === undefined) {
-    throw new BpmnError(ErrorCode.ConfigInvalid, PH.tl("Der Service ist nicht korrekt konfiguiriert, die Konfiguration konnte nicht geladen werden."));
+    throw new BpmnError(ErrorCode.ConfigInvalid, tl("Der Service ist nicht korrekt konfiguiriert, die Konfiguration konnte nicht geladen werden."));
   }
 
   const fields = config.fields;
@@ -30,11 +32,11 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
   try {
     xlsxfile = XLSX.readFile(filePath);
   } catch {
-    throw new BpmnError(ErrorCodes.FILE_ERROR, PH.tl(`Es konnte keine CSV oder XLSX Datei unter dem Pfad ${filePath} gefunden werden.`));
+    throw new BpmnError(ErrorCodes.FILE_ERROR, tl(`Es konnte keine CSV oder XLSX Datei unter dem Pfad ${filePath} gefunden werden.`));
   }
 
   const json = XLSX.utils.sheet_to_json(xlsxfile.Sheets[sheetName]);
-  if (json.length === 0) throw new BpmnError(ErrorCodes.FILE_ERROR, PH.tl(`Das Arbeitsblatt mit dem Namen ${sheetName} enthält keine Daten.`));
+  if (json.length === 0) throw new BpmnError(ErrorCodes.FILE_ERROR, tl(`Das Arbeitsblatt mit dem Namen ${sheetName} enthält keine Daten.`));
 
   query = CSVServiceMethods.parseFieldsOfQuery(query, instance);
   const resultArray = CSVServiceMethods.query(json, query);
@@ -46,7 +48,7 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
   };
 }
 
-export async function csvreader(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
+export async function csvreader(environment: IServiceTaskEnvironment): Promise<boolean> {
   await serviceLogic(environment);
 
   await environment.instances.updateInstance(environment.instanceDetails);

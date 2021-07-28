@@ -1,11 +1,13 @@
-import * as PH from "processhub-sdk";
-import { BpmnError } from "processhub-sdk/lib/instance";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
+import { BpmnError, IGenerateReportRequestType, IInstanceDetails } from "processhub-sdk/lib/instance";
+import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
 
 enum ErrorCodes {
   ATTACHMENT_ERROR = "ATTACHMENT_ERROR",
 }
 
-async function getReport(environment: PH.ServiceTask.IServiceTaskEnvironment, reportDraftID: string, reportType: PH.Instance.IGenerateReportRequestType): Promise<string> {
+async function getReport(environment: IServiceTaskEnvironment, reportDraftID: string, reportType: IGenerateReportRequestType): Promise<string> {
   const instance = environment.instanceDetails;
 
   const reply = await environment.instances.generateInstanceReport([instance.instanceId], reportDraftID, reportType);
@@ -14,7 +16,7 @@ async function getReport(environment: PH.ServiceTask.IServiceTaskEnvironment, re
   return url;
 }
 
-export function initReportUploadField(url: string, instance: PH.Instance.IInstanceDetails, reportFieldName: string): void {
+export function initReportUploadField(url: string, instance: IInstanceDetails, reportFieldName: string): void {
   if (url && url.length > 0) {
     if (instance.extras.fieldContents?.[reportFieldName] == null) {
       if (instance.extras.fieldContents === undefined) {
@@ -22,18 +24,18 @@ export function initReportUploadField(url: string, instance: PH.Instance.IInstan
       }
       instance.extras.fieldContents[reportFieldName] = { type: "ProcessHubFileUpload", value: undefined };
     }
-    (instance.extras.fieldContents[reportFieldName] as PH.Data.IFieldValue).value = [url];
+    (instance.extras.fieldContents[reportFieldName] as IFieldValue).value = [url];
   } else {
     throw new BpmnError(ErrorCodes.ATTACHMENT_ERROR, "Der Bericht konnte dem Vorgang nicht angehängt werden.");
   }
 }
 
 // Extract the serviceLogic that testing is possible
-export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<PH.Instance.IInstanceDetails> {
-  const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
+export async function serviceLogic(environment: IServiceTaskEnvironment): Promise<IInstanceDetails> {
+  const processObject: BpmnProcess = new BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
-  const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
+  const extensionValues = BpmnProcess.getExtensionValues(taskObject);
   const config = extensionValues.serviceTaskConfigObject;
 
   if (config === undefined) {
@@ -65,7 +67,7 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
   return instance;
 }
 
-export async function createReport(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
+export async function createReport(environment: IServiceTaskEnvironment): Promise<boolean> {
   await serviceLogic(environment);
   await environment.instances.updateInstance(environment.instanceDetails);
   return true;

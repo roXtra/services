@@ -1,16 +1,19 @@
 import * as mysql from "mysql";
-import * as PH from "processhub-sdk";
+import { FieldType, IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
 import { BpmnError } from "processhub-sdk/lib/instance";
+import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
+import { parseAndInsertStringWithFieldContent } from "processhub-sdk/lib/data/datatools";
 
 enum ErrorCodes {
   DB_ERROR = "DB_ERROR",
 }
 
-export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
-  const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
+export async function executeQuery(environment: IServiceTaskEnvironment): Promise<boolean> {
+  const processObject: BpmnProcess = new BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
-  const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
+  const extensionValues = BpmnProcess.getExtensionValues(taskObject);
   const config = extensionValues.serviceTaskConfigObject;
 
   if (config === undefined) {
@@ -62,13 +65,7 @@ export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvir
   }
 
   try {
-    query = PH.Data.parseAndInsertStringWithFieldContent(
-      query,
-      environment.instanceDetails.extras.fieldContents,
-      processObject,
-      environment.instanceDetails.extras.roleOwners,
-      true,
-    );
+    query = parseAndInsertStringWithFieldContent(query, environment.instanceDetails.extras.fieldContents, processObject, environment.instanceDetails.extras.roleOwners, true);
 
     console.log(`MySQL service: executing ${String(query)}`);
 
@@ -89,7 +86,7 @@ export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvir
       if (!environment.instanceDetails.extras.fieldContents?.[targetField]) {
         const fields = processObject.getFieldDefinitions();
         const field = fields.find((f) => f.name === targetField);
-        const targetFieldType: PH.Data.FieldType = field ? field.type : "ProcessHubTextInput";
+        const targetFieldType: FieldType = field ? field.type : "ProcessHubTextInput";
 
         if (environment.instanceDetails.extras.fieldContents === undefined) {
           environment.instanceDetails.extras.fieldContents = {};
@@ -100,7 +97,7 @@ export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvir
           type: targetFieldType,
         };
       }
-      (environment.instanceDetails.extras.fieldContents[targetField] as PH.Data.IFieldValue).value = res[0]["result"];
+      (environment.instanceDetails.extras.fieldContents[targetField] as IFieldValue).value = res[0]["result"];
       await environment.instances.updateInstance(environment.instanceDetails);
     }
   } catch (ex) {

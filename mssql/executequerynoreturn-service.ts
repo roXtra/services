@@ -1,14 +1,16 @@
-import * as PH from "processhub-sdk";
-import { IServiceActionConfigField } from "processhub-sdk/lib/data";
+import { IServiceActionConfigField } from "processhub-sdk/lib/data/datainterfaces";
 import { BpmnError } from "processhub-sdk/lib/instance";
+import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
 import { getConnectionPool } from "./database";
 import { ErrorCodes } from "./executequery-service";
+import { parseAndInsertStringWithFieldContent } from "processhub-sdk/lib/data/datatools";
 
-export async function executeQueryNoReturn(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
-  const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
+export async function executeQueryNoReturn(environment: IServiceTaskEnvironment): Promise<boolean> {
+  const processObject: BpmnProcess = new BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
-  const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
+  const extensionValues = BpmnProcess.getExtensionValues(taskObject);
   const config = extensionValues.serviceTaskConfigObject;
 
   if (config === undefined) {
@@ -27,13 +29,7 @@ export async function executeQueryNoReturn(environment: PH.ServiceTask.IServiceT
     throw new Error("environment.instanceDetails.extras.roleOwners is undefined, cannot proceed with service!");
   }
 
-  query = PH.Data.parseAndInsertStringWithFieldContent(
-    query,
-    environment.instanceDetails.extras.fieldContents,
-    processObject,
-    environment.instanceDetails.extras.roleOwners,
-    true,
-  );
+  query = parseAndInsertStringWithFieldContent(query, environment.instanceDetails.extras.fieldContents, processObject, environment.instanceDetails.extras.roleOwners, true);
 
   if (query === undefined) {
     throw new Error("query is undefined after parseAndInsertStringWithFieldContent, cannot proceed with service!");

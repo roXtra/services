@@ -1,40 +1,31 @@
-import * as PH from "processhub-sdk";
 import * as hanaClient from "@sap/hana-client";
-import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
+import { BpmnError, ErrorCode, IInstanceDetails } from "processhub-sdk/lib/instance";
+import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
+import { parseAndInsertStringWithFieldContent } from "processhub-sdk/lib/data/datatools";
 
 export default class SAPServiceMethods {
-  static buildInsertQuery(
-    tableName: string,
-    columns: string,
-    values: string,
-    instance: PH.Instance.IInstanceDetails,
-    processObject: PH.Process.BpmnProcess,
-  ): string | undefined {
+  static buildInsertQuery(tableName: string, columns: string, values: string, instance: IInstanceDetails, processObject: BpmnProcess): string | undefined {
     let query: string | undefined = "INSERT INTO " + tableName + " (" + columns + ") " + "VALUES (" + values + ");";
 
     if (instance.extras.roleOwners === undefined) {
       throw new Error("instance.extras.roleOwners is undefined, cannot proceed!");
     }
 
-    query = PH.Data.parseAndInsertStringWithFieldContent(query, instance.extras.fieldContents, processObject, instance.extras.roleOwners, true);
+    query = parseAndInsertStringWithFieldContent(query, instance.extras.fieldContents, processObject, instance.extras.roleOwners, true);
 
     return query;
   }
 
-  static buildSelectQuery(
-    tableName: string,
-    columns: string,
-    where: string,
-    instance: PH.Instance.IInstanceDetails,
-    processObject: PH.Process.BpmnProcess,
-  ): string | undefined {
+  static buildSelectQuery(tableName: string, columns: string, where: string, instance: IInstanceDetails, processObject: BpmnProcess): string | undefined {
     let selectQuery: string | undefined = "SELECT " + columns + " FROM " + tableName + " WHERE " + where + ";";
 
     if (instance.extras.roleOwners === undefined) {
       throw new Error("instance.extras.roleOwners is undefined, cannot proceed!");
     }
 
-    selectQuery = PH.Data.parseAndInsertStringWithFieldContent(selectQuery, instance.extras.fieldContents, processObject, instance.extras.roleOwners, true);
+    selectQuery = parseAndInsertStringWithFieldContent(selectQuery, instance.extras.fieldContents, processObject, instance.extras.roleOwners, true);
     selectQuery = selectQuery?.replace(/\s{2,}/g, " ");
 
     if (selectQuery !== undefined && selectQuery.endsWith("WHERE ;")) {
@@ -44,14 +35,14 @@ export default class SAPServiceMethods {
     return selectQuery;
   }
 
-  static buildDeleteQuery(tableName: string, where: string, instance: PH.Instance.IInstanceDetails, processObject: PH.Process.BpmnProcess): string | undefined {
+  static buildDeleteQuery(tableName: string, where: string, instance: IInstanceDetails, processObject: BpmnProcess): string | undefined {
     let deleteQuery: string | undefined = "DELETE FROM " + tableName + " WHERE " + where + ";";
 
     if (instance.extras.roleOwners === undefined) {
       throw new Error("instance.extras.roleOwners is undefined, cannot proceed!");
     }
 
-    deleteQuery = PH.Data.parseAndInsertStringWithFieldContent(deleteQuery, instance.extras.fieldContents, processObject, instance.extras.roleOwners, true);
+    deleteQuery = parseAndInsertStringWithFieldContent(deleteQuery, instance.extras.fieldContents, processObject, instance.extras.roleOwners, true);
 
     return deleteQuery;
   }
@@ -90,7 +81,7 @@ export default class SAPServiceMethods {
   static async serviceOutputLogic(
     rows: Array<any>,
     newValue: any,
-    environment: PH.ServiceTask.IServiceTaskEnvironment,
+    environment: IServiceTaskEnvironment,
     instance: any,
     targetFieldTable: string,
     targetFieldCSV: string,
@@ -106,9 +97,9 @@ export default class SAPServiceMethods {
 
     if (url && url.length > 0) {
       if (instance.extras.fieldContents[targetFieldCSV] == null) {
-        instance.extras.fieldContents[targetFieldCSV] = { type: "ProcessHubFileUpload", value: undefined } as PH.Data.IFieldValue;
+        instance.extras.fieldContents[targetFieldCSV] = { type: "ProcessHubFileUpload", value: undefined } as IFieldValue;
       }
-      (instance.extras.fieldContents[targetFieldCSV] as PH.Data.IFieldValue).value = [url];
+      (instance.extras.fieldContents[targetFieldCSV] as IFieldValue).value = [url];
     }
 
     await environment.instances.updateInstance(environment.instanceDetails);

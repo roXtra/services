@@ -4,6 +4,8 @@ import { missingRequiredField, initRequiredFields, RoXtraFileApi, readFileBase64
 import { IRoXtraFileApi } from "./iroxtrafileapi";
 import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance";
 import { decodeURLSafeBase64 } from "processhub-sdk/lib/tools";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
+import { IServiceTaskEnvironment, getFields } from "processhub-sdk/lib/servicetask";
 
 let APIUrl: string;
 let efAccessToken: string;
@@ -33,8 +35,8 @@ function generateTitleWithDataType(title: string, fileName: string): string {
 }
 
 // Extract the serviceLogic that testing is possible
-export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvironment, roxtraFileAPI: IRoXtraFileApi): Promise<PH.Instance.IInstanceDetails> {
-  const fields = await PH.ServiceTask.getFields(environment);
+export async function serviceLogic(environment: IServiceTaskEnvironment, roxtraFileAPI: IRoXtraFileApi): Promise<PH.Instance.IInstanceDetails> {
+  const fields = await getFields(environment);
   const instance = environment.instanceDetails;
 
   const requiredFields = initRequiredFields(["docType", "destinationID", "destinationType"], fields);
@@ -77,9 +79,9 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
   }
 
   // Get the value of a selected field
-  const roxFile = (environment.instanceDetails.extras.fieldContents?.[roxFileField] as PH.Data.IFieldValue).value as string;
-  const title = (environment.instanceDetails.extras.fieldContents?.[titleField] as PH.Data.IFieldValue).value as string;
-  const description = (environment.instanceDetails.extras.fieldContents?.[descriptionField] as PH.Data.IFieldValue).value as string;
+  const roxFile = (environment.instanceDetails.extras.fieldContents?.[roxFileField] as IFieldValue).value as string;
+  const title = (environment.instanceDetails.extras.fieldContents?.[titleField] as IFieldValue).value as string;
+  const description = (environment.instanceDetails.extras.fieldContents?.[descriptionField] as IFieldValue).value as string;
 
   let relativePath = roxFile[0].split("modules/files/")[1];
   const pathParts = relativePath.split("/");
@@ -114,7 +116,7 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
   return instance;
 }
 
-export async function createRoxFile(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
+export async function createRoxFile(environment: IServiceTaskEnvironment): Promise<boolean> {
   APIUrl = environment.serverConfig.roXtra.efApiEndpoint;
   efAccessToken = await environment.roxApi.getEfApiToken();
 

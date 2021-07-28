@@ -1,11 +1,13 @@
-import * as PH from "processhub-sdk";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
+import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
 import Methods from "./sapServiceMethods";
 
-export async function selectSAPQuery(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
-  const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
+export async function selectSAPQuery(environment: IServiceTaskEnvironment): Promise<boolean> {
+  const processObject: BpmnProcess = new BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
-  const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
+  const extensionValues = BpmnProcess.getExtensionValues(taskObject);
   const config = extensionValues.serviceTaskConfigObject;
 
   if (config === undefined) {
@@ -57,7 +59,7 @@ export async function selectSAPQuery(environment: PH.ServiceTask.IServiceTaskEnv
     databaseName: tenant,
   };
 
-  const newValue: PH.Data.IFieldValue = {
+  const newValue: IFieldValue = {
     value: "",
     type: "ProcessHubTextArea",
   };

@@ -1,16 +1,19 @@
-import * as PH from "processhub-sdk";
+import { parseAndInsertStringWithFieldContent } from "processhub-sdk/lib/data/datatools";
+import { FieldType, IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
 import { BpmnError } from "processhub-sdk/lib/instance";
+import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
 import { getConnectionPool } from "./database";
 
 export enum ErrorCodes {
   DB_ERROR = "DB_ERROR",
 }
 
-export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
-  const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
+export async function executeQuery(environment: IServiceTaskEnvironment): Promise<boolean> {
+  const processObject: BpmnProcess = new BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
-  const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
+  const extensionValues = BpmnProcess.getExtensionValues(taskObject);
   const config = extensionValues.serviceTaskConfigObject;
 
   if (config === undefined) {
@@ -41,13 +44,7 @@ export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvir
   try {
     await pool.connect();
 
-    query = PH.Data.parseAndInsertStringWithFieldContent(
-      query,
-      environment.instanceDetails.extras.fieldContents,
-      processObject,
-      environment.instanceDetails.extras.roleOwners,
-      true,
-    );
+    query = parseAndInsertStringWithFieldContent(query, environment.instanceDetails.extras.fieldContents, processObject, environment.instanceDetails.extras.roleOwners, true);
 
     if (query === undefined) {
       throw new Error("query is undefined after parseAndInsertStringWithFieldContent, cannot proceed with service!");
@@ -61,14 +58,14 @@ export async function executeQuery(environment: PH.ServiceTask.IServiceTaskEnvir
       if (!environment.instanceDetails.extras.fieldContents?.[targetField]) {
         const fields = processObject.getFieldDefinitions();
         const field = fields.find((f) => f.name === targetField);
-        const targetFieldType: PH.Data.FieldType = field ? field.type : "ProcessHubTextInput";
+        const targetFieldType: FieldType = field ? field.type : "ProcessHubTextInput";
 
         environment.instanceDetails.extras.fieldContents[targetField] = {
           value: undefined,
           type: targetFieldType,
         };
       }
-      (environment.instanceDetails.extras.fieldContents[targetField] as PH.Data.IFieldValue).value = rows[0].result;
+      (environment.instanceDetails.extras.fieldContents[targetField] as IFieldValue).value = rows[0].result;
       await environment.instances.updateInstance(environment.instanceDetails);
     }
   } catch (ex) {

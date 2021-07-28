@@ -1,12 +1,15 @@
-import * as PH from "processhub-sdk";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
+import { IInstanceDetails } from "processhub-sdk/lib/instance";
+import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
 import * as IntrafoxAPI from "./IntrafoxAPI";
 import * as IntrafoxTypes from "./IntrafoxTypes";
 
-export async function serviceLogic(url: string, environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<PH.Instance.IInstanceDetails> {
-  const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
+export async function serviceLogic(url: string, environment: IServiceTaskEnvironment): Promise<IInstanceDetails> {
+  const processObject: BpmnProcess = new BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
-  const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
+  const extensionValues = BpmnProcess.getExtensionValues(taskObject);
   const config = extensionValues.serviceTaskConfigObject;
 
   if (config === undefined) {
@@ -42,10 +45,10 @@ export async function serviceLogic(url: string, environment: PH.ServiceTask.ISer
     throw new Error("fieldContents are undefined, cannot proceed!");
   }
 
-  const activityAbbrevation = ((instance.extras.fieldContents[activityAbbrevationField] as PH.Data.IFieldValue).value as string).trim();
-  const activityDescription = ((instance.extras.fieldContents[activityDescriptionField] as PH.Data.IFieldValue).value as string).trim();
-  const activityExpirationdate = (instance.extras.fieldContents[activityExpirationdateField] as PH.Data.IFieldValue).value as Date;
-  const username = ((instance.extras.fieldContents[usernameField] as PH.Data.IFieldValue).value as string).trim();
+  const activityAbbrevation = ((instance.extras.fieldContents[activityAbbrevationField] as IFieldValue).value as string).trim();
+  const activityDescription = ((instance.extras.fieldContents[activityDescriptionField] as IFieldValue).value as string).trim();
+  const activityExpirationdate = (instance.extras.fieldContents[activityExpirationdateField] as IFieldValue).value as Date;
+  const username = ((instance.extras.fieldContents[usernameField] as IFieldValue).value as string).trim();
 
   const response = await IntrafoxAPI.createGlobalActivity(url, username, activityAbbrevation, activityDescription, activityExpirationdate, token);
   const responseOK = response as string;
@@ -63,7 +66,7 @@ export async function serviceLogic(url: string, environment: PH.ServiceTask.ISer
   return instance;
 }
 
-export async function createActivity(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
+export async function createActivity(environment: IServiceTaskEnvironment): Promise<boolean> {
   await serviceLogic("https://asp3.intrafox.net/cgi-bin/ws.app?D=P32zdyNCFcIwZ40HE1RY", environment);
   await environment.instances.updateInstance(environment.instanceDetails);
   return true;

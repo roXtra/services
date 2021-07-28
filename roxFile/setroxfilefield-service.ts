@@ -1,9 +1,10 @@
-import * as PH from "processhub-sdk";
 import { missingRequiredField, initRequiredFields, RoXtraFileApi } from "./roxtrafileapi";
 import { ISetFileFieldsObject, ISelection, SelectTypes } from "./roxtrafileapitypes";
 import JSONQuery from "json-query";
 import { IRoXtraFileApi } from "./iroxtrafileapi";
-import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance";
+import { BpmnError, ErrorCode, IInstanceDetails } from "processhub-sdk/lib/instance";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
+import { IServiceTaskEnvironment, getFields } from "processhub-sdk/lib/servicetask";
 
 let APIUrl: string;
 let efAccessToken: string;
@@ -33,7 +34,7 @@ async function selectionValueIDMapping(
   body: ISetFileFieldsObject,
   selectionID: string,
   selectID: string,
-  environment: PH.ServiceTask.IServiceTaskEnvironment,
+  environment: IServiceTaskEnvironment,
   roxFileApi: IRoXtraFileApi,
 ): Promise<any> {
   const selections: ISelection[] = await roxFileApi.getSelectionsCall(APIUrl, efAccessToken, environment.roxApi.getApiToken());
@@ -47,18 +48,18 @@ async function selectionValueIDMapping(
   return handleSelectField(selectID, body.Value, selection);
 }
 
-function parseFileID(fieldID: string, environment: PH.ServiceTask.IServiceTaskEnvironment): string | undefined {
+function parseFileID(fieldID: string, environment: IServiceTaskEnvironment): string | undefined {
   const fieldIDSplit = fieldID.split("@@");
 
   if (fieldIDSplit.length > 1) {
     fieldID = fieldIDSplit[1].trim();
-    return (environment.instanceDetails.extras.fieldContents?.[fieldID] as PH.Data.IFieldValue).value as string;
+    return (environment.instanceDetails.extras.fieldContents?.[fieldID] as IFieldValue).value as string;
   } else {
     return fieldID.trim();
   }
 }
 
-async function getFieldDetails(fileID: string, fieldID: string, environment: PH.ServiceTask.IServiceTaskEnvironment, roxFileApi: IRoXtraFileApi): Promise<any> {
+async function getFieldDetails(fileID: string, fieldID: string, environment: IServiceTaskEnvironment, roxFileApi: IRoXtraFileApi): Promise<any> {
   const fileDetails = await roxFileApi.getFileDetailsCall(APIUrl, fileID, efAccessToken, environment.roxApi.getApiToken());
 
   const data = {
@@ -69,8 +70,8 @@ async function getFieldDetails(fileID: string, fieldID: string, environment: PH.
   return JSONQuery("fields[Id = {fieldID}]", { data: data }).value;
 }
 
-export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvironment, roxFileApi: IRoXtraFileApi): Promise<PH.Instance.IInstanceDetails> {
-  const fields = await PH.ServiceTask.getFields(environment);
+export async function serviceLogic(environment: IServiceTaskEnvironment, roxFileApi: IRoXtraFileApi): Promise<IInstanceDetails> {
+  const fields = await getFields(environment);
   const instance = environment.instanceDetails;
 
   const requiredFields = initRequiredFields(["fileId", "fieldId"], fields);
@@ -97,7 +98,7 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
   }
 
   // Get the value of a selected field
-  const value = (environment.instanceDetails.extras.fieldContents?.[valueField] as PH.Data.IFieldValue).value as string;
+  const value = (environment.instanceDetails.extras.fieldContents?.[valueField] as IFieldValue).value as string;
 
   fileId = parseFileID(fileId, environment);
 
@@ -121,7 +122,7 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
   return instance;
 }
 
-export async function setRoxFileField(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
+export async function setRoxFileField(environment: IServiceTaskEnvironment): Promise<boolean> {
   APIUrl = environment.serverConfig.roXtra.efApiEndpoint;
   efAccessToken = await environment.roxApi.getEfApiToken();
 

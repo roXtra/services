@@ -1,11 +1,12 @@
-import * as PH from "processhub-sdk";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
 
 export default class MathServiceMethods {
-  static getNumberFromField(environment: PH.ServiceTask.IServiceTaskEnvironment, fieldName: string): number {
+  static getNumberFromField(environment: IServiceTaskEnvironment, fieldName: string): number {
     if (environment.instanceDetails.extras.fieldContents === undefined) {
       throw new Error("environment.instanceDetails.extras.fieldContents is undefined, cannot proceed!");
     }
 
-    return (environment.instanceDetails.extras.fieldContents[fieldName] as PH.Data.IFieldValue).value as number;
+    return (environment.instanceDetails.extras.fieldContents[fieldName] as IFieldValue).value as number;
   }
 }

@@ -1,12 +1,15 @@
-import * as PH from "processhub-sdk";
 import MathServiceMethods from "./mathServiceMethods";
 import { Bpmn } from "modeler/bpmn/bpmn";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
+import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
+import { ITaskExtensions } from "processhub-sdk/lib/process/processinterfaces";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
 
-export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<void> {
-  const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
+export async function serviceLogic(environment: IServiceTaskEnvironment): Promise<void> {
+  const processObject: BpmnProcess = new BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject: Bpmn.ITask = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
-  const extensionValues: PH.Process.ITaskExtensions = PH.Process.BpmnProcess.getExtensionValues(taskObject);
+  const extensionValues: ITaskExtensions = BpmnProcess.getExtensionValues(taskObject);
   const config = extensionValues.serviceTaskConfigObject;
 
   if (config === undefined) {
@@ -31,7 +34,7 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
     throw new Error("fieldContents are undefined, cannot proceed with service!");
   }
 
-  const newValue: PH.Data.IFieldValue = {
+  const newValue: IFieldValue = {
     value: MathServiceMethods.getNumberFromField(environment, numberField1) + MathServiceMethods.getNumberFromField(environment, numberField2),
     type: "ProcessHubNumber",
   };
@@ -39,7 +42,7 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
   environment.instanceDetails.extras.fieldContents[targetField] = newValue;
 }
 
-export async function addition(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
+export async function addition(environment: IServiceTaskEnvironment): Promise<boolean> {
   await serviceLogic(environment);
   await environment.instances.updateInstance(environment.instanceDetails);
   return true;

@@ -1,6 +1,7 @@
 import { expect } from "chai";
-import * as PH from "processhub-sdk";
 import * as fs from "fs";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
+import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools";
 import { executeQuery } from "../main";
 
 const taskIds = {
@@ -10,8 +11,8 @@ const taskIds = {
 };
 
 describe("mysql", () => {
-  function createEnvironment(bpmnTaskId: string): PH.ServiceTask.IServiceTaskEnvironment {
-    const env = PH.Test.createEmptyTestServiceEnvironment(fs.readFileSync("./test/testfiles/mysql-test.bpmn", "utf8"));
+  function createEnvironment(bpmnTaskId: string): IServiceTaskEnvironment {
+    const env = createEmptyTestServiceEnvironment(fs.readFileSync("./test/testfiles/mysql-test.bpmn", "utf8"));
     env.bpmnTaskId = bpmnTaskId;
     env.instanceDetails.extras.roleOwners = {};
     env.instanceDetails.extras.fieldContents = {};

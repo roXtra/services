@@ -1,12 +1,14 @@
-import * as PH from "processhub-sdk";
+import { IFieldContentMap } from "processhub-sdk/lib/data/ifieldcontentmap";
+import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces";
+import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
+import { createId } from "processhub-sdk/lib/tools/guid";
 
-async function getServiceTaskConfig(
-  environment: PH.ServiceTask.IServiceTaskEnvironment,
-): Promise<{ workspaceAndProcessId: string; fields: string[]; executingUserId: string }> {
-  const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
+async function getServiceTaskConfig(environment: IServiceTaskEnvironment): Promise<{ workspaceAndProcessId: string; fields: string[]; executingUserId: string }> {
+  const processObject: BpmnProcess = new BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
-  const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
+  const extensionValues = BpmnProcess.getExtensionValues(taskObject);
   const config = extensionValues.serviceTaskConfigObject;
 
   if (config === undefined) {
@@ -33,7 +35,7 @@ async function getServiceTaskConfig(
   };
 }
 
-export async function startinstance(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
+export async function startinstance(environment: IServiceTaskEnvironment): Promise<boolean> {
   const { workspaceAndProcessId, fields, executingUserId } = await getServiceTaskConfig(environment);
   const workspaceId = workspaceAndProcessId.split("/")[0];
   const processId = workspaceAndProcessId.split("/")[1];
@@ -41,16 +43,16 @@ export async function startinstance(environment: PH.ServiceTask.IServiceTaskEnvi
   const accessToken = await environment.roxApi.getRoxtraTokenByUserId(executingUserId);
 
   const oldFieldContents = environment.instanceDetails.extras.fieldContents;
-  const newFieldContents: PH.Data.IFieldContentMap = {};
+  const newFieldContents: IFieldContentMap = {};
   if (oldFieldContents !== undefined) {
     for (const fieldName of fields) {
       newFieldContents[fieldName] = oldFieldContents[fieldName];
     }
   }
 
-  const newInstance: PH.Instance.IInstanceDetails = {
+  const newInstance: IInstanceDetails = {
     title: "",
-    instanceId: PH.Tools.createId(),
+    instanceId: createId(),
     workspaceId,
     processId,
     extras: {
