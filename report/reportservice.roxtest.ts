@@ -1,13 +1,15 @@
-import * as PH from "processhub-sdk";
 import { initReportUploadField, createReportConfig } from "./main";
 import * as fs from "fs";
 import { assert, expect } from "chai";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
+import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test";
 
 describe("services", () => {
   describe("servicetemplate", () => {
     // Create a mock service environment
-    function createEnvironment(bpmnXmlPath: string, bpmnTaskId: string): PH.ServiceTask.IServiceTaskEnvironment {
-      const env = PH.Test.createEmptyTestServiceEnvironment(fs.readFileSync(bpmnXmlPath, "utf8"));
+    function createEnvironment(bpmnXmlPath: string, bpmnTaskId: string): IServiceTaskEnvironment {
+      const env = createEmptyTestServiceEnvironment(fs.readFileSync(bpmnXmlPath, "utf8"));
       env.bpmnTaskId = bpmnTaskId;
       env.instanceDetails.extras.fieldContents = { UploadField: { type: "ProcessHubFileUpload", value: undefined } };
 
@@ -19,7 +21,7 @@ describe("services", () => {
 
       initReportUploadField(url, env.instanceDetails, "UploadField");
 
-      return (env.instanceDetails.extras.fieldContents?.["UploadField"] as PH.Data.IFieldValue).value as string;
+      return (env.instanceDetails.extras.fieldContents?.["UploadField"] as IFieldValue).value as string;
     }
 
     it("execute report service test with correct result_8fd1ba08-f8a1-4caa-b685-27b3ee946037", () => {

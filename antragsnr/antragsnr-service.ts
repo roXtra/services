@@ -1,9 +1,13 @@
-import * as PH from "processhub-sdk";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
 import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance";
-import { ProcessExtras } from "processhub-sdk/lib/process";
+import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces";
+import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
+import { IProcessDetails, ProcessExtras } from "processhub-sdk/lib/process/processinterfaces";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
+import { tl } from "processhub-sdk/lib/tl";
 
-function getNumberOfInstancesOfSpecificYear(instances: PH.Instance.IInstanceDetails[], year: number): number {
-  const instancesOfTheYear: PH.Instance.IInstanceDetails[] = [];
+function getNumberOfInstancesOfSpecificYear(instances: IInstanceDetails[], year: number): number {
+  const instancesOfTheYear: IInstanceDetails[] = [];
 
   for (let i = 0; i < instances.length; i++) {
     const currentInstance = instances[i];
@@ -21,7 +25,7 @@ function getNumberOfInstancesOfSpecificYear(instances: PH.Instance.IInstanceDeta
   return instancesOfTheYear.length;
 }
 
-export function serviceLogic(processDetails: PH.Process.IProcessDetails, environment: PH.ServiceTask.IServiceTaskEnvironment, targetField: string): void {
+export function serviceLogic(processDetails: IProcessDetails, environment: IServiceTaskEnvironment, targetField: string): void {
   const instances = processDetails.extras.instances;
 
   if (instances === undefined) {
@@ -38,7 +42,7 @@ export function serviceLogic(processDetails: PH.Process.IProcessDetails, environ
   const numberOfInstances = getNumberOfInstancesOfSpecificYear(instances, instanceYear);
   const nr: string = numberOfInstances < 10 ? instanceYear.toString() + "/0" + numberOfInstances.toString() : instanceYear.toString() + "/" + numberOfInstances.toString();
 
-  const newValue: PH.Data.IFieldValue = {
+  const newValue: IFieldValue = {
     value: nr,
     type: "ProcessHubTextInput",
   };
@@ -46,23 +50,23 @@ export function serviceLogic(processDetails: PH.Process.IProcessDetails, environ
   environment.instanceDetails.extras.fieldContents[targetField] = newValue;
 }
 
-export async function antragsnrAction(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
-  const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
+export async function antragsnrAction(environment: IServiceTaskEnvironment): Promise<boolean> {
+  const processObject: BpmnProcess = new BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
-  const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
+  const extensionValues = BpmnProcess.getExtensionValues(taskObject);
 
   const config = extensionValues.serviceTaskConfigObject;
 
   if (config === undefined) {
-    throw new BpmnError(ErrorCode.ConfigInvalid, PH.tl("Der Service ist nicht korrekt konfiguiriert, die Konfiguration konnte nicht geladen werden."));
+    throw new BpmnError(ErrorCode.ConfigInvalid, tl("Der Service ist nicht korrekt konfiguiriert, die Konfiguration konnte nicht geladen werden."));
   }
 
   const fields = config.fields;
   const targetField = fields.find((f) => f.key === "targetfield")?.value;
 
   if (targetField === undefined) {
-    throw new BpmnError(ErrorCode.ConfigInvalid, PH.tl("Der Service ist nicht korrekt konfiguiriert, das Zielfeld wurde nicht ausgefüllt."));
+    throw new BpmnError(ErrorCode.ConfigInvalid, tl("Der Service ist nicht korrekt konfiguiriert, das Zielfeld wurde nicht ausgefüllt."));
   }
 
   const processDetails = await environment.processes.getProcessDetails(environment.instanceDetails.processId, ProcessExtras.ExtrasInstances);

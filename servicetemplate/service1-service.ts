@@ -1,11 +1,14 @@
-import * as PH from "processhub-sdk";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
+import { IInstanceDetails } from "processhub-sdk/lib/instance";
+import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
 
 // Extract the serviceLogic that testing is possible
-export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<PH.Instance.IInstanceDetails> {
-  const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
+export async function serviceLogic(environment: IServiceTaskEnvironment): Promise<IInstanceDetails> {
+  const processObject: BpmnProcess = new BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
-  const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
+  const extensionValues = BpmnProcess.getExtensionValues(taskObject);
   const config = extensionValues.serviceTaskConfigObject;
 
   if (config === undefined) {
@@ -21,13 +24,13 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
 
   if (selectField !== undefined) {
     // Get the value of a selected field
-    const selectFieldValue = (environment.instanceDetails.extras.fieldContents?.[selectField] as PH.Data.IFieldValue).value as string;
+    const selectFieldValue = (environment.instanceDetails.extras.fieldContents?.[selectField] as IFieldValue).value as string;
     console.log(selectFieldValue);
   }
   return instance;
 }
 
-export async function service1(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
+export async function service1(environment: IServiceTaskEnvironment): Promise<boolean> {
   // Get the instance to manipulate and add fields
   const instance = await serviceLogic(environment);
 

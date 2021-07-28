@@ -1,11 +1,13 @@
-import * as PH from "processhub-sdk";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
+import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
 import MathServiceMethods from "./mathServiceMethods";
 
-export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<void> {
-  const processObject: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
+export async function serviceLogic(environment: IServiceTaskEnvironment): Promise<void> {
+  const processObject: BpmnProcess = new BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
-  const extensionValues = PH.Process.BpmnProcess.getExtensionValues(taskObject);
+  const extensionValues = BpmnProcess.getExtensionValues(taskObject);
   const config = extensionValues.serviceTaskConfigObject;
 
   if (config === undefined) {
@@ -30,14 +32,14 @@ export async function serviceLogic(environment: PH.ServiceTask.IServiceTaskEnvir
     throw new Error("fieldContents are undefined, cannot proceed with service!");
   }
 
-  const newValue: PH.Data.IFieldValue = {
+  const newValue: IFieldValue = {
     value: MathServiceMethods.getNumberFromField(environment, numberField1) - MathServiceMethods.getNumberFromField(environment, numberField2),
     type: "ProcessHubNumber",
   };
   environment.instanceDetails.extras.fieldContents[targetField] = newValue;
 }
 
-export async function subtraktion(environment: PH.ServiceTask.IServiceTaskEnvironment): Promise<boolean> {
+export async function subtraktion(environment: IServiceTaskEnvironment): Promise<boolean> {
   await serviceLogic(environment);
   await environment.instances.updateInstance(environment.instanceDetails);
   return true;

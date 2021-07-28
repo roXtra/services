@@ -1,13 +1,14 @@
 import { expect } from "chai";
-import * as PH from "processhub-sdk";
 import { service1, service1Config, service2, service2Config } from "./main";
 import * as fs from "fs";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
+import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools";
 
 describe("services", () => {
   describe("servicetemplate", () => {
     // Create a mock service environment
-    function createEnvironment(bpmnXmlPath: string, bpmnTaskId: string, field1Value: string, field2Value: string): PH.ServiceTask.IServiceTaskEnvironment {
-      const env = PH.Test.createEmptyTestServiceEnvironment(fs.readFileSync(bpmnXmlPath, "utf8"));
+    function createEnvironment(bpmnXmlPath: string, bpmnTaskId: string, field1Value: string, field2Value: string): IServiceTaskEnvironment {
+      const env = createEmptyTestServiceEnvironment(fs.readFileSync(bpmnXmlPath, "utf8"));
       env.bpmnTaskId = bpmnTaskId;
       env.instanceDetails.extras.fieldContents = { Field1: { type: "ProcessHubNumber", value: field1Value }, Field2: { type: "ProcessHubNumber", value: field2Value } };
 

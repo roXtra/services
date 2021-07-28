@@ -1,9 +1,9 @@
 import { ErrorCodes, ICreateFileRequestBody, IGetRequest, IMissingField, IPostRequest, IRequestHeader, ISelection, ISetFileFieldsObject } from "./roxtrafileapitypes";
 import * as fs from "fs";
-import * as PH from "processhub-sdk";
 import { IRoXtraFileApi } from "./iroxtrafileapi";
 import fetch, { Response } from "node-fetch";
 import { BpmnError } from "processhub-sdk/lib/instance";
+import { IServiceActionConfigField } from "processhub-sdk/lib/data/datainterfaces";
 
 async function post(apiUrl: string, requestBody: ICreateFileRequestBody | ISetFileFieldsObject[], eftoken: string, token: string): Promise<Response> {
   const headers: IRequestHeader = {
@@ -87,8 +87,8 @@ export async function readFileBase64Async(path: string): Promise<string> {
   });
 }
 
-export function initRequiredFields(keys: string[], fields: PH.Data.IServiceActionConfigField[]): Map<string, PH.Data.IServiceActionConfigField> {
-  const requiredFields: Map<string, PH.Data.IServiceActionConfigField> = new Map();
+export function initRequiredFields(keys: string[], fields: IServiceActionConfigField[]): Map<string, IServiceActionConfigField> {
+  const requiredFields: Map<string, IServiceActionConfigField> = new Map();
 
   for (const key of keys) {
     const field = fields.find((f) => f.key === key);
@@ -102,7 +102,7 @@ export function initRequiredFields(keys: string[], fields: PH.Data.IServiceActio
   return requiredFields;
 }
 
-export function missingRequiredField(requiredFields: Map<string, PH.Data.IServiceActionConfigField>): IMissingField {
+export function missingRequiredField(requiredFields: Map<string, IServiceActionConfigField>): IMissingField {
   const keys = requiredFields.keys();
   for (const key of keys) {
     if (!requiredFields.get(key) || !requiredFields.get(key)?.value) {

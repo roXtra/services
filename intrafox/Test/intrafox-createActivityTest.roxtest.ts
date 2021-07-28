@@ -1,10 +1,12 @@
 import { assert, expect } from "chai";
-import * as PH from "processhub-sdk";
 import * as fs from "fs";
 import { createActivityServiceLogic } from "../main";
 import { NockServer } from "./nockServer";
 import { BpmnError, isBpmnError } from "processhub-sdk/lib/instance";
 import { ErrorCodes } from "../IntrafoxTypes";
+import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
 
 describe("services", () => {
   describe("intrafox", () => {
@@ -20,8 +22,8 @@ describe("services", () => {
       abbreation: string,
       describtion: string,
       expirationDate: Date,
-    ): PH.ServiceTask.IServiceTaskEnvironment {
-      const env = PH.Test.createEmptyTestServiceEnvironment(fs.readFileSync(bpmnXmlPath, "utf8"));
+    ): IServiceTaskEnvironment {
+      const env = createEmptyTestServiceEnvironment(fs.readFileSync(bpmnXmlPath, "utf8"));
       env.bpmnTaskId = bpmnTaskId;
       env.instanceDetails.extras.fieldContents = {
         Username: { type: "ProcessHubNumber", value: username },
@@ -41,7 +43,7 @@ describe("services", () => {
       abbreation: string,
       describtion: string,
       expirationDate: Date,
-    ): Promise<PH.ServiceTask.IServiceTaskEnvironment> {
+    ): Promise<IServiceTaskEnvironment> {
       const env = createEnvironment(bpmnXmlPath, bpmnTaskId, username, abbreation, describtion, expirationDate);
 
       await createActivityServiceLogic("http://localhost:1080/" + testGuid, env);
@@ -67,11 +69,11 @@ describe("services", () => {
         describtion,
         expirationDate,
       );
-      assert.equal((env.instanceDetails.extras.fieldContents?.["Info"] as PH.Data.IFieldValue).value as string, "Maßnahme wurde erstellt");
-      assert.equal((env.instanceDetails.extras.fieldContents?.["Abb"] as PH.Data.IFieldValue).value as string, abbreation);
-      assert.equal((env.instanceDetails.extras.fieldContents?.["Desc"] as PH.Data.IFieldValue).value as string, describtion);
-      assert.equal((env.instanceDetails.extras.fieldContents?.["Date"] as PH.Data.IFieldValue).value as Date, expirationDate);
-      assert.isUndefined(env.instanceDetails.extras.fieldContents?.["ERROR"] as PH.Data.IFieldValue);
+      assert.equal((env.instanceDetails.extras.fieldContents?.["Info"] as IFieldValue).value as string, "Maßnahme wurde erstellt");
+      assert.equal((env.instanceDetails.extras.fieldContents?.["Abb"] as IFieldValue).value as string, abbreation);
+      assert.equal((env.instanceDetails.extras.fieldContents?.["Desc"] as IFieldValue).value as string, describtion);
+      assert.equal((env.instanceDetails.extras.fieldContents?.["Date"] as IFieldValue).value as Date, expirationDate);
+      assert.isUndefined(env.instanceDetails.extras.fieldContents?.["ERROR"] as IFieldValue);
     });
 
     it("execute intrafox createActivity with wrong username_6a439a53-9c1b-4e31-969b-2be89b2ebb95", async () => {

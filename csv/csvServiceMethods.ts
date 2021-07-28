@@ -1,4 +1,5 @@
-import * as PH from "processhub-sdk";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
+import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces";
 
 export class CSVServiceMethods {
   public static query(objectArray: any[], queryString: string): any[] {
@@ -44,7 +45,7 @@ export class CSVServiceMethods {
     return (table += "</table>");
   }
 
-  public static parseFieldsOfQuery(query: string, instance: PH.Instance.IInstanceDetails): string {
+  public static parseFieldsOfQuery(query: string, instance: IInstanceDetails): string {
     let modifiedQuery = query;
 
     if (instance.extras.fieldContents === undefined) {
@@ -57,7 +58,7 @@ export class CSVServiceMethods {
       const pos2 = pos1 + subString.search("@@");
       const fieldName = modifiedQuery.substring(pos1, pos2);
 
-      modifiedQuery = modifiedQuery.replace("@@" + fieldName + "@@", String((instance.extras.fieldContents[fieldName] as PH.Data.IFieldValue).value));
+      modifiedQuery = modifiedQuery.replace("@@" + fieldName + "@@", String((instance.extras.fieldContents[fieldName] as IFieldValue).value));
     }
     return modifiedQuery;
   }

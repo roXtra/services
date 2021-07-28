@@ -1,9 +1,10 @@
 import { serviceLogicSetroxfilefield, setRoxFileField, setRoxFileFieldConfig } from "../main";
-import * as PH from "processhub-sdk";
 import * as fs from "fs";
 import { expect } from "chai";
 import { ISetFileFieldsObject } from "../roxtrafileapitypes";
 import { IRoXtraFileApi } from "../iroxtrafileapi";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
+import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test";
 
 describe("services", () => {
   describe("roxfile", () => {
@@ -63,9 +64,7 @@ describe("services", () => {
               ];
             },
           };
-          const environment: PH.ServiceTask.IServiceTaskEnvironment = PH.Test.createEmptyTestServiceEnvironment(
-            fs.readFileSync("./Test/Testfiles/setroxfilefield-service.bpmn", "utf8"),
-          );
+          const environment: IServiceTaskEnvironment = createEmptyTestServiceEnvironment(fs.readFileSync("./Test/Testfiles/setroxfilefield-service.bpmn", "utf8"));
           environment.bpmnTaskName = "SetFields";
           environment.bpmnTaskId = "ServiceTask_6FAF8F7973EF56FA";
           environment.instanceDetails.extras.fieldContents = {

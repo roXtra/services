@@ -1,7 +1,9 @@
 import { startinstance, startInstanceConfig } from "./main";
-import * as PH from "processhub-sdk";
 import * as fs from "fs";
 import { expect } from "chai";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
+import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools";
 
 describe("services", () => {
   describe("roxfile", () => {
@@ -13,7 +15,7 @@ describe("services", () => {
           const testAccessToken = "token";
           let executeWasCalled = false;
 
-          const environment: PH.ServiceTask.IServiceTaskEnvironment = PH.Test.createEmptyTestServiceEnvironment(fs.readFileSync("./testfiles/startservice.bpmn", "utf8"));
+          const environment: IServiceTaskEnvironment = createEmptyTestServiceEnvironment(fs.readFileSync("./testfiles/startservice.bpmn", "utf8"));
           environment.bpmnTaskName = "Start";
           environment.bpmnTaskId = "ServiceTask_960AFDE95A570BF3";
           environment.instanceDetails.extras.fieldContents = {
@@ -43,8 +45,8 @@ describe("services", () => {
             // Must match the value defined in startservice.bpmn
             expect(processId).to.equal("E431DD73D9B0EDEB");
             // Make sure field contents were set
-            expect((instance.extras.fieldContents!["Feld_1"] as PH.Data.IFieldValue).value).to.equal(valueFeld1);
-            expect((instance.extras.fieldContents!["Feld_2"] as PH.Data.IFieldValue).value).to.equal(valueFeld2);
+            expect((instance.extras.fieldContents!["Feld_1"] as IFieldValue).value).to.equal(valueFeld1);
+            expect((instance.extras.fieldContents!["Feld_2"] as IFieldValue).value).to.equal(valueFeld2);
             return instance.instanceId;
           };
 

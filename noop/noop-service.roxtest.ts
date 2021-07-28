@@ -1,11 +1,11 @@
-import * as PH from "processhub-sdk";
 import { noop, noopConfig } from "./main";
 import { expect } from "chai";
+import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools";
 
 describe("services", () => {
   describe("noop", () => {
     it("execute service", async () => {
-      const env = PH.Test.createEmptyTestServiceEnvironment("");
+      const env = createEmptyTestServiceEnvironment("");
       const result = await noop(env);
       expect(result).to.equal(true);
     });

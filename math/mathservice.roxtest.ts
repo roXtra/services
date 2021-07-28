@@ -1,5 +1,4 @@
 import { assert, expect } from "chai";
-import * as PH from "processhub-sdk";
 import {
   addition,
   additionConfig,
@@ -15,6 +14,9 @@ import {
   divisionServiceLogic,
 } from "./main";
 import * as fs from "fs";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
+import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test";
 
 const operators = {
   ADDITION: 0,
@@ -32,8 +34,8 @@ const serviceTaskIDs = [
 
 describe("services", () => {
   describe("math", () => {
-    function createEnvironment(bpmnXmlPath: string, bpmnTaskId: string, number1: number, number2: number): PH.ServiceTask.IServiceTaskEnvironment {
-      const env = PH.Test.createEmptyTestServiceEnvironment(fs.readFileSync(bpmnXmlPath, "utf8"));
+    function createEnvironment(bpmnXmlPath: string, bpmnTaskId: string, number1: number, number2: number): IServiceTaskEnvironment {
+      const env = createEmptyTestServiceEnvironment(fs.readFileSync(bpmnXmlPath, "utf8"));
       env.bpmnTaskId = bpmnTaskId;
       // eslint-disable-next-line @typescript-eslint/naming-convention
       env.fieldContents = { Feld_1: { type: "ProcessHubNumber", value: number1 }, Feld_2: { type: "ProcessHubNumber", value: number2 } };
@@ -61,13 +63,13 @@ describe("services", () => {
       }
 
       if (operator === operators.DIVISION && num2 === 0) {
-        assert.equal((env.instanceDetails.extras.fieldContents?.Feld_1 as PH.Data.IFieldValue).value as number, num1);
-        assert.equal((env.instanceDetails.extras.fieldContents?.Feld_2 as PH.Data.IFieldValue).value as number, num2);
-        assert.isUndefined(env.instanceDetails.extras.fieldContents?.Ergebnis as PH.Data.IFieldValue);
+        assert.equal((env.instanceDetails.extras.fieldContents?.Feld_1 as IFieldValue).value as number, num1);
+        assert.equal((env.instanceDetails.extras.fieldContents?.Feld_2 as IFieldValue).value as number, num2);
+        assert.isUndefined(env.instanceDetails.extras.fieldContents?.Ergebnis as IFieldValue);
       } else {
-        assert.equal((env.instanceDetails.extras.fieldContents?.Feld_1 as PH.Data.IFieldValue).value as number, num1);
-        assert.equal((env.instanceDetails.extras.fieldContents?.Feld_2 as PH.Data.IFieldValue).value as number, num2);
-        assert.closeTo((env.instanceDetails.extras.fieldContents?.Ergebnis as PH.Data.IFieldValue).value as number, expResult, 0.0001);
+        assert.equal((env.instanceDetails.extras.fieldContents?.Feld_1 as IFieldValue).value as number, num1);
+        assert.equal((env.instanceDetails.extras.fieldContents?.Feld_2 as IFieldValue).value as number, num2);
+        assert.closeTo((env.instanceDetails.extras.fieldContents?.Ergebnis as IFieldValue).value as number, expResult, 0.0001);
       }
     }
 

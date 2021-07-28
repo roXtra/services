@@ -1,9 +1,11 @@
-import * as PH from "processhub-sdk";
 import * as fs from "fs";
 import { expect } from "chai";
 import { IRoXtraFileApi } from "../iroxtrafileapi";
 import { ICreateFileRequestBody } from "../roxtrafileapitypes";
 import { serviceLogicCreateroxfile, createRoxFile, createRoxFileConfig } from "../main";
+import { isFieldValue, IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
+import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools";
 
 describe("services", () => {
   describe("roxfile", () => {
@@ -33,9 +35,7 @@ describe("services", () => {
               };
             },
           };
-          const environment: PH.ServiceTask.IServiceTaskEnvironment = PH.Test.createEmptyTestServiceEnvironment(
-            fs.readFileSync("./Test/Testfiles/createroxfile-service.bpmn", "utf8"),
-          );
+          const environment: IServiceTaskEnvironment = createEmptyTestServiceEnvironment(fs.readFileSync("./Test/Testfiles/createroxfile-service.bpmn", "utf8"));
           environment.bpmnTaskName = "createroxfile";
           environment.bpmnTaskId = "ServiceTask_712C1B34834A21B9";
 
@@ -61,8 +61,8 @@ describe("services", () => {
           };
 
           const instance = await serviceLogicCreateroxfile(environment, testApi);
-          expect(PH.Data.isFieldValue(instance.extras.fieldContents?.["CreatedRoxFileId"])).to.equal(true);
-          expect((instance.extras.fieldContents?.["CreatedRoxFileId"] as PH.Data.IFieldValue).value).to.equal(newRoxFileId);
+          expect(isFieldValue(instance.extras.fieldContents?.["CreatedRoxFileId"])).to.equal(true);
+          expect((instance.extras.fieldContents?.["CreatedRoxFileId"] as IFieldValue).value).to.equal(newRoxFileId);
         });
       });
 

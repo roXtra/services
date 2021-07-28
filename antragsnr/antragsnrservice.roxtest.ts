@@ -1,28 +1,27 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import * as PH from "processhub-sdk";
 import * as fs from "fs";
 import { assert } from "chai";
 import { serviceLogic } from "./main";
+import { IProcessDetails } from "processhub-sdk/lib/process/processinterfaces";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
+import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools";
+import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces";
 
 describe("services", () => {
   describe("servicetemplate", () => {
     // Create a mock service environment
-    function createEnvironment(bpmnXmlPath: string, bpmnTaskId: string): PH.ServiceTask.IServiceTaskEnvironment {
-      const env = PH.Test.createEmptyTestServiceEnvironment(fs.readFileSync(bpmnXmlPath, "utf8"));
+    function createEnvironment(bpmnXmlPath: string, bpmnTaskId: string): IServiceTaskEnvironment {
+      const env = createEmptyTestServiceEnvironment(fs.readFileSync(bpmnXmlPath, "utf8"));
       env.bpmnTaskId = bpmnTaskId;
       env.instanceDetails.extras.fieldContents = {};
       env.instanceDetails.createdAt = new Date("October 13, 2018 11:13:00");
       return env;
     }
 
-    function performAntragsnrTest(
-      bpmnXmlPath: string,
-      bpmnTaskId: string,
-      instances: PH.Instance.IInstanceDetails[],
-      tragetField: string,
-    ): PH.ServiceTask.IServiceTaskEnvironment {
+    function performAntragsnrTest(bpmnXmlPath: string, bpmnTaskId: string, instances: IInstanceDetails[], tragetField: string): IServiceTaskEnvironment {
       const env = createEnvironment(bpmnXmlPath, bpmnTaskId);
-      const processDetails: PH.Process.IProcessDetails = {
+      const processDetails: IProcessDetails = {
         processId: "",
         workspaceId: "",
         displayName: "",
@@ -38,7 +37,7 @@ describe("services", () => {
     it("execute antragsnr service test_8fd1ba08-f8a1-4caa-b685-27b3ee946038", () => {
       const targetFieldName = "target";
 
-      const instances: PH.Instance.IInstanceDetails[] = [
+      const instances: IInstanceDetails[] = [
         // Current instance
         {
           title: "",
@@ -76,13 +75,13 @@ describe("services", () => {
 
       const env = performAntragsnrTest("./testfiles/antragsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName);
 
-      assert.equal((env.instanceDetails.extras.fieldContents![targetFieldName] as PH.Data.IFieldValue).value as string, "2018/01");
+      assert.equal((env.instanceDetails.extras.fieldContents![targetFieldName] as IFieldValue).value as string, "2018/01");
     });
 
     it("execute antragsnr service test_8fd1ba08-f8a1-4caa-b685-27b3ee946038", () => {
       const targetFieldName = "target";
 
-      const instances: PH.Instance.IInstanceDetails[] = [
+      const instances: IInstanceDetails[] = [
         // Current instance
         {
           title: "",
@@ -120,13 +119,13 @@ describe("services", () => {
 
       const env = performAntragsnrTest("./testfiles/antragsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName);
 
-      assert.equal((env.instanceDetails.extras.fieldContents![targetFieldName] as PH.Data.IFieldValue).value as string, "2018/02");
+      assert.equal((env.instanceDetails.extras.fieldContents![targetFieldName] as IFieldValue).value as string, "2018/02");
     });
 
     it("execute antragsnr service test_8fd1ba08-f8a1-4caa-b685-27b3ee946038", () => {
       const targetFieldName = "target";
 
-      const instances: PH.Instance.IInstanceDetails[] = [
+      const instances: IInstanceDetails[] = [
         // Current instance
         {
           title: "",
@@ -164,7 +163,7 @@ describe("services", () => {
 
       const env = performAntragsnrTest("./testfiles/antragsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName);
 
-      assert.equal((env.instanceDetails.extras.fieldContents![targetFieldName] as PH.Data.IFieldValue).value as string, "2018/03");
+      assert.equal((env.instanceDetails.extras.fieldContents![targetFieldName] as IFieldValue).value as string, "2018/03");
     });
   });
 });

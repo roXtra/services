@@ -21,7 +21,7 @@
 //         describe("tasks", () => {
 //           describe("servicetask", () => {
 
-//             const testMathService: PH.Process.ProcessDetails = {
+//             const testMathService: ProcessDetails = {
 //               description: "This is a test process",
 //               displayName: "math-service",
 //               extras: {},
@@ -30,7 +30,7 @@
 //               processId: PH.Tools.createId(),
 //               processXmlHash: PH.Tools.createId(),
 //               urlName: "math-service",
-//               userRights: PH.Process.ProcessAccessRights.EditProcess,
+//               userRights: ProcessAccessRights.EditProcess,
 //               workspaceId: testWorkspace.workspaceId,
 //             };
 
@@ -39,17 +39,17 @@
 //               await createProcess(getTestApiContext(), testMathService);
 //               const bpmn: string = fs.readFileSync("./src/test/testfiles/math-service.bpmn", "utf8");
 //               await getFileStore().createFile(testWorkspace.workspaceId, testMathService.processId, "process.bpmn", bpmn, "private");
-//               const process: PH.Process.ProcessDetails = await getProcessDetails(getTestApiContext(),
+//               const process: ProcessDetails = await getProcessDetails(getTestApiContext(),
 //                 testMathService.processId,
-//                 PH.Process.ProcessExtras.ExtrasProcessRolesWithMemberNames | PH.Process.ProcessExtras.ExtrasBpmnXml);
-//               const bpmnProcess: PH.Process.BpmnProcess = new PH.Process.BpmnProcess();
+//                 ProcessExtras.ExtrasProcessRolesWithMemberNames | ProcessExtras.ExtrasBpmnXml);
+//               const bpmnProcess: BpmnProcess = new BpmnProcess();
 //               await bpmnProcess.loadXml(process.extras.bpmnXml);
-//               process.extras.processRoles = PH.Process.getProcessRoles(process.extras.processRoles, bpmnProcess, testWorkspace);
+//               process.extras.processRoles = getProcessRoles(process.extras.processRoles, bpmnProcess, testWorkspace);
 //               await updateProcess(getTestApiContext(), process);
 //             });
 
 //             async function performSAPProcessTest(rows: any, targetFieldName1: string, targetFieldName2: string) {
-//               let newValue: PH.Data.IFieldValue = {
+//               let newValue: IFieldValue = {
 //                 value: "",
 //                 type: "ProcessHubTextArea"
 //               };
@@ -71,8 +71,8 @@
 
 //               assert.equal(keys[0], targetFieldName1);
 //               assert.equal(keys[1], targetFieldName2);
-//               assert((instance.extras.fieldContents[targetFieldName2] as PH.Data.IFieldValue).value.toString().endsWith("results.csv"));
-//               assert.equal((instance.extras.fieldContents[targetFieldName1] as PH.Data.IFieldValue).value.toString(), generateTable(rows));
+//               assert((instance.extras.fieldContents[targetFieldName2] as IFieldValue).value.toString().endsWith("results.csv"));
+//               assert.equal((instance.extras.fieldContents[targetFieldName1] as IFieldValue).value.toString(), generateTable(rows));
 //             }
 
 //             function generateTable(rows: any): string {
