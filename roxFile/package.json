@@ -24,7 +24,7 @@
     "@types/json-query": "^2.2.1",
     "json-query": "^2.2.2",
     "node-fetch": "^2.6.1",
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.20.0/release.tgz",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.21.0-1/release.tgz",
     "react": "^17.0.2",
     "semantic-ui-react": "^2.0.3"
   },
