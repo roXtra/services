@@ -3,7 +3,7 @@ import * as fs from "fs";
 import { assert, expect } from "chai";
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
 import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
-import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test";
+import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools";
 
 describe("services", () => {
   describe("servicetemplate", () => {

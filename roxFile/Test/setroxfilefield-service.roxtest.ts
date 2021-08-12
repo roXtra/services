@@ -4,7 +4,7 @@ import { expect } from "chai";
 import { ISetFileFieldsObject } from "../roxtrafileapitypes";
 import { IRoXtraFileApi } from "../iroxtrafileapi";
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
-import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test";
+import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools";
 
 describe("services", () => {
   describe("roxfile", () => {
