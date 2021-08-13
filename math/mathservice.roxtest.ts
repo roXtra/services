@@ -16,7 +16,7 @@ import {
 import * as fs from "fs";
 import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
-import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test";
+import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools";
 
 const operators = {
   ADDITION: 0,

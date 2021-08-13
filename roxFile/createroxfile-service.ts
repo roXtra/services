@@ -3,9 +3,10 @@ import { ICreateFileRequestBody } from "./roxtrafileapitypes";
 import { missingRequiredField, initRequiredFields, RoXtraFileApi, readFileBase64Async } from "./roxtrafileapi";
 import { IRoXtraFileApi } from "./iroxtrafileapi";
 import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance";
-import { decodeURLSafeBase64 } from "processhub-sdk/lib/tools";
 import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
 import { IServiceTaskEnvironment, getFields } from "processhub-sdk/lib/servicetask";
+import { getLastArrayEntry } from "processhub-sdk/lib/tools/array";
+import { decodeURLSafeBase64 } from "processhub-sdk/lib/tools/stringtools";
 
 let APIUrl: string;
 let efAccessToken: string;
@@ -85,10 +86,10 @@ export async function serviceLogic(environment: IServiceTaskEnvironment, roxtraF
 
   let relativePath = roxFile[0].split("modules/files/")[1];
   const pathParts = relativePath.split("/");
-  pathParts[pathParts.length - 1] = decodeURLSafeBase64(pathParts.last());
+  pathParts[pathParts.length - 1] = decodeURLSafeBase64(getLastArrayEntry(pathParts)!);
   relativePath = pathParts.join("/");
 
-  const titleWithEnding = generateTitleWithDataType(title, pathParts.last());
+  const titleWithEnding = generateTitleWithDataType(title, getLastArrayEntry(pathParts)!);
 
   const filePath = decodeURIComponent(environment.fileStore.getPhysicalPath(relativePath));
 
