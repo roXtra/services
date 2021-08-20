@@ -1,7 +1,9 @@
 import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
-import { BpmnError, IGenerateReportRequestType, IInstanceDetails } from "processhub-sdk/lib/instance";
+import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces";
+import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror";
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
+import { IGenerateReportRequestType } from "processhub-sdk/lib/instance/legacyapi";
 
 enum ErrorCodes {
   ATTACHMENT_ERROR = "ATTACHMENT_ERROR",

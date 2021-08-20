@@ -2,7 +2,8 @@ import { missingRequiredField, initRequiredFields, RoXtraFileApi } from "./roxtr
 import { ISetFileFieldsObject, ISelection, SelectTypes } from "./roxtrafileapitypes";
 import JSONQuery from "json-query";
 import { IRoXtraFileApi } from "./iroxtrafileapi";
-import { BpmnError, ErrorCode, IInstanceDetails } from "processhub-sdk/lib/instance";
+import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces";
+import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror";
 import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
 import { IServiceTaskEnvironment, getFields } from "processhub-sdk/lib/servicetask";
 
