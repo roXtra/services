@@ -1,5 +1,5 @@
 import { IServiceActionConfigField } from "processhub-sdk/lib/data/datainterfaces";
-import { BpmnError } from "processhub-sdk/lib/instance";
+import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror";
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
 import { getConnectionPool } from "./database";

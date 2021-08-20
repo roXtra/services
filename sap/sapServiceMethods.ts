@@ -1,6 +1,7 @@
 import * as hanaClient from "@sap/hana-client";
 import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
-import { BpmnError, ErrorCode, IInstanceDetails } from "processhub-sdk/lib/instance";
+import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces";
+import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror";
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
 import { parseAndInsertStringWithFieldContent } from "processhub-sdk/lib/data/datatools";

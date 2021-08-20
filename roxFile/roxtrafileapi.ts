@@ -2,7 +2,7 @@ import { ErrorCodes, ICreateFileRequestBody, IGetRequest, IMissingField, IPostRe
 import * as fs from "fs";
 import { IRoXtraFileApi } from "./iroxtrafileapi";
 import fetch, { Response } from "node-fetch";
-import { BpmnError } from "processhub-sdk/lib/instance";
+import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror";
 import { IServiceActionConfigField } from "processhub-sdk/lib/data/datainterfaces";
 
 async function post(apiUrl: string, requestBody: ICreateFileRequestBody | ISetFileFieldsObject[], eftoken: string, token: string): Promise<Response> {

@@ -1,9 +1,9 @@
-import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance";
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
 import { tl } from "processhub-sdk/lib/tl";
 import * as XLSX from "xlsx";
 import { CSVServiceMethods } from "./csvServiceMethods";
+import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror";
 
 enum ErrorCodes {
   FILE_ERROR = "FILE_ERROR",

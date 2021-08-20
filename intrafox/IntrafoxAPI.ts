@@ -2,7 +2,8 @@ import * as IntrafoxTypes from "./IntrafoxTypes";
 import DateFormat from "dateformat";
 import * as PH from "processhub-sdk";
 import fetch from "node-fetch";
-import { BpmnError } from "processhub-sdk/lib/instance";
+import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror";
+import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces";
 
 async function post(url: string, requestBody: IntrafoxTypes.IIntraFoxBody, token: string): Promise<any> {
   const headers = { "X-INTRAFOX-ROXTRA-TOKEN": token };
@@ -117,7 +118,7 @@ export async function setGlobalActivityValues(url: string, username: string, tok
  * @param instance current process instance
  * @param errorCode error code of the Intrafox API response
  */
-export function errorHandling(instance: PH.Instance.IInstanceDetails, errorCode: string): void {
+export function errorHandling(instance: IInstanceDetails, errorCode: string): void {
   if (instance.extras.fieldContents === undefined) {
     throw new Error("fieldContents are undefined, cannot proceed!");
   }

@@ -1,5 +1,5 @@
 import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
-import { BpmnError } from "processhub-sdk/lib/instance";
+import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror";
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
 import { ProcessExtras } from "processhub-sdk/lib/process/processinterfaces";
 import { parseAndInsertStringWithFieldContent } from "processhub-sdk/lib/data/datatools";

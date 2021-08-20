@@ -2,7 +2,7 @@ import { assert, expect } from "chai";
 import * as fs from "fs";
 import { createActivityServiceLogic } from "../main";
 import { NockServer } from "./nockServer";
-import { BpmnError, isBpmnError } from "processhub-sdk/lib/instance";
+import { BpmnError, isBpmnError } from "processhub-sdk/lib/instance/bpmnerror";
 import { ErrorCodes } from "../IntrafoxTypes";
 import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools";
 import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";

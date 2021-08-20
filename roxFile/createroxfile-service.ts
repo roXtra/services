@@ -1,17 +1,17 @@
-import * as PH from "processhub-sdk";
 import { ICreateFileRequestBody } from "./roxtrafileapitypes";
 import { missingRequiredField, initRequiredFields, RoXtraFileApi, readFileBase64Async } from "./roxtrafileapi";
 import { IRoXtraFileApi } from "./iroxtrafileapi";
-import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance";
+import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror";
 import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
 import { IServiceTaskEnvironment, getFields } from "processhub-sdk/lib/servicetask";
 import { getLastArrayEntry } from "processhub-sdk/lib/tools/array";
 import { decodeURLSafeBase64 } from "processhub-sdk/lib/tools/stringtools";
+import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces";
 
 let APIUrl: string;
 let efAccessToken: string;
 
-function createFileIDField(fileIDFieldName: string, response: any, instance: PH.Instance.IInstanceDetails): void {
+function createFileIDField(fileIDFieldName: string, response: any, instance: IInstanceDetails): void {
   if (fileIDFieldName) {
     if (instance.extras.fieldContents === undefined) {
       throw new Error("instance.extras.fieldContents are undefined, cannot proceed with service!");
@@ -36,7 +36,7 @@ function generateTitleWithDataType(title: string, fileName: string): string {
 }
 
 // Extract the serviceLogic that testing is possible
-export async function serviceLogic(environment: IServiceTaskEnvironment, roxtraFileAPI: IRoXtraFileApi): Promise<PH.Instance.IInstanceDetails> {
+export async function serviceLogic(environment: IServiceTaskEnvironment, roxtraFileAPI: IRoXtraFileApi): Promise<IInstanceDetails> {
   const fields = await getFields(environment);
   const instance = environment.instanceDetails;
 
