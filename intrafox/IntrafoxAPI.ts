@@ -18,7 +18,8 @@ async function post(url: string, requestBody: IntrafoxTypes.IIntraFoxBody, token
     const response = await fetch(url, req);
     return await response.json();
   } catch (ex) {
-    throw new Error(ex.message);
+    const err = ex as { message: string };
+    throw new Error(err.message);
   }
 }
 
