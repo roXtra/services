@@ -3,7 +3,7 @@ import { Bpmn } from "modeler/bpmn/bpmn";
 import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
 import { ITaskExtensions } from "processhub-sdk/lib/process/processinterfaces";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
 
 export async function serviceLogic(environment: IServiceTaskEnvironment): Promise<void> {
   const processObject: BpmnProcess = new BpmnProcess();

@@ -22,7 +22,7 @@
   "license": "ISC",
   "dependencies": {
     "chai": "^4.3.4",
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.21.0/release.tgz",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.22.0/release.tgz",
     "react": "^17.0.2",
     "semantic-ui-react": "^2.0.3"
   },

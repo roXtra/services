@@ -3,7 +3,7 @@ import { missingRequiredField, initRequiredFields, RoXtraFileApi, readFileBase64
 import { IRoXtraFileApi } from "./iroxtrafileapi";
 import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror";
 import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
-import { IServiceTaskEnvironment, getFields } from "processhub-sdk/lib/servicetask";
+import { IServiceTaskEnvironment, getFields } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
 import { getLastArrayEntry } from "processhub-sdk/lib/tools/array";
 import { decodeURLSafeBase64 } from "processhub-sdk/lib/tools/stringtools";
 import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces";

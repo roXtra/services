@@ -2,7 +2,7 @@ import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
 import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces";
 import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror";
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
 import { IGenerateReportRequestType } from "processhub-sdk/lib/instance/legacyapi";
 
 enum ErrorCodes {

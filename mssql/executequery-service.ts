@@ -2,7 +2,7 @@ import { parseAndInsertStringWithFieldContent } from "processhub-sdk/lib/data/da
 import { FieldType, IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
 import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror";
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
 import { getConnectionPool } from "./database";
 
 export enum ErrorCodes {

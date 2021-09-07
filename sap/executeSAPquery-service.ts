@@ -1,7 +1,7 @@
 import { parseAndInsertStringWithFieldContent } from "processhub-sdk/lib/data/datatools";
 import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
 import Methods from "./sapServiceMethods";
 
 export async function executeSAPQuery(environment: IServiceTaskEnvironment): Promise<boolean> {

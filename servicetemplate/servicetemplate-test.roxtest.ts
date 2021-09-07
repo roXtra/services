@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { service1, service1Config, service2, service2Config } from "./main";
 import * as fs from "fs";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
 import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools";
 
 describe("services", () => {

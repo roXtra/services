@@ -1,6 +1,6 @@
 import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
 
 // Extract the serviceLogic that testing is possible
 export async function serviceLogic(environment: IServiceTaskEnvironment): Promise<void> {

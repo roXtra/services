@@ -4,7 +4,7 @@ import { assert } from "chai";
 import { serviceLogic } from "./main";
 import { IProcessDetails } from "processhub-sdk/lib/process/processinterfaces";
 import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
 import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools";
 import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces";
 
