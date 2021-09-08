@@ -59,7 +59,7 @@ export class RoXtraFileApi implements IRoXtraFileApi {
   public async getSelectionsCall(apiUrl: string, eftoken: string, token: string): Promise<ISelection[]> {
     const response = await get(apiUrl + "GetSelections", eftoken, token);
     if (response.status === 200) {
-      return await response.json();
+      return (await response.json()) as ISelection[];
     }
 
     throw new BpmnError(ErrorCodes.API_ERROR, `Schnittstellenfehler: ${response.status}: ${response.statusText}`);
