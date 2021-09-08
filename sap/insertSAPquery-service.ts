@@ -1,5 +1,5 @@
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
 import Methods from "./sapServiceMethods";
 
 export async function insertSAPQuery(environment: IServiceTaskEnvironment): Promise<boolean> {

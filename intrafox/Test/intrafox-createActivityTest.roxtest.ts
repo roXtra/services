@@ -6,7 +6,7 @@ import { BpmnError, isBpmnError } from "processhub-sdk/lib/instance/bpmnerror";
 import { ErrorCodes } from "../IntrafoxTypes";
 import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools";
 import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
 
 describe("services", () => {
   describe("intrafox", () => {

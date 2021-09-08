@@ -1,7 +1,7 @@
 import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
 import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces";
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
 import * as IntrafoxAPI from "./IntrafoxAPI";
 import * as IntrafoxTypes from "./IntrafoxTypes";
 

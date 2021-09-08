@@ -1,7 +1,7 @@
 import { IFieldContentMap } from "processhub-sdk/lib/data/ifieldcontentmap";
 import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces";
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
 import { createId } from "processhub-sdk/lib/tools/guid";
 
 async function getServiceTaskConfig(environment: IServiceTaskEnvironment): Promise<{ workspaceAndProcessId: string; fields: string[]; executingUserId: string }> {

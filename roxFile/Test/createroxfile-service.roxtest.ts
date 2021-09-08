@@ -4,7 +4,7 @@ import { IRoXtraFileApi } from "../iroxtrafileapi";
 import { ICreateFileRequestBody } from "../roxtrafileapitypes";
 import { serviceLogicCreateroxfile, createRoxFile, createRoxFileConfig } from "../main";
 import { isFieldValue, IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
 import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools";
 
 describe("services", () => {
