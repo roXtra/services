@@ -22,5 +22,10 @@ module.exports = {
       matchPackageNames: ["npm"],
       allowedVersions: "^6.0.0",
     },
+    {
+      // Version 3 is ESM only, see https://rossmanith.atlassian.net/browse/EF-1945
+      matchPackageNames: ["node-fetch", "@​types/node-fetch"],
+      allowedVersions: "^2.0.0",
+    },
   ],
 };
