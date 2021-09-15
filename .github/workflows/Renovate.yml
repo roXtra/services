@@ -4,6 +4,7 @@ on:
     # The "*" character has special semantics in YAML, so this string has to be quoted
     # Execute Wednesdays every 30 minutes
     - cron: '0/30 5-19 * * 3'
+  workflow_dispatch:
 jobs:
   renovate:
     runs-on: ubuntu-latest
