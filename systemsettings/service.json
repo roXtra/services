@@ -1,0 +1,22 @@
+{
+    "id": "systemsettings-service",
+    "name": "Systemeinstellungen",
+    "minRoXtraVersion": "9.23.0",
+    "maxRoXtraVersion": "100.0.0",
+    "actions": [
+        {
+            "id": "loopcount",
+            "label": "BPMN Enginge Loop Counter",
+            "configMethod": "loopCountConfig",
+            "settings": "main.js",
+            "serviceFile": "main.js",
+            "serviceMethod": "loopCount",
+            "fields": [
+                {
+                    "name": "maxIterations",
+                    "type": "text"
+                }
+            ]
+        }
+    ]
+}
