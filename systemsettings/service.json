@@ -17,6 +17,20 @@
                     "type": "text"
                 }
             ]
+        },
+        {
+            "id": "transactiontimeout",
+            "label": "Transaktions-Timeout",
+            "configMethod": "transactionTimeoutConfig",
+            "settings": "main.js",
+            "serviceFile": "main.js",
+            "serviceMethod": "transactionTimeout",
+            "fields": [
+                {
+                    "name": "transactionTimeout",
+                    "type": "text"
+                }
+            ]
         }
     ]
 }
