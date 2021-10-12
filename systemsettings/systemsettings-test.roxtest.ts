@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { loopCount, loopCountConfig } from "./main";
+import { loopCount, loopCountConfig, transactionTimeout, transactionTimeoutConfig } from "./main";
 
 describe("services", () => {
   describe("systemsettings", () => {
@@ -7,6 +7,9 @@ describe("services", () => {
       it("should check for bundled methods", () => {
         expect(typeof loopCount).to.equal("function");
         expect(typeof loopCountConfig).to.equal("function");
+
+        expect(typeof transactionTimeout).to.equal("function");
+        expect(typeof transactionTimeoutConfig).to.equal("function");
       });
     });
   });
