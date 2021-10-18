@@ -35,7 +35,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
     throw new BpmnError(ErrorCodes.FILE_ERROR, tl(`Es konnte keine CSV oder XLSX Datei unter dem Pfad ${filePath} gefunden werden.`));
   }
 
-  const json = XLSX.utils.sheet_to_json(xlsxfile.Sheets[sheetName]);
+  const json = XLSX.utils.sheet_to_json<Record<string, unknown>>(xlsxfile.Sheets[sheetName]);
   if (json.length === 0) throw new BpmnError(ErrorCodes.FILE_ERROR, tl(`Das Arbeitsblatt mit dem Namen ${sheetName} enthält keine Daten.`));
 
   query = CSVServiceMethods.parseFieldsOfQuery(query, instance);

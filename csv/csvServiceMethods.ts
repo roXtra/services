@@ -2,8 +2,8 @@ import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
 import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces";
 
 export class CSVServiceMethods {
-  public static query(objectArray: any[], queryString: string): any[] {
-    const result: any[] = [];
+  public static query(objectArray: Record<string, unknown>[], queryString: string): Record<string, unknown>[] {
+    const result: Record<string, unknown>[] = [];
     const queryArray = queryString.split("&");
     objectArray.forEach((object) => {
       let isCandidate = true;
@@ -22,7 +22,7 @@ export class CSVServiceMethods {
     return result;
   }
 
-  public static generateTable(rows: Array<any>): string {
+  public static generateTable(rows: Array<Record<string, unknown>>): string {
     let keys: string[];
     try {
       keys = Object.keys(rows[0]);
@@ -31,11 +31,11 @@ export class CSVServiceMethods {
     }
 
     let table = "<table><tr>";
-    keys.forEach((key: any) => {
+    keys.forEach((key) => {
       table += "<th>" + String(key) + "</th>";
     });
     table += "</tr>";
-    rows.forEach((row: any) => {
+    rows.forEach((row) => {
       table += "<tr>";
       keys.forEach((key) => {
         table += "<th>" + String(row[key]) + "</th>";
