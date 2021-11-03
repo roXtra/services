@@ -22,7 +22,7 @@
   "license": "ISC",
   "dependencies": {
     "dateformat": "^5.0.2",
-    "node-fetch": "^2.6.5",
+    "node-fetch": "^2.6.6",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.26.0/release.tgz",
     "react": "^17.0.2",
     "semantic-ui-react": "^2.0.4"
