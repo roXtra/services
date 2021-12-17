@@ -59,6 +59,8 @@ export async function startinstance(environment: IServiceTaskEnvironment): Promi
       instanceState: undefined,
       fieldContents: newFieldContents,
     },
+    takenStartEvent: "",
+    reachedEndEvents: [],
   };
 
   await environment.instances.executeInstance(processId, newInstance, undefined, accessToken);
