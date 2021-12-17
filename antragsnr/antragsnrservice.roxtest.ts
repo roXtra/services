@@ -48,6 +48,8 @@ describe("services", () => {
             instanceState: undefined,
           },
           createdAt: new Date("October 13, 2018 11:13:00"),
+          takenStartEvent: "",
+          reachedEndEvents: [],
         },
 
         // Older instances
@@ -60,6 +62,8 @@ describe("services", () => {
             instanceState: undefined,
           },
           createdAt: new Date("October 13, 2014 11:13:00"),
+          takenStartEvent: "",
+          reachedEndEvents: [],
         },
         {
           title: "",
@@ -70,6 +74,8 @@ describe("services", () => {
             instanceState: undefined,
           },
           createdAt: new Date("October 13, 2015 11:13:00"),
+          takenStartEvent: "",
+          reachedEndEvents: [],
         },
       ];
 
@@ -92,6 +98,8 @@ describe("services", () => {
             instanceState: undefined,
           },
           createdAt: new Date("October 13, 2018 11:13:00"),
+          takenStartEvent: "",
+          reachedEndEvents: [],
         },
 
         // Older instances
@@ -104,6 +112,8 @@ describe("services", () => {
             instanceState: undefined,
           },
           createdAt: new Date("October 12, 2018 11:13:00"),
+          takenStartEvent: "",
+          reachedEndEvents: [],
         },
         {
           title: "",
@@ -114,6 +124,8 @@ describe("services", () => {
             instanceState: undefined,
           },
           createdAt: new Date("October 13, 2015 11:13:00"),
+          takenStartEvent: "",
+          reachedEndEvents: [],
         },
       ];
 
@@ -136,6 +148,8 @@ describe("services", () => {
             instanceState: undefined,
           },
           createdAt: new Date("October 13, 2018 11:13:00"),
+          takenStartEvent: "",
+          reachedEndEvents: [],
         },
 
         // Older instances
@@ -148,6 +162,8 @@ describe("services", () => {
             instanceState: undefined,
           },
           createdAt: new Date("October 12, 2018 11:13:00"),
+          takenStartEvent: "",
+          reachedEndEvents: [],
         },
         {
           title: "",
@@ -158,6 +174,8 @@ describe("services", () => {
             instanceState: undefined,
           },
           createdAt: new Date("October 11, 2018 11:13:00"),
+          takenStartEvent: "",
+          reachedEndEvents: [],
         },
       ];
 
