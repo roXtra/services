@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/roXtra/services#readme",
   "dependencies": {
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.30.0-5/release.tgz",
     "react": "^17.0.2"
   },
   "devDependencies": {
