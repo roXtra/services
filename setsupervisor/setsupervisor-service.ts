@@ -2,6 +2,10 @@ import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces
 import { getFields, IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
 import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror";
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
+import { ProcessExtras } from "processhub-sdk/lib/process/processinterfaces";
+import { isPotentialRoleOwner } from "processhub-sdk/lib/process/processrights";
+import { UserExtras } from "processhub-sdk/lib/user/userinterfaces";
+import { WorkspaceExtras } from "processhub-sdk/lib/workspace/workspaceinterfaces";
 
 const ErrorCodes = {
   API_ERROR: "API_ERROR",
@@ -14,15 +18,14 @@ const ErrorCodes = {
 export async function serviceLogic(environment: IServiceTaskEnvironment): Promise<IInstanceDetails> {
   const processObject: BpmnProcess = new BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
+  const instance = environment.instanceDetails;
+  const processDetails = await environment.processes.getProcessDetails(instance.processId, ProcessExtras.ExtrasProcessRolesWithMemberNames);
 
   const fields = await getFields(environment);
-  const instance = environment.instanceDetails;
 
-  // Get field names of the corresponding field ID's
   const selectedFieldUser = fields.find((f) => f.key === "userRoleId")?.value;
   const selectedFieldSupervisor = fields.find((f) => f.key === "supervisorRoleId")?.value;
 
-  // Check the field inputs
   if (selectedFieldUser === undefined) {
     throw new BpmnError(ErrorCodes.INPUT_ERROR, "Die Rolle des Mitarbeiters wurde nicht definiert!");
   }
@@ -50,15 +53,42 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
   const userId = instance.extras.roleOwners[roleId][0].memberId;
   const supervisorObject = await environment.roxApi.getSupervisor(userId);
 
-  // Add supervisor and selected role to roleOwners
-  if (supervisorObject.type === "user" && typeof supervisorObject.value === "number") {
-    const supervisorId = supervisorObject.value.toString();
-    instance.extras.roleOwners[roleIdSupervisor] = [{ memberId: supervisorId }];
-  } else if (supervisorObject.type === "error") {
-    throw new BpmnError(ErrorCodes.API_ERROR, "Der Vorgesetzte wurde nicht gefunden!");
-  } else if (supervisorObject.type === "group") {
-    throw new BpmnError(ErrorCodes.SUPERVISOR_ERROR, "Gruppen werden als Vorgesetzte nicht unterstützt!");
+  switch (supervisorObject.type) {
+    case "group": {
+      throw new BpmnError(ErrorCodes.SUPERVISOR_ERROR, "Gruppen als Vorgesetzte werden nicht unterstützt!");
+    }
+    case "error": {
+      throw new BpmnError(ErrorCodes.INSTANCE_ERROR, "Die Instanz konnte nicht aktualisiert werden!");
+    }
   }
+
+  const supervisor = await environment.users.getUserDetails(supervisorObject.value.toString(), UserExtras.ExtrasWorkspaces);
+  const processWorkspace = await environment.workspaces.getWorkspaceDetails(processDetails.workspaceId, WorkspaceExtras.ExtrasMembers);
+
+  // Check if supervisor is potentialRoleOwner & member of current workspace
+  if (supervisor && processWorkspace) {
+    const supervisorWorkspaces = supervisor.extras.workspaces;
+
+    if (!isPotentialRoleOwner(supervisor, roleIdSupervisor, processWorkspace, processDetails)) {
+      throw new BpmnError(ErrorCodes.SUPERVISOR_ERROR, "Der Vorgesetzte ist kein potentieller Rolleninhaber dieses Prozesses!");
+    }
+
+    if (supervisorWorkspaces) {
+      const matchingWorkspaceId = supervisorWorkspaces.find((w) => w.workspaceId === processWorkspace.workspaceId)?.workspaceId;
+      if (!matchingWorkspaceId) {
+        throw new BpmnError(ErrorCodes.SUPERVISOR_ERROR, "Der Vorgesetzte ist nicht Mitglied des aktuellen Bereichs!");
+      }
+    } else {
+      throw new BpmnError(ErrorCodes.SUPERVISOR_ERROR, "Der Vorgesetzte ist keinen Bereichen zugeordnet!");
+    }
+  } else {
+    throw new BpmnError(ErrorCodes.API_ERROR, "Der Vorgesetzte / der Prozessbereich konnte nicht gefunden werden!");
+  }
+
+  // Add supervisor and selected role to roleOwners
+  const supervisorId = supervisorObject.value.toString();
+  instance.extras.roleOwners[roleIdSupervisor] = [{ memberId: supervisorId }];
+
   return instance;
 }
 
