@@ -23,7 +23,7 @@
   "license": "ISC",
   "dependencies": {
     "mysql": "^2.18.1",
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.30.0-2/release.tgz",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.30.0-7/release.tgz",
     "react": "^17.0.2",
     "semantic-ui-react": "^2.0.4"
   },

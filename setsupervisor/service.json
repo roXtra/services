@@ -1,0 +1,26 @@
+{
+  "id": "setsupervisor-service",
+  "name": "Rollen Service",
+  "minRoXtraVersion": "8.009.0",
+  "maxRoXtraVersion": "100.0.0",
+  "actions": [
+    {
+      "id": "setsupervisor",
+      "label": "Vorgesetzten zuordnen",
+      "configMethod": "setsupervisorConfig",
+      "settings": "main.js",
+      "serviceFile": "main.js",
+      "serviceMethod": "setsupervisor",
+      "fields": [
+        {
+          "name": "userRoleId",
+          "type": "text"
+        },
+        {
+          "name": "supervisorRoleId",
+          "type": "text"
+        }
+      ]
+    }
+  ]
+}
