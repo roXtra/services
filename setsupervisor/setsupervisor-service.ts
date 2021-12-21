@@ -35,24 +35,28 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
   if (!roleId) {
     throw new BpmnError(ErrorCodes.API_ERROR, `Es konnte keine Rolle "${selectedFieldUser}" gefunden werden!`);
   }
+
+  // Get the laneId for selectedFieldSupervisor
+  const roleIdSupervisor = processObject.getLanes(false).find((l) => l.name === selectedFieldSupervisor)?.id;
+  if (!roleIdSupervisor) {
+    throw new BpmnError(ErrorCodes.API_ERROR, `Es konnte keine Rolle "${selectedFieldSupervisor}" gefunden werden!`);
+  }
+
   // Check if the selectedFieldUser role is assigned
   if (!(instance.extras.roleOwners && instance.extras.roleOwners[roleId] && instance.extras.roleOwners[roleId].length > 0)) {
     throw new BpmnError(ErrorCodes.API_ERROR, `Es ist kein Benutzer der Rolle "${selectedFieldUser}" zugewiesen werden!`);
   }
 
   const userId = instance.extras.roleOwners[roleId][0].memberId;
-  const supervisorId = await environment.roxApi.getSupervisor(userId);
+  const supervisorObject = await environment.roxApi.getSupervisor(userId);
 
   // Add supervisor and selected role to roleOwners
-  if (typeof parseInt(supervisorId) === "number") {
-    if (instance.extras.roleOwners[selectedFieldSupervisor] && instance.extras.roleOwners[selectedFieldSupervisor].length > 0) {
-      instance.extras.roleOwners[selectedFieldSupervisor].push({ memberId: supervisorId });
-    } else {
-      instance.extras.roleOwners[selectedFieldSupervisor] = [{ memberId: supervisorId }];
-    }
-  } else if (supervisorId === "") {
+  if (supervisorObject.type === "user" && typeof supervisorObject.value === "number") {
+    const supervisorId = supervisorObject.value.toString();
+    instance.extras.roleOwners[roleIdSupervisor] = [{ memberId: supervisorId }];
+  } else if (supervisorObject.type === "error") {
     throw new BpmnError(ErrorCodes.API_ERROR, "Der Vorgesetzte wurde nicht gefunden!");
-  } else {
+  } else if (supervisorObject.type === "group") {
     throw new BpmnError(ErrorCodes.SUPERVISOR_ERROR, "Gruppen werden als Vorgesetzte nicht unterstützt!");
   }
   return instance;

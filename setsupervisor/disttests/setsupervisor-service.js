@@ -31,27 +31,26 @@ async function serviceLogic(environment) {
     if (!roleId) {
         throw new bpmnerror_1.BpmnError(ErrorCodes.API_ERROR, `Es konnte keine Rolle "${selectedFieldUser}" gefunden werden!`);
     }
+    // Get the laneId for selectedFieldSupervisor
+    const roleIdSupervisor = processObject.getLanes(false).find((l) => l.name === selectedFieldSupervisor)?.id;
+    if (!roleIdSupervisor) {
+        throw new bpmnerror_1.BpmnError(ErrorCodes.API_ERROR, `Es konnte keine Rolle "${selectedFieldSupervisor}" gefunden werden!`);
+    }
     // Check if the selectedFieldUser role is assigned
     if (!(instance.extras.roleOwners && instance.extras.roleOwners[roleId] && instance.extras.roleOwners[roleId].length > 0)) {
         throw new bpmnerror_1.BpmnError(ErrorCodes.API_ERROR, `Es ist kein Benutzer der Rolle "${selectedFieldUser}" zugewiesen werden!`);
     }
     const userId = instance.extras.roleOwners[roleId][0].memberId;
-    const supervisorId = await environment.roxApi.getSupervisor(userId);
+    const supervisorObject = await environment.roxApi.getSupervisor(userId);
     // Add supervisor and selected role to roleOwners
-    if (typeof parseInt(supervisorId) === "number") {
-        if (instance.extras.roleOwners[selectedFieldSupervisor] && instance.extras.roleOwners[selectedFieldSupervisor].length > 0) {
-            instance.extras.roleOwners[selectedFieldSupervisor].push({ memberId: supervisorId });
-            console.log(instance.extras.roleOwners);
-        }
-        else {
-            instance.extras.roleOwners[selectedFieldSupervisor] = [{ memberId: supervisorId }];
-            console.log(instance.extras.roleOwners);
-        }
+    if (supervisorObject.type === "user" && typeof supervisorObject.value === "number") {
+        const supervisorId = supervisorObject.value.toString();
+        instance.extras.roleOwners[roleIdSupervisor] = [{ memberId: supervisorId }];
     }
-    else if (supervisorId === "") {
+    else if (supervisorObject.type === "error") {
         throw new bpmnerror_1.BpmnError(ErrorCodes.API_ERROR, "Der Vorgesetzte wurde nicht gefunden!");
     }
-    else {
+    else if (supervisorObject.type === "group") {
         throw new bpmnerror_1.BpmnError(ErrorCodes.SUPERVISOR_ERROR, "Gruppen werden als Vorgesetzte nicht unterstützt!");
     }
     return instance;
@@ -65,6 +64,7 @@ async function setsupervisor(environment) {
     catch (error) {
         throw new bpmnerror_1.BpmnError(ErrorCodes.INSTANCE_ERROR, "Die Instanz konnte nicht aktualisiert werden!");
     }
+    console.log(environment.instanceDetails);
     return true;
 }
 exports.setsupervisor = setsupervisor;
