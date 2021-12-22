@@ -21,7 +21,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/json-query": "^2.2.2",
+    "@types/json-query": "^2.2.3",
     "json-query": "^2.2.2",
     "node-fetch": "^2.6.6",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.30.0-10/release.tgz",
