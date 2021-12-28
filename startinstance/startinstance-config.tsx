@@ -1,7 +1,8 @@
 import * as Semantic from "semantic-ui-react";
-import * as PH from "processhub-sdk";
+import { tl } from "processhub-sdk";
+import { Language } from "processhub-sdk/lib/tl";
 
-export function startInstanceConfig(): JSX.Element {
+export function startInstanceConfig(userLanguage: Language): JSX.Element {
   return (
     <Semantic.Modal.Content>
       <div id="service-form" className="ui form center">
@@ -9,7 +10,7 @@ export function startInstanceConfig(): JSX.Element {
           <Semantic.Table.Body>
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Zu startender Prozess"} />
+                <span>{tl("Zu startender Prozess", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <select id="processId" />
@@ -18,7 +19,7 @@ export function startInstanceConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Felder"} />
+                <span>{tl("Felder", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <select multiple id="fields" />
@@ -27,7 +28,7 @@ export function startInstanceConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"ID des ausführenden Users"} />
+                <span>{tl("ID des ausführenden Users", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <input id="executingUserId" />

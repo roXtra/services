@@ -1,7 +1,8 @@
+import { tl } from "processhub-sdk";
 import * as Semantic from "semantic-ui-react";
-import * as PH from "processhub-sdk";
+import { Language } from "processhub-sdk/lib/tl";
 
-export function service2Config(): JSX.Element {
+export function service2Config(userLanguage: Language): JSX.Element {
   return (
     <Semantic.Modal.Content>
       <div id="service-form" className="ui form center">
@@ -9,7 +10,7 @@ export function service2Config(): JSX.Element {
           <Semantic.Table.Body>
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Eingabefeld"} />
+                <span>{tl("Eingabefeld", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <input id="inputField" />
@@ -18,7 +19,7 @@ export function service2Config(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Auswahlfeld"} />
+                <span>{tl("Auswahlfeld", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <select id="selectField" />
@@ -29,13 +30,13 @@ export function service2Config(): JSX.Element {
 
         <Semantic.Table.Row>
           <Semantic.Table.Cell colSpan="2">
-            <h3>Erklärung Eingabefeld</h3>
+            <h3>{tl("Erklärung Eingabefeld", userLanguage)}</h3>
             <div>
-              <p>Ein Eingabefeld dient der textuellen Eingabe.</p>
+              <p>{tl("Ein Eingabefeld dient der textuellen Eingabe.", userLanguage)}</p>
             </div>
-            <h3>Erklärung Auswahlfeld</h3>
+            <h3>{tl("Erklärung Auswahlfeld", userLanguage)}</h3>
             <div>
-              <p>Ein Auswahlfeld dient der Auswahl verschiedener exestierender Felder.</p>
+              <p>{tl("Ein Auswahlfeld dient der Auswahl verschiedener exestierender Felder.", userLanguage)}</p>
             </div>
           </Semantic.Table.Cell>
         </Semantic.Table.Row>

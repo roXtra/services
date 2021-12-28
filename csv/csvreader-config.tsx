@@ -1,7 +1,8 @@
 import * as Semantic from "semantic-ui-react";
-import * as PH from "processhub-sdk";
+import { tl } from "processhub-sdk";
+import { Language } from "processhub-sdk/lib/tl";
 
-export function csvreaderConfig(): JSX.Element {
+export function csvreaderConfig(userLanguage: Language): JSX.Element {
   return (
     <Semantic.Modal.Content>
       <div id="service-form" className="ui form center">
@@ -9,7 +10,7 @@ export function csvreaderConfig(): JSX.Element {
           <Semantic.Table.Body>
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Dateipfad"} />
+                <span>{tl("Dateipfad", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <input id="filePath" />
@@ -18,7 +19,7 @@ export function csvreaderConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Arbeitsblattname"} />
+                <span>{tl("Arbeitsblattname", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <input id="sheetName" />
@@ -27,7 +28,7 @@ export function csvreaderConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Abfrage"} />
+                <span>{tl("Abfrage", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <input id="query" />
@@ -36,30 +37,37 @@ export function csvreaderConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell colSpan="2">
-                <h3>Erklärung Eingabefeld Dateipfad</h3>
+                <h3>{tl("Erklärung Eingabefeld Dateipfad", userLanguage)}</h3>
                 <div>
-                  <p>Im Eingabefeld Dateipfad wird der Pfad der CSV oder XLSX Datei angegeben. Diese Datei muss auf dem roXtra Server liegen.</p>
+                  <p>{tl("Im Eingabefeld Dateipfad wird der Pfad der CSV oder XLSX Datei angegeben. Diese Datei muss auf dem roXtra Server liegen.", userLanguage)}</p>
                 </div>
 
-                <h3>Erklärung Eingabefeld Arbeitsblattname</h3>
+                <h3>{tl("Erklärung Eingabefeld Arbeitsblattname", userLanguage)}</h3>
                 <div>
-                  <p>Im Eingabefeld Arbeitsblattname wird der Name des zu importierenden Arbeitsblatts angegeben.</p>
+                  <p>{tl("Im Eingabefeld Arbeitsblattname wird der Name des zu importierenden Arbeitsblatts angegeben.", userLanguage)}</p>
                 </div>
 
-                <h3>Erklärung Eingabefeld Abfrage</h3>
+                <h3>{tl("Erklärung Eingabefeld Abfrage", userLanguage)}</h3>
                 <div>
-                  <p>Im Eingabefeld Abfrage kann eine Abfrage hinterlegt werden um das importierte Arbeitsblatt zu filtern.</p>
-                  <p>Die Abfrage hat folgendes Schema: Spaltenname=Wert</p>
-                  <p>Feldwerte können über @@Feldname@@ eingefügt werden.</p>
+                  <p>{tl("Im Eingabefeld Abfrage kann eine Abfrage hinterlegt werden um das importierte Arbeitsblatt zu filtern.", userLanguage)}</p>
+                  <p>{tl("Die Abfrage hat folgendes Schema: Spaltenname=Wert", userLanguage)}</p>
+                  <p>{tl("Feldwerte können über @@Feldname@@ eingefügt werden.", userLanguage)}</p>
                 </div>
 
-                <h3>Mögliche Service Fehler</h3>
+                <h3>{tl("Mögliche Service Fehler", userLanguage)}</h3>
                 <div>
                   <p>
-                    CONFIG_INVALID: Tritt dieser Fehler auf, sollte die Konfiguration nochmals überarbeitet werden. Es könnte zum Beispiel daran liegen, dass kein Dateipfad
-                    angegeben wurde.
+                    {tl(
+                      "CONFIG_INVALID: Tritt dieser Fehler auf, sollte die Konfiguration nochmals überarbeitet werden. Es könnte zum Beispiel daran liegen, dass kein Dateipfad angegeben wurde.",
+                      userLanguage,
+                    )}
                   </p>
-                  <p>FILE_ERROR: Tritt dieser Fehler auf, wurde keine Datei mit dem angegebenen Dateipfad gefunden oder enthält das Arbeitsblatt keine Daten.</p>
+                  <p>
+                    {tl(
+                      "FILE_ERROR: Tritt dieser Fehler auf, wurde keine Datei mit dem angegebenen Dateipfad gefunden oder enthält das Arbeitsblatt keine Daten.",
+                      userLanguage,
+                    )}
+                  </p>
                 </div>
               </Semantic.Table.Cell>
             </Semantic.Table.Row>

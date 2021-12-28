@@ -1,7 +1,8 @@
+import { tl } from "processhub-sdk";
 import * as Semantic from "semantic-ui-react";
-import * as PH from "processhub-sdk";
+import { Language } from "processhub-sdk/lib/tl";
 
-export function setsupervisorConfig(): JSX.Element {
+export function setsupervisorConfig(userLanguage: Language): JSX.Element {
   return (
     <Semantic.Modal.Content>
       <div id="setsupervisor-form" className="ui form center">
@@ -9,7 +10,7 @@ export function setsupervisorConfig(): JSX.Element {
           <Semantic.Table.Body>
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Rolle des Mitarbeiters"} />
+                <span>{tl("Rolle des Mitarbeiters", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <input id="userRoleId" />
@@ -17,7 +18,7 @@ export function setsupervisorConfig(): JSX.Element {
             </Semantic.Table.Row>
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Rolle des Vorgesetzten"} />
+                <span>{tl("Rolle des Vorgesetzten", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <input id="supervisorRoleId" />

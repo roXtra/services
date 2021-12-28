@@ -1,7 +1,8 @@
+import { tl } from "processhub-sdk";
+import { Language } from "processhub-sdk/lib/tl";
 import * as Semantic from "semantic-ui-react";
-import * as PH from "processhub-sdk";
 
-export function generateConfig(): JSX.Element {
+export function generateConfig(userLanguage: Language): JSX.Element {
   return (
     <Semantic.Modal.Content>
       <div id="service-form" className="ui form center">
@@ -9,7 +10,7 @@ export function generateConfig(): JSX.Element {
           <Semantic.Table.Body>
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Titel Feld"} />
+                <span>{tl("Titel Feld", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <input id="titleField" />
@@ -18,7 +19,7 @@ export function generateConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Von Feld"} />
+                <span>{tl("Von Feld", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <select id="fromField" />
@@ -27,7 +28,7 @@ export function generateConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Bis Feld"} />
+                <span>{tl("Bis Feld", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <select id="tillField" />
@@ -36,7 +37,7 @@ export function generateConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Beschreibungsfeld"} />
+                <span>{tl("Beschreibungsfeld", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <select id="descriptionField" />
@@ -50,7 +51,7 @@ export function generateConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Ergebnis"} />
+                <span>{tl("Ergebnis", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <select id="targetField" />
@@ -59,9 +60,9 @@ export function generateConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell colSpan="2">
-                <h3>Mögliche Service Fehler</h3>
+                <h3>{tl("Mögliche Service Fehler", userLanguage)}</h3>
                 <div>
-                  <p>ATTACHMENT_ERROR: Tritt dieser Fehler auf, konnte die ICS Datei nicht an den Vorgang angehängt werden.</p>
+                  <p>{tl("ATTACHMENT_ERROR: Tritt dieser Fehler auf, konnte die ICS Datei nicht an den Vorgang angehängt werden.", userLanguage)}</p>
                 </div>
               </Semantic.Table.Cell>
             </Semantic.Table.Row>

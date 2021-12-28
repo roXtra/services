@@ -1,18 +1,21 @@
 import * as Semantic from "semantic-ui-react";
-import * as PH from "processhub-sdk";
+import { tl } from "processhub-sdk";
+import { Language } from "processhub-sdk/lib/tl";
 
-export const queryHint = (
-  <Semantic.Table.Cell colSpan="2">
-    <h3>{PH.tl("Abfrage")}</h3>
-    <div>
-      <p>{PH.tl("Die SQL-Abfrage, die ausgeführt werden soll. Felder können mit field['Feldname'] in die Abfrage eingefügt werden, Rollen mit role['Lane'].")}</p>
-      <br />
-      <p>{PH.tl("Beispiel: ") + "UPDATE test_table SET abteilung='field['Abteilung']', name='role['Ersteller']' WHERE id='field['id']'"}</p>
-    </div>
-  </Semantic.Table.Cell>
-);
+export function getQueryHint(userLanguage: Language): JSX.Element {
+  return (
+    <Semantic.Table.Cell colSpan="2">
+      <h3>{tl("Abfrage", userLanguage)}</h3>
+      <div>
+        <p>{tl("Die SQL-Abfrage, die ausgeführt werden soll. Felder können mit field['Feldname'] in die Abfrage eingefügt werden, Rollen mit role['Lane'].", userLanguage)}</p>
+        <br />
+        <p>{(tl("Beispiel: ") + "UPDATE test_table SET abteilung='field['Abteilung']', name='role['Ersteller']' WHERE id='field['id']'", userLanguage)}</p>
+      </div>
+    </Semantic.Table.Cell>
+  );
+}
 
-export function executeQueryConfig(): JSX.Element {
+export function executeQueryConfig(userLanguage: Language): JSX.Element {
   return (
     <Semantic.Modal.Content>
       <div id="service-form" className="ui form center">
@@ -20,7 +23,7 @@ export function executeQueryConfig(): JSX.Element {
           <Semantic.Table.Body>
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Server"} />
+                <span>{tl("Server", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <input id="server" />
@@ -29,7 +32,7 @@ export function executeQueryConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Benutzername"} />
+                <span>{tl("Benutzername", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <input id="username" />
@@ -38,7 +41,7 @@ export function executeQueryConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Passwort"} />
+                <span>{tl("Passwort", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <input id="password" type="password" />
@@ -47,7 +50,7 @@ export function executeQueryConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Datenbank"} />
+                <span>{tl("Datenbank", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <input id="database" />
@@ -56,7 +59,7 @@ export function executeQueryConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Abfrage"} />
+                <span>{tl("Abfrage", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <input id="query" />
@@ -70,7 +73,7 @@ export function executeQueryConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Ergebnis"} />
+                <span>{tl("Ergebnis", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <select id="targetField" />
@@ -79,7 +82,7 @@ export function executeQueryConfig(): JSX.Element {
           </Semantic.Table.Body>
         </Semantic.Table>
 
-        <Semantic.Table.Row>{queryHint}</Semantic.Table.Row>
+        <Semantic.Table.Row>{getQueryHint(userLanguage)}</Semantic.Table.Row>
       </div>
     </Semantic.Modal.Content>
   );

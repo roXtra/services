@@ -1,7 +1,8 @@
 import * as Semantic from "semantic-ui-react";
-import * as PH from "processhub-sdk";
+import { tl } from "processhub-sdk";
+import { Language } from "processhub-sdk/lib/tl";
 
-export function setRoxFileFieldConfig(): JSX.Element {
+export function setRoxFileFieldConfig(userLanguage: Language): JSX.Element {
   return (
     <Semantic.Modal.Content>
       <div id="service-form" className="ui form center">
@@ -9,7 +10,7 @@ export function setRoxFileFieldConfig(): JSX.Element {
           <Semantic.Table.Body>
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Datei ID"} />
+                <span>{tl("Datei ID", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <input id="fileId" />
@@ -18,7 +19,7 @@ export function setRoxFileFieldConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Feld ID"} />
+                <span>{tl("Feld ID", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <input id="fieldId" />
@@ -27,7 +28,7 @@ export function setRoxFileFieldConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Wert"} />
+                <span>{tl("Wert", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <select id="value" />
@@ -38,26 +39,26 @@ export function setRoxFileFieldConfig(): JSX.Element {
 
         <Semantic.Table.Row>
           <Semantic.Table.Cell colSpan="2">
-            <h3>Erklärung Datei ID</h3>
+            <h3>{tl("Erklärung Datei ID", userLanguage)}</h3>
             <div>
-              <p>Geben Sie die ID der Datei an.</p>
+              <p>{tl("Geben Sie die ID der Datei an.", userLanguage)}</p>
             </div>
-            <h3>Erklärung Feld ID</h3>
+            <h3>{tl("Erklärung Feld ID", userLanguage)}</h3>
             <div>
-              <p>Geben Sie die ID des Feldes an, welches editiert werden soll.</p>
+              <p>{tl("Geben Sie die ID des Feldes an, welches editiert werden soll.", userLanguage)}</p>
             </div>
-            <h3>Erklärung Wert</h3>
+            <h3>{tl("Erklärung Wert", userLanguage)}</h3>
             <div>
-              <p>Geben Sie den Wert an, den das Feld der Datei haben soll.</p>
+              <p>{tl("Geben Sie den Wert an, den das Feld der Datei haben soll.", userLanguage)}</p>
             </div>
           </Semantic.Table.Cell>
         </Semantic.Table.Row>
 
         <Semantic.Table.Row>
           <Semantic.Table.Cell colSpan="2">
-            <h3>Mögliche Service Fehler</h3>
+            <h3>{tl("Mögliche Service Fehler", userLanguage)}</h3>
             <div>
-              <p>API_ERROR: Tritt dieser Fehler auf, gab es ein Problem mit der Verbindung zu roXtra Dokumente.</p>
+              <p>{tl("API_ERROR: Tritt dieser Fehler auf, gab es ein Problem mit der Verbindung zu roXtra Dokumente.", userLanguage)}</p>
             </div>
           </Semantic.Table.Cell>
         </Semantic.Table.Row>

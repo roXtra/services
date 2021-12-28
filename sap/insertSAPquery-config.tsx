@@ -1,7 +1,8 @@
 import * as Semantic from "semantic-ui-react";
-import * as PH from "processhub-sdk";
+import { tl } from "processhub-sdk";
+import { Language } from "processhub-sdk/lib/tl";
 
-export function insertSAPQueryConfig(): JSX.Element {
+export function insertSAPQueryConfig(userLanguage: Language): JSX.Element {
   return (
     <Semantic.Modal.Content>
       <div id="service-form" className="ui form center">
@@ -9,7 +10,7 @@ export function insertSAPQueryConfig(): JSX.Element {
           <Semantic.Table.Body>
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"IP Adresse"} />
+                <span>{tl("IP Adresse", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <input id="ipAddress" />
@@ -18,7 +19,7 @@ export function insertSAPQueryConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Port"} />
+                <span>{tl("Port", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <input id="port" />
@@ -27,7 +28,7 @@ export function insertSAPQueryConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Datenbank Benutzername"} />
+                <span>{tl("Datenbank Benutzername", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <input id="databaseUsername" />
@@ -36,7 +37,7 @@ export function insertSAPQueryConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Datenbankpasswort"} />
+                <span>{tl("Datenbankpasswort", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <input id="password" type="password" />
@@ -45,7 +46,7 @@ export function insertSAPQueryConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Tenant"} />
+                <span>{tl("Tenant", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <input id="tenant" />
@@ -54,7 +55,7 @@ export function insertSAPQueryConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Tabellenname"} />
+                <span>{tl("Tabellenname", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <input id="tableName" />
@@ -63,7 +64,7 @@ export function insertSAPQueryConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Spalten"} />
+                <span>{tl("Spalten", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <input id="columns" />
@@ -72,7 +73,7 @@ export function insertSAPQueryConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Werte"} />
+                <span>{tl("Werte", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <input id="values" />
