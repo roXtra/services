@@ -1,7 +1,8 @@
 import * as Semantic from "semantic-ui-react";
-import * as PH from "processhub-sdk";
+import { tl } from "processhub-sdk";
+import { Language } from "processhub-sdk/lib/tl";
 
-export function createReportConfig(): JSX.Element {
+export function createReportConfig(userLanguage: Language): JSX.Element {
   return (
     <Semantic.Modal.Content>
       <div id="service-form" className="ui form center">
@@ -9,7 +10,7 @@ export function createReportConfig(): JSX.Element {
           <Semantic.Table.Body>
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Berichtsvorlage"} />
+                <span>{tl("Berichtsvorlage", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <select id="selectReportDraft" />
@@ -18,7 +19,7 @@ export function createReportConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Dateityp"} />
+                <span>{tl("Dateityp", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <select id="selectReportType" />
@@ -27,7 +28,7 @@ export function createReportConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Feld für Berichtsanhang"} />
+                <span>{tl("Feld für Berichtsanhang", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <select id="selectReportField" />
@@ -38,30 +39,32 @@ export function createReportConfig(): JSX.Element {
 
         <Semantic.Table.Row>
           <Semantic.Table.Cell colSpan="2">
-            <h3>Berichtsvorlage</h3>
+            <h3>{tl("Berichtsvorlage", userLanguage)}</h3>
             <div>
-              <p>Wählen Sie die Berichtsvorlage aus die zum Erstellen des Berichts verwendet werden soll. </p>
+              <p>{tl("Wählen Sie die Berichtsvorlage aus die zum Erstellen des Berichts verwendet werden soll. ", userLanguage)}</p>
               <b>
-                Hinweis: Beim Erstellen eines neuen Prozesses sind noch keine Vorlagen verfügbar. Speichern Sie hierfür den Prozess einmal ab und bearbeiten Sie ihn
-                anschließend, um die Standardvorlage auswählen zu können.
+                {tl(
+                  "Hinweis: Beim Erstellen eines neuen Prozesses sind noch keine Vorlagen verfügbar. Speichern Sie hierfür den Prozess einmal ab und bearbeiten Sie ihn anschließend, um die Standardvorlage auswählen zu können.",
+                  userLanguage,
+                )}
               </b>
             </div>
-            <h3>Dateityp</h3>
+            <h3>{tl("Dateityp", userLanguage)}</h3>
             <div>
-              <p>Wählen Sie den Dateitypen aus in dem der Bericht gespeichert werden soll.</p>
+              <p>{tl("Wählen Sie den Dateitypen aus in dem der Bericht gespeichert werden soll.", userLanguage)}</p>
             </div>
-            <h3>Feld für Berichtsanhang</h3>
+            <h3>{tl("Feld für Berichtsanhang", userLanguage)}</h3>
             <div>
-              <p>Wählen Sie das Feld aus in dem die Berichtsdatei angehängt werden soll.</p>
+              <p>{tl("Wählen Sie das Feld aus in dem die Berichtsdatei angehängt werden soll.", userLanguage)}</p>
             </div>
           </Semantic.Table.Cell>
         </Semantic.Table.Row>
 
         <Semantic.Table.Row>
           <Semantic.Table.Cell colSpan="2">
-            <h3>Mögliche Service Fehler</h3>
+            <h3>{tl("Mögliche Service Fehler", userLanguage)}</h3>
             <div>
-              <p>ATTACHMENT_ERROR: Tritt dieser Fehler auf, konnte der Bericht nicht an den Vorgang angehängt werden.</p>
+              <p>{tl("ATTACHMENT_ERROR: Tritt dieser Fehler auf, konnte der Bericht nicht an den Vorgang angehängt werden.", userLanguage)}</p>
             </div>
           </Semantic.Table.Cell>
         </Semantic.Table.Row>

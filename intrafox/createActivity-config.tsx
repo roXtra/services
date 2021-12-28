@@ -1,7 +1,8 @@
 import * as Semantic from "semantic-ui-react";
-import * as PH from "processhub-sdk";
+import { tl } from "processhub-sdk";
+import { Language } from "processhub-sdk/lib/tl";
 
-export function createActivityConfig(): JSX.Element {
+export function createActivityConfig(userLanguage: Language): JSX.Element {
   return (
     <Semantic.Modal.Content>
       <div id="service-form" className="ui form center">
@@ -9,7 +10,7 @@ export function createActivityConfig(): JSX.Element {
           <Semantic.Table.Body>
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Token"} />
+                <span>{tl("Token", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <input id="token" />
@@ -18,7 +19,7 @@ export function createActivityConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Benutzername"} />
+                <span>{tl("Benutzername", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <select id="username" />
@@ -27,7 +28,7 @@ export function createActivityConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Kurzbezeichnung"} />
+                <span>{tl("Kurzbezeichnung", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <select id="activityAbbrevation" />
@@ -36,7 +37,7 @@ export function createActivityConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Beschreibung"} />
+                <span>{tl("Beschreibung", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <select id="activityDescription" />
@@ -45,7 +46,7 @@ export function createActivityConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"zu erledigen bis"} />
+                <span>{tl("zu erledigen bis", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <select id="activityExpirationdate" />
@@ -56,30 +57,35 @@ export function createActivityConfig(): JSX.Element {
 
         <Semantic.Table.Row>
           <Semantic.Table.Cell colSpan="2">
-            <h3>Erklärung Token</h3>
+            <h3>{tl("Erklärung Token", userLanguage)}</h3>
             <div>
-              <p>Geben Sie das Authentifizierungstoken der Intrafox-API ein.</p>
+              <p>{tl("Geben Sie das Authentifizierungstoken der Intrafox-API ein.", userLanguage)}</p>
             </div>
-            <h3>Erklärung Benutzername</h3>
+            <h3>{tl("Erklärung Benutzername", userLanguage)}</h3>
             <div>
-              <p>Geben Sie das Feld an, über das der Benutzername des Verantwortlichen eingegeben werden kann.</p>
+              <p>{tl("Geben Sie das Feld an, über das der Benutzername des Verantwortlichen eingegeben werden kann.", userLanguage)}</p>
             </div>
-            <h3>Erklärung Kurzbezeichnung</h3>
+            <h3>{tl("Erklärung Kurzbezeichnung", userLanguage)}</h3>
             <div>
-              <p>Geben Sie das Feld an, über das die Kurzbezeichnung der Maßnahme eingegeben werden kann.</p>
+              <p>{tl("Geben Sie das Feld an, über das die Kurzbezeichnung der Maßnahme eingegeben werden kann.", userLanguage)}</p>
             </div>
-            <h3>Erklärung Beschreibung</h3>
+            <h3>{tl("Erklärung Beschreibung", userLanguage)}</h3>
             <div>
-              <p>Geben Sie das Feld an, über das die Beschreibung der Maßnahme eingegeben werden kann.</p>
+              <p>{tl("Geben Sie das Feld an, über das die Beschreibung der Maßnahme eingegeben werden kann.", userLanguage)}</p>
             </div>
-            <h3>Erklärung zu erledigen bis</h3>
+            <h3>{tl("Erklärung zu erledigen bis", userLanguage)}</h3>
             <div>
-              <p>Geben Sie das Feld an, über das das Auslaufdatum der Maßnahme eingegeben werden kann.</p>
+              <p>{tl("Geben Sie das Feld an, über das das Auslaufdatum der Maßnahme eingegeben werden kann.", userLanguage)}</p>
             </div>
 
-            <h3>Mögliche Service Fehler</h3>
+            <h3>{tl("Mögliche Service Fehler", userLanguage)}</h3>
             <div>
-              <p>API_ERROR: Tritt dieser Fehler auf, ist bei der Intrafox Schnittstelle ein Fehler aufgetreten und es konnte keine Activity erstellt werden.</p>
+              <p>
+                {tl(
+                  "API_ERROR: Tritt dieser Fehler auf, ist bei der Intrafox Schnittstelle ein Fehler aufgetreten und es konnte keine Activity erstellt werden.",
+                  userLanguage,
+                )}
+              </p>
             </div>
           </Semantic.Table.Cell>
         </Semantic.Table.Row>

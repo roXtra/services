@@ -1,7 +1,8 @@
+import { tl } from "processhub-sdk";
 import * as Semantic from "semantic-ui-react";
-import * as PH from "processhub-sdk";
+import { Language } from "processhub-sdk/lib/tl";
 
-export function divisionConfig(): JSX.Element {
+export function divisionConfig(userLanguage: Language): JSX.Element {
   return (
     <Semantic.Modal.Content>
       <div id="service-form" className="ui form center">
@@ -9,7 +10,7 @@ export function divisionConfig(): JSX.Element {
           <Semantic.Table.Body>
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Zähler"} />
+                <span>{tl("Zähler", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <select id="numberField1" />
@@ -18,7 +19,7 @@ export function divisionConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Nenner"} />
+                <span>{tl("Nenner", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <select id="numberField2" />
@@ -27,7 +28,7 @@ export function divisionConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Ergebnis"} />
+                <span>{tl("Ergebnis", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <input id="targetField" />

@@ -1,7 +1,8 @@
 import * as Semantic from "semantic-ui-react";
-import * as PH from "processhub-sdk";
+import { tl } from "processhub-sdk";
+import { Language } from "processhub-sdk/lib/tl";
 
-export function getActivityByNumberConfig(): JSX.Element {
+export function getActivityByNumberConfig(userLanguage: Language): JSX.Element {
   return (
     <Semantic.Modal.Content>
       <div id="service-form" className="ui form center">
@@ -9,7 +10,7 @@ export function getActivityByNumberConfig(): JSX.Element {
           <Semantic.Table.Body>
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Token"} />
+                <span>{tl("Token", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <input id="token" />
@@ -18,7 +19,7 @@ export function getActivityByNumberConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Benutzername"} />
+                <span>{tl("Benutzername", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <select id="username" />
@@ -27,7 +28,7 @@ export function getActivityByNumberConfig(): JSX.Element {
 
             <Semantic.Table.Row>
               <Semantic.Table.Cell>
-                <PH.TL text={"Maßnahmennummer"} />
+                <span>{tl("Maßnahmennummer", userLanguage)}</span>
               </Semantic.Table.Cell>
               <Semantic.Table.Cell>
                 <select id="activityNumber" />
@@ -38,22 +39,32 @@ export function getActivityByNumberConfig(): JSX.Element {
 
         <Semantic.Table.Row>
           <Semantic.Table.Cell colSpan="2">
-            <h3>Erklärung Token</h3>
+            <h3>{tl("Erklärung Token", userLanguage)}</h3>
             <div>
-              <p>Geben Sie das Authentifizierungstoken der Intrafox-API ein.</p>
+              <p>{tl("Geben Sie das Authentifizierungstoken der Intrafox-API ein.", userLanguage)}</p>
             </div>
-            <h3>Erklärung Benutzername</h3>
+            <h3>{tl("Erklärung Benutzername", userLanguage)}</h3>
             <div>
-              <p>Geben Sie das Feld an, über das der Benutzername des Intrafoxbenutzers, von dem Sie Maßnahmen aus dem System erhalten wollen, eingegeben werden kann.</p>
+              <p>
+                {tl(
+                  "Geben Sie das Feld an, über das der Benutzername des Intrafoxbenutzers, von dem Sie Maßnahmen aus dem System erhalten wollen, eingegeben werden kann.",
+                  userLanguage,
+                )}
+              </p>
             </div>
-            <h3>Erklärung Maßnahmennummer</h3>
+            <h3>{tl("Erklärung Maßnahmennummer", userLanguage)}</h3>
             <div>
-              <p>Geben Sie das Feld an, über das die Maßnahmennummer der Maßnahme von der Sie Informationen erhalten wollen, eingegeben werden kann.</p>
+              <p>{tl("Geben Sie das Feld an, über das die Maßnahmennummer der Maßnahme von der Sie Informationen erhalten wollen, eingegeben werden kann.", userLanguage)}</p>
             </div>
 
-            <h3>Mögliche Service Fehler</h3>
+            <h3>{tl("Mögliche Service Fehler", userLanguage)}</h3>
             <div>
-              <p>API_ERROR: Tritt dieser Fehler auf, ist bei der Intrafox Schnittstelle ein Fehler aufgetreten und es konnte keine Activity erstellt werden.</p>
+              <p>
+                {tl(
+                  "API_ERROR: Tritt dieser Fehler auf, ist bei der Intrafox Schnittstelle ein Fehler aufgetreten und es konnte keine Activity erstellt werden.",
+                  userLanguage,
+                )}
+              </p>
             </div>
           </Semantic.Table.Cell>
         </Semantic.Table.Row>
