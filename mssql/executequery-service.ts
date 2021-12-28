@@ -44,7 +44,14 @@ export async function executeQuery(environment: IServiceTaskEnvironment): Promis
   try {
     await pool.connect();
 
-    query = parseAndInsertStringWithFieldContent(query, environment.instanceDetails.extras.fieldContents, processObject, environment.instanceDetails.extras.roleOwners, true);
+    query = parseAndInsertStringWithFieldContent(
+      query,
+      environment.instanceDetails.extras.fieldContents,
+      processObject,
+      environment.instanceDetails.extras.roleOwners,
+      environment.sender.language || "de-DE",
+      true,
+    );
 
     if (query === undefined) {
       throw new Error("query is undefined after parseAndInsertStringWithFieldContent, cannot proceed with service!");

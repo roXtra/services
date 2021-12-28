@@ -29,7 +29,14 @@ export async function executeQueryNoReturn(environment: IServiceTaskEnvironment)
     throw new Error("environment.instanceDetails.extras.roleOwners is undefined, cannot proceed with service!");
   }
 
-  query = parseAndInsertStringWithFieldContent(query, environment.instanceDetails.extras.fieldContents, processObject, environment.instanceDetails.extras.roleOwners, true);
+  query = parseAndInsertStringWithFieldContent(
+    query,
+    environment.instanceDetails.extras.fieldContents,
+    processObject,
+    environment.instanceDetails.extras.roleOwners,
+    environment.sender.language || "de-DE",
+    true,
+  );
 
   if (query === undefined) {
     throw new Error("query is undefined after parseAndInsertStringWithFieldContent, cannot proceed with service!");

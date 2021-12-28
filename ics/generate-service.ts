@@ -99,7 +99,13 @@ export async function generate(environment: IServiceTaskEnvironment): Promise<bo
     throw new Error("roleOwners are undefined, cannot proceed!");
   }
 
-  const parsedSummary = parseAndInsertStringWithFieldContent(title, instance.extras.fieldContents, process.extras.processRoles, instance.extras.roleOwners);
+  const parsedSummary = parseAndInsertStringWithFieldContent(
+    title,
+    instance.extras.fieldContents,
+    process.extras.processRoles,
+    instance.extras.roleOwners,
+    environment.sender.language || "de-DE",
+  );
 
   if (parsedSummary === undefined) {
     throw new Error("parsedSummary is undefined, cannot proceed!");

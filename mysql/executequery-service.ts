@@ -65,7 +65,14 @@ export async function executeQuery(environment: IServiceTaskEnvironment): Promis
   }
 
   try {
-    query = parseAndInsertStringWithFieldContent(query, environment.instanceDetails.extras.fieldContents, processObject, environment.instanceDetails.extras.roleOwners, true);
+    query = parseAndInsertStringWithFieldContent(
+      query,
+      environment.instanceDetails.extras.fieldContents,
+      processObject,
+      environment.instanceDetails.extras.roleOwners,
+      environment.sender.language || "de-DE",
+      true,
+    );
 
     console.log(`MySQL service: executing ${String(query)}`);
 
