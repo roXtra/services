@@ -1,10 +1,9 @@
 import * as IntrafoxTypes from "./IntrafoxTypes";
 import DateFormat from "dateformat";
-import * as PH from "processhub-sdk";
 import fetch from "node-fetch";
 import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror";
 import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces";
-import { Language } from "processhub-sdk";
+import { Language, tl } from "processhub-sdk/lib/tl";
 
 async function post(url: string, requestBody: IntrafoxTypes.IIntraFoxBody, token: string): Promise<any> {
   const headers = { "X-INTRAFOX-ROXTRA-TOKEN": token };
@@ -131,28 +130,28 @@ export function errorHandling(instance: IInstanceDetails, errorCode: string, lan
       break;
     }
     case "ERRORCODE_REQUESTMETHOD": {
-      throw new BpmnError(IntrafoxTypes.ErrorCodes.API_ERROR, PH.tl("Ein Fehler ist aufgetreten, falsche HTTP Methode benutzt. Zur Zeit wird nur POST untersützt.", language));
+      throw new BpmnError(IntrafoxTypes.ErrorCodes.API_ERROR, tl("Ein Fehler ist aufgetreten, falsche HTTP Methode benutzt. Zur Zeit wird nur POST untersützt.", language));
     }
     case "ERRORCODE_A1": {
-      throw new BpmnError(IntrafoxTypes.ErrorCodes.API_ERROR, PH.tl("Ein Fehler ist aufgetreten, Authentifizierungstoken fehlt im Header.", language));
+      throw new BpmnError(IntrafoxTypes.ErrorCodes.API_ERROR, tl("Ein Fehler ist aufgetreten, Authentifizierungstoken fehlt im Header.", language));
     }
     case "ERRORCODE_A2": {
-      throw new BpmnError(IntrafoxTypes.ErrorCodes.API_ERROR, PH.tl("Ein Fehler ist aufgetreten, Authentifizierungstoken ist ungültig.", language));
+      throw new BpmnError(IntrafoxTypes.ErrorCodes.API_ERROR, tl("Ein Fehler ist aufgetreten, Authentifizierungstoken ist ungültig.", language));
     }
     case "ERRORCODE_INVALID_BODY": {
-      throw new BpmnError(IntrafoxTypes.ErrorCodes.API_ERROR, PH.tl("Ein Fehler ist aufgetreten, der Body ist falsch.", language));
+      throw new BpmnError(IntrafoxTypes.ErrorCodes.API_ERROR, tl("Ein Fehler ist aufgetreten, der Body ist falsch.", language));
     }
     case "ERRORCODE_INVALID_JSON": {
-      throw new BpmnError(IntrafoxTypes.ErrorCodes.API_ERROR, PH.tl("Ein Fehler ist aufgetreten, falsches JSON Format.", language));
+      throw new BpmnError(IntrafoxTypes.ErrorCodes.API_ERROR, tl("Ein Fehler ist aufgetreten, falsches JSON Format.", language));
     }
     case "ERRORCODE_ARGUMENTS": {
-      throw new BpmnError(IntrafoxTypes.ErrorCodes.API_ERROR, PH.tl("Ein Fehler ist aufgetreten, ARGS wurden falsch gesetzt.", language));
+      throw new BpmnError(IntrafoxTypes.ErrorCodes.API_ERROR, tl("Ein Fehler ist aufgetreten, ARGS wurden falsch gesetzt.", language));
     }
     case "ERRORCODE_FUNCTION": {
-      throw new BpmnError(IntrafoxTypes.ErrorCodes.API_ERROR, PH.tl("Ein Fehler ist aufgetreten, die API Funktion konnte nicht ausgeführt werden.", language));
+      throw new BpmnError(IntrafoxTypes.ErrorCodes.API_ERROR, tl("Ein Fehler ist aufgetreten, die API Funktion konnte nicht ausgeführt werden.", language));
     }
     default: {
-      throw new BpmnError(IntrafoxTypes.ErrorCodes.API_ERROR, PH.tl("Ein Fehler ist aufgetreten, Activity konnte nicht erstellt werden.", language));
+      throw new BpmnError(IntrafoxTypes.ErrorCodes.API_ERROR, tl("Ein Fehler ist aufgetreten, Activity konnte nicht erstellt werden.", language));
     }
   }
 }
