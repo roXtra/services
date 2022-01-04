@@ -1,4 +1,4 @@
-import { tl } from "processhub-sdk";
+import { tl } from "processhub-sdk/lib/tl";
 import * as Semantic from "semantic-ui-react";
 import { Language } from "processhub-sdk/lib/tl";
 

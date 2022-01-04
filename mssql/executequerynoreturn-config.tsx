@@ -1,6 +1,6 @@
 import * as Semantic from "semantic-ui-react";
 import { getQueryHint } from "./executequery-config";
-import { tl } from "processhub-sdk";
+import { tl } from "processhub-sdk/lib/tl";
 import { Language } from "processhub-sdk/lib/tl";
 
 export function executeQueryNoReturnConfig(userLanguage: Language): JSX.Element {
