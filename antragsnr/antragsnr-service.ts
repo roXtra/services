@@ -51,6 +51,7 @@ export function serviceLogic(processDetails: IProcessDetails, environment: IServ
 }
 
 export async function antragsnrAction(environment: IServiceTaskEnvironment): Promise<boolean> {
+  const language = environment.sender.language || "de-DE";
   const processObject: BpmnProcess = new BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
@@ -59,14 +60,14 @@ export async function antragsnrAction(environment: IServiceTaskEnvironment): Pro
   const config = extensionValues.serviceTaskConfigObject;
 
   if (config === undefined) {
-    throw new BpmnError(ErrorCode.ConfigInvalid, tl("Der Service ist nicht korrekt konfiguiriert, die Konfiguration konnte nicht geladen werden."));
+    throw new BpmnError(ErrorCode.ConfigInvalid, tl("Der Service ist nicht korrekt konfiguiriert, die Konfiguration konnte nicht geladen werden.", language));
   }
 
   const fields = config.fields;
   const targetField = fields.find((f) => f.key === "targetfield")?.value;
 
   if (targetField === undefined) {
-    throw new BpmnError(ErrorCode.ConfigInvalid, tl("Der Service ist nicht korrekt konfiguiriert, das Zielfeld wurde nicht ausgefüllt."));
+    throw new BpmnError(ErrorCode.ConfigInvalid, tl("Der Service ist nicht korrekt konfiguiriert, das Zielfeld wurde nicht ausgefüllt.", language));
   }
 
   const processDetails = await environment.processes.getProcessDetails(environment.instanceDetails.processId, ProcessExtras.ExtrasInstances);

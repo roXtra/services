@@ -54,13 +54,15 @@ export async function serviceLogic(url: string, environment: IServiceTaskEnviron
   const responseOK = response as string;
   const error = response as IntrafoxTypes.IIntraFoxErrorResponse;
 
+  const language = environment.sender.language || "de-DE";
+
   if (responseOK === "ok") {
     instance.extras.fieldContents["Info"] = {
       value: "Maßnahme wurde erstellt",
       type: "ProcessHubTextArea",
     };
   } else {
-    IntrafoxAPI.errorHandling(instance, error.ERRORCODE);
+    IntrafoxAPI.errorHandling(instance, error.ERRORCODE, language);
   }
 
   return instance;

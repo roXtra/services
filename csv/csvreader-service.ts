@@ -10,6 +10,7 @@ enum ErrorCodes {
 }
 
 export async function serviceLogic(environment: IServiceTaskEnvironment): Promise<void> {
+  const language = environment.sender.language || "de-DE";
   const processObject: BpmnProcess = new BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
@@ -17,7 +18,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
   const config = extensionValues.serviceTaskConfigObject;
 
   if (config === undefined) {
-    throw new BpmnError(ErrorCode.ConfigInvalid, tl("Der Service ist nicht korrekt konfiguiriert, die Konfiguration konnte nicht geladen werden."));
+    throw new BpmnError(ErrorCode.ConfigInvalid, tl("Der Service ist nicht korrekt konfiguiriert, die Konfiguration konnte nicht geladen werden.", language));
   }
 
   const fields = config.fields;
@@ -32,11 +33,11 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
   try {
     xlsxfile = XLSX.readFile(filePath);
   } catch {
-    throw new BpmnError(ErrorCodes.FILE_ERROR, tl(`Es konnte keine CSV oder XLSX Datei unter dem Pfad ${filePath} gefunden werden.`));
+    throw new BpmnError(ErrorCodes.FILE_ERROR, tl(`Es konnte keine CSV oder XLSX Datei unter dem Pfad ${filePath} gefunden werden.`, language));
   }
 
   const json = XLSX.utils.sheet_to_json<Record<string, unknown>>(xlsxfile.Sheets[sheetName]);
-  if (json.length === 0) throw new BpmnError(ErrorCodes.FILE_ERROR, tl(`Das Arbeitsblatt mit dem Namen ${sheetName} enthält keine Daten.`));
+  if (json.length === 0) throw new BpmnError(ErrorCodes.FILE_ERROR, tl(`Das Arbeitsblatt mit dem Namen ${sheetName} enthält keine Daten.`, language));
 
   query = CSVServiceMethods.parseFieldsOfQuery(query, instance);
   const resultArray = CSVServiceMethods.query(json, query);

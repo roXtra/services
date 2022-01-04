@@ -45,6 +45,8 @@ export async function serviceLogic(url: string, environment: IServiceTaskEnviron
   const activity = response as IntrafoxTypes.IGetGlobalActivityListResponse;
   const error = response as IntrafoxTypes.IIntraFoxErrorResponse;
 
+  const language = environment.sender.language || "de-DE";
+
   if (activity && !error.ERRORCODE) {
     instance.extras.fieldContents["Abkürzung"] = {
       value: activity.ACTIVITY_ABBREVIATION,
@@ -56,7 +58,7 @@ export async function serviceLogic(url: string, environment: IServiceTaskEnviron
       type: "ProcessHubTextArea",
     };
   } else {
-    IntrafoxAPI.errorHandling(instance, error.ERRORCODE);
+    IntrafoxAPI.errorHandling(instance, error.ERRORCODE, language);
   }
 
   return instance;
