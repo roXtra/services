@@ -1,10 +1,11 @@
 import * as Semantic from "semantic-ui-react";
+import Modal from "react-bootstrap/Modal";
 import { tl } from "processhub-sdk/lib/tl";
 import { Language } from "processhub-sdk/lib/tl";
 
 export function getActivityByNumberConfig(userLanguage: Language): JSX.Element {
   return (
-    <Semantic.Modal.Content>
+    <Modal.Body>
       <div id="service-form" className="ui form center">
         <Semantic.Table striped>
           <Semantic.Table.Body>
@@ -69,6 +70,6 @@ export function getActivityByNumberConfig(userLanguage: Language): JSX.Element {
           </Semantic.Table.Cell>
         </Semantic.Table.Row>
       </div>
-    </Semantic.Modal.Content>
+    </Modal.Body>
   );
 }

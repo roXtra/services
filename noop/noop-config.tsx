@@ -1,5 +1,5 @@
-import * as Semantic from "semantic-ui-react";
+import Modal from "react-bootstrap/Modal";
 
 export function noopConfig(): JSX.Element {
-  return <Semantic.Modal.Content></Semantic.Modal.Content>;
+  return <Modal.Body></Modal.Body>;
 }
