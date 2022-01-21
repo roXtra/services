@@ -1,11 +1,10 @@
 import * as Semantic from "semantic-ui-react";
-import Modal from "react-bootstrap/Modal";
 import { tl } from "processhub-sdk/lib/tl";
 import { Language } from "processhub-sdk/lib/tl";
 
 export function setRoxFileFieldConfig(userLanguage: Language): JSX.Element {
   return (
-    <Modal.Body>
+    <Semantic.Modal.Content>
       <div id="service-form" className="ui form center">
         <Semantic.Table striped>
           <Semantic.Table.Body>
@@ -64,6 +63,6 @@ export function setRoxFileFieldConfig(userLanguage: Language): JSX.Element {
           </Semantic.Table.Cell>
         </Semantic.Table.Row>
       </div>
-    </Modal.Body>
+    </Semantic.Modal.Content>
   );
 }

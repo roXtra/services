@@ -1,11 +1,10 @@
 import * as Semantic from "semantic-ui-react";
-import Modal from "react-bootstrap/Modal";
 import { tl } from "processhub-sdk/lib/tl";
 import { Language } from "processhub-sdk/lib/tl";
 
 export function antragsnrconfig(userLanguage: Language): JSX.Element {
   return (
-    <Modal.Body>
+    <Semantic.Modal.Content>
       <Semantic.Table striped>
         <Semantic.Table.Body>
           <Semantic.Table.Row>
@@ -37,6 +36,6 @@ export function antragsnrconfig(userLanguage: Language): JSX.Element {
           </Semantic.Table.Row>
         </Semantic.Table.Body>
       </Semantic.Table>
-    </Modal.Body>
+    </Semantic.Modal.Content>
   );
 }
