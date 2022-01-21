@@ -23,7 +23,6 @@
     "@sap/hana-client": "^2.11.14",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.32.0-3/release.tgz",
     "react": "^17.0.2",
-    "react-bootstrap": "^2.1.1",
     "semantic-ui-react": "^2.0.4"
   },
   "devDependencies": {
