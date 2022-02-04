@@ -124,7 +124,7 @@ export async function generate(environment: IServiceTaskEnvironment): Promise<bo
   // End calendar item
   icsString += "END:VCALENDAR\n";
 
-  const url: string = await environment.instances.uploadAttachment(instance.instanceId, "ics_import_file.ics", Buffer.from(icsString).toString("base64"));
+  const url: string = await environment.instances.uploadAttachment(instance.instanceId, "ics_import_file.ics", Buffer.from(icsString));
 
   if (url) {
     if (instance.extras.fieldContents[targetField] == null) {

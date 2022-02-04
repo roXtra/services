@@ -128,7 +128,7 @@ export default class SAPServiceMethods {
       newValue.value = this.generateTable(rows);
       instance.extras.fieldContents[targetFieldTable] = newValue;
 
-      url = await environment.instances.uploadAttachment(instance.instanceId, "results.csv", Buffer.from(this.generateCSV(rows)).toString("base64"));
+      url = await environment.instances.uploadAttachment(instance.instanceId, "results.csv", Buffer.from(this.generateCSV(rows)));
     }
 
     if (url && url.length > 0) {
