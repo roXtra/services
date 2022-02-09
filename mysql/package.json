@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@types/mocha": "^9.1.0",
-    "@types/mysql": "^2.15.20",
+    "@types/mysql": "^2.15.21",
     "@types/node": "^14.18.10",
     "@types/react": "^17.0.38",
     "bestzip": "^2.2.0",
