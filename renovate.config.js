@@ -15,6 +15,11 @@ module.exports = {
   ignoreDeps: [],
   packageRules: [
     {
+      matchPackageNames: ["renovatebot/github-action"],
+      // Reduce stability days for renovate bot updates for itself as they update regularly and otherwise, it would never update itself
+      stabilityDays: 1
+    },
+    {
       matchPackageNames: ["node", "@types/node"],
       allowedVersions: "^14.0.0",
     },
