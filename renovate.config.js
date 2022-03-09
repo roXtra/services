@@ -25,7 +25,7 @@ module.exports = {
     },
     {
       matchPackageNames: ["npm"],
-      allowedVersions: "^6.0.0",
+      allowedVersions: "^8.0.0",
     },
     {
       // Version 3 is ESM only, see https://rossmanith.atlassian.net/browse/EF-1945

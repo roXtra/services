@@ -1,28 +1,30 @@
 {
   "name": "@eformservice/ics",
-  "servicename": "ics",
   "version": "1.0.3",
   "description": "",
   "main": "index.js",
   "minRoXtraVersion": "8.006.0",
+  "config": {
+    "servicename": "ics"
+  },
   "scripts": {
     "lint": "eslint --ext .ts,.tsx ./",
     "test": "cross-env HOTRELOAD=no DEBUG=bpmn-engine:123* mocha ./disttests/**/*.roxtest.js --exit --recursive --timeout 40000 --require source-map-support/register",
     "build": "rimraf ./disttests && tsc && npm run webpack && npm run copymain",
-    "copyfiles": "cross-var copyfiles service.json dist/* $npm_package_servicename",
-    "zip": "cross-var bestzip $npm_package_servicename.zip $npm_package_servicename",
-    "copyandzip": "cross-var npm run copyfiles && npm run zip && cross-var rimraf $npm_package_servicename",
-    "webpack": "cross-var webpack --env servicename=$npm_package_servicename --config ../webpack.config.js",
+    "copyfiles": "cross-var copyfiles service.json dist/* $npm_package_config_servicename",
+    "zip": "cross-var bestzip $npm_package_config_servicename.zip $npm_package_config_servicename",
+    "copyandzip": "cross-var npm run copyfiles && npm run zip && cross-var rimraf $npm_package_config_servicename",
+    "webpack": "cross-var webpack --env servicename=$npm_package_config_servicename --config ../webpack.config.js",
     "copymain": "copyfiles -u 1 dist/main.js disttests"
   },
   "engines": {
     "node": "^v16.14.0",
-    "npm": "^6.14.16"
+    "npm": "^8.5.3"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.35.0/release.tgz",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.36.0-1/release.tgz",
     "react": "^17.0.2",
     "semantic-ui-react": "^2.1.2"
   },

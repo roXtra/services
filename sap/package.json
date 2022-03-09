@@ -1,27 +1,29 @@
 {
   "name": "@eformservice/sap",
-  "servicename": "sap",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "config": {
+    "servicename": "sap"
+  },
   "scripts": {
     "lint": "eslint --ext .ts,.tsx ./",
     "build": "tsc",
     "test": "cross-env HOTRELOAD=no DEBUG=bpmn-engine:123* mocha ./dist/**/*.roxtest.js --exit --recursive --timeout 40000 --require source-map-support/register",
-    "copyproduction": "cross-var copyfiles package.json production && copyfiles .npmrc production && cd ./production && npm install --production && cd .. && cross-var copyfiles -u 1 \"./production/node_modules/**/*\" $npm_package_servicename && rimraf production/",
-    "copyfiles": "cross-var copyfiles service.json dist/* $npm_package_servicename && npm run copyproduction",
-    "zip": "cross-var bestzip $npm_package_servicename.zip $npm_package_servicename",
-    "copyandzip": "cross-var npm run copyfiles && npm run zip && cross-var rimraf $npm_package_servicename"
+    "copyproduction": "cross-var copyfiles package.json production && copyfiles .npmrc production && cd ./production && npm install --production && cd .. && cross-var copyfiles -u 1 \"./production/node_modules/**/*\" $npm_package_config_servicename && rimraf production/",
+    "copyfiles": "cross-var copyfiles service.json dist/* $npm_package_config_servicename && npm run copyproduction",
+    "zip": "cross-var bestzip $npm_package_config_servicename.zip $npm_package_config_servicename",
+    "copyandzip": "cross-var npm run copyfiles && npm run zip && cross-var rimraf $npm_package_config_servicename"
   },
   "engines": {
     "node": "^v16.14.0",
-    "npm": "^6.14.16"
+    "npm": "^8.5.3"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@sap/hana-client": "^2.11.20",
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.35.0/release.tgz",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.36.0-1/release.tgz",
     "react": "^17.0.2",
     "semantic-ui-react": "^2.1.2"
   },
