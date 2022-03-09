@@ -2,21 +2,21 @@ name: Build and Test
 
 on: [push]
 
+env:
+  NODE_VERSION: 16.x
+
 jobs:
   build:
     name: Build and Test
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [14.x]
     steps:
     - name: Start MySQL Docker Container
       run: docker run -p 3306:3306 --name mysql-test -e MYSQL_ROOT_PASSWORD=12345 -e MYSQL_DATABASE=test -d mysql:latest
     - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js ${{ env.NODE_VERSION }}
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: ${{ env.NODE_VERSION }}
     - name: Install global dependencies
       run: |
         sudo apt update

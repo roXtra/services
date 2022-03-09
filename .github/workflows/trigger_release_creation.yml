@@ -12,6 +12,9 @@ on:
         required: true
         default: 'false'
 
+env:
+  NODE_VERSION: 16.x
+
 jobs:
   configure:
     name: Configure Release Branch
@@ -24,10 +27,10 @@ jobs:
         with:
           ref: master
           token: ${{ secrets.DEVBOT_GH_TOKEN }}
-      - name: Setup Node.js
+      - name: Use Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version: ${{ env.NODE_VERSION }}
       - name: Configure Git
         run: |
           git config user.name 'Development Bot'

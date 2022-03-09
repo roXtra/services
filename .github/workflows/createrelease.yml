@@ -5,20 +5,20 @@ on:
     tags:
       - 'v*.*.*'
 
+env:
+  NODE_VERSION: 16.x
+
 jobs:
   build:
     name: Create Release
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [14.x]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.NODE_VERSION }}
       - name: Install global dependencies
         run: |
           sudo apt update
