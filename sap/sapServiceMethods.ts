@@ -128,7 +128,7 @@ export default class SAPServiceMethods {
       newValue.value = this.generateTable(rows);
       instance.extras.fieldContents[targetFieldTable] = newValue;
 
-      url = await environment.instances.uploadAttachment(instance.instanceId, "results.csv", Buffer.from(this.generateCSV(rows)));
+      url = await environment.instances.uploadAttachment(instance.instanceId as string, "results.csv", Buffer.from(this.generateCSV(rows)));
     }
 
     if (url && url.length > 0) {
@@ -143,7 +143,7 @@ export default class SAPServiceMethods {
   }
 
   private static generateTable(rows: Array<any>): string {
-    const keys = Object.keys(rows[0]);
+    const keys = Object.keys(rows[0] as {});
     let table = "<table><tr>";
     keys.forEach((key: any) => {
       table += "<th>" + String(key) + "</th>";
@@ -160,7 +160,7 @@ export default class SAPServiceMethods {
   }
 
   private static generateCSV(rows: Array<any>): string {
-    const keys = Object.keys(rows[0]);
+    const keys = Object.keys(rows[0] as {});
     let data = "";
     keys.forEach((key: any) => {
       data += String(key) + ",";

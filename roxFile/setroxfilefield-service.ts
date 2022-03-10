@@ -116,7 +116,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment, roxFile
 
   if (value) {
     const fieldDetails = await getFieldDetails(fileId, fieldId, environment, roxFileApi);
-    body[0].ValueIds = await selectionValueIDMapping(body[0], fieldDetails.RoxSelection, fieldDetails.RoxType, environment, roxFileApi);
+    body[0].ValueIds = await selectionValueIDMapping(body[0], fieldDetails.RoxSelection as string, fieldDetails.RoxType as string, environment, roxFileApi);
     await roxFileApi.setFileFieldsCall(APIUrl, body, fileId, efAccessToken, environment.roxApi.getApiToken());
   }
 
