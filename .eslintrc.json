@@ -90,6 +90,12 @@
         "leadingUnderscore": "forbid"
       },
       {
+        "selector": "property",
+        "format": null,
+        "leadingUnderscore": "forbid",
+        "modifiers": ["requiresQuotes"]
+      },
+      {
         "selector": "memberLike",
         "modifiers": ["private"],
         "format": ["PascalCase", "camelCase"],

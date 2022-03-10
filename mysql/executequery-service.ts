@@ -81,7 +81,7 @@ export async function executeQuery(environment: IServiceTaskEnvironment): Promis
       if (query === undefined) {
         throw new Error("query is undefined after parseAndInsertStringWithFieldContent, cannot proceed with service!");
       }
-      connection.query(query, function (error: mysql.MysqlError | null, results) {
+      connection.query(query, function (error: mysql.MysqlError | null, results: any[]) {
         if (error) reject(error);
         resolve(results);
       });

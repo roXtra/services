@@ -77,7 +77,7 @@ export class RoXtraFileApi implements IRoXtraFileApi {
 
 export async function readFileBase64Async(path: string): Promise<string> {
   return await new Promise<string>((resolve, reject): void => {
-    fs.readFile(path, "base64", (err: any, buf: any) => {
+    fs.readFile(path, "base64", (err, buf) => {
       if (err) {
         reject(err);
       } else {
