@@ -18,8 +18,8 @@
     "copymain": "copyfiles -u 1 dist/main.js disttests"
   },
   "engines": {
-    "node": "^v16.14.1",
-    "npm": "^8.5.4"
+    "node": "16",
+    "npm": "8"
   },
   "dependencies": {
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.36.0-1/release.tgz",

@@ -16,8 +16,8 @@
     "copyandzip": "cross-var npm run copyfiles && npm run zip && cross-var rimraf $npm_package_config_servicename"
   },
   "engines": {
-    "node": "^v16.14.1",
-    "npm": "^8.5.4"
+    "node": "16",
+    "npm": "8"
   },
   "author": "",
   "license": "ISC",
