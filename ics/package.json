@@ -18,7 +18,7 @@
     "copymain": "copyfiles -u 1 dist/main.js disttests"
   },
   "engines": {
-    "node": "^v16.14.0",
+    "node": "^v16.14.1",
     "npm": "^8.5.3"
   },
   "author": "",
