@@ -14,8 +14,8 @@
     "check:format": "prettier --config .prettierrc -c ./**/*.ts*"
   },
   "engines": {
-    "node": "^v16.14.1",
-    "npm": "^8.5.4"
+    "node": "16",
+    "npm": "8"
   },
   "repository": {
     "type": "git",
