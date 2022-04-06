@@ -17,7 +17,7 @@ module.exports = {
     {
       matchPackageNames: ["renovatebot/github-action"],
       // Reduce stability days for renovate bot updates for itself as they update regularly and otherwise, it would never update itself
-      stabilityDays: 1
+      stabilityDays: 1,
     },
     {
       matchPackageNames: ["node", "@types/node"],
@@ -26,6 +26,10 @@ module.exports = {
     {
       matchPackageNames: ["npm"],
       allowedVersions: "^8.0.0",
+    },
+    {
+      matchPackageNames: ["react", "react-dom"],
+      allowedVersions: "^17.0.0",
     },
     {
       // Version 3 is ESM only, see https://rossmanith.atlassian.net/browse/EF-1945
