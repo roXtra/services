@@ -31,7 +31,7 @@
     "react": "^17.0.2"
   },
   "devDependencies": {
-    "@types/chai": "^4.3.0",
+    "@types/chai": "^4.3.1",
     "@types/mocha": "^9.1.0",
     "@types/react": "^17.0.44",
     "@typescript-eslint/eslint-plugin": "^5.19.0",
