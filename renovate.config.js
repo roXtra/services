@@ -28,7 +28,7 @@ module.exports = {
       allowedVersions: "^8.0.0",
     },
     {
-      matchPackageNames: ["react", "react-dom"],
+      matchPackageNames: ["react", "react-dom", "@types/react"],
       allowedVersions: "^17.0.0",
     },
     {
