@@ -36,7 +36,7 @@
     "@types/node": "^16.11.26",
     "@types/node-fetch": "^2.6.1",
     "@types/react": "^17.0.44",
-    "bestzip": "^2.2.0",
+    "bestzip": "^2.2.1",
     "chai": "^4.3.6",
     "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
