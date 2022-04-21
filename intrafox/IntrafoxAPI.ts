@@ -5,7 +5,7 @@ import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror";
 import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces";
 import { Language, tl } from "processhub-sdk/lib/tl";
 
-async function post(url: string, requestBody: IntrafoxTypes.IIntraFoxBody, token: string): Promise<any> {
+async function post<T>(url: string, requestBody: IntrafoxTypes.IIntraFoxBody, token: string): Promise<T> {
   const headers = { "X-INTRAFOX-ROXTRA-TOKEN": token };
 
   const req = {
@@ -16,7 +16,7 @@ async function post(url: string, requestBody: IntrafoxTypes.IIntraFoxBody, token
 
   try {
     const response = await fetch(url, req);
-    return await response.json();
+    return (await response.json()) as T;
   } catch (ex) {
     const err = ex as { message: string };
     throw new Error(err.message);
@@ -42,7 +42,7 @@ export async function getActivityByNumber(
     ARGS: {},
   };
 
-  const result = await post(url, body, token);
+  const result = await post<{ ACTIVITIES: IntrafoxTypes.IGetGlobalActivityListResponse[] }>(url, body, token);
   const activities: IntrafoxTypes.IGetGlobalActivityListResponse[] = result.ACTIVITIES;
 
   for (let i = 0; i < activities.length; i++) {
