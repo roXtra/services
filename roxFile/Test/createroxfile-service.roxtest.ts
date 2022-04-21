@@ -3,7 +3,7 @@ import { expect } from "chai";
 import { IRoXtraFileApi } from "../iroxtrafileapi";
 import { ICreateFileRequestBody } from "../roxtrafileapitypes";
 import { serviceLogicCreateroxfile, createRoxFile, createRoxFileConfig } from "../main";
-import { isFieldValue, IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
 import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools";
 
@@ -61,7 +61,7 @@ describe("services", () => {
           };
 
           const instance = await serviceLogicCreateroxfile(environment, testApi);
-          expect(isFieldValue(instance.extras.fieldContents?.["CreatedRoxFileId"])).to.equal(true);
+          expect(instance.extras.fieldContents?.["CreatedRoxFileId"]).not.to.be.undefined;
           expect((instance.extras.fieldContents?.["CreatedRoxFileId"] as IFieldValue).value).to.equal(newRoxFileId);
         });
       });
