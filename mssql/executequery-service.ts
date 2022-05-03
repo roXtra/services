@@ -1,5 +1,5 @@
 import { parseAndInsertStringWithFieldContent } from "processhub-sdk/lib/data/datatools";
-import { FieldType, IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
+import { FieldType, FieldValueType, IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
 import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror";
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
@@ -57,7 +57,7 @@ export async function executeQuery(environment: IServiceTaskEnvironment): Promis
       throw new Error("query is undefined after parseAndInsertStringWithFieldContent, cannot proceed with service!");
     }
 
-    const result = await pool.request().query(query);
+    const result = await pool.request().query<{ result: FieldValueType | undefined | null }>(query);
 
     const rows = result.recordset;
 

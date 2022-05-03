@@ -1,5 +1,5 @@
 import * as mysql from "mysql";
-import { FieldType, IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
+import { FieldType, FieldValueType, IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
 import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror";
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
@@ -77,11 +77,11 @@ export async function executeQuery(environment: IServiceTaskEnvironment): Promis
     console.log(`MySQL service: executing ${String(query)}`);
 
     connection.connect();
-    const res = await new Promise<any[]>((resolve, reject) => {
+    const res = await new Promise<{ result: FieldValueType | undefined | null }[]>((resolve, reject) => {
       if (query === undefined) {
         throw new Error("query is undefined after parseAndInsertStringWithFieldContent, cannot proceed with service!");
       }
-      connection.query(query, function (error: mysql.MysqlError | null, results: any[]) {
+      connection.query(query, function (error: mysql.MysqlError | null, results: { result: FieldValueType | undefined | null }[]) {
         if (error) reject(error);
         resolve(results);
       });
