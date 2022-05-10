@@ -4,6 +4,7 @@ import { tl } from "processhub-sdk/lib/tl";
 import * as XLSX from "xlsx";
 import { CSVServiceMethods } from "./csvServiceMethods";
 import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror";
+import fs from "fs";
 
 enum ErrorCodes {
   FILE_ERROR = "FILE_ERROR",
@@ -50,6 +51,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
 }
 
 export async function csvreader(environment: IServiceTaskEnvironment): Promise<boolean> {
+  XLSX.set_fs(fs);
   await serviceLogic(environment);
 
   await environment.instances.updateInstance(environment.instanceDetails);
