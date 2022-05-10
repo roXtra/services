@@ -29,6 +29,7 @@ export async function serviceLogic({ bpmnTaskId, bpmnXml, instanceDetails, users
 
   const sheetJSON: { Bereich: string; "E-Mailadresse": string }[] = utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
 
+  let set = false;
   for (const { Bereich: area, "E-Mailadresse": email } of sheetJSON) {
     if (area !== areaFieldValue) continue;
 
@@ -47,8 +48,10 @@ export async function serviceLogic({ bpmnTaskId, bpmnXml, instanceDetails, users
     }
 
     roleOwners[lane.id] = [{ memberId: userId }];
+    set = true;
     break;
   }
+  if (!set) throw new Error(`Area "${JSON.stringify(areaFieldValue)}" not found in file!`);
 }
 
 function throwErrorIfNotSet<T>(obj: T | undefined | null, errorMessage: string): T {
