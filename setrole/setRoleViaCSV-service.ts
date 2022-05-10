@@ -51,7 +51,7 @@ export async function serviceLogic({ bpmnTaskId, bpmnXml, instanceDetails, users
     set = true;
     break;
   }
-  if (!set) throw new Error(`Area "${JSON.stringify(areaFieldValue)}" not found in file!`);
+  if (!set) throw new Error(`Area "${String(areaFieldValue)}" not found in file!`);
 }
 
 function throwErrorIfNotSet<T>(obj: T | undefined | null, errorMessage: string): T {
