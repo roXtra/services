@@ -1,0 +1,27 @@
+{
+  "id": "setrole-service",
+  "name": "Rolle setzen",
+  "minRoXtraVersion": "9.40.0",
+  "maxRoXtraVersion": "100.0.0",
+  "actions": [
+    {
+      "id": "setRoleViaCSV",
+      "label": "Setze Rolle anhand einer CSV Datei",
+      "configMethod": "setRoleViaCSVConfig",
+      "settings": "main.js",
+      "serviceFile": "main.js",
+      "serviceMethod": "setRoleViaCSV",
+      "fields": [
+        {
+          "name": "areaField",
+          "type": "select",
+          "onload": "fields ProcessHubDropdown"
+        },
+        {
+          "name": "filePath",
+          "type": "text"
+        }
+      ]
+    }
+  ]
+}
