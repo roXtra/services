@@ -17,7 +17,7 @@ module.exports = {
     {
       matchPackageNames: ["renovatebot/github-action"],
       // Reduce stability days for renovate bot updates for itself as they update regularly and otherwise, it would never update itself
-      stabilityDays: 1,
+      stabilityDays: 0,
     },
     {
       matchPackageNames: ["node", "@types/node"],
