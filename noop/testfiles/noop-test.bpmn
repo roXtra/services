@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:processhub="http://processhub.com/schema/1.0/bpmn" id="Definition_9EF97F41FEC58EF5">
+  <bpmn:extensionElements>
+    <processhub:inputOutput>
+      <processhub:inputParameter name="roxtra-version">9.40.0</processhub:inputParameter>
+    </processhub:inputOutput>
+  </bpmn:extensionElements>
+  <bpmn:collaboration id="Collaboration_7C0FC8A599662C67">
+    <bpmn:participant id="Participant_AA27AC1F1CFE79BC" name="noop-test" processRef="Process_FC0687670EEB2B59" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_FC0687670EEB2B59" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_24F66F903828DB9F">
+      <bpmn:lane id="Lane_964768C4BE34EBCB" name="Ersteller">
+        <bpmn:flowNodeRef>StartEvent_C272B863B0AA8EB0</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>UserTask_72AD588FCB20F19E</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_A51EB6D4D14BE69D</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ServiceTask_63A7C651C4BBF141</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="StartEvent_C272B863B0AA8EB0">
+      <bpmn:extensionElements>
+        <processhub:inputOutput>
+          <processhub:inputParameter name="processhub-userform">[{"name":"Titel","type":"ProcessHubTextInput","isRequired":false,"config":{"conditionExpression":"","conditionBuilderMode":true,"validationExpression":""},"inlineEditingActive":false},{"name":"Feld_1","type":"ProcessHubTextInput","isRequired":false,"config":{"conditionExpression":"","conditionBuilderMode":true,"validationExpression":""},"inlineEditingActive":false},{"name":"Feld_2","type":"ProcessHubTextArea","isRequired":false,"config":{"conditionExpression":"","conditionBuilderMode":true,"validationExpression":""},"inlineEditingActive":false},{"name":"Anlagen","type":"ProcessHubFileUpload","isRequired":false,"config":{"conditionExpression":"","conditionBuilderMode":true,"validationExpression":""},"inlineEditingActive":false}]</processhub:inputParameter>
+          <processhub:inputParameter name="roleowners-editable">true</processhub:inputParameter>
+        </processhub:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>SequenceFlow_AF3BA75C985A43E2</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="UserTask_72AD588FCB20F19E" name="Aufgabe 1">
+      <bpmn:incoming>SequenceFlow_AF3BA75C985A43E2</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_543B2E1480380E33</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="EndEvent_A51EB6D4D14BE69D">
+      <bpmn:incoming>SequenceFlow_C221FD11C94142EE</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_AF3BA75C985A43E2" sourceRef="StartEvent_C272B863B0AA8EB0" targetRef="UserTask_72AD588FCB20F19E" />
+    <bpmn:serviceTask id="ServiceTask_63A7C651C4BBF141">
+      <bpmn:extensionElements>
+        <processhub:inputOutput>
+          <processhub:inputParameter name="service-task-config-object">{"selectedServiceId":"noop-service","selectedActionId":"noop","fields":[{"key":"waitInSec","type":"text","value":""}]}</processhub:inputParameter>
+        </processhub:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_543B2E1480380E33</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_C221FD11C94142EE</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_543B2E1480380E33" sourceRef="UserTask_72AD588FCB20F19E" targetRef="ServiceTask_63A7C651C4BBF141" />
+    <bpmn:sequenceFlow id="SequenceFlow_C221FD11C94142EE" sourceRef="ServiceTask_63A7C651C4BBF141" targetRef="EndEvent_A51EB6D4D14BE69D" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram name="BPMNDiagram_F588B54AAE5CB99C">
+    <bpmndi:BPMNPlane bpmnElement="Collaboration_7C0FC8A599662C67">
+      <bpmndi:BPMNShape id="BPMNShape_530109AE264ED9A6" bpmnElement="Lane_964768C4BE34EBCB">
+        <dc:Bounds x="430" y="0" width="550" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_AB50CA8F3BC67C9D" bpmnElement="Participant_AA27AC1F1CFE79BC">
+        <dc:Bounds x="400" y="0" width="580" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_D1E53A6DF921D010" bpmnElement="StartEvent_C272B863B0AA8EB0">
+        <dc:Bounds x="500" y="42" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_3DED52ABB729767F" bpmnElement="UserTask_72AD588FCB20F19E">
+        <dc:Bounds x="596" y="20" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0AAD40469CA99CA9" bpmnElement="EndEvent_A51EB6D4D14BE69D">
+        <dc:Bounds x="916" y="42" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_BE8510A7020A8AF3" bpmnElement="SequenceFlow_AF3BA75C985A43E2" sourceElement="BPMNShape_D1E53A6DF921D010" targetElement="BPMNShape_3DED52ABB729767F">
+        <di:waypoint x="536" y="60" />
+        <di:waypoint x="566" y="60" />
+        <di:waypoint x="566" y="60" />
+        <di:waypoint x="596" y="60" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="BPMNShape_CEE2BA9740D876EF" bpmnElement="ServiceTask_63A7C651C4BBF141">
+        <dc:Bounds x="730" y="20" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_B767887B33619E2D" bpmnElement="SequenceFlow_543B2E1480380E33" sourceElement="BPMNShape_3DED52ABB729767F" targetElement="BPMNShape_CEE2BA9740D876EF">
+        <di:waypoint x="696" y="60" />
+        <di:waypoint x="730" y="60" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_80575764E14CD9DD" bpmnElement="SequenceFlow_C221FD11C94142EE" sourceElement="BPMNShape_CEE2BA9740D876EF" targetElement="BPMNShape_0AAD40469CA99CA9">
+        <di:waypoint x="830" y="60" />
+        <di:waypoint x="916" y="60" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
