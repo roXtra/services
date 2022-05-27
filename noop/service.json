@@ -11,7 +11,8 @@
             "settings": "main.js",
             "serviceFile": "main.js",
             "serviceMethod": "noop",
-            "fields": [                
+            "fields": [     
+              { "name": "waitInSec", "type": "text" }           
             ]
         }
     ]

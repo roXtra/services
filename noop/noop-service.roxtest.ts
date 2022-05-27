@@ -4,11 +4,12 @@
 import { noop, noopConfig } from "./main";
 import { expect } from "chai";
 import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools";
+import fs from "fs";
 
 describe("services", () => {
   describe("noop", () => {
     it("execute service", async () => {
-      const env = createEmptyTestServiceEnvironment("");
+      const env = createEmptyTestServiceEnvironment(fs.readFileSync("./testfiles/noop-test.bpmn", "utf-8"));
       const result = await noop(env);
       expect(result).to.equal(true);
     });
