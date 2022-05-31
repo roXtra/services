@@ -22,7 +22,7 @@
     "npm": "8"
   },
   "dependencies": {
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.41.0-8/release.tgz",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.41.0/release.tgz",
     "react": "^17.0.2",
     "semantic-ui-react": "^2.1.2",
     "xlsx": "^0.18.5"
