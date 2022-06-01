@@ -23,14 +23,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "mssql": "8.1.0",
+    "mssql": "8.1.2",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.41.0/release.tgz",
     "react": "^17.0.2",
     "semantic-ui-react": "^2.1.2"
   },
   "devDependencies": {
     "@types/mocha": "^9.1.1",
-    "@types/mssql": "^7.1.5",
+    "@types/mssql": "^8.0.1",
     "@types/node": "^16.11.38",
     "@types/react": "^17.0.45",
     "bestzip": "^2.2.1",
