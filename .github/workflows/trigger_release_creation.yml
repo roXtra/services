@@ -8,9 +8,10 @@ on:
         required: true
         default: 'v'
       isfinalreleasebuild:
-        description: 'Should this be a final release build (true OR false)'
+        description: 'Build final release build? (if unchecked, this builds a pre-release)'
         required: true
-        default: 'false'
+        type: boolean
+        default: false
 
 env:
   NODE_VERSION: 16
@@ -20,7 +21,7 @@ jobs:
     name: Configure Release Branch
     runs-on: ubuntu-latest
     env:
-      isprereleasebuild: ${{ github.event.inputs.isfinalreleasebuild != 'true' }}
+      isprereleasebuild: ${{ inputs.isfinalreleasebuild != true }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
