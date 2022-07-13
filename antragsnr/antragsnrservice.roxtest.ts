@@ -27,6 +27,7 @@ describe("services", () => {
         displayName: "",
         description: "",
         extras: { instances: instances },
+        type: "backend",
       };
 
       serviceLogic(processDetails, env, tragetField);
