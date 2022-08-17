@@ -31,7 +31,7 @@
   "devDependencies": {
     "@types/chai": "^4.3.3",
     "@types/mocha": "^9.1.1",
-    "@types/node": "^16.11.47",
+    "@types/node": "^16.11.49",
     "@types/react": "^17.0.48",
     "acorn": "^8.8.0",
     "bestzip": "^2.2.1",
