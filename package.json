@@ -1,6 +1,6 @@
 {
   "name": "services",
-  "version": "9.48.0",
+  "version": "9.48.1",
   "description": "",
   "main": "index.js",
   "scripts": {
