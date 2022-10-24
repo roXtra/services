@@ -1,36 +1,39 @@
-import * as Semantic from "semantic-ui-react";
 import { tl } from "processhub-sdk/lib/tl";
 import { Language } from "processhub-sdk/lib/tl";
 
 export function transactionTimeoutConfig(userLanguage: Language): JSX.Element {
   return (
     <div id="service-form" className="ui form center">
-      <Semantic.Table striped>
-        <Semantic.Table.Body>
-          <Semantic.Table.Row>
-            <Semantic.Table.Cell>
+      <table className="table table-striped table-bordered">
+        <tbody>
+          <tr>
+            <td>
               <span>{tl("Transaktions-Timeout", userLanguage)}</span>
-            </Semantic.Table.Cell>
-            <Semantic.Table.Cell>
+            </td>
+            <td>
               <input id="transactionTimeout" />
-            </Semantic.Table.Cell>
-          </Semantic.Table.Row>
-        </Semantic.Table.Body>
-      </Semantic.Table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
-      <Semantic.Table.Row>
-        <Semantic.Table.Cell colSpan="2">
-          <h3>{tl("Erklärung Transaktions-Timeout", userLanguage)}</h3>
-          <div>
-            <p>
-              {tl(
-                "Setzt das Transaktions-Timeout für zukünftige Datenbank-Transaktionen in ms. Das Timeout der aktuell laufenden Transaktion bleibt unverändert.",
-                userLanguage,
-              )}
-            </p>
-          </div>
-        </Semantic.Table.Cell>
-      </Semantic.Table.Row>
+      <table className="table">
+        <tbody>
+          <tr>
+            <td colSpan={2}>
+              <h3>{tl("Erklärung Transaktions-Timeout", userLanguage)}</h3>
+              <div>
+                <p>
+                  {tl(
+                    "Setzt das Transaktions-Timeout für zukünftige Datenbank-Transaktionen in ms. Das Timeout der aktuell laufenden Transaktion bleibt unverändert.",
+                    userLanguage,
+                  )}
+                </p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 }

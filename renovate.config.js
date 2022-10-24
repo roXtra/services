@@ -36,10 +36,5 @@ module.exports = {
       matchPackageNames: ["node-fetch", "@types/node-fetch"],
       allowedVersions: "^2.0.0",
     },
-    {
-      // Currently locked due to semantic-ui-react compile errors
-      matchPackageNames: ["typescript"],
-      allowedVersions: "4.7.4",
-    },
   ],
 };

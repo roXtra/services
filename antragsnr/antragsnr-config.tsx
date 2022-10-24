@@ -1,22 +1,21 @@
-import * as Semantic from "semantic-ui-react";
 import { tl } from "processhub-sdk/lib/tl";
 import { Language } from "processhub-sdk/lib/tl";
 
 export function antragsnrconfig(userLanguage: Language): JSX.Element {
   return (
-    <Semantic.Table striped>
-      <Semantic.Table.Body>
-        <Semantic.Table.Row>
-          <Semantic.Table.Cell>
+    <table className="table table-striped table-bordered">
+      <tbody>
+        <tr>
+          <td>
             <span>{tl("Zielfeld", userLanguage)}</span>
-          </Semantic.Table.Cell>
-          <Semantic.Table.Cell>
+          </td>
+          <td>
             <input id="targetfield" />
-          </Semantic.Table.Cell>
-        </Semantic.Table.Row>
+          </td>
+        </tr>
 
-        <Semantic.Table.Row>
-          <Semantic.Table.Cell colSpan="2">
+        <tr>
+          <td colSpan={2}>
             <h3>{tl("Erklärung Eingabefeld Zielfeld", userLanguage)}</h3>
             <div>
               <p>{tl("Im Zielfeld kann der Name des Feldes angegeben werden, in dem die Antragsnummer gespeichert werden soll.", userLanguage)}</p>
@@ -31,9 +30,9 @@ export function antragsnrconfig(userLanguage: Language): JSX.Element {
                 )}
               </p>
             </div>
-          </Semantic.Table.Cell>
-        </Semantic.Table.Row>
-      </Semantic.Table.Body>
-    </Semantic.Table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   );
 }
