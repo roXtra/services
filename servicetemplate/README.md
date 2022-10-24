@@ -93,7 +93,6 @@ These dependant packages are:
 
 - processhub-sdk - you should use the same version as the version of Prozesse
 - react - actual React (at the time of writing) is 17.0.1
-- semantic-ui-react - we prefer you leave the version as is. Internally we use Semantic for displaying all of our services.
 
 Add dependencies as you need as long as these three packages are included.
 Please ensure that all used dependencies are available freely from npm in order to pull these dependencies during builds.
