@@ -1,69 +1,77 @@
-import * as Semantic from "semantic-ui-react";
 import { tl } from "processhub-sdk/lib/tl";
 import { Language } from "processhub-sdk/lib/tl";
 
 export function getActivityByNumberConfig(userLanguage: Language): JSX.Element {
   return (
     <div id="service-form" className="ui form center">
-      <Semantic.Table striped>
-        <Semantic.Table.Body>
-          <Semantic.Table.Row>
-            <Semantic.Table.Cell>
+      <table className="table table-striped table-bordered">
+        <tbody>
+          <tr>
+            <td>
               <span>{tl("Token", userLanguage)}</span>
-            </Semantic.Table.Cell>
-            <Semantic.Table.Cell>
+            </td>
+            <td>
               <input id="token" />
-            </Semantic.Table.Cell>
-          </Semantic.Table.Row>
+            </td>
+          </tr>
 
-          <Semantic.Table.Row>
-            <Semantic.Table.Cell>
+          <tr>
+            <td>
               <span>{tl("Benutzername", userLanguage)}</span>
-            </Semantic.Table.Cell>
-            <Semantic.Table.Cell>
+            </td>
+            <td>
               <select id="username" />
-            </Semantic.Table.Cell>
-          </Semantic.Table.Row>
+            </td>
+          </tr>
 
-          <Semantic.Table.Row>
-            <Semantic.Table.Cell>
+          <tr>
+            <td>
               <span>{tl("Maßnahmennummer", userLanguage)}</span>
-            </Semantic.Table.Cell>
-            <Semantic.Table.Cell>
+            </td>
+            <td>
               <select id="activityNumber" />
-            </Semantic.Table.Cell>
-          </Semantic.Table.Row>
-        </Semantic.Table.Body>
-      </Semantic.Table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
-      <Semantic.Table.Row>
-        <Semantic.Table.Cell colSpan="2">
-          <h3>{tl("Erklärung Token", userLanguage)}</h3>
-          <div>
-            <p>{tl("Geben Sie das Authentifizierungstoken der Intrafox-API ein.", userLanguage)}</p>
-          </div>
-          <h3>{tl("Erklärung Benutzername", userLanguage)}</h3>
-          <div>
-            <p>
-              {tl(
-                "Geben Sie das Feld an, über das der Benutzername des Intrafoxbenutzers, von dem Sie Maßnahmen aus dem System erhalten wollen, eingegeben werden kann.",
-                userLanguage,
-              )}
-            </p>
-          </div>
-          <h3>{tl("Erklärung Maßnahmennummer", userLanguage)}</h3>
-          <div>
-            <p>{tl("Geben Sie das Feld an, über das die Maßnahmennummer der Maßnahme von der Sie Informationen erhalten wollen, eingegeben werden kann.", userLanguage)}</p>
-          </div>
+      <table className="table">
+        <tbody>
+          <tr>
+            <td colSpan={2}>
+              <h3>{tl("Erklärung Token", userLanguage)}</h3>
+              <div>
+                <p>{tl("Geben Sie das Authentifizierungstoken der Intrafox-API ein.", userLanguage)}</p>
+              </div>
+              <h3>{tl("Erklärung Benutzername", userLanguage)}</h3>
+              <div>
+                <p>
+                  {tl(
+                    "Geben Sie das Feld an, über das der Benutzername des Intrafoxbenutzers, von dem Sie Maßnahmen aus dem System erhalten wollen, eingegeben werden kann.",
+                    userLanguage,
+                  )}
+                </p>
+              </div>
+              <h3>{tl("Erklärung Maßnahmennummer", userLanguage)}</h3>
+              <div>
+                <p>
+                  {tl("Geben Sie das Feld an, über das die Maßnahmennummer der Maßnahme von der Sie Informationen erhalten wollen, eingegeben werden kann.", userLanguage)}
+                </p>
+              </div>
 
-          <h3>{tl("Mögliche Service Fehler", userLanguage)}</h3>
-          <div>
-            <p>
-              {tl("API_ERROR: Tritt dieser Fehler auf, ist bei der Intrafox Schnittstelle ein Fehler aufgetreten und es konnte keine Activity erstellt werden.", userLanguage)}
-            </p>
-          </div>
-        </Semantic.Table.Cell>
-      </Semantic.Table.Row>
+              <h3>{tl("Mögliche Service Fehler", userLanguage)}</h3>
+              <div>
+                <p>
+                  {tl(
+                    "API_ERROR: Tritt dieser Fehler auf, ist bei der Intrafox Schnittstelle ein Fehler aufgetreten und es konnte keine Activity erstellt werden.",
+                    userLanguage,
+                  )}
+                </p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 }

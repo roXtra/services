@@ -1,87 +1,90 @@
-import * as Semantic from "semantic-ui-react";
 import { tl } from "processhub-sdk/lib/tl";
 import { Language } from "processhub-sdk/lib/tl";
 
 export function getQueryHint(userLanguage: Language): JSX.Element {
   return (
-    <Semantic.Table.Cell colSpan="2">
+    <td colSpan={2}>
       <h3>{tl("Abfrage", userLanguage)}</h3>
       <div>
         <p>{tl("Die SQL-Abfrage, die ausgeführt werden soll. Felder können mit field['Feldname'] in die Abfrage eingefügt werden, Rollen mit role['Lane'].", userLanguage)}</p>
         <br />
         <p>{tl("Beispiel: ", userLanguage) + "UPDATE test_table SET abteilung='field['Abteilung']', name='role['Ersteller']' WHERE id='field['id']'"}</p>
       </div>
-    </Semantic.Table.Cell>
+    </td>
   );
 }
 
 export function executeQueryConfig(userLanguage: Language): JSX.Element {
   return (
     <div id="service-form" className="ui form center">
-      <Semantic.Table striped>
-        <Semantic.Table.Body>
-          <Semantic.Table.Row>
-            <Semantic.Table.Cell>
+      <table className="table table-striped table-bordered">
+        <tbody>
+          <tr>
+            <td>
               <span>{tl("Server", userLanguage)}</span>
-            </Semantic.Table.Cell>
-            <Semantic.Table.Cell>
+            </td>
+            <td>
               <input id="server" />
-            </Semantic.Table.Cell>
-          </Semantic.Table.Row>
+            </td>
+          </tr>
 
-          <Semantic.Table.Row>
-            <Semantic.Table.Cell>
+          <tr>
+            <td>
               <span>{tl("Benutzername", userLanguage)}</span>
-            </Semantic.Table.Cell>
-            <Semantic.Table.Cell>
+            </td>
+            <td>
               <input id="username" />
-            </Semantic.Table.Cell>
-          </Semantic.Table.Row>
+            </td>
+          </tr>
 
-          <Semantic.Table.Row>
-            <Semantic.Table.Cell>
+          <tr>
+            <td>
               <span>{tl("Passwort", userLanguage)}</span>
-            </Semantic.Table.Cell>
-            <Semantic.Table.Cell>
+            </td>
+            <td>
               <input id="password" type="password" />
-            </Semantic.Table.Cell>
-          </Semantic.Table.Row>
+            </td>
+          </tr>
 
-          <Semantic.Table.Row>
-            <Semantic.Table.Cell>
+          <tr>
+            <td>
               <span>{tl("Datenbank", userLanguage)}</span>
-            </Semantic.Table.Cell>
-            <Semantic.Table.Cell>
+            </td>
+            <td>
               <input id="database" />
-            </Semantic.Table.Cell>
-          </Semantic.Table.Row>
+            </td>
+          </tr>
 
-          <Semantic.Table.Row>
-            <Semantic.Table.Cell>
+          <tr>
+            <td>
               <span>{tl("Abfrage", userLanguage)}</span>
-            </Semantic.Table.Cell>
-            <Semantic.Table.Cell>
+            </td>
+            <td>
               <input id="query" />
-            </Semantic.Table.Cell>
-          </Semantic.Table.Row>
+            </td>
+          </tr>
 
-          <Semantic.Table.Row>
-            <Semantic.Table.Cell></Semantic.Table.Cell>
-            <Semantic.Table.Cell></Semantic.Table.Cell>
-          </Semantic.Table.Row>
+          <tr>
+            <td></td>
+            <td></td>
+          </tr>
 
-          <Semantic.Table.Row>
-            <Semantic.Table.Cell>
+          <tr>
+            <td>
               <span>{tl("Ergebnis", userLanguage)}</span>
-            </Semantic.Table.Cell>
-            <Semantic.Table.Cell>
+            </td>
+            <td>
               <select id="targetField" />
-            </Semantic.Table.Cell>
-          </Semantic.Table.Row>
-        </Semantic.Table.Body>
-      </Semantic.Table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
-      <Semantic.Table.Row>{getQueryHint(userLanguage)}</Semantic.Table.Row>
+      <table className="table">
+        <tbody>
+          <tr>{getQueryHint(userLanguage)}</tr>
+        </tbody>
+      </table>
     </div>
   );
 }

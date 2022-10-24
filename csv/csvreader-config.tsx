@@ -1,41 +1,40 @@
-import * as Semantic from "semantic-ui-react";
 import { tl } from "processhub-sdk/lib/tl";
 import { Language } from "processhub-sdk/lib/tl";
 
 export function csvreaderConfig(userLanguage: Language): JSX.Element {
   return (
     <div id="service-form" className="ui form center">
-      <Semantic.Table striped>
-        <Semantic.Table.Body>
-          <Semantic.Table.Row>
-            <Semantic.Table.Cell>
+      <table className="table table-striped table-bordered">
+        <tbody>
+          <tr>
+            <td>
               <span>{tl("Dateipfad", userLanguage)}</span>
-            </Semantic.Table.Cell>
-            <Semantic.Table.Cell>
+            </td>
+            <td>
               <input id="filePath" />
-            </Semantic.Table.Cell>
-          </Semantic.Table.Row>
+            </td>
+          </tr>
 
-          <Semantic.Table.Row>
-            <Semantic.Table.Cell>
+          <tr>
+            <td>
               <span>{tl("Arbeitsblattname", userLanguage)}</span>
-            </Semantic.Table.Cell>
-            <Semantic.Table.Cell>
+            </td>
+            <td>
               <input id="sheetName" />
-            </Semantic.Table.Cell>
-          </Semantic.Table.Row>
+            </td>
+          </tr>
 
-          <Semantic.Table.Row>
-            <Semantic.Table.Cell>
+          <tr>
+            <td>
               <span>{tl("Abfrage", userLanguage)}</span>
-            </Semantic.Table.Cell>
-            <Semantic.Table.Cell>
+            </td>
+            <td>
               <input id="query" />
-            </Semantic.Table.Cell>
-          </Semantic.Table.Row>
+            </td>
+          </tr>
 
-          <Semantic.Table.Row>
-            <Semantic.Table.Cell colSpan="2">
+          <tr>
+            <td colSpan={2}>
               <h3>{tl("Erklärung Eingabefeld Dateipfad", userLanguage)}</h3>
               <div>
                 <p>{tl("Im Eingabefeld Dateipfad wird der Pfad der CSV oder XLSX Datei angegeben. Diese Datei muss auf dem roXtra Server liegen.", userLanguage)}</p>
@@ -68,10 +67,10 @@ export function csvreaderConfig(userLanguage: Language): JSX.Element {
                   )}
                 </p>
               </div>
-            </Semantic.Table.Cell>
-          </Semantic.Table.Row>
-        </Semantic.Table.Body>
-      </Semantic.Table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 }

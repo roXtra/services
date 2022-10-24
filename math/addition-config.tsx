@@ -1,40 +1,39 @@
-import * as Semantic from "semantic-ui-react";
 import { tl } from "processhub-sdk/lib/tl";
 import { Language } from "processhub-sdk/lib/tl";
 
 export function additionConfig(userLanguage: Language): JSX.Element {
   return (
     <div id="service-form" className="ui form center">
-      <Semantic.Table striped>
-        <Semantic.Table.Body>
-          <Semantic.Table.Row>
-            <Semantic.Table.Cell>
+      <table className="table table-striped table-bordered">
+        <tbody>
+          <tr>
+            <td>
               <span>{tl("Zahl 1", userLanguage)}</span>
-            </Semantic.Table.Cell>
-            <Semantic.Table.Cell>
+            </td>
+            <td>
               <select id="numberField1" />
-            </Semantic.Table.Cell>
-          </Semantic.Table.Row>
+            </td>
+          </tr>
 
-          <Semantic.Table.Row>
-            <Semantic.Table.Cell>
+          <tr>
+            <td>
               <span>{tl("Zahl 2", userLanguage)}</span>
-            </Semantic.Table.Cell>
-            <Semantic.Table.Cell>
+            </td>
+            <td>
               <select id="numberField2" />
-            </Semantic.Table.Cell>
-          </Semantic.Table.Row>
+            </td>
+          </tr>
 
-          <Semantic.Table.Row>
-            <Semantic.Table.Cell>
+          <tr>
+            <td>
               <span>{tl("Ergebnis", userLanguage)}</span>
-            </Semantic.Table.Cell>
-            <Semantic.Table.Cell>
+            </td>
+            <td>
               <input id="targetField" />
-            </Semantic.Table.Cell>
-          </Semantic.Table.Row>
-        </Semantic.Table.Body>
-      </Semantic.Table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 }

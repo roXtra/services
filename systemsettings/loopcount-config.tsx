@@ -1,31 +1,34 @@
-import * as Semantic from "semantic-ui-react";
 import { tl } from "processhub-sdk/lib/tl";
 import { Language } from "processhub-sdk/lib/tl";
 
 export function loopCountConfig(userLanguage: Language): JSX.Element {
   return (
     <div id="service-form" className="ui form center">
-      <Semantic.Table striped>
-        <Semantic.Table.Body>
-          <Semantic.Table.Row>
-            <Semantic.Table.Cell>
+      <table className="table table-striped table-bordered">
+        <tbody>
+          <tr>
+            <td>
               <span>{tl("Max. Anzahl an Iterationen", userLanguage)}</span>
-            </Semantic.Table.Cell>
-            <Semantic.Table.Cell>
+            </td>
+            <td>
               <input id="maxIterations" />
-            </Semantic.Table.Cell>
-          </Semantic.Table.Row>
-        </Semantic.Table.Body>
-      </Semantic.Table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
-      <Semantic.Table.Row>
-        <Semantic.Table.Cell colSpan="2">
-          <h3>{tl("Erklärung Eingabefeld", userLanguage)}</h3>
-          <div>
-            <p>{tl("Max. Anzahl an Iterationen, die ein BPMN-Element durchlaufen kann, bevor die Ausführung unterbrochen wird.", userLanguage)}</p>
-          </div>
-        </Semantic.Table.Cell>
-      </Semantic.Table.Row>
+      <table className="table">
+        <tbody>
+          <tr>
+            <td colSpan={2}>
+              <h3>{tl("Erklärung Eingabefeld", userLanguage)}</h3>
+              <div>
+                <p>{tl("Max. Anzahl an Iterationen, die ein BPMN-Element durchlaufen kann, bevor die Ausführung unterbrochen wird.", userLanguage)}</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 }
