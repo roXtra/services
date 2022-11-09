@@ -28,12 +28,12 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
-    "@types/chai": "^4.3.3",
+    "@types/chai": "^4.3.4",
     "@types/mocha": "^10.0.0",
     "@types/node": "^16.18.3",
     "@types/react": "^17.0.52",
     "bestzip": "^2.2.1",
-    "chai": "^4.3.6",
+    "chai": "^4.3.7",
     "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
     "cross-var": "^1.1.0",
