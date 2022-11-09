@@ -36,7 +36,7 @@
     "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
     "cross-var": "^1.1.0",
-    "eslint": "^8.26.0",
+    "eslint": "^8.27.0",
     "mocha": "^10.1.0",
     "rimraf": "^3.0.2",
     "ts-loader": "^9.4.1",
