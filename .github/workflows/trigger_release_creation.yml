@@ -55,7 +55,7 @@ jobs:
         run: |
           if ${{ env.isprereleasebuild }}; then npm version prerelease; else npm version minor; fi
           NEWVERSION=$(echo "console.log(require('./package.json').version);" | node)
-          echo "::set-output name=newversion::$(echo $NEWVERSION)"
+          echo "newversion=$(echo $NEWVERSION)" >> $GITHUB_OUTPUT
       - name: Create Branch and Push Branch and Tag
         run: |
           echo "Create Release Branch"
