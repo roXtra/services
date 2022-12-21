@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@types/mocha": "^10.0.1",
-    "@types/node": "^16.18.9",
+    "@types/node": "^16.18.10",
     "@types/react": "^17.0.52",
     "bestzip": "^2.2.1",
     "chai": "^4.3.7",
