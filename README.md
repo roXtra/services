@@ -30,6 +30,9 @@ To run your new service you have to restart your roXtraEFormulare Windows Servic
 
 ## Develop your own Services
 
+### Note
+If you implement a service yourself, you must also ensure that the service is kept up to date. Before a roXtra system update of the productive system, you should install the corresponding processhub-sdk version (same version number as the roXtra update) in the service and check it for functionality on a test system.
+
 ### Requirements
 
 - [Node.js](https://nodejs.org/en/download/)
@@ -90,6 +93,9 @@ Roxtra/eformulare/node_modules/@eformservice Verzeichnis auf Ihrem roXtra Applik
 Um Ihren neuen Service zu verwenden starten Sie Ihren roXtraEFormulare Windows Dienst neu.
 
 ## Entwickeln von Services
+
+### Hinweis
+Sollten Sie einen Service selbst implementieren, müssen Sie auch darauf achten den Service aktuell zu halten. Vor einem roXtra Systemupdate des Produktivsystems sollten Sie die dazugehörige processhub-sdk Version (gleiche Versionsnummer wie das roXtra Update) im Service installieren und auf einem Testsystem auf Funktionalität überprüfen.
 
 ### Voraussetzungen
 
