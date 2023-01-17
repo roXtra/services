@@ -12,7 +12,7 @@ enum ErrorCodes {
 async function getReport(environment: IServiceTaskEnvironment, reportDraftID: string, reportType: IGenerateReportRequestType): Promise<string> {
   const instance = environment.instanceDetails;
 
-  const reply = await environment.instances.generateInstanceReport([instance.instanceId], reportDraftID, reportType);
+  const reply = await environment.instances.generateInstanceReport(instance.processId, [instance.instanceId], reportDraftID, reportType);
   const url = await environment.instances.uploadAttachment(instance.instanceId, reply.fileName, Buffer.from(reply.doc, "base64"));
 
   return url;
