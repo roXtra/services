@@ -43,7 +43,7 @@ export async function serviceLogic({ bpmnTaskId, bpmnXml, instanceDetails, users
     );
     const process = await processes.getProcessDetails(instanceDetails.processId, ProcessExtras.ExtrasProcessRolesWithMemberNames);
 
-    if (!isPotentialRoleOwner(user, lane.id, workspace, process)) {
+    if (!isPotentialRoleOwner(user.userId, lane.id, workspace, process)) {
       throw new Error(`The user "${user.displayName}" with id "${userId}" cannot be set in this role. Check process settings!`);
     }
 
