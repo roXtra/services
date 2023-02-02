@@ -69,7 +69,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
   if (supervisor && processWorkspace) {
     const supervisorWorkspaces = supervisor.extras.workspaces;
 
-    if (!isPotentialRoleOwner(supervisor, roleIdSupervisor, processWorkspace, processDetails)) {
+    if (!isPotentialRoleOwner(supervisor.userId, roleIdSupervisor, processWorkspace, processDetails)) {
       throw new BpmnError(ErrorCodes.SUPERVISOR_ERROR, "Der Vorgesetzte ist kein potentieller Rolleninhaber dieses Prozesses!");
     }
 
