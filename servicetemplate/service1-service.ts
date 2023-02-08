@@ -2,6 +2,7 @@ import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
 import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces";
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
+import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror";
 
 // Extract the serviceLogic that testing is possible
 export async function serviceLogic(environment: IServiceTaskEnvironment): Promise<IInstanceDetails> {
@@ -12,7 +13,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
   const config = extensionValues.serviceTaskConfigObject;
 
   if (config === undefined) {
-    throw new Error("Config is undefined, cannot proceed with service!");
+    throw new BpmnError(ErrorCode.ConfigInvalid, "Config is undefined, cannot proceed with service!");
   }
 
   const fields = config.fields;
@@ -35,7 +36,7 @@ export async function service1(environment: IServiceTaskEnvironment): Promise<bo
   const instance = await serviceLogic(environment);
 
   if (instance.extras.fieldContents === undefined) {
-    throw new Error("fieldContents are undefined, cannot proceed with service!");
+    throw new BpmnError(ErrorCode.ConfigInvalid, "fieldContents are undefined, cannot proceed with service!");
   }
 
   instance.extras.fieldContents["Neues Feld"] = {
