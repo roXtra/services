@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:processhub="http://processhub.com/schema/1.0/bpmn" id="Definition_A08EF1E856F7E7E0">
+  <bpmn:extensionElements>
+    <processhub:inputOutput>
+      <processhub:inputParameter name="roxtra-version">9.57.0</processhub:inputParameter>
+    </processhub:inputOutput>
+  </bpmn:extensionElements>
+  <bpmn:collaboration id="Collaboration_EC4A5EB8497903F9">
+    <bpmn:participant id="Participant_290D960A4902FCE4" name="Trigger Webhook" processRef="Process_B090EAE9F7EB39F5" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_B090EAE9F7EB39F5" isExecutable="true">
+    <bpmn:extensionElements>
+      <processhub:inputOutput>
+        <processhub:inputParameter name="processhub-userform">[{"name":"Titel","type":"ProcessHubTextInput","isRequired":false,"config":{"conditionExpression":"","conditionBuilderMode":true,"validationExpression":""},"inlineEditingActive":false,"id":"EEA359CBC542C20E","index":0},{"name":"Testdata","type":"ProcessHubTextInput","isRequired":false,"config":{"conditionExpression":"","conditionBuilderMode":true,"validationExpression":"","defaultValue":"9.9.9"},"inlineEditingActive":false,"id":"83FB8BA09EEB6942","index":1},{"name":"ContentType","type":"ProcessHubTextInput","isRequired":false,"config":{"conditionExpression":"","conditionBuilderMode":true,"validationExpression":"","defaultValue":"application/json"},"inlineEditingActive":false,"id":"D24678E90166DF56","index":2},{"name":"Anlagen","type":"ProcessHubFileUpload","isRequired":false,"config":{"conditionExpression":"","conditionBuilderMode":true,"validationExpression":""},"inlineEditingActive":false,"id":"C4051FB0A8924A71","index":3}]</processhub:inputParameter>
+      </processhub:inputOutput>
+    </bpmn:extensionElements>
+    <bpmn:laneSet id="LaneSet_821BC803F385BF84">
+      <bpmn:lane id="Lane_AC012F8B993FC2C6" name="Ersteller">
+        <bpmn:flowNodeRef>StartEvent_AB7864AC8135A525</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_69D8ACD97352781F</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ServiceTask_11EE4126D6C2F418</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="StartEvent_AB7864AC8135A525">
+      <bpmn:extensionElements>
+        <processhub:inputOutput>
+          <processhub:inputParameter name="processhub-userform">[{"name":"Titel","type":"ProcessHubTextInput","isRequired":false,"config":{"conditionExpression":"","conditionBuilderMode":true,"validationExpression":""},"inlineEditingActive":false,"id":"EEA359CBC542C20E","index":0},{"name":"Testdata","type":"ProcessHubTextInput","isRequired":false,"config":{"conditionExpression":"","conditionBuilderMode":true,"validationExpression":"","defaultValue":"9.9.9"},"inlineEditingActive":false,"id":"83FB8BA09EEB6942","index":1},{"name":"ContentType","type":"ProcessHubTextInput","isRequired":false,"config":{"conditionExpression":"","conditionBuilderMode":true,"validationExpression":"","defaultValue":"application/json"},"inlineEditingActive":false,"id":"D24678E90166DF56","index":2}]</processhub:inputParameter>
+          <processhub:inputParameter name="roleowners-editable">true</processhub:inputParameter>
+        </processhub:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>SequenceFlow_F34212E0CA4E8B67</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="EndEvent_69D8ACD97352781F">
+      <bpmn:incoming>SequenceFlow_72FB8D471A7ADEC9</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="ServiceTask_11EE4126D6C2F418" name="Trigger Webhook">
+      <bpmn:extensionElements>
+        <processhub:inputOutput>
+          <processhub:inputParameter name="service-task-config-object">{"selectedServiceId":"triggerwebhook-service","selectedActionId":"triggerwebhookPost","fields":[{"key":"webhookAddress","type":"text","value":"http://localhost:1080/webhookendpoint?test=field['Testdata']"},{"key":"headers","type":"text","value":"Content-type: field['ContentType']\nAdditionalHeader: Test"},{"key":"bodyData","type":"text","value":"{\n   \"data\": \n        {\"releaseVersion\":\"field['Testdata']\"\n    }\n}"}]}</processhub:inputParameter>
+        </processhub:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_F34212E0CA4E8B67</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_72FB8D471A7ADEC9</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_F34212E0CA4E8B67" sourceRef="StartEvent_AB7864AC8135A525" targetRef="ServiceTask_11EE4126D6C2F418" />
+    <bpmn:sequenceFlow id="SequenceFlow_72FB8D471A7ADEC9" sourceRef="ServiceTask_11EE4126D6C2F418" targetRef="EndEvent_69D8ACD97352781F" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram name="BPMNDiagram_B9483D4534DDFB31">
+    <bpmndi:BPMNPlane bpmnElement="Collaboration_EC4A5EB8497903F9">
+      <bpmndi:BPMNShape id="BPMNShape_FE31E5E46FDBB7DC" bpmnElement="Lane_AC012F8B993FC2C6">
+        <dc:Bounds x="430" y="0" width="550" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_8A53C3A6014BDFAC" bpmnElement="Participant_290D960A4902FCE4">
+        <dc:Bounds x="400" y="0" width="580" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_64109CBB1212FB04" bpmnElement="StartEvent_AB7864AC8135A525">
+        <dc:Bounds x="500" y="42" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_50DC0F9402C7F054" bpmnElement="EndEvent_69D8ACD97352781F">
+        <dc:Bounds x="916" y="42" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_FE9C208E269C7B89" bpmnElement="ServiceTask_11EE4126D6C2F418">
+        <dc:Bounds x="620" y="20" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_C2639E243021D1F0" bpmnElement="SequenceFlow_F34212E0CA4E8B67" sourceElement="BPMNShape_64109CBB1212FB04" targetElement="BPMNShape_FE9C208E269C7B89">
+        <di:waypoint x="536" y="60" />
+        <di:waypoint x="620" y="60" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_0CE1AC6879FDD2CA" bpmnElement="SequenceFlow_72FB8D471A7ADEC9" sourceElement="BPMNShape_FE9C208E269C7B89" targetElement="BPMNShape_50DC0F9402C7F054">
+        <di:waypoint x="720" y="60" />
+        <di:waypoint x="916" y="60" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

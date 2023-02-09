@@ -1,0 +1,30 @@
+{
+  "id": "triggerwebhook-service",
+  "name": "Trigger Webhook",
+  "minRoXtraVersion": "8.009.0",
+  "maxRoXtraVersion": "100.0.0",
+  "actions": [
+    {
+      "id": "triggerwebhookPost",
+      "label": "Trigger Webhook POST",
+      "configMethod": "triggerwebhookPostConfig",
+      "settings": "main.js",
+      "serviceFile": "main.js",
+      "serviceMethod": "triggerwebhookPost",
+      "fields": [
+        {
+          "name": "webhookAddress",
+          "type": "text"
+        },
+        {
+          "name": "headers",
+          "type": "text"
+        },
+        {
+          "name": "bodyData",
+          "type": "text"
+        }
+      ]
+    }
+  ]
+}
