@@ -1,7 +1,7 @@
 {
   "id": "triggerwebhook-service",
   "name": "Trigger Webhook",
-  "minRoXtraVersion": "8.009.0",
+  "minRoXtraVersion": "9.59.0",
   "maxRoXtraVersion": "100.0.0",
   "actions": [
     {
