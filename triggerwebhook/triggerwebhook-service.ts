@@ -33,28 +33,27 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
     throw new BpmnError(ErrorCode.ConfigInvalid, "Webhook address is empty - cannot perform webhook call!");
   }
 
-  const webhookAddressWithFieldValues = parseAndInsertStringWithFieldContent(
-    webhookAddress,
-    instance.extras.fieldContents,
-    processObject,
-    instanceRoleOwners,
-    environment.sender.language || "de-DE",
-  );
-
-  const webhookBodyWithFieldValues = webhookBody
-    ? parseAndInsertStringWithFieldContent(webhookBody, instance.extras.fieldContents, processObject, instanceRoleOwners, environment.sender.language || "de-DE")
-    : undefined;
-
-  const webhookHeadersWithFieldValues: { [key: string]: string } = {};
-
-  webhookHeaders?.forEach((headerRow) => {
-    const headerRowWithReplacedFields = parseAndInsertStringWithFieldContent(
-      headerRow,
+  const replaceFieldContentsInFieldValue = (value: string): string | undefined =>
+    parseAndInsertStringWithFieldContent(
+      value,
       instance.extras.fieldContents,
       processObject,
       instanceRoleOwners,
       environment.sender.language || "de-DE",
+      undefined,
+      undefined,
+      undefined,
+      instance,
     );
+
+  const webhookAddressWithFieldValues = replaceFieldContentsInFieldValue(webhookAddress);
+
+  const webhookBodyWithFieldValues = webhookBody ? replaceFieldContentsInFieldValue(webhookBody) : undefined;
+
+  const webhookHeadersWithFieldValues: { [key: string]: string } = {};
+
+  webhookHeaders?.forEach((headerRow) => {
+    const headerRowWithReplacedFields = replaceFieldContentsInFieldValue(headerRow);
 
     const headerKeyAndValue = headerRowWithReplacedFields?.split(": ");
 
