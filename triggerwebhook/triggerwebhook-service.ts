@@ -1,22 +1,34 @@
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
-import { parseAndInsertStringWithFieldContent } from "processhub-sdk/lib/data/datatools";
+import { parseAndInsertStringWithFieldContent, replaceObjectReferences, validateType } from "processhub-sdk/lib/data/datatools";
 import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror";
 import axios, { AxiosError } from "axios";
+import * as fs from "fs/promises";
+import Joi from "joi";
+
+export interface IServiceConfig {
+  secret: { [key: string]: string };
+}
+
+const IServiceConfigObject: IServiceConfig = {
+  secret: Joi.object().pattern(Joi.string(), Joi.string()) as unknown as { [key: string]: string },
+};
+
+const IServiceConfigSchema = Joi.object(IServiceConfigObject);
 
 // Extract the serviceLogic that testing is possible
-export async function serviceLogic(environment: IServiceTaskEnvironment): Promise<boolean> {
+export async function serviceLogic(environment: IServiceTaskEnvironment, configPath: string = __dirname + "./../config.json"): Promise<boolean> {
   const processObject: BpmnProcess = new BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
   const extensionValues = BpmnProcess.getExtensionValues(taskObject);
-  const config = extensionValues.serviceTaskConfigObject;
+  const serviceTaskConfig = extensionValues.serviceTaskConfigObject;
 
-  if (config === undefined) {
+  if (serviceTaskConfig === undefined) {
     throw new BpmnError(ErrorCode.ConfigInvalid, "Config is undefined, cannot proceed with service!");
   }
 
-  const fields = config.fields;
+  const fields = serviceTaskConfig.fields;
   const instance = environment.instanceDetails;
   const instanceRoleOwners = instance.extras.roleOwners;
 
@@ -33,9 +45,26 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
     throw new BpmnError(ErrorCode.ConfigInvalid, "Webhook address is empty - cannot perform webhook call!");
   }
 
-  const replaceFieldContentsInFieldValue = (value: string): string | undefined =>
-    parseAndInsertStringWithFieldContent(
-      value,
+  let configFile: IServiceConfig = {
+    secret: {},
+  };
+  try {
+    const configData = await fs.readFile(configPath, "utf8");
+    configFile = validateType<IServiceConfig>(IServiceConfigSchema, JSON.parse(configData));
+  } catch (ex) {
+    if ((ex as NodeJS.ErrnoException)?.code === "ENOENT") {
+      // Config file does not exist - use empty secrets
+      environment.logger.info(`Webhook service: Config file ${configPath} does not exist.`);
+    } else {
+      environment.logger.error("Webhook service failed to load config file: " + String(ex));
+      throw new BpmnError(ErrorCode.ConfigInvalid, "Could not load config file " + configPath, ex instanceof Error ? ex : undefined);
+    }
+  }
+
+  const replaceFieldContentsInFieldValue = (value: string): string | undefined => {
+    let result: string | undefined = replaceObjectReferences(value, "secret", configFile.secret);
+    result = parseAndInsertStringWithFieldContent(
+      result,
       instance.extras.fieldContents,
       processObject,
       instanceRoleOwners,
@@ -45,6 +74,8 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
       undefined,
       instance,
     );
+    return result;
+  };
 
   const webhookAddressWithFieldValues = replaceFieldContentsInFieldValue(webhookAddress);
 

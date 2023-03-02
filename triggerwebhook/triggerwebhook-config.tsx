@@ -43,7 +43,7 @@ export function triggerwebhookPostConfig(userLanguage: Language): JSX.Element {
               <div>
                 <p>
                   {tl(
-                    "Die Webadresse (URL) des Webhooks, die aufgerufen werden soll. Es können Platzhalter für Werte kompatibler Felder eingesetzt werden (z.B. field['test']).",
+                    "Die Webadresse (URL) des Webhooks, die aufgerufen werden soll. Es können Platzhalter für Werte kompatibler Felder eingesetzt werden (z.B. field['test']). Werte aus der config.json können z.B. mit secret['test'] eingesetzt werden.",
                     userLanguage,
                   )}
                 </p>
@@ -52,7 +52,7 @@ export function triggerwebhookPostConfig(userLanguage: Language): JSX.Element {
               <div>
                 <p>
                   {tl(
-                    'HTTP Header, die für den Request gesetzt werden sollen. Header Key und Value müssen dabei im Format "Key: Wert" (getrennt durch ": ") angegeben werden. Sofern mehrere Header angegeben werden, muss jeder Header in einer eigenen Zeile stehen. Es können Platzhalter für Werte kompatibler Felder eingesetzt werden (z.B. field[\'test\']).',
+                    "HTTP Header, die für den Request gesetzt werden sollen. Header Key und Value müssen dabei im Format \"Key: Wert\" (getrennt durch \": \") angegeben werden. Sofern mehrere Header angegeben werden, muss jeder Header in einer eigenen Zeile stehen. Es können Platzhalter für Werte kompatibler Felder eingesetzt werden (z.B. field['test']). Werte aus der config.json können z.B. mit secret['test'] eingesetzt werden.",
                     userLanguage,
                   )}
                 </p>
@@ -61,7 +61,7 @@ export function triggerwebhookPostConfig(userLanguage: Language): JSX.Element {
               <div>
                 <p>
                   {tl(
-                    "Der Body, der mit dem Request gesendet wird (z.B. JSON). Es können Platzhalter für Werte kompatibler Felder eingesetzt werden (z.B. field['test']).",
+                    "Der Body, der mit dem Request gesendet wird (z.B. JSON). Es können Platzhalter für Werte kompatibler Felder eingesetzt werden (z.B. field['test']). Werte aus der config.json können z.B. mit secret['test'] eingesetzt werden.",
                     userLanguage,
                   )}
                 </p>
