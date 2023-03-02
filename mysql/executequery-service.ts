@@ -3,7 +3,8 @@ import { FieldType, FieldValueType, IFieldValue } from "processhub-sdk/lib/data/
 import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror";
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
-import { parseAndInsertStringWithFieldContent } from "processhub-sdk/lib/data/datatools";
+import { parseAndInsertStringWithFieldContent, replaceObjectReferences } from "processhub-sdk/lib/data/datatools";
+import { IServiceConfigSchema, IServiceConfigSecret, readConfigFile } from "processhub-sdk/lib/servicetask/configfile";
 
 enum ErrorCodes {
   DB_ERROR = "DB_ERROR",
@@ -24,7 +25,7 @@ export async function executeQuery(environment: IServiceTaskEnvironment): Promis
 
   const server = fields.find((f) => f.key === "server")?.value;
   const user = fields.find((f) => f.key === "username")?.value;
-  const password = fields.find((f) => f.key === "password")?.value;
+  let password = fields.find((f) => f.key === "password")?.value;
   const database = fields.find((f) => f.key === "database")?.value;
   const port = fields.find((f) => f.key === "port")?.value;
   let query = fields.find((f) => f.key === "query")?.value;
@@ -51,6 +52,10 @@ export async function executeQuery(environment: IServiceTaskEnvironment): Promis
   if (targetField === undefined) {
     throw new Error("targetField is undefined, cannot proceed with service!");
   }
+
+  const configFile = (await readConfigFile<IServiceConfigSecret>(__dirname + "./../config.json", IServiceConfigSchema, environment.logger)) || { secret: {} };
+
+  password = replaceObjectReferences(password, "secret", configFile.secret);
 
   const connection = mysql.createConnection({
     user: user,

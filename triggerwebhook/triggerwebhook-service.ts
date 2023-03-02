@@ -1,20 +1,9 @@
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
-import { parseAndInsertStringWithFieldContent, replaceObjectReferences, validateType } from "processhub-sdk/lib/data/datatools";
+import { parseAndInsertStringWithFieldContent, replaceObjectReferences } from "processhub-sdk/lib/data/datatools";
 import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror";
 import axios, { AxiosError } from "axios";
-import * as fs from "fs/promises";
-import Joi from "joi";
-
-export interface IServiceConfig {
-  secret: { [key: string]: string };
-}
-
-const IServiceConfigObject: IServiceConfig = {
-  secret: Joi.object().pattern(Joi.string(), Joi.string()) as unknown as { [key: string]: string },
-};
-
-const IServiceConfigSchema = Joi.object(IServiceConfigObject);
+import { IServiceConfigSchema, IServiceConfigSecret, readConfigFile } from "processhub-sdk/lib/servicetask/configfile";
 
 // Extract the serviceLogic that testing is possible
 export async function serviceLogic(environment: IServiceTaskEnvironment, configPath: string = __dirname + "./../config.json"): Promise<boolean> {
@@ -45,21 +34,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment, configP
     throw new BpmnError(ErrorCode.ConfigInvalid, "Webhook address is empty - cannot perform webhook call!");
   }
 
-  let configFile: IServiceConfig = {
-    secret: {},
-  };
-  try {
-    const configData = await fs.readFile(configPath, "utf8");
-    configFile = validateType<IServiceConfig>(IServiceConfigSchema, JSON.parse(configData));
-  } catch (ex) {
-    if ((ex as NodeJS.ErrnoException)?.code === "ENOENT") {
-      // Config file does not exist - use empty secrets
-      environment.logger.info(`Webhook service: Config file ${configPath} does not exist.`);
-    } else {
-      environment.logger.error("Webhook service failed to load config file: " + String(ex));
-      throw new BpmnError(ErrorCode.ConfigInvalid, "Could not load config file " + configPath, ex instanceof Error ? ex : undefined);
-    }
-  }
+  const configFile = (await readConfigFile<IServiceConfigSecret>(configPath, IServiceConfigSchema, environment.logger)) || { secret: {} };
 
   const replaceFieldContentsInFieldValue = (value: string): string | undefined => {
     let result: string | undefined = replaceObjectReferences(value, "secret", configFile.secret);

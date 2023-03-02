@@ -42,7 +42,7 @@ export async function executeQueryNoReturn(environment: IServiceTaskEnvironment)
     throw new Error("query is undefined after parseAndInsertStringWithFieldContent, cannot proceed with service!");
   }
 
-  const pool = getConnectionPool(fields);
+  const pool = await getConnectionPool(fields, environment.logger);
   try {
     await pool.connect();
     await pool.request().query(query);

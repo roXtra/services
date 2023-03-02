@@ -14,13 +14,13 @@ export async function executeQuery(environment: IServiceTaskEnvironment): Promis
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
   const extensionValues = BpmnProcess.getExtensionValues(taskObject);
-  const config = extensionValues.serviceTaskConfigObject;
+  const serviceTaskConfig = extensionValues.serviceTaskConfigObject;
 
-  if (config === undefined) {
+  if (serviceTaskConfig === undefined) {
     throw new Error("Config is undefined, cannot proceed with service!");
   }
 
-  const fields = config.fields;
+  const fields = serviceTaskConfig.fields;
 
   let query = fields.find((f) => f.key === "query")?.value;
   const targetField = fields.find((f) => f.key === "targetField")?.value;
@@ -39,7 +39,7 @@ export async function executeQuery(environment: IServiceTaskEnvironment): Promis
     throw new Error("fieldContents are undefined, cannot proceed with service!");
   }
 
-  const pool = getConnectionPool(fields);
+  const pool = await getConnectionPool(fields, environment.logger);
   // Connect to your database
   try {
     await pool.connect();
