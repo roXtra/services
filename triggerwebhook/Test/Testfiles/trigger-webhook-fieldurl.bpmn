@@ -36,7 +36,7 @@
     <bpmn:serviceTask id="ServiceTask_11EE4126D6C2F418" name="Trigger Webhook">
       <bpmn:extensionElements>
         <processhub:inputOutput>
-          <processhub:inputParameter name="service-task-config-object">{"selectedServiceId":"triggerwebhook-service","selectedActionId":"triggerwebhookPost","fields":[{"key":"webhookAddress","type":"text","value":"http://localhost:1080/webhookendpoint?test=field['Testdata']"},{"key":"headers","type":"text","value":"Content-type: field['ContentType']\nAdditionalHeader: Test"},{"key":"bodyData","type":"text","value":"{\n   \"data\": \n        {\"releaseVersion\":\"field['Testdata']\"\n    }\n}"}]}</processhub:inputParameter>
+          <processhub:inputParameter name="service-task-config-object">{"selectedServiceId":"triggerwebhook-service","selectedActionId":"triggerwebhookPost","fields":[{"key":"webhookAddress","type":"text","value":"http://localhost:1080/webhookendpoint?test=field['Testdata']&token=secret['token']"},{"key":"headers","type":"text","value":"Content-type: field['ContentType']\nAdditionalHeader: Test"},{"key":"bodyData","type":"text","value":"{\n   \"data\": \n        {\"releaseVersion\":\"field['Testdata']\",\n\"token\":\"secret['token']\"    }\n}"}]}</processhub:inputParameter>
         </processhub:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_F34212E0CA4E8B67</bpmn:incoming>

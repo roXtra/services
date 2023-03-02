@@ -4,6 +4,7 @@ import * as fs from "fs";
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
 import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools";
 import nock from "nock";
+import { serviceLogic } from "../triggerwebhook-service";
 
 describe("services", () => {
   describe("triggerwebhook", () => {
@@ -20,9 +21,9 @@ describe("services", () => {
       return env;
     }
 
-    async function performtriggerwebhookPostTest(bpmnPath: string, fieldTestdataValue: string, fieldContentTypeValue: string): Promise<boolean> {
+    async function performtriggerwebhookPostTest(bpmnPath: string, fieldTestdataValue: string, fieldContentTypeValue: string, configPath?: string): Promise<boolean> {
       const env = createEnvironment(bpmnPath, fieldTestdataValue, fieldContentTypeValue);
-      return triggerwebhookPost(env);
+      return serviceLogic(env, configPath);
     }
 
     afterEach(() => {
@@ -53,7 +54,7 @@ describe("services", () => {
       expect(nockServer.isDone()).to.be.true;
     });
 
-    it("calls webhook address with field in url and correct field data in headers and body", async () => {
+    it("calls webhook address with field in url and correct field data and secret in headers and body", async () => {
       const nockServer = nock("http://localhost:1080", {
         reqheaders: {
           // Ensure the header value is present from the field ContentType
@@ -61,15 +62,20 @@ describe("services", () => {
         },
       })
         .post(
-          "/webhookendpoint?test=9.9.9",
+          "/webhookendpoint?test=9.9.9&token=123abc",
           // Ensure the body data is present from the field Testdata
           {
-            data: { releaseVersion: "9.9.9" },
+            data: { releaseVersion: "9.9.9", token: "123abc" },
           },
         )
         .reply(200);
 
-      const result = await performtriggerwebhookPostTest("./Test/Testfiles/trigger-webhook-fieldurl.bpmn", "9.9.9", "application/json");
+      const result = await performtriggerwebhookPostTest(
+        "./Test/Testfiles/trigger-webhook-fieldurl.bpmn",
+        "9.9.9",
+        "application/json",
+        "./Test/Testfiles/trigger-webhook-fieldurl-config.json",
+      );
       expect(result).to.equal(true);
 
       // Ensure a webhook request was made with the correct data
