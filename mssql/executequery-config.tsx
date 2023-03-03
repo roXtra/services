@@ -10,6 +10,15 @@ export function getQueryHint(userLanguage: Language): JSX.Element {
         <br />
         <p>{tl("Beispiel: ", userLanguage) + "UPDATE test_table SET abteilung='field['Abteilung']', name='role['Ersteller']' WHERE id='field['id']'"}</p>
       </div>
+      <h3>{tl("Passwort", userLanguage)}</h3>
+      <div>
+        <p>
+          {tl(
+            "Im Passwort können auch Werte aus der config.json referenziert werden (z.B. secret['password']). Damit können Sie verhindern, dass das Passwort im Klartext im Prozess gespeichert wird. ",
+            userLanguage,
+          )}
+        </p>
+      </div>
     </td>
   );
 }
@@ -42,7 +51,7 @@ export function executeQueryConfig(userLanguage: Language): JSX.Element {
               <span>{tl("Passwort", userLanguage)}</span>
             </td>
             <td>
-              <input id="password" type="password" />
+              <input id="password" />
             </td>
           </tr>
 

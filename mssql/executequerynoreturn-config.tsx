@@ -30,7 +30,7 @@ export function executeQueryNoReturnConfig(userLanguage: Language): JSX.Element 
               <span>{tl("Passwort", userLanguage)}</span>
             </td>
             <td>
-              <input id="password" type="password" />
+              <input id="password" />
             </td>
           </tr>
 

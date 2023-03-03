@@ -1,10 +1,15 @@
 import * as sql from "mssql";
 import { IServiceActionConfigField } from "processhub-sdk/lib/data/datainterfaces";
+import { replaceObjectReferences } from "processhub-sdk/lib/data/datatools";
+import { IServiceConfigSchema, IServiceConfigSecret, readConfigFile } from "processhub-sdk/lib/servicetask/configfile";
+import { IServiceTaskLogger } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
 
-export function getConnectionPool(fields: IServiceActionConfigField[]): sql.ConnectionPool {
+export async function getConnectionPool(fields: IServiceActionConfigField[], logger: IServiceTaskLogger): Promise<sql.ConnectionPool> {
+  const configFile = (await readConfigFile<IServiceConfigSecret>(__dirname + "./../config.json", IServiceConfigSchema, logger)) || { secret: {} };
+
   const server = fields.find((f) => f.key === "server")?.value;
   const user = fields.find((f) => f.key === "username")?.value;
-  const password = fields.find((f) => f.key === "password")?.value;
+  let password = fields.find((f) => f.key === "password")?.value;
   const database = fields.find((f) => f.key === "database")?.value;
 
   if (server === undefined) {
@@ -19,6 +24,8 @@ export function getConnectionPool(fields: IServiceActionConfigField[]): sql.Conn
   if (database === undefined) {
     throw new Error("database is undefined, cannot proceed with service!");
   }
+
+  password = replaceObjectReferences(password, "secret", configFile.secret);
 
   // Config for your database
   const dbConfig = {
