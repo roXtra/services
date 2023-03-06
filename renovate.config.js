@@ -29,7 +29,7 @@ module.exports = {
     },
     {
       matchPackageNames: ["react", "react-dom", "@types/react"],
-      allowedVersions: "^17.0.0",
+      allowedVersions: "^18.0.0",
     },
     {
       // Version 3 is ESM only, see https://rossmanith.atlassian.net/browse/EF-1945
