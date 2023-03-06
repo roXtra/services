@@ -7,7 +7,7 @@
 
 ## Use existing Services
 
-### Download Services
+1. ### Download Services
 
 To use existing sample services you need to download the builded versions of services from the [releases section](https://github.com/roXtra/services/releases) of this GitHub
 repository.
@@ -18,7 +18,7 @@ Download the service.zip of your corresponding roXtra version. This zip contains
 
 ![Image 2](resources/images/services_zip.PNG "Image 2")
 
-### Install a Service
+2. ### Install a Service
 
 Once you have downloaded the services.zip of the roXtra version you use extract the service you want in the Roxtra/eformulare/node_modules/@eformservice directory of your
 roXtra application server.  
@@ -26,12 +26,34 @@ Create this folder if it doesn't exist.
 
 ![Image 3](resources/images/service_folder.PNG "Image 3")
 
+3. ### (Optional) Konfiguration des Services via `config.json`
+
+Some services allow configuration using a `config.json` configuration file. Example:
+
+```json
+{
+  "secret": {
+    "mytoken": "value"
+  }
+}
+```
+
+In this configuration file, you can securely store authentication tokens on the server for supported services and use them with the variable `secret['mytoken']` in the service
+configuration in the user interface.
+
+The configuration options vary by service. Services that support this configuration file contain a `configtemplate.json` file that serves as a template and has to be renamed
+to `config.json` for use.
+
+4. ### Restart
+
 To run your new service you have to restart your roXtraEFormulare Windows Service.
 
 ## Develop your own Services
 
 ### Note
-If you implement a service yourself, you must also ensure that the service is kept up to date. Before a roXtra system update of the productive system, you should install the corresponding processhub-sdk version (same version number as the roXtra update) in the service and check it for functionality on a test system.
+
+If you implement a service yourself, you must also ensure that the service is kept up to date. Before a roXtra system update of the productive system, you should install the
+corresponding processhub-sdk version (same version number as the roXtra update) in the service and check it for functionality on a test system.
 
 ### Requirements
 
@@ -72,7 +94,7 @@ To get a basic understanding for developing services, feel free to look into our
 
 ## Benutzen von bereits vorhandenen Services
 
-### Herunterladen von Services
+1. ### Herunterladen von Services
 
 Um einen bereits vorhandenen Beispiel Service zu nutzen, müssen Sie diesen herunterladen. Dies können Sie unter dem Reiter
 [releases](https://github.com/roXtra/services/releases) dieses GitHub Repositories tun.
@@ -83,19 +105,41 @@ Laden Sie sich die services.zip Ihrer installierten roXtra Version herunter. Die
 
 ![Image 2](resources/images/services_zip.PNG "Image 2")
 
-### Installieren eines Services
+2. ### Installieren eines Services
 
 Nachdem Sie die services.zip Ihrer roXtra Version heruntergeladen haben extrahieren Sie den Service, den Sie installieren möchten, in das
 Roxtra/eformulare/node_modules/@eformservice Verzeichnis auf Ihrem roXtra Applikationsserver. Ggf. muss der Ordner @eformservice von Ihnen erstellt werden.
 
 ![Image 3](resources/images/service_folder.PNG "Image 3")
 
-Um Ihren neuen Service zu verwenden starten Sie Ihren roXtraEFormulare Windows Dienst neu.
+3. ### (Optional) Konfiguration des Services via `config.json`
+
+Einige Services erlauben eine Konfiguration mittels einer `config.json` Konfigurationsdatei. Beispiel:
+
+```json
+{
+  "secret": {
+    "mytoken": "value"
+  }
+}
+```
+
+In diese Konfigurationsdatei können Sie für unterstützte Services beispielsweise Authentifizierungs-Tokens sicher auf dem Server abgelegen und anschließend mit der Variablen
+`secret['mytoken']` in der Servicekonfiguration über die Benutzeroberfläche verwenden.
+
+Die Möglichkeiten unterscheiden sich pro Service. Services, die diese Konfigurationsdatei unterstützen, enthalten eine `configtemplate.json` Datei, die als Vorlage dient und
+zur Verwendung in `config.json` umbenannt werden muss.
+
+4. ### Neustart
+
+Um Ihren neu installierten Service zu verwenden starten Sie Ihren roXtraEFormulare Windows Dienst neu.
 
 ## Entwickeln von Services
 
 ### Hinweis
-Sollten Sie einen Service selbst implementieren, müssen Sie auch darauf achten den Service aktuell zu halten. Vor einem roXtra Systemupdate des Produktivsystems sollten Sie die dazugehörige processhub-sdk Version (gleiche Versionsnummer wie das roXtra Update) im Service installieren und auf einem Testsystem auf Funktionalität überprüfen.
+
+Sollten Sie einen Service selbst implementieren, müssen Sie auch darauf achten den Service aktuell zu halten. Vor einem roXtra Systemupdate des Produktivsystems sollten Sie
+die dazugehörige processhub-sdk Version (gleiche Versionsnummer wie das roXtra Update) im Service installieren und auf einem Testsystem auf Funktionalität überprüfen.
 
 ### Voraussetzungen
 
