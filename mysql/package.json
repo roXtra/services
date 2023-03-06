@@ -11,7 +11,7 @@
     "test": "cross-env HOTRELOAD=no DEBUG=bpmn-engine:123* mocha ./disttests/**/*.roxtest.js --exit --recursive --timeout 40000 --require source-map-support/register",
     "test:pipeline": "cross-env HOTRELOAD=no DEBUG=bpmn-engine:123* mocha ./disttests/**/*.pipelinetest.js --exit --recursive --timeout 40000 --require source-map-support/register",
     "build": "rimraf ./disttests && tsc && npm run webpack && npm run copymain",
-    "copyfiles": "cross-var copyfiles service.json dist/* $npm_package_config_servicename",
+    "copyfiles": "cross-var copyfiles service.json configtemplate.json dist/* $npm_package_config_servicename",
     "zip": "cross-var bestzip $npm_package_config_servicename.zip $npm_package_config_servicename",
     "copyandzip": "cross-var npm run copyfiles && npm run zip && cross-var rimraf $npm_package_config_servicename",
     "webpack": "cross-var webpack --env servicename=$npm_package_config_servicename --config ../webpack.config.js",
