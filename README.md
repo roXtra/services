@@ -26,7 +26,7 @@ Create this folder if it doesn't exist.
 
 ![Image 3](resources/images/service_folder.PNG "Image 3")
 
-3. ### (Optional) Konfiguration des Services via `config.json`
+3. ### (Optional) Service configuration via `config.json`
 
 Some services allow configuration using a `config.json` configuration file. Example:
 
