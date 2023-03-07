@@ -3,6 +3,10 @@ name: Trigger Release Creation
 on:
   workflow_dispatch:
     inputs:
+      prassignee:
+        description: 'User to assign PR to (defaults to current user)'
+        required: false
+        type: string
       sdkversion:
         description: 'SDK Version (e.g. "v9.8.0")'
         required: true
@@ -22,6 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       isprereleasebuild: ${{ inputs.isfinalreleasebuild != true }}
+      prassignee: ${{ inputs.prassignee || github.actor }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -80,5 +85,5 @@ jobs:
           pr_title: 'Release v${{ steps.version-upgrade.outputs.newversion }}'
           pr_body: Updates version to v${{ steps.version-upgrade.outputs.newversion }}
           github_token: ${{ secrets.DEVBOT_GH_TOKEN }}
-          pr_assignee: '${{ github.actor }}'
+          pr_assignee: '${{ env.prassignee }}'
           pr_draft: false
