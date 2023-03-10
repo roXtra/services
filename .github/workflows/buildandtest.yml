@@ -3,7 +3,7 @@ name: Build and Test
 on: [push]
 
 env:
-  NODE_VERSION: 16
+  NODE_VERSION: 18
 
 jobs:
   build:
