@@ -16,20 +16,20 @@
     "copyandzip": "cross-var npm run copyfiles && npm run zip && cross-var rimraf $npm_package_config_servicename"
   },
   "engines": {
-    "node": "16",
-    "npm": "8"
+    "node": "18",
+    "npm": "9"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@sap/hana-client": "2.15.22",
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.61.0/release.tgz",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.62.0-4/release.tgz",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.1",
-    "@types/node": "^16.18.14",
+    "@types/node": "^18.15.0",
     "@types/react": "^18.0.28",
     "bestzip": "^2.2.1",
     "copyfiles": "^2.4.1",
