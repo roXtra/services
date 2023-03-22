@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/roXtra/services#readme",
   "dependencies": {
-    "@types/node": "^18.15.3",
+    "@types/node": "^18.15.5",
     "react": "^18.2.0"
   },
   "devDependencies": {
