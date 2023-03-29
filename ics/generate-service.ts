@@ -9,11 +9,12 @@ enum ErrorCodes {
   ATTACHMENT_ERROR = "ATTACHMENT_ERROR",
 }
 
-function getDateFormatted(date: Date, start: boolean): string {
+function getDateTimeFormatted(date: Date, start: boolean): string {
   const month = date.getMonth() + 1;
+  const time = date.getTime();
   const monthString = month < 10 ? "0" + String(month) : String(month);
   const endDay = start ? date.getDate() : +date.getDate() + 1;
-  return date.getFullYear().toString() + monthString + String(endDay); // + "T" + time;
+  return date.getFullYear().toString() + monthString + String(endDay) + "T" + String(time);
 }
 
 export async function generate(environment: IServiceTaskEnvironment): Promise<boolean> {
@@ -31,13 +32,18 @@ export async function generate(environment: IServiceTaskEnvironment): Promise<bo
   const instance = environment.instanceDetails;
 
   const title = fields.find((f) => f.key === "titleField")?.value;
+  const location = fields.find((f) => f.key === "locationField")?.value;
   const fromField = fields.find((f) => f.key === "fromField")?.value;
   const tillField = fields.find((f) => f.key === "tillField")?.value;
   const targetField = fields.find((f) => f.key === "targetField")?.value;
   const descriptionField = fields.find((f) => f.key === "descriptionField")?.value;
+  const fileName = fields.find((f) => f.key === "fileNameField")?.value;
 
   if (title === undefined) {
     throw new Error("title is undefined, cannot proceed!");
+  }
+  if (location === undefined) {
+    throw new Error("location is undefined, cannot proceed!");
   }
   if (fromField === undefined) {
     throw new Error("fromField is undefined, cannot proceed!");
@@ -53,6 +59,9 @@ export async function generate(environment: IServiceTaskEnvironment): Promise<bo
   }
   if (descriptionField === undefined) {
     throw new Error("descriptionField is undefined, cannot proceed!");
+  }
+  if (fileName === undefined) {
+    throw new Error("fileName is undefined, cannot proceed!");
   }
   if (instance.extras.fieldContents === undefined) {
     throw new Error("fieldContents are undefined, cannot proceed!");
@@ -87,8 +96,8 @@ export async function generate(environment: IServiceTaskEnvironment): Promise<bo
   // icsString += "DTSTART;TZID=Europe/Amsterdam:" + getDateFormatted(fromDate, true) + "\n";
   // icsString += "DTEND;TZID=Europe/Amsterdam:" + getDateFormatted(tillDate, false) + "\n";
   // or without
-  icsString += "DTSTART:" + getDateFormatted(fromDate, true) + "\n";
-  icsString += "DTEND:" + getDateFormatted(tillDate, false) + "\n";
+  icsString += "DTSTART:" + getDateTimeFormatted(fromDate, true) + "\n";
+  icsString += "DTEND:" + getDateTimeFormatted(tillDate, false) + "\n";
 
   const process = await environment.processes.getProcessDetails(instance.processId, ProcessExtras.ExtrasProcessRolesWithMemberNames);
 
@@ -113,8 +122,7 @@ export async function generate(environment: IServiceTaskEnvironment): Promise<bo
 
   icsString += "SUMMARY:" + parsedSummary + "\n";
   // Location
-  // icsString += "LOCATION:" + Location + "";
-
+  icsString += "LOCATION:" + location + "\n";
   const descriptionValue = instance.extras.fieldContents[descriptionField] != null ? (instance.extras.fieldContents[descriptionField] as IFieldValue).value : "";
   icsString += "DESCRIPTION:" + String(descriptionValue) + "\n";
   // Priority
@@ -124,7 +132,7 @@ export async function generate(environment: IServiceTaskEnvironment): Promise<bo
   // End calendar item
   icsString += "END:VCALENDAR\n";
 
-  const url: string = await environment.instances.uploadAttachment(instance.instanceId, "ics_import_file.ics", Buffer.from(icsString));
+  const url: string = await environment.instances.uploadAttachment(instance.instanceId, fileName, Buffer.from(icsString));
 
   if (url) {
     if (instance.extras.fieldContents[targetField] == null) {

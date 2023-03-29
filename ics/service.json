@@ -3,20 +3,21 @@
   "name": "ICS Service",
   "minRoXtraVersion": "8.009.0",
   "actions": [
-    { 
+    {
       "id": "generate",
-      "label": "generiere ICS Datei", 
+      "label": "generiere ICS Datei",
       "configMethod": "generateConfig",
       "settings": "main.js",
       "serviceFile": "main.js",
       "serviceMethod": "generate",
       "fields": [
-        { "name": "titleField", "type": "text" }, 
-        { "name": "fromField", "type": "select", "onload": "fields" }, 
-        { "name": "tillField", "type": "select", "onload": "fields" }, 
+        { "name": "titleField", "type": "text" },
+        { "name": "locationField", "type": "text" },
+        { "name": "fromField", "type": "select", "onload": "fields" },
+        { "name": "tillField", "type": "select", "onload": "fields" },
         { "name": "targetField", "type": "select", "onload": "fields" },
-        { "name": "descriptionField", "type": "select", "onload": "fields" }
-        
+        { "name": "descriptionField", "type": "select", "onload": "fields" },
+        { "name": "fileNameField", "type": "text" }
       ]
     }
   ]
