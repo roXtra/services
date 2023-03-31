@@ -11,13 +11,13 @@
       "serviceFile": "main.js",
       "serviceMethod": "generate",
       "fields": [
-        { "name": "titleField", "type": "text" },
-        { "name": "locationField", "type": "text" },
+        { "name": "titleField", "type": "select", "onload": "fields" },
+        { "name": "locationField", "type": "select", "onload": "fields" },
         { "name": "fromField", "type": "select", "onload": "fields" },
         { "name": "tillField", "type": "select", "onload": "fields" },
         { "name": "targetField", "type": "select", "onload": "fields" },
         { "name": "descriptionField", "type": "select", "onload": "fields" },
-        { "name": "fileNameField", "type": "text" }
+        { "name": "fileNameField", "type": "select", "onload": "fields" }
       ]
     }
   ]

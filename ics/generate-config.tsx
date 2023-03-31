@@ -11,7 +11,7 @@ export function generateConfig(userLanguage: Language): JSX.Element {
               <span>{tl("Titel Feld", userLanguage)}</span>
             </td>
             <td>
-              <input id="titleField" />
+              <select id="titleField" />
             </td>
           </tr>
 
@@ -20,7 +20,7 @@ export function generateConfig(userLanguage: Language): JSX.Element {
               <span>{tl("Ort Feld", userLanguage)}</span>
             </td>
             <td>
-              <input id="locationField" />
+              <select id="locationField" />
             </td>
           </tr>
 
@@ -70,7 +70,7 @@ export function generateConfig(userLanguage: Language): JSX.Element {
               <span>{tl("ICS Dateiname", userLanguage)}</span>
             </td>
             <td>
-              <input id="fileNameField" />
+              <select id="fileNameField" />
             </td>
           </tr>
 
