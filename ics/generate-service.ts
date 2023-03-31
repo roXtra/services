@@ -9,12 +9,18 @@ enum ErrorCodes {
   ATTACHMENT_ERROR = "ATTACHMENT_ERROR",
 }
 
-function getDateTimeFormatted(date: Date, start: boolean): string {
-  const month = date.getMonth() + 1;
-  const time = date.getTime();
-  const monthString = month < 10 ? "0" + String(month) : String(month);
-  const endDay = start ? date.getDate() : +date.getDate() + 1;
-  return date.getFullYear().toString() + monthString + String(endDay) + "T" + String(time);
+function getDateTimeFormatted(date: Date): string {
+  const year = date.getUTCFullYear();
+  const month = pad(date.getUTCMonth() + 1);
+  const day = pad(date.getUTCDate());
+  const hour = pad(date.getUTCHours());
+  const minute = pad(date.getUTCMinutes());
+  const second = pad(date.getUTCSeconds());
+  return `${year}${month}${day}T${hour}${minute}${second}Z`;
+}
+
+function pad(i: number): string {
+  return i < 10 ? `0${i}` : `${i}`;
 }
 
 export async function generate(environment: IServiceTaskEnvironment): Promise<boolean> {
@@ -31,19 +37,19 @@ export async function generate(environment: IServiceTaskEnvironment): Promise<bo
   const fields = config.fields;
   const instance = environment.instanceDetails;
 
-  const title = fields.find((f) => f.key === "titleField")?.value;
-  const location = fields.find((f) => f.key === "locationField")?.value;
+  const titleField = fields.find((f) => f.key === "titleField")?.value;
+  const locationField = fields.find((f) => f.key === "locationField")?.value;
   const fromField = fields.find((f) => f.key === "fromField")?.value;
   const tillField = fields.find((f) => f.key === "tillField")?.value;
   const targetField = fields.find((f) => f.key === "targetField")?.value;
   const descriptionField = fields.find((f) => f.key === "descriptionField")?.value;
-  const fileName = fields.find((f) => f.key === "fileNameField")?.value;
+  const fileNameField = fields.find((f) => f.key === "fileNameField")?.value;
 
-  if (title === undefined) {
-    throw new Error("title is undefined, cannot proceed!");
+  if (titleField === undefined) {
+    throw new Error("titleField is undefined, cannot proceed!");
   }
-  if (location === undefined) {
-    throw new Error("location is undefined, cannot proceed!");
+  if (locationField === undefined) {
+    throw new Error("locationField is undefined, cannot proceed!");
   }
   if (fromField === undefined) {
     throw new Error("fromField is undefined, cannot proceed!");
@@ -54,14 +60,11 @@ export async function generate(environment: IServiceTaskEnvironment): Promise<bo
   if (targetField === undefined) {
     throw new Error("targetField is undefined, cannot proceed!");
   }
-  if (targetField === undefined) {
-    throw new Error("targetField is undefined, cannot proceed!");
-  }
   if (descriptionField === undefined) {
     throw new Error("descriptionField is undefined, cannot proceed!");
   }
-  if (fileName === undefined) {
-    throw new Error("fileName is undefined, cannot proceed!");
+  if (fileNameField === undefined) {
+    throw new Error("fileNameField is undefined, cannot proceed!");
   }
   if (instance.extras.fieldContents === undefined) {
     throw new Error("fieldContents are undefined, cannot proceed!");
@@ -96,8 +99,8 @@ export async function generate(environment: IServiceTaskEnvironment): Promise<bo
   // icsString += "DTSTART;TZID=Europe/Amsterdam:" + getDateFormatted(fromDate, true) + "\n";
   // icsString += "DTEND;TZID=Europe/Amsterdam:" + getDateFormatted(tillDate, false) + "\n";
   // or without
-  icsString += "DTSTART:" + getDateTimeFormatted(fromDate, true) + "\n";
-  icsString += "DTEND:" + getDateTimeFormatted(tillDate, false) + "\n";
+  icsString += "DTSTART:" + getDateTimeFormatted(fromDate) + "\n";
+  icsString += "DTEND:" + getDateTimeFormatted(tillDate) + "\n";
 
   const process = await environment.processes.getProcessDetails(instance.processId, ProcessExtras.ExtrasProcessRolesWithMemberNames);
 
@@ -108,8 +111,11 @@ export async function generate(environment: IServiceTaskEnvironment): Promise<bo
     throw new Error("roleOwners are undefined, cannot proceed!");
   }
 
+  // Title
+  const titleValue = instance.extras.fieldContents[titleField] != null ? (instance.extras.fieldContents[titleField] as IFieldValue).value : "";
+
   const parsedSummary = parseAndInsertStringWithFieldContent(
-    title,
+    String(titleValue),
     instance.extras.fieldContents,
     process.extras.processRoles,
     instance.extras.roleOwners,
@@ -122,7 +128,9 @@ export async function generate(environment: IServiceTaskEnvironment): Promise<bo
 
   icsString += "SUMMARY:" + parsedSummary + "\n";
   // Location
-  icsString += "LOCATION:" + location + "\n";
+  const locationValue = instance.extras.fieldContents[locationField] != null ? (instance.extras.fieldContents[locationField] as IFieldValue).value : "";
+  icsString += "LOCATION:" + String(locationValue) + "\n";
+  // Description
   const descriptionValue = instance.extras.fieldContents[descriptionField] != null ? (instance.extras.fieldContents[descriptionField] as IFieldValue).value : "";
   icsString += "DESCRIPTION:" + String(descriptionValue) + "\n";
   // Priority
@@ -132,7 +140,10 @@ export async function generate(environment: IServiceTaskEnvironment): Promise<bo
   // End calendar item
   icsString += "END:VCALENDAR\n";
 
-  const url: string = await environment.instances.uploadAttachment(instance.instanceId, fileName, Buffer.from(icsString));
+  // Filename
+  const fileNameValue = instance.extras.fieldContents[fileNameField] != null ? (instance.extras.fieldContents[fileNameField] as IFieldValue).value : "";
+
+  const url: string = await environment.instances.uploadAttachment(instance.instanceId, String(fileNameValue), Buffer.from(icsString));
 
   if (url) {
     if (instance.extras.fieldContents[targetField] == null) {
