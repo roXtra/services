@@ -4,6 +4,7 @@ import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
 import { ProcessExtras } from "processhub-sdk/lib/process/processinterfaces";
 import { parseAndInsertStringWithFieldContent } from "processhub-sdk/lib/data/datatools";
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
+import { removeHtmlTags } from "processhub-sdk/lib/tools/stringtools";
 
 enum ErrorCodes {
   ATTACHMENT_ERROR = "ATTACHMENT_ERROR",
@@ -150,7 +151,7 @@ export async function generate(environment: IServiceTaskEnvironment): Promise<bo
   if (descriptionValue == null) {
     throw new BpmnError(ErrorCodes.INPUT_ERROR, "Die Beschreibung wurde nicht definiert!");
   }
-  icsString += "DESCRIPTION:" + String(descriptionValue) + "\n";
+  icsString += "DESCRIPTION:" + removeHtmlTags(String(descriptionValue)) + "\n";
   // Priority
   // icsString += "PRIORITY:3\n";
   icsString += "END:VEVENT\n";
@@ -164,7 +165,7 @@ export async function generate(environment: IServiceTaskEnvironment): Promise<bo
     throw new BpmnError(ErrorCodes.INPUT_ERROR, "Der Dateiname wurde nicht definiert!");
   }
 
-  const url: string = await environment.instances.uploadAttachment(instance.instanceId, String(fileNameValue), Buffer.from(icsString));
+  const url: string = await environment.instances.uploadAttachment(instance.instanceId, `${String(fileNameValue)}.ics`, Buffer.from(icsString));
 
   if (url) {
     if (instance.extras.fieldContents[targetField] == null) {
