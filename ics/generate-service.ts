@@ -7,6 +7,7 @@ import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicet
 
 enum ErrorCodes {
   ATTACHMENT_ERROR = "ATTACHMENT_ERROR",
+  CONFIG_ERROR = "CONFIG_ERROR",
   INPUT_ERROR = "INPUT_ERROR",
   FIELDCONTENTS_ERROR = "FIELDCONTENTS_ERROR",
 }
@@ -48,25 +49,25 @@ export async function generate(environment: IServiceTaskEnvironment): Promise<bo
   const fileNameField = fields.find((f) => f.key === "fileNameField")?.value;
 
   if (!(titleField && titleField.length > 0)) {
-    throw new BpmnError(ErrorCodes.INPUT_ERROR, "Der Titel wurde nicht definiert!");
+    throw new BpmnError(ErrorCodes.CONFIG_ERROR, "Der Titel wurde nicht definiert!");
   }
   if (!(locationField && locationField.length > 0)) {
-    throw new BpmnError(ErrorCodes.INPUT_ERROR, "Der Ort wurde nicht definiert!");
+    throw new BpmnError(ErrorCodes.CONFIG_ERROR, "Der Ort wurde nicht definiert!");
   }
   if (!(fromField && fromField.length > 0)) {
-    throw new BpmnError(ErrorCodes.INPUT_ERROR, "Das Von Datum wurde nicht definiert!");
+    throw new BpmnError(ErrorCodes.CONFIG_ERROR, "Das Von Datum wurde nicht definiert!");
   }
   if (!(tillField && tillField.length > 0)) {
-    throw new BpmnError(ErrorCodes.INPUT_ERROR, "Das Bis Datum wurde nicht definiert!");
+    throw new BpmnError(ErrorCodes.CONFIG_ERROR, "Das Bis Datum wurde nicht definiert!");
   }
   if (!(targetField && targetField.length > 0)) {
-    throw new BpmnError(ErrorCodes.INPUT_ERROR, "Das Ergebnis Feld wurde nicht definiert!");
+    throw new BpmnError(ErrorCodes.CONFIG_ERROR, "Das Ergebnis Feld wurde nicht definiert!");
   }
   if (!(descriptionField && descriptionField.length > 0)) {
-    throw new BpmnError(ErrorCodes.INPUT_ERROR, "Die Beschreibung wurde nicht definiert!");
+    throw new BpmnError(ErrorCodes.CONFIG_ERROR, "Die Beschreibung wurde nicht definiert!");
   }
   if (!(fileNameField && fileNameField.length > 0)) {
-    throw new BpmnError(ErrorCodes.INPUT_ERROR, "Der Dateiname wurde nicht definiert!");
+    throw new BpmnError(ErrorCodes.CONFIG_ERROR, "Der Dateiname wurde nicht definiert!");
   }
   if (instance.extras.fieldContents === undefined) {
     throw new BpmnError(ErrorCodes.FIELDCONTENTS_ERROR, "Die Feldwerte sind nicht definiert!");
@@ -92,9 +93,15 @@ export async function generate(environment: IServiceTaskEnvironment): Promise<bo
 
   // With time zone specified
   const fromValue = (instance.extras.fieldContents[fromField] as IFieldValue).value;
+  if (fromValue == null) {
+    throw new BpmnError(ErrorCodes.INPUT_ERROR, "Das Von Datum wurde nicht definiert!");
+  }
   const fromDate = new Date(fromValue as string);
 
   const tillValue = (instance.extras.fieldContents[tillField] as IFieldValue).value;
+  if (tillValue == null) {
+    throw new BpmnError(ErrorCodes.INPUT_ERROR, "Das Bis Datum wurde nicht definiert!");
+  }
   const tillDate = new Date(tillValue as string);
 
   // Timezone
@@ -114,7 +121,10 @@ export async function generate(environment: IServiceTaskEnvironment): Promise<bo
   }
 
   // Title
-  const titleValue = instance.extras.fieldContents[titleField] != null ? (instance.extras.fieldContents[titleField] as IFieldValue).value : "";
+  const titleValue = (instance.extras.fieldContents[titleField] as IFieldValue).value;
+  if (titleValue == null) {
+    throw new BpmnError(ErrorCodes.INPUT_ERROR, "Der Titel wurde nicht definiert!");
+  }
 
   const parsedSummary = parseAndInsertStringWithFieldContent(
     String(titleValue),
@@ -130,10 +140,16 @@ export async function generate(environment: IServiceTaskEnvironment): Promise<bo
 
   icsString += "SUMMARY:" + parsedSummary + "\n";
   // Location
-  const locationValue = instance.extras.fieldContents[locationField] != null ? (instance.extras.fieldContents[locationField] as IFieldValue).value : "";
+  const locationValue = (instance.extras.fieldContents[locationField] as IFieldValue).value;
+  if (locationValue == null) {
+    throw new BpmnError(ErrorCodes.INPUT_ERROR, "Der Ort wurde nicht definiert!");
+  }
   icsString += "LOCATION:" + String(locationValue) + "\n";
   // Description
-  const descriptionValue = instance.extras.fieldContents[descriptionField] != null ? (instance.extras.fieldContents[descriptionField] as IFieldValue).value : "";
+  const descriptionValue = (instance.extras.fieldContents[descriptionField] as IFieldValue).value;
+  if (descriptionValue == null) {
+    throw new BpmnError(ErrorCodes.INPUT_ERROR, "Die Beschreibung wurde nicht definiert!");
+  }
   icsString += "DESCRIPTION:" + String(descriptionValue) + "\n";
   // Priority
   // icsString += "PRIORITY:3\n";
@@ -143,7 +159,10 @@ export async function generate(environment: IServiceTaskEnvironment): Promise<bo
   icsString += "END:VCALENDAR\n";
 
   // Filename
-  const fileNameValue = instance.extras.fieldContents[fileNameField] != null ? (instance.extras.fieldContents[fileNameField] as IFieldValue).value : "";
+  const fileNameValue = (instance.extras.fieldContents[fileNameField] as IFieldValue).value;
+  if (fileNameValue == null) {
+    throw new BpmnError(ErrorCodes.INPUT_ERROR, "Der Dateiname wurde nicht definiert!");
+  }
 
   const url: string = await environment.instances.uploadAttachment(instance.instanceId, String(fileNameValue), Buffer.from(icsString));
 
