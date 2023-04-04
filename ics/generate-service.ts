@@ -7,6 +7,8 @@ import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicet
 
 enum ErrorCodes {
   ATTACHMENT_ERROR = "ATTACHMENT_ERROR",
+  INPUT_ERROR = "INPUT_ERROR",
+  FIELDCONTENTS_ERROR = "FIELDCONTENTS_ERROR",
 }
 
 function getDateTimeFormatted(date: Date): string {
@@ -45,29 +47,29 @@ export async function generate(environment: IServiceTaskEnvironment): Promise<bo
   const descriptionField = fields.find((f) => f.key === "descriptionField")?.value;
   const fileNameField = fields.find((f) => f.key === "fileNameField")?.value;
 
-  if (titleField === undefined) {
-    throw new Error("titleField is undefined, cannot proceed!");
+  if (!(titleField && titleField.length > 0)) {
+    throw new BpmnError(ErrorCodes.INPUT_ERROR, "Der Titel wurde nicht definiert!");
   }
-  if (locationField === undefined) {
-    throw new Error("locationField is undefined, cannot proceed!");
+  if (!(locationField && locationField.length > 0)) {
+    throw new BpmnError(ErrorCodes.INPUT_ERROR, "Der Ort wurde nicht definiert!");
   }
-  if (fromField === undefined) {
-    throw new Error("fromField is undefined, cannot proceed!");
+  if (!(fromField && fromField.length > 0)) {
+    throw new BpmnError(ErrorCodes.INPUT_ERROR, "Das Von Datum wurde nicht definiert!");
   }
-  if (tillField === undefined) {
-    throw new Error("tillField is undefined, cannot proceed!");
+  if (!(tillField && tillField.length > 0)) {
+    throw new BpmnError(ErrorCodes.INPUT_ERROR, "Das Bis Datum wurde nicht definiert!");
   }
-  if (targetField === undefined) {
-    throw new Error("targetField is undefined, cannot proceed!");
+  if (!(targetField && targetField.length > 0)) {
+    throw new BpmnError(ErrorCodes.INPUT_ERROR, "Das Ergebnis Feld wurde nicht definiert!");
   }
-  if (descriptionField === undefined) {
-    throw new Error("descriptionField is undefined, cannot proceed!");
+  if (!(descriptionField && descriptionField.length > 0)) {
+    throw new BpmnError(ErrorCodes.INPUT_ERROR, "Die Beschreibung wurde nicht definiert!");
   }
-  if (fileNameField === undefined) {
-    throw new Error("fileNameField is undefined, cannot proceed!");
+  if (!(fileNameField && fileNameField.length > 0)) {
+    throw new BpmnError(ErrorCodes.INPUT_ERROR, "Der Dateiname wurde nicht definiert!");
   }
   if (instance.extras.fieldContents === undefined) {
-    throw new Error("fieldContents are undefined, cannot proceed!");
+    throw new BpmnError(ErrorCodes.FIELDCONTENTS_ERROR, "Die Feldwerte sind nicht definiert!");
   }
 
   let icsString = "";
