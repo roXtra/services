@@ -171,6 +171,9 @@ export async function generate(environment: IServiceTaskEnvironment): Promise<bo
     if (instance.extras.fieldContents[targetField] == null) {
       instance.extras.fieldContents[targetField] = { type: "ProcessHubFileUpload", value: undefined };
     }
+    if ((instance.extras.fieldContents[targetField] as IFieldValue).type !== "ProcessHubFileUpload") {
+      throw new BpmnError(ErrorCodes.ATTACHMENT_ERROR, "Es ist kein FileUpload Feld hinterlegt!.");
+    }
     (instance.extras.fieldContents[targetField] as IFieldValue).value = [url];
     await environment.instances.updateInstance(instance);
 
