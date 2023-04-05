@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "copyzips": "copyfiles -u 1 */*.zip zipped_services && copyfiles -u 1 */eformservice-*.tgz ./",
     "buildonly": "node buildScript.js buildonly",
-    "buildbundle": "rimraf ./**/*.zip && rimraf ./**/*.tgz && node buildScript.js bundle && npm run copyzips && cd zipped_services/ && bestzip ../services.zip * && rimraf zipped_services",
+    "buildbundle": "Remove-Item * -Recurse -Include *.zip,*.tgz && node buildScript.js bundle && npm run copyzips && cd zipped_services/ && bestzip ../services.zip * && cd .. && Remove-Item -Recurse ./zipped_services",
     "release-switch-to-next-rc": "npm version preminor",
     "release-bump-preview-version": "npm version prerelease",
     "release-make-next-rc-final": "npm version minor",
@@ -47,7 +47,6 @@
     "eslint-plugin-react": "^7.32.2",
     "mocha": "^10.2.0",
     "prettier": "^2.8.7",
-    "rimraf": "^4.4.1",
     "ts-loader": "^9.4.2",
     "typescript": "^4.9.5"
   }
