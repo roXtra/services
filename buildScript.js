@@ -2,7 +2,7 @@ const dirTree = require("directory-tree");
 const { execSync } = require("child_process");
 
 // If renamed, adjust name in trigger_release_creation.yml
-const processHubSDKVersion = "v9.63.0-3";
+const processHubSDKVersion = "v9.64.0-2";
 
 const childProcessStdioOptions = [0, 1, 2];
 const childProcessTimeout = 300000;
