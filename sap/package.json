@@ -10,7 +10,7 @@
     "lint": "eslint --ext .ts,.tsx \"**/*.{ts,tsx}\"",
     "build": "tsc",
     "test": "cross-env HOTRELOAD=no DEBUG=bpmn-engine:123* mocha ./dist/**/*.roxtest.js --exit --recursive --timeout 40000 --require source-map-support/register",
-    "copyproduction": "copyfiles package.json production && copyfiles .npmrc production && cd ./production && npm install --production && cd .. && copyfiles -u 1 \"./production/node_modules/**/*\" $Env:npm_package_config_servicename && Remove-Item -Recurse ./production",
+    "copyproduction": "copyfiles package.json production && copyfiles .npmrc production && cd ./production && npm install --production && cd .. && copyfiles -u 1 \"./production/node_modules/**/*\" $Env:npm_package_config_servicename && Remove-Item -Force -Recurse ./production",
     "copyfiles": "copyfiles service.json configtemplate.json dist/* $Env:npm_package_config_servicename && npm run copyproduction",
     "zip": "bestzip \"$Env:npm_package_config_servicename.zip\" \"$Env:npm_package_config_servicename\"",
     "copyandzip": "npm run copyfiles && npm run zip && Remove-Item -Recurse $Env:npm_package_config_servicename"
