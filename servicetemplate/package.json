@@ -8,13 +8,13 @@
     "servicename": "servicetemplate"
   },
   "scripts": {
-    "lint": "eslint --ext .ts,.tsx ./",
+    "lint": "eslint --ext .ts,.tsx \"**/*.{ts,tsx}\"",
     "test": "cross-env HOTRELOAD=no DEBUG=bpmn-engine:123* mocha ./disttests/**/*.roxtest.js --exit --recursive --timeout 40000 --require source-map-support/register",
-    "build": "rimraf ./disttests && tsc && npm run webpack && npm run copymain",
-    "copyfiles": "cross-var copyfiles service.json configtemplate.json dist/* $npm_package_config_servicename",
-    "zip": "cross-var bestzip $npm_package_config_servicename.zip $npm_package_config_servicename",
-    "copyandzip": "cross-var npm run copyfiles && npm run zip && cross-var rimraf $npm_package_config_servicename",
-    "webpack": "cross-var webpack --env servicename=$npm_package_config_servicename --config ../webpack.config.js",
+    "build": "$(if (Test-Path ./disttests) { Remove-Item -Recurse ./disttests }) && tsc && npm run webpack && npm run copymain",
+    "copyfiles": "copyfiles service.json configtemplate.json dist/* $Env:npm_package_config_servicename",
+    "zip": "bestzip \"$Env:npm_package_config_servicename.zip\" \"$Env:npm_package_config_servicename\"",
+    "copyandzip": "npm run copyfiles && npm run zip && Remove-Item -Recurse $Env:npm_package_config_servicename",
+    "webpack": "webpack --env servicename=$Env:npm_package_config_servicename --config ../webpack.config.js",
     "copymain": "copyfiles -u 1 dist/main.js disttests"
   },
   "engines": {
@@ -35,10 +35,8 @@
     "chai": "^4.3.7",
     "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
-    "cross-var": "^1.1.0",
     "eslint": "^8.38.0",
     "mocha": "^10.2.0",
-    "rimraf": "^4.4.1",
     "ts-loader": "^9.4.2",
     "typescript": "^4.9.5",
     "webpack": "^5.78.0",
