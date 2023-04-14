@@ -75,7 +75,7 @@ export async function executeSAPQuery(environment: IServiceTaskEnvironment): Pro
     type: "ProcessHubTextArea",
   };
 
-  return Methods.execQuery(connectionParams, query, async (rows: Array<any>) => {
+  return await Methods.execQuery(connectionParams, query, async (rows: Array<any>) => {
     return await Methods.serviceOutputLogic(rows, newValue, environment, instance, targetFieldTable, targetFieldCSV);
   });
 }
