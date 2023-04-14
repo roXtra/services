@@ -83,15 +83,15 @@ export default class SAPServiceMethods {
     return deleteQuery;
   }
 
-  static execQuery(connectionParams: string | hanaClient.ConnectionOptions, query: string, updateMethod: Function): boolean {
+  static async execQuery(connectionParams: any, query: string, updateMethod: Function): Promise<boolean> {
     let noErrors = true;
 
-    const connection = hanaClient.createConnection();
-    connection.connect(connectionParams, (err) => {
+    const connection = await hanaClient.createConnection();
+    await connection.connect(connectionParams, async (err: any) => {
       noErrors = this.errorOutput(err, "Connection error", noErrors);
 
-      connection.exec(query, async (err, rows) => {
-        connection.disconnect();
+      await connection.exec(query, async (err: any, rows: Array<any>) => {
+        await connection.disconnect();
 
         if (noErrors) {
           noErrors = this.errorOutput(err, "SQL execute error:", noErrors);
