@@ -3,16 +3,16 @@
   "name": "SAP Service",
   "minRoXtraVersion": "8.006.0",
   "actions": [
-    { 
+    {
       "id": "executeSAPQuery",
-      "label": "Abfrage ausführen", 
+      "label": "Abfrage ausführen",
       "configMethod": "executeSAPQueryConfig",
-      "settings": "executeSAPquery-config.js",
-      "serviceFile": "executeSAPquery-service.js",
+      "settings": "main.js",
+      "serviceFile": "main.js",
       "serviceMethod": "executeSAPQuery",
       "fields": [
-        { "name": "ipAddress", "type": "text" }, 
-        { "name": "port", "type": "text" }, 
+        { "name": "ipAddress", "type": "text" },
+        { "name": "port", "type": "text" },
         { "name": "databaseUsername", "type": "text" },
         { "name": "password", "type": "text" },
         { "name": "tenant", "type": "text" },
@@ -22,16 +22,16 @@
       ]
     },
 
-    { 
+    {
       "id": "insertSAPQuery",
-      "label": "INSERT Abfrage", 
+      "label": "INSERT Abfrage",
       "configMethod": "insertSAPQueryConfig",
-      "settings": "insertSAPquery-config.js",
-      "serviceFile": "insertSAPquery-service.js",
+      "settings": "main.js",
+      "serviceFile": "main.js",
       "serviceMethod": "insertSAPQuery",
       "fields": [
         { "name": "ipAddress", "type": "text" },
-        { "name": "port", "type": "text" }, 
+        { "name": "port", "type": "text" },
         { "name": "databaseUsername", "type": "text" },
         { "name": "password", "type": "text" },
         { "name": "tenant", "type": "text" },
@@ -41,16 +41,16 @@
       ]
     },
 
-    { 
+    {
       "id": "selectSAPQuery",
-      "label": "SELECT Abfrage", 
+      "label": "SELECT Abfrage",
       "configMethod": "selectSAPQueryConfig",
-      "settings": "selectSAPquery-config.js",
-      "serviceFile": "selectSAPquery-service.js",
+      "settings": "main.js",
+      "serviceFile": "main.js",
       "serviceMethod": "selectSAPQuery",
       "fields": [
         { "name": "ipAddress", "type": "text" },
-        { "name": "port", "type": "text" }, 
+        { "name": "port", "type": "text" },
         { "name": "databaseUsername", "type": "text" },
         { "name": "password", "type": "text" },
         { "name": "tenant", "type": "text" },
@@ -60,16 +60,16 @@
       ]
     },
 
-    { 
+    {
       "id": "deleteSAPQuery",
-      "label": "DELETE Abfrage", 
+      "label": "DELETE Abfrage",
       "configMethod": "deleteSAPQueryConfig",
-      "settings": "deleteSAPquery-config.js",
-      "serviceFile": "deleteSAPquery-service.js",
+      "settings": "main.js",
+      "serviceFile": "main.js",
       "serviceMethod": "deleteSAPQuery",
       "fields": [
         { "name": "ipAddress", "type": "text" },
-        { "name": "port", "type": "text" }, 
+        { "name": "port", "type": "text" },
         { "name": "databaseUsername", "type": "text" },
         { "name": "password", "type": "text" },
         { "name": "tenant", "type": "text" },

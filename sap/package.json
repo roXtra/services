@@ -8,12 +8,13 @@
   },
   "scripts": {
     "lint": "eslint --ext .ts,.tsx \"**/*.{ts,tsx}\"",
-    "build": "tsc",
-    "test": "cross-env HOTRELOAD=no DEBUG=bpmn-engine:123* mocha ./dist/**/*.roxtest.js --exit --recursive --timeout 40000 --require source-map-support/register",
-    "copyproduction": "copyfiles package.json production && copyfiles .npmrc production && cd ./production && npm install --production && cd .. && copyfiles -u 1 \"./production/node_modules/**/*\" $Env:npm_package_config_servicename && Remove-Item -Recurse ./production",
-    "copyfiles": "copyfiles service.json configtemplate.json dist/* $Env:npm_package_config_servicename && npm run copyproduction",
+    "test": "cross-env HOTRELOAD=no DEBUG=bpmn-engine:123* mocha ./disttests/**/*.roxtest.js --exit --recursive --timeout 40000 --require source-map-support/register",
+    "build": "$(if (Test-Path ./disttests) { Remove-Item -Recurse ./disttests }) && tsc && npm run webpack && npm run copymain",
+    "copyfiles": "copyfiles service.json configtemplate.json dist/* $Env:npm_package_config_servicename",
     "zip": "bestzip \"$Env:npm_package_config_servicename.zip\" \"$Env:npm_package_config_servicename\"",
-    "copyandzip": "npm run copyfiles && npm run zip && Remove-Item -Recurse $Env:npm_package_config_servicename"
+    "copyandzip": "npm run copyfiles && npm run zip && Remove-Item -Recurse $Env:npm_package_config_servicename",
+    "webpack": "webpack --env servicename=$Env:npm_package_config_servicename --config ../webpack.config.js",
+    "copymain": "copyfiles -u 1 dist/main.js disttests"
   },
   "engines": {
     "node": "18",
@@ -22,7 +23,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@sap/hana-client": "2.15.22",
+    "@sap/hana-client": "2.16.21",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.64.0-2/release.tgz",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
@@ -37,6 +38,8 @@
     "eslint": "^8.38.0",
     "mocha": "^10.2.0",
     "ts-loader": "^9.4.2",
-    "typescript": "^4.9.5"
+    "typescript": "^4.9.5",
+    "webpack": "^5.79.0",
+    "webpack-cli": "^5.0.1"
   }
 }

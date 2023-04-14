@@ -70,7 +70,7 @@ export async function selectSAPQuery(environment: IServiceTaskEnvironment): Prom
     throw new Error("selectQuery is undefined, cannot proceed!");
   }
 
-  const result = await Methods.execQuery(connectionParams, selectQuery, async (rows: Array<any>) => {
+  const result = Methods.execQuery(connectionParams, selectQuery, async (rows: Array<any>) => {
     return await Methods.serviceOutputLogic(rows, newValue, environment, instance, "Ergebnis", "CSV Export");
   });
 

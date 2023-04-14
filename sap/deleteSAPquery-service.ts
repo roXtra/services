@@ -60,7 +60,7 @@ export async function deleteSAPQuery(environment: IServiceTaskEnvironment): Prom
     throw new Error("insertQuery is undefined, cannot proceed!");
   }
 
-  return await Methods.execQuery(connectionParams, insertQuery, async () => {
+  return Methods.execQuery(connectionParams, insertQuery, async () => {
     return await environment.instances.updateInstance(environment.instanceDetails);
   });
 }
