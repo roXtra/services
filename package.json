@@ -40,7 +40,7 @@
     "bestzip": "^2.2.1",
     "copyfiles": "^2.4.1",
     "directory-tree": "^3.5.1",
-    "eslint": "^8.38.0",
+    "eslint": "^8.39.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-deprecation": "^1.4.1",
     "eslint-plugin-prettier": "^4.2.1",
