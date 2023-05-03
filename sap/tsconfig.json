@@ -12,7 +12,9 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "strict": true,
-    "lib": ["ES2021", "dom"]
+    "lib": ["ES2021", "dom"],
+    "strictNullChecks": true,
+    "skipLibCheck": true
   },
   "include": ["./**/*"],
   "exclude": ["./dist/**/*", "./disttests/**/*", "./node_modules"]
