@@ -1,7 +1,7 @@
 import { tl } from "processhub-sdk/lib/tl";
 import { Language } from "processhub-sdk/lib/tl";
 
-export function getActivityByNumberConfig(userLanguage: Language): JSX.Element {
+export function getActivityByNumberConfig(userLanguage: Language): React.JSX.Element {
   return (
     <div id="service-form" className="ui form center">
       <table className="table table-striped table-bordered">

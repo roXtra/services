@@ -24,7 +24,7 @@
   "license": "ISC",
   "dependencies": {
     "chai": "^4.3.7",
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.68.0/release.tgz",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.69.0-1/release.tgz",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

@@ -1,7 +1,7 @@
 import { tl } from "processhub-sdk/lib/tl";
 import { Language } from "processhub-sdk/lib/tl";
 
-export function getQueryHint(userLanguage: Language): JSX.Element {
+export function getQueryHint(userLanguage: Language): React.JSX.Element {
   return (
     <td colSpan={2}>
       <h3>{tl("Abfrage", userLanguage)}</h3>
@@ -23,7 +23,7 @@ export function getQueryHint(userLanguage: Language): JSX.Element {
   );
 }
 
-export function executeQueryConfig(userLanguage: Language): JSX.Element {
+export function executeQueryConfig(userLanguage: Language): React.JSX.Element {
   return (
     <div id="service-form" className="ui form center">
       <table className="table table-striped table-bordered">

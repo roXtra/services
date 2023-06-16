@@ -1,7 +1,7 @@
 import { tl } from "processhub-sdk/lib/tl";
 import { Language } from "processhub-sdk/lib/tl";
 
-export function antragsnrconfig(userLanguage: Language): JSX.Element {
+export function antragsnrconfig(userLanguage: Language): React.JSX.Element {
   return (
     <table className="table table-striped table-bordered">
       <tbody>
