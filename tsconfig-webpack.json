@@ -1,15 +1,15 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "node",
+    "target": "ES2022",
+    "module": "Node16",
+    "moduleResolution": "node16",
     "noImplicitAny": true,
     "jsx": "react-jsx",
     "allowJs": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
-    "lib": ["esnext", "dom"]
+    "lib": ["es2022", "dom"]
   },
   "files": ["main.ts"]
 }

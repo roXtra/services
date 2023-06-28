@@ -2,7 +2,7 @@ const path = require("path");
 
 module.exports = (env) => {
   return {
-    target: "node14",
+    target: "node18",
     mode: "production",
     entry: {
       main: path.resolve(__dirname, env.servicename, "main.ts"),
