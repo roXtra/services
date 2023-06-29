@@ -23,7 +23,7 @@
   "license": "ISC",
   "dependencies": {
     "@sap/hana-client": "2.17.14",
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.70.0-3/release.tgz",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.70.0-4/release.tgz",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
