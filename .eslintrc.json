@@ -5,7 +5,7 @@
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
-  "plugins": ["@typescript-eslint", "deprecation", "prettier"],
+  "plugins": ["@typescript-eslint", "deprecation"],
   "env": {
     "browser": true,
     "node": true,
@@ -16,7 +16,7 @@
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    "plugin:prettier/recommended"
+    "prettier"
   ],
   "rules": {
     "linebreak-style": ["error", "unix"],
