@@ -18,8 +18,8 @@ describe("services", () => {
             setFileFieldsCall: async () => {
               // Do nothing
             },
-            getFileDetailsCall: async () => {
-              // Do nothing
+            getFileDetailsCall: () => {
+              return Promise.resolve({ Fields: [] });
             },
             // eslint-disable-next-line @typescript-eslint/require-await
             getSelectionsCall: async () => [],

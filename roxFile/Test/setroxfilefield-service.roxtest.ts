@@ -5,6 +5,7 @@ import { ISetFileFieldsObject } from "../roxtrafileapitypes";
 import { IRoXtraFileApi } from "../iroxtrafileapi";
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
 import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools";
+import { IConfig } from "processhub-sdk/lib/serverconfig/iconfig";
 
 describe("services", () => {
   describe("roxfile", () => {
@@ -14,8 +15,9 @@ describe("services", () => {
           let bodyFromSetCall: ISetFileFieldsObject[] | undefined;
 
           const testApi: IRoXtraFileApi = {
-            createRoxFileCall: async () => {
+            createRoxFileCall: () => {
               // Do nothing
+              return Promise.resolve({ Fields: [] });
             },
             // eslint-disable-next-line @typescript-eslint/require-await
             setFileFieldsCall: async (url, body) => {
@@ -81,7 +83,7 @@ describe("services", () => {
               url: undefined,
               clientSecret: undefined,
             },
-          } as any;
+          } as unknown as IConfig;
           await serviceLogicSetroxfilefield(environment, testApi);
           // Make sure setFileFieldsCall was called with the right values
           expect(bodyFromSetCall?.length).to.equal(1);

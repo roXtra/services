@@ -10,7 +10,7 @@ import { IServiceTaskEnvironment, getFields } from "processhub-sdk/lib/serviceta
 let APIUrl: string;
 let efAccessToken: string;
 
-function handleSelectField(selectID: string, value: string, selection: ISelection): any {
+function handleSelectField(selectID: string, value: string, selection: ISelection): string | undefined {
   switch (selectID) {
     case SelectTypes.COMPLEXSELECT: {
       return JSONQuery("SelectionsList[Value = " + value.split(",")[0].trim() + "].GUID", { data: selection }).value;
@@ -37,7 +37,7 @@ async function selectionValueIDMapping(
   selectID: string,
   environment: IServiceTaskEnvironment,
   roxFileApi: IRoXtraFileApi,
-): Promise<any> {
+): Promise<string | undefined> {
   const selections: ISelection[] = await roxFileApi.getSelectionsCall(APIUrl, efAccessToken, environment.roxApi.getApiToken());
   const data = {
     body: body,
@@ -60,7 +60,7 @@ function parseFileID(fieldID: string, environment: IServiceTaskEnvironment): str
   }
 }
 
-async function getFieldDetails(fileID: string, fieldID: string, environment: IServiceTaskEnvironment, roxFileApi: IRoXtraFileApi): Promise<any> {
+async function getFieldDetails<T>(fileID: string, fieldID: string, environment: IServiceTaskEnvironment, roxFileApi: IRoXtraFileApi): Promise<T> {
   const fileDetails = await roxFileApi.getFileDetailsCall(APIUrl, fileID, efAccessToken, environment.roxApi.getApiToken());
 
   const data = {
@@ -115,8 +115,8 @@ export async function serviceLogic(environment: IServiceTaskEnvironment, roxFile
   ];
 
   if (value) {
-    const fieldDetails = await getFieldDetails(fileId, fieldId, environment, roxFileApi);
-    body[0].ValueIds = await selectionValueIDMapping(body[0], fieldDetails.RoxSelection as string, fieldDetails.RoxType as string, environment, roxFileApi);
+    const fieldDetails = await getFieldDetails<{ RoxSelection: string; RoxType: string }>(fileId, fieldId, environment, roxFileApi);
+    body[0].ValueIds = await selectionValueIDMapping(body[0], fieldDetails.RoxSelection, fieldDetails.RoxType, environment, roxFileApi);
     await roxFileApi.setFileFieldsCall(APIUrl, body, fileId, efAccessToken, environment.roxApi.getApiToken());
   }
 
