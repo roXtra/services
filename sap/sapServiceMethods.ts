@@ -5,6 +5,7 @@ import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror";
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
 import { parseAndInsertStringWithFieldContent } from "processhub-sdk/lib/data/datatools";
+import { ConnectionOptions } from "@sap/hana-client";
 
 export default class SAPServiceMethods {
   static buildInsertQuery(
@@ -83,14 +84,16 @@ export default class SAPServiceMethods {
     return deleteQuery;
   }
 
-  static async execQuery(connectionParams: any, query: string, updateMethod: Function): Promise<boolean> {
+  static async execQuery(connectionParams: ConnectionOptions | string, query: string, updateMethod: Function): Promise<boolean> {
     let noErrors = true;
-
+    // eslint-disable-next-line @typescript-eslint/await-thenable
     const connection = await hanaClient.createConnection();
-    await connection.connect(connectionParams, async (err: any) => {
+    // eslint-disable-next-line @typescript-eslint/await-thenable
+    await connection.connect(connectionParams, async (err) => {
       noErrors = this.errorOutput(err, "Connection error", noErrors);
-
-      await connection.exec(query, async (err: any, rows: Array<any>) => {
+      // eslint-disable-next-line @typescript-eslint/await-thenable
+      await connection.exec(query, async (err, rows) => {
+        // eslint-disable-next-line @typescript-eslint/await-thenable
         await connection.disconnect();
 
         if (noErrors) {
@@ -98,6 +101,7 @@ export default class SAPServiceMethods {
         }
 
         if (noErrors) {
+          // eslint-disable-next-line @typescript-eslint/await-thenable
           noErrors = await updateMethod(rows);
         }
       });
@@ -106,7 +110,7 @@ export default class SAPServiceMethods {
     return noErrors;
   }
 
-  private static errorOutput(err: any, errorMessage: string, currentErrorState: boolean): boolean {
+  private static errorOutput(err: unknown, errorMessage: string, currentErrorState: boolean): boolean {
     if (err) {
       console.error(errorMessage, err);
       throw new BpmnError(ErrorCode.UnknownError, `${errorMessage}: ${String(err)}`);
@@ -115,20 +119,23 @@ export default class SAPServiceMethods {
   }
 
   static async serviceOutputLogic(
-    rows: Array<any>,
-    newValue: any,
+    rows: Array<{ [key: string]: unknown }>,
+    newValue: IFieldValue,
     environment: IServiceTaskEnvironment,
-    instance: any,
+    instance: IInstanceDetails,
     targetFieldTable: string,
     targetFieldCSV: string,
   ): Promise<boolean> {
+    if (!instance.extras.fieldContents) {
+      throw new Error("Missing fieldcontents");
+    }
     let url: string | undefined = undefined;
 
     if (rows && rows.length) {
       newValue.value = this.generateTable(rows);
       instance.extras.fieldContents[targetFieldTable] = newValue;
 
-      url = await environment.instances.uploadAttachment(instance.instanceId as string, "results.csv", Buffer.from(this.generateCSV(rows)));
+      url = await environment.instances.uploadAttachment(instance.instanceId, "results.csv", Buffer.from(this.generateCSV(rows)));
     }
 
     if (url && url.length > 0) {
@@ -142,14 +149,14 @@ export default class SAPServiceMethods {
     return true;
   }
 
-  private static generateTable(rows: Array<any>): string {
+  private static generateTable(rows: Array<{ [key: string]: unknown }>): string {
     const keys = Object.keys(rows[0] as {});
     let table = "<table><tr>";
-    keys.forEach((key: any) => {
+    keys.forEach((key: unknown) => {
       table += "<th>" + String(key) + "</th>";
     });
     table += "</tr>";
-    rows.forEach((row: any) => {
+    rows.forEach((row) => {
       table += "<tr>";
       keys.forEach((key) => {
         table += "<th>" + String(row[key]) + "</th>";
@@ -159,15 +166,15 @@ export default class SAPServiceMethods {
     return (table += "</table>");
   }
 
-  private static generateCSV(rows: Array<any>): string {
+  private static generateCSV(rows: Array<{ [key: string]: unknown }>): string {
     const keys = Object.keys(rows[0] as {});
     let data = "";
-    keys.forEach((key: any) => {
+    keys.forEach((key) => {
       data += String(key) + ",";
     });
     data = data.substring(0, data.length - 1);
     data += "\r\n";
-    rows.forEach((row: any) => {
+    rows.forEach((row) => {
       keys.forEach((key) => {
         data += String(row[key]) + ",";
       });
