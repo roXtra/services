@@ -11,7 +11,7 @@ import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces
 let APIUrl: string;
 let efAccessToken: string;
 
-function createFileIDField(fileIDFieldName: string, response: any, instance: IInstanceDetails): void {
+function createFileIDField(fileIDFieldName: string, response: { Fields: { Value: string }[] }, instance: IInstanceDetails): void {
   if (fileIDFieldName) {
     if (instance.extras.fieldContents === undefined) {
       throw new Error("instance.extras.fieldContents are undefined, cannot proceed with service!");

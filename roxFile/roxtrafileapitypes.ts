@@ -26,7 +26,6 @@ export interface IPostRequest extends RequestInit {
 
 export interface IGetRequest extends RequestInit {
   method: "GET";
-  headers: any;
 }
 
 export interface ICreateFileRequestBody {

@@ -1,6 +1,6 @@
 import { ErrorCodes, ICreateFileRequestBody, IGetRequest, IMissingField, IPostRequest, IRequestHeader, ISelection, ISetFileFieldsObject } from "./roxtrafileapitypes";
 import * as fs from "fs";
-import { IRoXtraFileApi } from "./iroxtrafileapi";
+import { IRoXtraFileApi, IRoXtraFileDetails } from "./iroxtrafileapi";
 import fetch, { Response } from "node-fetch";
 import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror";
 import { IServiceActionConfigField } from "processhub-sdk/lib/data/datainterfaces";
@@ -38,7 +38,7 @@ async function get(apiUrl: string, eftoken: string, token: string): Promise<Resp
 }
 
 export class RoXtraFileApi implements IRoXtraFileApi {
-  public async createRoxFileCall(apiUrl: string, body: ICreateFileRequestBody, eftoken: string, token: string): Promise<any> {
+  public async createRoxFileCall(apiUrl: string, body: ICreateFileRequestBody, eftoken: string, token: string): Promise<IRoXtraFileDetails> {
     const response = await post(apiUrl + "CreateNewDocument", body, eftoken, token);
     if (response.status === 200) {
       return await response.json();
@@ -47,7 +47,7 @@ export class RoXtraFileApi implements IRoXtraFileApi {
     throw new BpmnError(ErrorCodes.API_ERROR, `Schnittstellenfehler: ${response.status}: ${response.statusText}`);
   }
 
-  public async setFileFieldsCall(apiUrl: string, body: ISetFileFieldsObject[], fileId: string, eftoken: string, token: string): Promise<any> {
+  public async setFileFieldsCall(apiUrl: string, body: ISetFileFieldsObject[], fileId: string, eftoken: string, token: string): Promise<unknown> {
     const response = await post(apiUrl + "SetFileFields/" + fileId, body, eftoken, token);
     if (response.status === 200) {
       return await response.json();
@@ -65,7 +65,7 @@ export class RoXtraFileApi implements IRoXtraFileApi {
     throw new BpmnError(ErrorCodes.API_ERROR, `Schnittstellenfehler: ${response.status}: ${response.statusText}`);
   }
 
-  public async getFileDetailsCall(apiUrl: string, fileID: string, eftoken: string, token: string): Promise<any> {
+  public async getFileDetailsCall(apiUrl: string, fileID: string, eftoken: string, token: string): Promise<IRoXtraFileDetails> {
     const response = await get(apiUrl + "GetFileDetails/" + fileID, eftoken, token);
     if (response.status === 200) {
       return await response.json();
