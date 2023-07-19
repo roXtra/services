@@ -30,7 +30,7 @@
     "@types/chai": "^4.3.5",
     "@types/mocha": "^10.0.1",
     "@types/node": "^18.16.19",
-    "@types/react": "^18.2.14",
+    "@types/react": "^18.2.15",
     "bestzip": "^2.2.1",
     "chai": "^4.3.7",
     "copyfiles": "^2.4.1",
