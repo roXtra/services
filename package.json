@@ -40,7 +40,7 @@
     "copyfiles": "^2.4.1",
     "directory-tree": "^3.5.1",
     "eslint": "^8.46.0",
-    "eslint-config-prettier": "^8.8.0",
+    "eslint-config-prettier": "^8.9.0",
     "eslint-plugin-deprecation": "^1.5.0",
     "eslint-plugin-react": "^7.33.1",
     "mocha": "^10.2.0",
