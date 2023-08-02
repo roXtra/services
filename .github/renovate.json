@@ -1,11 +1,6 @@
 {
-  "extends": [
-    "config:base",
-    ":timezone(Europe/Amsterdam)"
-  ],
-  "ignorePresets": [
-    ":prHourlyLimit2"
-  ],
+  "extends": ["config:base", ":timezone(Europe/Amsterdam)"],
+  "ignorePresets": [":prHourlyLimit2"],
   "lockFileMaintenance": {
     "enabled": true,
     "schedule": ["after 2pm and before 5pm on Wednesday"]
@@ -15,12 +10,6 @@
   },
   "rangeStrategy": "bump",
   "prCreation": "not-pending",
-  "assignees": [
-    "@ceisele-r",
-    "@BCaspari",
-    "@JPressmar",
-    "@VFritsch",
-    "@DRichter-r"
-  ],
+  "assignees": ["@ceisele-r", "@BCaspari", "@VFritsch", "@DRichter-r", "@MSpeidel-r"],
   "assigneesSampleSize": 1
 }
