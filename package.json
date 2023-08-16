@@ -44,7 +44,7 @@
     "eslint-plugin-deprecation": "^1.5.0",
     "eslint-plugin-react": "^7.33.1",
     "mocha": "^10.2.0",
-    "prettier": "^3.0.1",
+    "prettier": "^3.0.2",
     "ts-loader": "^9.4.4",
     "typescript": "^5.1.6"
   }
