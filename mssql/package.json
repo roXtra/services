@@ -24,7 +24,7 @@
   "license": "ISC",
   "dependencies": {
     "joi": "^17.10.1",
-    "mssql": "9.2.0",
+    "mssql": "9.3.2",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.74.0/release.tgz",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
