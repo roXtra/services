@@ -29,7 +29,7 @@ jobs:
       prassignee: ${{ inputs.prassignee || github.actor }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: master
           token: ${{ secrets.DEVBOT_GH_TOKEN }}
