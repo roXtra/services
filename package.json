@@ -33,7 +33,7 @@
   "devDependencies": {
     "@types/chai": "^4.3.6",
     "@types/mocha": "^10.0.1",
-    "@types/react": "^18.2.21",
+    "@types/react": "^18.2.22",
     "@typescript-eslint/eslint-plugin": "^6.7.0",
     "@typescript-eslint/parser": "^6.7.0",
     "bestzip": "^2.2.1",
