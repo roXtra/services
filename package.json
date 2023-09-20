@@ -41,7 +41,7 @@
     "directory-tree": "^3.5.1",
     "eslint": "^8.49.0",
     "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-deprecation": "^1.5.0",
+    "eslint-plugin-deprecation": "^2.0.0",
     "eslint-plugin-react": "^7.33.2",
     "mocha": "^10.2.0",
     "prettier": "^3.0.3",
