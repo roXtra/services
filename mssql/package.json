@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@types/mocha": "^10.0.1",
-    "@types/mssql": "^8.1.2",
+    "@types/mssql": "^9.1.0",
     "@types/node": "^18.17.18",
     "@types/react": "^18.2.22",
     "bestzip": "^2.2.1",
