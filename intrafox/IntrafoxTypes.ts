@@ -1,5 +1,3 @@
-import { RequestInit } from "node-fetch";
-
 export enum ErrorCodes {
   API_ERROR = "API_ERROR",
 }
@@ -12,7 +10,7 @@ export interface IGetGlobalActivityListResponse {
   ORGANIZATIONUNIT_NAMES: string[][];
 }
 
-export interface IIntraFoxErrorResponse extends RequestInit {
+export interface IIntraFoxErrorResponse {
   ERRORCODE: string;
   REASON: string;
   MESSAGE: string;

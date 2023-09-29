@@ -1,6 +1,6 @@
+import axios, { AxiosRequestConfig } from "axios";
 import * as IntrafoxTypes from "./IntrafoxTypes";
 import DateFormat from "dateformat";
-import fetch from "node-fetch";
 import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror";
 import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces";
 import { Language, tl } from "processhub-sdk/lib/tl";
@@ -8,15 +8,16 @@ import { Language, tl } from "processhub-sdk/lib/tl";
 async function post<T>(url: string, requestBody: IntrafoxTypes.IIntraFoxBody, token: string): Promise<T> {
   const headers = { "X-INTRAFOX-ROXTRA-TOKEN": token };
 
-  const req = {
+  const req: AxiosRequestConfig = {
     method: "POST",
-    body: JSON.stringify(requestBody),
+    data: JSON.stringify(requestBody),
     headers: headers,
+    responseType: "json",
   };
 
   try {
-    const response = await fetch(url, req);
-    return (await response.json()) as T;
+    const response = await axios<T>(url, req);
+    return response.data;
   } catch (ex) {
     const err = ex as { message: string };
     throw new Error(err.message);

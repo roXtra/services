@@ -24,8 +24,8 @@
   "license": "ISC",
   "dependencies": {
     "@types/json-query": "^2.2.4",
+    "axios": "^1.5.1",
     "json-query": "^2.2.2",
-    "node-fetch": "^2.7.0",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.75.0/release.tgz",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
@@ -34,7 +34,6 @@
     "@types/chai": "^4.3.6",
     "@types/mocha": "^10.0.2",
     "@types/node": "^18.18.0",
-    "@types/node-fetch": "^2.6.6",
     "@types/react": "^18.2.23",
     "bestzip": "^2.2.1",
     "chai": "^4.3.9",

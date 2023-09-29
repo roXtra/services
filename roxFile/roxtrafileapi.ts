@@ -1,11 +1,11 @@
-import { ErrorCodes, ICreateFileRequestBody, IGetRequest, IMissingField, IPostRequest, IRequestHeader, ISelection, ISetFileFieldsObject } from "./roxtrafileapitypes";
+import { ErrorCodes, ICreateFileRequestBody, IMissingField, IRequestHeader, ISelection, ISetFileFieldsObject } from "./roxtrafileapitypes";
 import * as fs from "fs";
 import { IRoXtraFileApi, IRoXtraFileDetails } from "./iroxtrafileapi";
-import fetch, { Response } from "node-fetch";
 import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror";
 import { IServiceActionConfigField } from "processhub-sdk/lib/data/datainterfaces";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
-async function post(apiUrl: string, requestBody: ICreateFileRequestBody | ISetFileFieldsObject[], eftoken: string, token: string): Promise<Response> {
+async function post<T>(apiUrl: string, requestBody: ICreateFileRequestBody | ISetFileFieldsObject[], eftoken: string, token: string): Promise<AxiosResponse<T>> {
   const headers: IRequestHeader = {
     Accept: "application/json",
     "Content-Type": "application/json",
@@ -13,16 +13,16 @@ async function post(apiUrl: string, requestBody: ICreateFileRequestBody | ISetFi
     authtoken: token,
   };
 
-  const req: IPostRequest = {
+  const req: AxiosRequestConfig = {
     method: "POST",
-    body: JSON.stringify(requestBody),
+    data: JSON.stringify(requestBody),
     headers: headers,
   };
 
-  return await fetch(apiUrl, req);
+  return await axios<T>(apiUrl, req);
 }
 
-async function get(apiUrl: string, eftoken: string, token: string): Promise<Response> {
+async function get<T>(apiUrl: string, eftoken: string, token: string): Promise<AxiosResponse<T>> {
   const headers: IRequestHeader = {
     Accept: "application/json",
     "Content-Type": "application/json",
@@ -30,18 +30,18 @@ async function get(apiUrl: string, eftoken: string, token: string): Promise<Resp
     authtoken: token,
   };
 
-  const req: IGetRequest = {
+  const req: AxiosRequestConfig = {
     method: "GET",
     headers: headers,
   };
-  return await fetch(apiUrl, req);
+  return await axios<T>(apiUrl, req);
 }
 
 export class RoXtraFileApi implements IRoXtraFileApi {
   public async createRoxFileCall(apiUrl: string, body: ICreateFileRequestBody, eftoken: string, token: string): Promise<IRoXtraFileDetails> {
-    const response = await post(apiUrl + "CreateNewDocument", body, eftoken, token);
+    const response = await post<IRoXtraFileDetails>(apiUrl + "CreateNewDocument", body, eftoken, token);
     if (response.status === 200) {
-      return await response.json();
+      return response.data;
     }
 
     throw new BpmnError(ErrorCodes.API_ERROR, `Schnittstellenfehler: ${response.status}: ${response.statusText}`);
@@ -50,25 +50,25 @@ export class RoXtraFileApi implements IRoXtraFileApi {
   public async setFileFieldsCall(apiUrl: string, body: ISetFileFieldsObject[], fileId: string, eftoken: string, token: string): Promise<unknown> {
     const response = await post(apiUrl + "SetFileFields/" + fileId, body, eftoken, token);
     if (response.status === 200) {
-      return await response.json();
+      return response.data;
     }
 
     throw new BpmnError(ErrorCodes.API_ERROR, `Schnittstellenfehler: ${response.status}: ${response.statusText}`);
   }
 
   public async getSelectionsCall(apiUrl: string, eftoken: string, token: string): Promise<ISelection[]> {
-    const response = await get(apiUrl + "GetSelections", eftoken, token);
+    const response = await get<ISelection[]>(apiUrl + "GetSelections", eftoken, token);
     if (response.status === 200) {
-      return await response.json();
+      return response.data;
     }
 
     throw new BpmnError(ErrorCodes.API_ERROR, `Schnittstellenfehler: ${response.status}: ${response.statusText}`);
   }
 
   public async getFileDetailsCall(apiUrl: string, fileID: string, eftoken: string, token: string): Promise<IRoXtraFileDetails> {
-    const response = await get(apiUrl + "GetFileDetails/" + fileID, eftoken, token);
+    const response = await get<IRoXtraFileDetails>(apiUrl + "GetFileDetails/" + fileID, eftoken, token);
     if (response.status === 200) {
-      return await response.json();
+      return response.data;
     }
 
     throw new BpmnError(ErrorCodes.API_ERROR, `Schnittstellenfehler: ${response.status}: ${response.statusText}`);
