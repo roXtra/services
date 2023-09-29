@@ -1,5 +1,3 @@
-import { RequestInit } from "node-fetch";
-
 export enum ErrorCodes {
   API_ERROR = "API_ERROR",
 }
@@ -16,16 +14,6 @@ export interface IRequestHeader extends Record<string, string> {
   "Content-Type": "application/json";
   "ef-authtoken": string;
   authtoken: string;
-}
-
-export interface IPostRequest extends RequestInit {
-  method: "POST";
-  body: string;
-  headers: IRequestHeader;
-}
-
-export interface IGetRequest extends RequestInit {
-  method: "GET";
 }
 
 export interface ICreateFileRequestBody {
