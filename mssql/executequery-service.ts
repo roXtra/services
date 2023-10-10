@@ -50,6 +50,7 @@ export async function executeQuery(environment: IServiceTaskEnvironment): Promis
       processObject,
       environment.instanceDetails.extras.roleOwners,
       environment.sender.language || "de-DE",
+      await environment.roxApi.getUsersConfig(),
       true,
     );
 

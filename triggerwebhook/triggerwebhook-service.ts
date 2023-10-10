@@ -35,6 +35,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment, configP
   }
 
   const configFile = (await readConfigFile<IServiceConfigSecret>(configPath, IServiceConfigSchema, environment.logger)) || { secret: {} };
+  const usersConfig = await environment.roxApi.getUsersConfig();
 
   const replaceFieldContentsInFieldValue = (value: string): string | undefined => {
     let result: string | undefined = replaceObjectReferences(value, "secret", configFile.secret);
@@ -44,6 +45,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment, configP
       processObject,
       instanceRoleOwners,
       environment.sender.language || "de-DE",
+      usersConfig,
       undefined,
       undefined,
       undefined,

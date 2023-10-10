@@ -35,6 +35,7 @@ export async function executeQueryNoReturn(environment: IServiceTaskEnvironment)
     processObject,
     environment.instanceDetails.extras.roleOwners,
     environment.sender.language || "de-DE",
+    await environment.roxApi.getUsersConfig(),
     true,
   );
 

@@ -54,7 +54,7 @@ export async function deleteSAPQuery(environment: IServiceTaskEnvironment): Prom
     databaseName: tenant,
   };
 
-  const insertQuery = Methods.buildDeleteQuery(environment, tableName, where, instance, processObject);
+  const insertQuery = await Methods.buildDeleteQuery(environment, tableName, where, instance, processObject);
 
   if (insertQuery === undefined) {
     throw new Error("insertQuery is undefined, cannot proceed!");
