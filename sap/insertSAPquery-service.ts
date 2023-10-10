@@ -58,7 +58,7 @@ export async function insertSAPQuery(environment: IServiceTaskEnvironment): Prom
     databaseName: tenant,
   };
 
-  const insertQuery = Methods.buildInsertQuery(environment, tableName, columns, values, instance, processObject);
+  const insertQuery = await Methods.buildInsertQuery(environment, tableName, columns, values, instance, processObject);
 
   if (insertQuery === undefined) {
     throw new Error("insertQuery is undefined, cannot proceed!");

@@ -56,7 +56,15 @@ export async function executeSAPQuery(environment: IServiceTaskEnvironment): Pro
     throw new Error("instance.extras.roleOwners is undefined, cannot proceed!");
   }
 
-  query = parseAndInsertStringWithFieldContent(query, instance.extras.fieldContents, processObject, instance.extras.roleOwners, environment.sender.language || "de-DE", true);
+  query = parseAndInsertStringWithFieldContent(
+    query,
+    instance.extras.fieldContents,
+    processObject,
+    instance.extras.roleOwners,
+    environment.sender.language || "de-DE",
+    await environment.roxApi.getUsersConfig(),
+    true,
+  );
 
   if (query === undefined) {
     throw new Error("query is undefined, cannot proceed!");

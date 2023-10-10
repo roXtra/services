@@ -133,6 +133,7 @@ export async function generate(environment: IServiceTaskEnvironment): Promise<bo
     process.extras.processRoles,
     instance.extras.roleOwners,
     environment.sender.language || "de-DE",
+    await environment.roxApi.getUsersConfig(),
   );
 
   if (parsedSummary === undefined) {

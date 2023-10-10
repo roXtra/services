@@ -64,7 +64,7 @@ export async function selectSAPQuery(environment: IServiceTaskEnvironment): Prom
     type: "ProcessHubTextArea",
   };
 
-  const selectQuery = Methods.buildSelectQuery(environment, tableName, columns, where, instance, processObject);
+  const selectQuery = await Methods.buildSelectQuery(environment, tableName, columns, where, instance, processObject);
 
   if (selectQuery === undefined) {
     throw new Error("selectQuery is undefined, cannot proceed!");

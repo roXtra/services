@@ -8,14 +8,14 @@ import { parseAndInsertStringWithFieldContent } from "processhub-sdk/lib/data/da
 import { ConnectionOptions } from "@sap/hana-client";
 
 export default class SAPServiceMethods {
-  static buildInsertQuery(
+  static async buildInsertQuery(
     environment: IServiceTaskEnvironment,
     tableName: string,
     columns: string,
     values: string,
     instance: IInstanceDetails,
     processObject: BpmnProcess,
-  ): string | undefined {
+  ): Promise<string | undefined> {
     let query: string | undefined = "INSERT INTO " + tableName + " (" + columns + ") " + "VALUES (" + values + ");";
 
     if (instance.extras.roleOwners === undefined) {
@@ -28,20 +28,21 @@ export default class SAPServiceMethods {
       processObject,
       instance.extras.roleOwners,
       environment.sender.language || "de-DE",
+      await environment.roxApi.getUsersConfig(),
       true,
     );
 
     return query;
   }
 
-  static buildSelectQuery(
+  static async buildSelectQuery(
     environment: IServiceTaskEnvironment,
     tableName: string,
     columns: string,
     where: string,
     instance: IInstanceDetails,
     processObject: BpmnProcess,
-  ): string | undefined {
+  ): Promise<string | undefined> {
     let selectQuery: string | undefined = "SELECT " + columns + " FROM " + tableName + " WHERE " + where + ";";
 
     if (instance.extras.roleOwners === undefined) {
@@ -54,6 +55,7 @@ export default class SAPServiceMethods {
       processObject,
       instance.extras.roleOwners,
       environment.sender.language || "de-DE",
+      await environment.roxApi.getUsersConfig(),
       true,
     );
     selectQuery = selectQuery?.replace(/\s{2,}/g, " ");
@@ -65,7 +67,13 @@ export default class SAPServiceMethods {
     return selectQuery;
   }
 
-  static buildDeleteQuery(environment: IServiceTaskEnvironment, tableName: string, where: string, instance: IInstanceDetails, processObject: BpmnProcess): string | undefined {
+  static async buildDeleteQuery(
+    environment: IServiceTaskEnvironment,
+    tableName: string,
+    where: string,
+    instance: IInstanceDetails,
+    processObject: BpmnProcess,
+  ): Promise<string | undefined> {
     let deleteQuery: string | undefined = "DELETE FROM " + tableName + " WHERE " + where + ";";
 
     if (instance.extras.roleOwners === undefined) {
@@ -78,6 +86,7 @@ export default class SAPServiceMethods {
       processObject,
       instance.extras.roleOwners,
       environment.sender.language || "de-DE",
+      await environment.roxApi.getUsersConfig(),
       true,
     );
 
