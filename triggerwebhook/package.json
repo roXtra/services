@@ -29,12 +29,12 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@types/chai": "^4.3.6",
+    "@types/chai": "^4.3.7",
     "@types/mocha": "^10.0.2",
     "@types/node": "^18.18.3",
     "@types/react": "^18.2.23",
     "bestzip": "^2.2.1",
-    "chai": "^4.3.9",
+    "chai": "^4.3.10",
     "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.50.0",
