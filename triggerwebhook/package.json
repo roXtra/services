@@ -39,7 +39,7 @@
     "cross-env": "^7.0.3",
     "eslint": "^8.52.0",
     "mocha": "^10.2.0",
-    "nock": "^13.3.4",
+    "nock": "^13.3.6",
     "ts-loader": "^9.5.0",
     "typescript": "^5.2.2",
     "webpack": "^5.89.0",
