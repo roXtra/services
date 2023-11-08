@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@types/mocha": "^10.0.3",
-    "@types/mysql": "^2.15.23",
+    "@types/mysql": "^2.15.24",
     "@types/node": "^18.18.8",
     "@types/react": "^18.2.31",
     "bestzip": "^2.2.1",
