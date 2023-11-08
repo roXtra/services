@@ -34,7 +34,7 @@ jobs:
           ref: master
           token: ${{ secrets.DEVBOT_GH_TOKEN }}
       - name: Use Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
       - name: Configure Git
