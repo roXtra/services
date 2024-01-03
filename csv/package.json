@@ -34,7 +34,7 @@
     "@types/node": "^18.19.4",
     "@types/react": "^18.2.46",
     "bestzip": "^2.2.1",
-    "chai": "^4.3.10",
+    "chai": "^5.0.0",
     "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.56.0",
