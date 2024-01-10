@@ -24,7 +24,7 @@
   "license": "ISC",
   "dependencies": {
     "@types/json-query": "^2.2.6",
-    "axios": "^1.6.3",
+    "axios": "^1.6.5",
     "json-query": "^2.2.2",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.82.0/release.tgz",
     "react": "^18.2.0",
