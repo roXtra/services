@@ -34,7 +34,7 @@
     "@types/chai": "^4.3.11",
     "@types/mocha": "^10.0.6",
     "@types/node": "^18.19.6",
-    "@types/react": "^18.2.47",
+    "@types/react": "^18.2.48",
     "bestzip": "^2.2.1",
     "chai": "^4.4.0",
     "copyfiles": "^2.4.1",
