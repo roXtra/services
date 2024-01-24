@@ -32,6 +32,11 @@ module.exports = {
     {
       matchPackageNames: ["react", "react-dom", "@types/react"],
       allowedVersions: "^18.0.0",
-    }
+    },
+    {
+      // Lock chai in to v4 as v5 is ES Module only
+      matchPackageNames: ["chai"],
+      allowedVersions: "^4.0.0",
+    },
   ],
 };
