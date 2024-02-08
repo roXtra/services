@@ -23,11 +23,11 @@ module.exports = {
     },
     {
       matchPackageNames: ["node", "@types/node"],
-      allowedVersions: "^18.0.0",
+      allowedVersions: "^20.0.0",
     },
     {
       matchPackageNames: ["npm"],
-      allowedVersions: "^9.0.0",
+      allowedVersions: "^10.0.0",
     },
     {
       matchPackageNames: ["react", "react-dom", "@types/react"],
