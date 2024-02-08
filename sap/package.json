@@ -16,14 +16,14 @@
     "copyandzip": "npm run copyfiles && npm run zip && Remove-Item -Recurse $Env:npm_package_config_servicename"
   },
   "engines": {
-    "node": "18",
-    "npm": "9"
+    "node": "20",
+    "npm": "10"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@sap/hana-client": "2.19.21",
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.84.0/release.tgz",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.85.0-2/release.tgz",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

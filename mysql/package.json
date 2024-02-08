@@ -18,14 +18,14 @@
     "copymain": "copyfiles -u 1 dist/main.js disttests"
   },
   "engines": {
-    "node": "18",
-    "npm": "9"
+    "node": "20",
+    "npm": "10"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "mysql": "^2.18.1",
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.84.0/release.tgz",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.85.0-2/release.tgz",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
