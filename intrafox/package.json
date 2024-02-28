@@ -33,7 +33,7 @@
     "@types/chai": "^4.3.12",
     "@types/dateformat": "^5.0.2",
     "@types/mocha": "^10.0.6",
-    "@types/node": "^20.11.19",
+    "@types/node": "^20.11.21",
     "@types/react": "^18.2.60",
     "bestzip": "^2.2.1",
     "chai": "^4.4.1",
