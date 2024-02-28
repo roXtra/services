@@ -23,7 +23,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "joi": "^17.12.1",
+    "joi": "^17.12.2",
     "mssql": "10.0.2",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.85.0/release.tgz",
     "react": "^18.2.0",
