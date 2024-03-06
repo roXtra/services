@@ -32,7 +32,7 @@
   "devDependencies": {
     "@types/mocha": "^10.0.6",
     "@types/mssql": "^9.1.5",
-    "@types/node": "^20.11.21",
+    "@types/node": "^20.11.24",
     "@types/react": "^18.2.60",
     "bestzip": "^2.2.1",
     "chai": "^4.4.1",
