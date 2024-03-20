@@ -28,7 +28,7 @@
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.0/xlsx-0.20.0.tgz"
   },
   "devDependencies": {
-    "@types/chai": "^4.3.12",
+    "@types/chai": "^4.3.13",
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.11.27",
     "@types/react": "^18.2.65",
