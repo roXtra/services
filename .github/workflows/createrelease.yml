@@ -37,7 +37,7 @@ jobs:
         run: |
           npm run buildbundle
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: |
             services.zip
