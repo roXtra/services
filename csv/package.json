@@ -38,7 +38,7 @@
     "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
-    "mocha": "^10.3.0",
+    "mocha": "^10.4.0",
     "ts-loader": "^9.5.1",
     "typescript": "^5.4.3",
     "webpack": "^5.90.3",
