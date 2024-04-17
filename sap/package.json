@@ -16,7 +16,7 @@
     "copyandzip": "npm run copyfiles && npm run zip && Remove-Item -Recurse $Env:npm_package_config_servicename"
   },
   "engines": {
-    "node": "20",
+    "node": "20.12.2",
     "npm": "10"
   },
   "author": "",
