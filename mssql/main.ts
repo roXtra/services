@@ -1,5 +1,5 @@
-export * from "./executequery-config";
-export * from "./executequery-service";
+export * from "./executequery-config.js";
+export * from "./executequery-service.js";
 
-export * from "./executequerynoreturn-config";
-export * from "./executequerynoreturn-service";
+export * from "./executequerynoreturn-config.js";
+export * from "./executequerynoreturn-service.js";

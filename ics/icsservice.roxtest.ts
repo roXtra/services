@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { generateConfig, generate } from "./main";
+import { generateConfig, generate } from "./main.js";
 
 describe("services", () => {
   describe("ics", () => {

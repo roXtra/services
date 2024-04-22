@@ -1,16 +1,24 @@
-const path = require("path");
+import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-module.exports = (env) => {
+export default (env) => {
   return {
     target: "node18",
     mode: "production",
     entry: {
       main: path.resolve(__dirname, env.servicename, "main.ts"),
     },
+    experiments: {
+      outputModule: true,
+    },
     output: {
       path: path.resolve(__dirname, env.servicename, "dist"),
       filename: "[name].js",
-      libraryTarget: "commonjs2",
+      library: {
+        type: "module",
+      },
     },
     optimization: {
       // mysql package does not support minimize: https://github.com/mysqljs/mysql/issues/1655
@@ -18,6 +26,7 @@ module.exports = (env) => {
     },
     resolve: {
       extensions: [".ts", ".tsx", ".js", ".json"],
+      extensionAlias: { ".js": [".ts", ".js", ".tsx"] },
     },
     module: {
       rules: [

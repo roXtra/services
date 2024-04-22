@@ -1,5 +1,6 @@
 {
   "name": "@eformservice/systemsettings",
+  "type": "module",
   "version": "1.0.0",
   "license": "ISC",
   "description": "",
@@ -14,7 +15,7 @@
     "copyfiles": "copyfiles service.json configtemplate.json dist/* $Env:npm_package_config_servicename",
     "zip": "bestzip \"$Env:npm_package_config_servicename.zip\" \"$Env:npm_package_config_servicename\"",
     "copyandzip": "npm run copyfiles && npm run zip && Remove-Item -Recurse $Env:npm_package_config_servicename",
-    "webpack": "webpack --env servicename=$Env:npm_package_config_servicename --config ../webpack.config.js",
+    "webpack": "webpack --env servicename=$Env:npm_package_config_servicename --config ../webpack.config.mjs",
     "copymain": "copyfiles -u 1 dist/main.js disttests"
   },
   "engines": {
@@ -22,7 +23,7 @@
     "npm": "10"
   },
   "dependencies": {
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.89.0/release.tgz",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.90.0-4/release.tgz",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

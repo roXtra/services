@@ -1,2 +1,2 @@
-export * from "./createReport-config";
-export * from "./createReport-service";
+export * from "./createReport-config.js";
+export * from "./createReport-service.js";

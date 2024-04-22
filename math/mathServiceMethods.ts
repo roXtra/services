@@ -1,5 +1,5 @@
-import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue.js";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
 
 export default class MathServiceMethods {
   static getNumberFromField(environment: IServiceTaskEnvironment, fieldName: string): number {

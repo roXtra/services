@@ -1,2 +1,2 @@
-export * from "./antragsnr-service";
-export * from "./antragsnr-config";
+export * from "./antragsnr-service.js";
+export * from "./antragsnr-config.js";

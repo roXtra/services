@@ -1,5 +1,5 @@
-import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
-import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue.js";
+import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
 
 export class CSVServiceMethods {
   public static query(objectArray: Record<string, unknown>[], queryString: string): Record<string, unknown>[] {

@@ -1,11 +1,11 @@
 import * as fs from "fs";
 import { expect } from "chai";
-import { IRoXtraFileApi } from "../iroxtrafileapi";
-import { ICreateFileRequestBody } from "../roxtrafileapitypes";
-import { serviceLogicCreateroxfile, createRoxFile, createRoxFileConfig } from "../main";
-import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
-import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools";
+import { IRoXtraFileApi } from "../iroxtrafileapi.js";
+import { ICreateFileRequestBody } from "../roxtrafileapitypes.js";
+import { serviceLogicCreateroxfile, createRoxFile, createRoxFileConfig } from "../main.js";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue.js";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools.js";
 
 describe("services", () => {
   describe("roxfile", () => {

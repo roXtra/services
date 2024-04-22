@@ -1,13 +1,13 @@
 // Import { assert } from "chai";
 // import * as fs from "fs";
-// import * as PH from "processhub-sdk";
-// import { createTestObjects, getTestApiContext, testWorkspace } from "../../test/roxtestobjects";
-// import { getFileStore } from "../../server/sfilestore/filestore";
-// import { createProcess, getProcessDetails, updateProcess } from "../../server/sprocess/processes";
-// import { startWebserver } from "../../server/webserver";
-// import { getInstanceDetails } from "../../server/sinstance/instances";
-// import { executeInstance } from "../../server/sinstance/engine/engine";
-// import Methods from "./sapServiceMethods";
+// import * as PH from "processhub-sdk.js";
+// import { createTestObjects, getTestApiContext, testWorkspace } from "../../test/roxtestobjects.js";
+// import { getFileStore } from "../../server/sfilestore/filestore.js";
+// import { createProcess, getProcessDetails, updateProcess } from "../../server/sprocess/processes.js";
+// import { startWebserver } from "../../server/webserver.js";
+// import { getInstanceDetails } from "../../server/sinstance/instances.js";
+// import { executeInstance } from "../../server/sinstance/engine/engine.js";
+// import Methods from "./sapServiceMethods.js";
 
 // describe("server", () => {
 //   before(async () => {

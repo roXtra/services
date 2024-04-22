@@ -1,7 +1,7 @@
-import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
-import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
-import MathServiceMethods from "./mathServiceMethods";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue.js";
+import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import MathServiceMethods from "./mathServiceMethods.js";
 
 export async function serviceLogic(environment: IServiceTaskEnvironment): Promise<void> {
   const processObject: BpmnProcess = new BpmnProcess();

@@ -1,9 +1,11 @@
 import axios, { AxiosRequestConfig } from "axios";
-import * as IntrafoxTypes from "./IntrafoxTypes";
-import DateFormat from "dateformat";
-import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror";
-import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces";
-import { Language, tl } from "processhub-sdk/lib/tl";
+import * as IntrafoxTypes from "./IntrafoxTypes.js";
+import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror.js";
+import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
+import { Language, tl } from "processhub-sdk/lib/tl.js";
+import dateformatImport from "dateformat";
+
+const dateformat = dateformatImport.default || dateformatImport;
 
 async function post<T>(url: string, requestBody: IntrafoxTypes.IIntraFoxBody, token: string): Promise<T> {
   const headers = { "X-INTRAFOX-ROXTRA-TOKEN": token };
@@ -74,7 +76,7 @@ export async function createGlobalActivity(
   const args: IntrafoxTypes.ICreateActivityARGS = {
     ACTIVITY_ABBREVIATION: activityAbbrevation,
     ACTIVITY_DESCRIPTION: activityDescription,
-    ACTIVITY_EXPIRATIONDATE: DateFormat(activityExpirationdate, "yyyy-mm-dd"),
+    ACTIVITY_EXPIRATIONDATE: dateformat(activityExpirationdate, "yyyy-mm-dd"),
   };
 
   const body: IntrafoxTypes.IIntraFoxBody = {

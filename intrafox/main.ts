@@ -1,5 +1,5 @@
-export * from "./getActivityByNumber-config";
-export { getActivityByNumber } from "./getActivityByNumber-service";
+export * from "./getActivityByNumber-config.js";
+export { getActivityByNumber } from "./getActivityByNumber-service.js";
 
-export * from "./createActivity-config";
-export { createActivity, serviceLogic as createActivityServiceLogic } from "./createActivity-service";
+export * from "./createActivity-config.js";
+export { createActivity, serviceLogic as createActivityServiceLogic } from "./createActivity-service.js";

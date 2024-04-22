@@ -1,6 +1,6 @@
 // Tests for csvreader
 import { expect } from "chai";
-import { csvreaderConfig, csvreader } from "./main";
+import { csvreaderConfig, csvreader } from "./main.js";
 
 describe("services", () => {
   describe("csv", () => {

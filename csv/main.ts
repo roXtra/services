@@ -1,2 +1,2 @@
-export * from "./csvreader-config";
-export * from "./csvreader-service";
+export * from "./csvreader-config.js";
+export * from "./csvreader-service.js";

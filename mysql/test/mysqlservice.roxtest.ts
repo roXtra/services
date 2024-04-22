@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { executeQuery, executeQueryConfig } from "../main";
+import { executeQuery, executeQueryConfig } from "../main.js";
 
 describe("services", () => {
   describe("mysql", () => {

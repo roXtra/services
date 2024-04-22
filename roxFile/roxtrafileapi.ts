@@ -1,8 +1,8 @@
-import { ErrorCodes, ICreateFileRequestBody, IMissingField, IRequestHeader, ISelection, ISetFileFieldsObject } from "./roxtrafileapitypes";
+import { ErrorCodes, ICreateFileRequestBody, IMissingField, IRequestHeader, ISelection, ISetFileFieldsObject } from "./roxtrafileapitypes.js";
 import * as fs from "fs";
-import { IRoXtraFileApi, IRoXtraFileDetails } from "./iroxtrafileapi";
-import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror";
-import { IServiceActionConfigField } from "processhub-sdk/lib/data/datainterfaces";
+import { IRoXtraFileApi, IRoXtraFileDetails } from "./iroxtrafileapi.js";
+import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror.js";
+import { IServiceActionConfigField } from "processhub-sdk/lib/data/datainterfaces.js";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 async function post<T>(apiUrl: string, requestBody: ICreateFileRequestBody | ISetFileFieldsObject[], eftoken: string, token: string): Promise<AxiosResponse<T>> {

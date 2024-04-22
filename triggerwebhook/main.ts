@@ -1,2 +1,2 @@
-export { triggerwebhookPost } from "./triggerwebhook-service";
-export * from "./triggerwebhook-config";
+export { triggerwebhookPost } from "./triggerwebhook-service.js";
+export * from "./triggerwebhook-config.js";

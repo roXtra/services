@@ -1,8 +1,8 @@
-import { parseAndInsertStringWithFieldContent } from "processhub-sdk/lib/data/datatools";
-import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
-import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
-import Methods from "./sapServiceMethods";
+import { parseAndInsertStringWithFieldContent } from "processhub-sdk/lib/data/datatools.js";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue.js";
+import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import Methods from "./sapServiceMethods.js";
 
 export async function executeSAPQuery(environment: IServiceTaskEnvironment): Promise<boolean> {
   const processObject: BpmnProcess = new BpmnProcess();

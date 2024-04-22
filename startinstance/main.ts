@@ -1,2 +1,2 @@
-export * from "./startinstance-service";
-export * from "./startinstance-config";
+export * from "./startinstance-service.js";
+export * from "./startinstance-config.js";

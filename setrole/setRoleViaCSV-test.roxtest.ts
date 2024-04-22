@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { setRoleViaCSVConfig, setRoleViaCSV } from "./main";
+import { setRoleViaCSVConfig, setRoleViaCSV } from "./main.js";
 
 describe("services", () => {
   describe("bundle test", () => {

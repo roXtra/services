@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { loopCount, loopCountConfig, transactionTimeout, transactionTimeoutConfig } from "./main";
+import { loopCount, loopCountConfig, transactionTimeout, transactionTimeoutConfig } from "./main.js";
 
 describe("services", () => {
   describe("systemsettings", () => {

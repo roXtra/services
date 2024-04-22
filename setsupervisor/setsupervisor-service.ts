@@ -1,11 +1,11 @@
-import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces";
-import { getFields, IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
-import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror";
-import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
-import { ProcessExtras } from "processhub-sdk/lib/process/processinterfaces";
-import { isPotentialRoleOwner } from "processhub-sdk/lib/process/processrights";
-import { UserExtras } from "processhub-sdk/lib/user/userinterfaces";
-import { WorkspaceExtras } from "processhub-sdk/lib/workspace/workspaceinterfaces";
+import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
+import { getFields, IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror.js";
+import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
+import { ProcessExtras } from "processhub-sdk/lib/process/processinterfaces.js";
+import { isPotentialRoleOwner } from "processhub-sdk/lib/process/processrights.js";
+import { UserExtras } from "processhub-sdk/lib/user/userinterfaces.js";
+import { WorkspaceExtras } from "processhub-sdk/lib/workspace/workspaceinterfaces.js";
 
 const ErrorCodes = {
   API_ERROR: "API_ERROR",

@@ -1,4 +1,4 @@
-export { loopCount } from "./loopcount-service";
-export * from "./loopcount-config";
-export * from "./transactiontimeout-config";
-export * from "./transactiontimeout-service";
+export { loopCount } from "./loopcount-service.js";
+export * from "./loopcount-config.js";
+export * from "./transactiontimeout-config.js";
+export * from "./transactiontimeout-service.js";

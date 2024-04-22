@@ -1,4 +1,4 @@
-import * as Types from "./roxtrafileapitypes";
+import * as Types from "./roxtrafileapitypes.js";
 
 export interface IRoXtraFileDetails {
   Fields: { Value: string }[];

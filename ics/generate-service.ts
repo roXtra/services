@@ -1,10 +1,10 @@
-import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
-import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror";
-import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
-import { ProcessExtras } from "processhub-sdk/lib/process/processinterfaces";
-import { parseAndInsertStringWithFieldContent } from "processhub-sdk/lib/data/datatools";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
-import { removeHtmlTags } from "processhub-sdk/lib/tools/stringtools";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue.js";
+import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror.js";
+import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
+import { ProcessExtras } from "processhub-sdk/lib/process/processinterfaces.js";
+import { parseAndInsertStringWithFieldContent } from "processhub-sdk/lib/data/datatools.js";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { removeHtmlTags } from "processhub-sdk/lib/tools/stringtools.js";
 
 enum ErrorCodes {
   ATTACHMENT_ERROR = "ATTACHMENT_ERROR",
