@@ -1,11 +1,11 @@
-import { missingRequiredField, initRequiredFields, RoXtraFileApi } from "./roxtrafileapi";
-import { ISetFileFieldsObject, ISelection, SelectTypes } from "./roxtrafileapitypes";
+import { missingRequiredField, initRequiredFields, RoXtraFileApi } from "./roxtrafileapi.js";
+import { ISetFileFieldsObject, ISelection, SelectTypes } from "./roxtrafileapitypes.js";
 import JSONQuery from "json-query";
-import { IRoXtraFileApi } from "./iroxtrafileapi";
-import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces";
-import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror";
-import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
-import { IServiceTaskEnvironment, getFields } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
+import { IRoXtraFileApi } from "./iroxtrafileapi.js";
+import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
+import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror.js";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue.js";
+import { IServiceTaskEnvironment, getFields } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
 
 let APIUrl: string;
 let efAccessToken: string;

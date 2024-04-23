@@ -1,8 +1,8 @@
-import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
-import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces";
-import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
-import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue.js";
+import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
+import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror.js";
 
 // Extract the serviceLogic that testing is possible
 export async function serviceLogic(environment: IServiceTaskEnvironment): Promise<IInstanceDetails> {

@@ -1,8 +1,8 @@
 import * as sql from "mssql";
-import { IServiceActionConfigField } from "processhub-sdk/lib/data/datainterfaces";
-import { replaceObjectReferences } from "processhub-sdk/lib/data/datatools";
-import { IServiceConfigSchema, IServiceConfigSecret, readConfigFile } from "processhub-sdk/lib/servicetask/configfile";
-import { IServiceTaskLogger } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
+import { IServiceActionConfigField } from "processhub-sdk/lib/data/datainterfaces.js";
+import { replaceObjectReferences } from "processhub-sdk/lib/data/datatools.js";
+import { IServiceConfigSchema, IServiceConfigSecret, readConfigFile } from "processhub-sdk/lib/servicetask/configfile.js";
+import { IServiceTaskLogger } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
 
 export async function getConnectionPool(fields: IServiceActionConfigField[], logger: IServiceTaskLogger): Promise<sql.ConnectionPool> {
   const configFile = (await readConfigFile<IServiceConfigSecret>(__dirname + "./../config.json", IServiceConfigSchema, logger)) || { secret: {} };

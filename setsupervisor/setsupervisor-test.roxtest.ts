@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { setsupervisor, setsupervisorConfig } from "./main";
+import { setsupervisor, setsupervisorConfig } from "./main.js";
 
 describe("services", () => {
   describe("bundle test", () => {

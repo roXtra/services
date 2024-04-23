@@ -1,2 +1,2 @@
-export * from "./generate-config";
-export * from "./generate-service";
+export * from "./generate-config.js";
+export * from "./generate-service.js";

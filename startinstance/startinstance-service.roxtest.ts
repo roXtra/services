@@ -1,9 +1,9 @@
-import { startinstance, startInstanceConfig } from "./main";
+import { startinstance, startInstanceConfig } from "./main.js";
 import * as fs from "fs";
 import { expect } from "chai";
-import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
-import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue.js";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools.js";
 
 describe("services", () => {
   describe("roxfile", () => {

@@ -1,10 +1,10 @@
 import * as mysql from "mysql";
-import { FieldType, FieldValueType, IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
-import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror";
-import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
-import { parseAndInsertStringWithFieldContent, replaceObjectReferences } from "processhub-sdk/lib/data/datatools";
-import { IServiceConfigSchema, IServiceConfigSecret, readConfigFile } from "processhub-sdk/lib/servicetask/configfile";
+import { FieldType, FieldValueType, IFieldValue } from "processhub-sdk/lib/data/ifieldvalue.js";
+import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror.js";
+import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { parseAndInsertStringWithFieldContent, replaceObjectReferences } from "processhub-sdk/lib/data/datatools.js";
+import { IServiceConfigSchema, IServiceConfigSecret, readConfigFile } from "processhub-sdk/lib/servicetask/configfile.js";
 
 enum ErrorCodes {
   DB_ERROR = "DB_ERROR",

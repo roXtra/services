@@ -1,2 +1,2 @@
-export { setsupervisor } from "./setsupervisor-service";
-export { setsupervisorConfig } from "./setsupervisor-config";
+export { setsupervisor } from "./setsupervisor-service.js";
+export { setsupervisorConfig } from "./setsupervisor-config.js";

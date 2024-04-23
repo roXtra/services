@@ -1,10 +1,10 @@
 import { expect } from "chai";
-import { triggerwebhookPost, triggerwebhookPostConfig } from "../main";
+import { triggerwebhookPost, triggerwebhookPostConfig } from "../main.js";
 import * as fs from "fs";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
-import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools.js";
 import nock from "nock";
-import { serviceLogic } from "../triggerwebhook-service";
+import { serviceLogic } from "../triggerwebhook-service.js";
 
 describe("services", () => {
   describe("triggerwebhook", () => {

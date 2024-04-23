@@ -1,10 +1,10 @@
-import { IServiceActionConfigField } from "processhub-sdk/lib/data/datainterfaces";
-import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror";
-import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
-import { getConnectionPool } from "./database";
-import { ErrorCodes } from "./executequery-service";
-import { parseAndInsertStringWithFieldContent } from "processhub-sdk/lib/data/datatools";
+import { IServiceActionConfigField } from "processhub-sdk/lib/data/datainterfaces.js";
+import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror.js";
+import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { getConnectionPool } from "./database.js";
+import { ErrorCodes } from "./executequery-service.js";
+import { parseAndInsertStringWithFieldContent } from "processhub-sdk/lib/data/datatools.js";
 
 export async function executeQueryNoReturn(environment: IServiceTaskEnvironment): Promise<boolean> {
   const processObject: BpmnProcess = new BpmnProcess();

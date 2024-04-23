@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { executeQuery, executeQueryConfig, executeQueryNoReturnConfig, executeQueryNoReturn } from "./main";
+import { executeQuery, executeQueryConfig, executeQueryNoReturnConfig, executeQueryNoReturn } from "./main.js";
 
 describe("services", () => {
   describe("mssql", () => {

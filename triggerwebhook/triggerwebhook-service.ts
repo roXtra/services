@@ -1,9 +1,15 @@
-import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
-import { parseAndInsertStringWithFieldContent, replaceObjectReferences } from "processhub-sdk/lib/data/datatools";
-import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror";
+import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { parseAndInsertStringWithFieldContent, replaceObjectReferences } from "processhub-sdk/lib/data/datatools.js";
+import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror.js";
 import axios, { AxiosError } from "axios";
-import { IServiceConfigSchema, IServiceConfigSecret, readConfigFile } from "processhub-sdk/lib/servicetask/configfile";
+import { IServiceConfigSchema, IServiceConfigSecret, readConfigFile } from "processhub-sdk/lib/servicetask/configfile.js";
+import { fileURLToPath } from "url";
+import path from "path";
+// eslint-disable-next-line no-underscore-dangle, @typescript-eslint/naming-convention
+const __filename = fileURLToPath(import.meta.url);
+// eslint-disable-next-line no-underscore-dangle, @typescript-eslint/naming-convention
+const __dirname = path.dirname(__filename);
 
 // Extract the serviceLogic that testing is possible
 export async function serviceLogic(environment: IServiceTaskEnvironment, configPath: string = __dirname + "./../config.json"): Promise<boolean> {

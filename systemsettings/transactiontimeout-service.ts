@@ -1,6 +1,6 @@
-import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror";
-import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
+import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror.js";
+import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
 
 export async function transactionTimeout(environment: IServiceTaskEnvironment): Promise<boolean> {
   const processObject: BpmnProcess = new BpmnProcess();

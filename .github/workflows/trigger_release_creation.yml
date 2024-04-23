@@ -4,15 +4,15 @@ on:
   workflow_dispatch:
     inputs:
       prassignee:
-        description: 'User to assign PR to (defaults to current user)'
+        description: "User to assign PR to (defaults to current user)"
         required: false
         type: string
       sdkversion:
         description: 'SDK Version (e.g. "v9.8.0")'
         required: true
-        default: 'v'
+        default: "v"
       isfinalreleasebuild:
-        description: 'Build final release build? (if unchecked, this builds a pre-release)'
+        description: "Build final release build? (if unchecked, this builds a pre-release)"
         required: true
         type: boolean
         default: false
@@ -44,13 +44,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Update SDK
-        # Replace processHubSDKVersion in buildScript.js with new version
+        # Replace processHubSDKVersion in buildScript.cjs with new version
         # Build all services to update package-lock.json files
         # Commit changes if there are changes. This works the following way:
         # First, add all unstaged changes in the working tree if there are changes
         # Second: if the git diff command has an exit code other than 0 (=there are changes), make the commit. Otherwise, do not commit.
         run: |
-          sed -i -r 's/processHubSDKVersion = "v[0-9]+\.[0-9]+\.[0-9]+(-[0-9]+)?"/processHubSDKVersion = "${{ github.event.inputs.sdkversion }}"/g' buildScript.js
+          sed -i -r 's/processHubSDKVersion = "v[0-9]+\.[0-9]+\.[0-9]+(-[0-9]+)?"/processHubSDKVersion = "${{ github.event.inputs.sdkversion }}"/g' buildScript.cjs
           npm run buildonly
           git add -A
           git diff-index --quiet HEAD || git commit -m "Update SDK"
@@ -80,10 +80,10 @@ jobs:
       - name: Create PR for new Version
         uses: repo-sync/pull-request@v2
         with:
-          source_branch: 'release-v${{ steps.version-upgrade.outputs.newversion }}'
-          destination_branch: 'master'
-          pr_title: 'Release v${{ steps.version-upgrade.outputs.newversion }}'
+          source_branch: "release-v${{ steps.version-upgrade.outputs.newversion }}"
+          destination_branch: "master"
+          pr_title: "Release v${{ steps.version-upgrade.outputs.newversion }}"
           pr_body: Updates version to v${{ steps.version-upgrade.outputs.newversion }}
           github_token: ${{ secrets.DEVBOT_GH_TOKEN }}
-          pr_assignee: '${{ env.prassignee }}'
+          pr_assignee: "${{ env.prassignee }}"
           pr_draft: false

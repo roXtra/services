@@ -1,8 +1,8 @@
 import { expect } from "chai";
-import { service1, service1Config, service2, service2Config } from "./main";
+import { service1, service1Config, service2, service2Config } from "./main.js";
 import * as fs from "fs";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
-import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools.js";
 
 describe("services", () => {
   describe("servicetemplate", () => {

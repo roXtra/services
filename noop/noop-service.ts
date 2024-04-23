@@ -1,9 +1,9 @@
 // We need to reference the types here explicitly as otherwise, compilation errors for missing module declarations for "modeler/bpmn/bpmn" and "bpmn-moddle/lib/simple" occur
 /* eslint-disable-next-line spaced-comment */
 /// <reference path="node_modules/processhub-sdk/src/process/types/index.d.ts" />
-import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
-import { sleep } from "processhub-sdk/lib/tools/timing";
+import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { sleep } from "processhub-sdk/lib/tools/timing.js";
 
 export async function noop(environment: IServiceTaskEnvironment): Promise<boolean> {
   const processObject: BpmnProcess = new BpmnProcess();

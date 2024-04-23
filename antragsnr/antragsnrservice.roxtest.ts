@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as fs from "fs";
 import { assert } from "chai";
-import { serviceLogic } from "./main";
-import { IProcessDetails } from "processhub-sdk/lib/process/processinterfaces";
-import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
-import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools";
-import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces";
+import { serviceLogic } from "./main.js";
+import { IProcessDetails } from "processhub-sdk/lib/process/processinterfaces.js";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue.js";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools.js";
+import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
 
 describe("services", () => {
   describe("servicetemplate", () => {

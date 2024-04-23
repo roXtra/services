@@ -1,12 +1,12 @@
-import { ICreateFileRequestBody } from "./roxtrafileapitypes";
-import { missingRequiredField, initRequiredFields, RoXtraFileApi, readFileBase64Async } from "./roxtrafileapi";
-import { IRoXtraFileApi } from "./iroxtrafileapi";
-import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror";
-import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
-import { IServiceTaskEnvironment, getFields } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
-import { getLastArrayEntry } from "processhub-sdk/lib/tools/array";
-import { decodeURLSafeBase64 } from "processhub-sdk/lib/tools/stringtools";
-import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces";
+import { ICreateFileRequestBody } from "./roxtrafileapitypes.js";
+import { missingRequiredField, initRequiredFields, RoXtraFileApi, readFileBase64Async } from "./roxtrafileapi.js";
+import { IRoXtraFileApi } from "./iroxtrafileapi.js";
+import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror.js";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue.js";
+import { IServiceTaskEnvironment, getFields } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { getLastArrayEntry } from "processhub-sdk/lib/tools/array.js";
+import { decodeURLSafeBase64 } from "processhub-sdk/lib/tools/stringtools.js";
+import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
 
 let APIUrl: string;
 let efAccessToken: string;

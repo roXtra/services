@@ -1,10 +1,10 @@
-import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue";
-import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces";
-import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess";
-import { IProcessDetails, ProcessExtras } from "processhub-sdk/lib/process/processinterfaces";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
-import { tl } from "processhub-sdk/lib/tl";
-import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror";
+import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue.js";
+import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
+import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
+import { IProcessDetails, ProcessExtras } from "processhub-sdk/lib/process/processinterfaces.js";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { tl } from "processhub-sdk/lib/tl.js";
+import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror.js";
 
 function getNumberOfInstancesOfSpecificYear(instances: IInstanceDetails[], year: number): number {
   const instancesOfTheYear: IInstanceDetails[] = [];

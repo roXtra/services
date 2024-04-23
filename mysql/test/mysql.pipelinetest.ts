@@ -1,8 +1,8 @@
 import { expect } from "chai";
 import * as fs from "fs";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
-import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools";
-import { executeQuery } from "../main";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools.js";
+import { executeQuery } from "../main.js";
 
 const taskIds = {
   Create: "ServiceTask_14289B964966CFB7",

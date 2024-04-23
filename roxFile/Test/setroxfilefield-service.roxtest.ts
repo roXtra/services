@@ -1,11 +1,11 @@
-import { serviceLogicSetroxfilefield, setRoxFileField, setRoxFileFieldConfig } from "../main";
+import { serviceLogicSetroxfilefield, setRoxFileField, setRoxFileFieldConfig } from "../main.js";
 import * as fs from "fs";
 import { expect } from "chai";
-import { ISetFileFieldsObject } from "../roxtrafileapitypes";
-import { IRoXtraFileApi } from "../iroxtrafileapi";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment";
-import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools";
-import { IConfig } from "processhub-sdk/lib/serverconfig/iconfig";
+import { ISetFileFieldsObject } from "../roxtrafileapitypes.js";
+import { IRoXtraFileApi } from "../iroxtrafileapi.js";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools.js";
+import { IConfig } from "processhub-sdk/lib/serverconfig/iconfig.js";
 
 describe("services", () => {
   describe("roxfile", () => {
