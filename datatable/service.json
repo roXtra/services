@@ -1,0 +1,35 @@
+{
+  "id": "datatable-service",
+  "name": "Tabellarische Daten",
+  "minRoXtraVersion": "8.009.0",
+  "maxRoXtraVersion": "100.0.0",
+  "actions": [
+    {
+      "id": "readXlsx",
+      "label": "Daten aus Excel-Datei lesen und in Feld vom Typ 'Tabellarische Daten' schreiben",
+      "configMethod": "readXlsxConfig",
+      "settings": "main.js",
+      "serviceFile": "main.js",
+      "serviceMethod": "readXlsx",
+      "fields": [
+        {
+          "name": "filePath",
+          "type": "text"
+        },
+        {
+          "name": "sheetName",
+          "type": "text"
+        },
+        {
+          "name": "rowFilter",
+          "type": "text"
+        },
+        {
+          "name": "dataTableField",
+          "type": "select",
+          "onload": "fields"
+        }
+      ]
+    }
+  ]
+}
