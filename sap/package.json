@@ -9,7 +9,7 @@
   },
   "scripts": {
     "lint": "eslint --ext .ts,.tsx \"**/*.{ts,tsx}\"",
-    "build": "tsc",
+    "build": "tsc && mv ./dist/deleteSAPquery-config.js ./dist/deleteSAPquery-config.mjs && mv ./dist/executeSAPquery-config.js ./dist/executeSAPquery-config.mjs && mv ./dist/insertSAPquery-config.js ./dist/insertSAPquery-config.mjs && mv ./dist/selectSAPquery-config.js ./dist/selectSAPquery-config.mjs",
     "test": "cross-env HOTRELOAD=no DEBUG=bpmn-engine:123* mocha ./dist/**/*.roxtest.js --exit --recursive --timeout 40000 --require source-map-support/register",
     "copyproduction": "copyfiles package.json production && copyfiles .npmrc production && cd ./production && npm install --production && cd .. && copyfiles -u 1 \"./production/node_modules/**/*\" $Env:npm_package_config_servicename && Remove-Item -Force -Recurse ./production",
     "copyfiles": "copyfiles service.json configtemplate.json dist/* $Env:npm_package_config_servicename && npm run copyproduction",

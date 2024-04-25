@@ -1,10 +1,9 @@
-import { parseAndInsertStringWithFieldContent } from "processhub-sdk/lib/data/datatools.js";
 import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue.js";
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
-import Methods from "./sapServiceMethods.js";
+import Methods from "./sapServiceMethods.mjs";
 
-export async function executeSAPQuery(environment: IServiceTaskEnvironment): Promise<boolean> {
+export async function selectSAPQuery(environment: IServiceTaskEnvironment): Promise<boolean> {
   const processObject: BpmnProcess = new BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
@@ -23,9 +22,9 @@ export async function executeSAPQuery(environment: IServiceTaskEnvironment): Pro
   const databaseUsername = fields.find((f) => f.key === "databaseUsername")?.value;
   const password = fields.find((f) => f.key === "password")?.value;
   const tenant = fields.find((f) => f.key === "tenant")?.value;
-  let query = fields.find((f) => f.key === "query")?.value;
-  const targetFieldTable = fields.find((f) => f.key === "targetFieldTable")?.value;
-  const targetFieldCSV = fields.find((f) => f.key === "targetFieldCSV")?.value;
+  const tableName = fields.find((f) => f.key === "tableName")?.value;
+  const columns = fields.find((f) => f.key === "columns")?.value;
+  const where = fields.find((f) => f.key === "where")?.value;
 
   if (ipAddress === undefined) {
     throw new Error("ipAddress is undefined, cannot proceed!");
@@ -42,32 +41,14 @@ export async function executeSAPQuery(environment: IServiceTaskEnvironment): Pro
   if (tenant === undefined) {
     throw new Error("tenant is undefined, cannot proceed!");
   }
-  if (query === undefined) {
-    throw new Error("query is undefined, cannot proceed!");
+  if (tableName === undefined) {
+    throw new Error("tableName is undefined, cannot proceed!");
   }
-  if (targetFieldTable === undefined) {
-    throw new Error("targetFieldTable is undefined, cannot proceed!");
+  if (columns === undefined) {
+    throw new Error("columns is undefined, cannot proceed!");
   }
-  if (targetFieldCSV === undefined) {
-    throw new Error("targetFieldCSV is undefined, cannot proceed!");
-  }
-
-  if (instance.extras.roleOwners === undefined) {
-    throw new Error("instance.extras.roleOwners is undefined, cannot proceed!");
-  }
-
-  query = parseAndInsertStringWithFieldContent(
-    query,
-    instance.extras.fieldContents,
-    processObject,
-    instance.extras.roleOwners,
-    environment.sender.language || "de-DE",
-    await environment.roxApi.getUsersConfig(),
-    true,
-  );
-
-  if (query === undefined) {
-    throw new Error("query is undefined, cannot proceed!");
+  if (where === undefined) {
+    throw new Error("where is undefined, cannot proceed!");
   }
 
   const connectionParams = {
@@ -83,7 +64,15 @@ export async function executeSAPQuery(environment: IServiceTaskEnvironment): Pro
     type: "ProcessHubTextArea",
   };
 
-  return await Methods.execQuery(connectionParams, query, async (rows: Array<{ [key: string]: unknown }>) => {
-    return await Methods.serviceOutputLogic(rows, newValue, environment, instance, targetFieldTable, targetFieldCSV);
+  const selectQuery = await Methods.buildSelectQuery(environment, tableName, columns, where, instance, processObject);
+
+  if (selectQuery === undefined) {
+    throw new Error("selectQuery is undefined, cannot proceed!");
+  }
+
+  const result = await Methods.execQuery(connectionParams, selectQuery, async (rows: Array<{ [key: string]: unknown }>) => {
+    return await Methods.serviceOutputLogic(rows, newValue, environment, instance, "Ergebnis", "CSV Export");
   });
+
+  return result;
 }
