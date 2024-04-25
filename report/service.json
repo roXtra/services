@@ -1,32 +1,32 @@
 {
-    "id": "report-service",
-    "name": "Bericht Service",
-    "minRoXtraVersion": "8.009.0",
-    "actions": [
+  "id": "report-service",
+  "name": "Bericht Service",
+  "minRoXtraVersion": "8.009.0",
+  "actions": [
+    {
+      "id": "createReport",
+      "label": "Bericht erstellen",
+      "configMethod": "createReportConfig",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
+      "serviceMethod": "createReport",
+      "fields": [
         {
-            "id": "createReport",
-            "label": "Bericht erstellen",
-            "configMethod": "createReportConfig",
-            "settings": "main.js",
-            "serviceFile": "main.js",
-            "serviceMethod": "createReport",
-            "fields": [
-                {
-                    "name": "selectReportDraft",
-                    "type": "select",
-                    "onload": "reportDrafts"
-                },
-                {
-                    "name": "selectReportType",
-                    "type": "select",
-                    "onload": "reportTypes"
-                },
-                {
-                    "name": "selectReportField",
-                    "type": "select",
-                    "onload": "fields ProcessHubFileUpload"
-                }
-            ]
+          "name": "selectReportDraft",
+          "type": "select",
+          "onload": "reportDrafts"
+        },
+        {
+          "name": "selectReportType",
+          "type": "select",
+          "onload": "reportTypes"
+        },
+        {
+          "name": "selectReportField",
+          "type": "select",
+          "onload": "fields ProcessHubFileUpload"
         }
-    ]
+      ]
+    }
+  ]
 }

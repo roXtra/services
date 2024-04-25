@@ -1,80 +1,80 @@
 {
-    "id": "roxFile-service",
-    "name": "roXtra Datei",
-    "minRoXtraVersion": "8.009.0",
-    "maxRoXtraVersion": "100.0.0",
-    "actions": [
+  "id": "roxFile-service",
+  "name": "roXtra Datei",
+  "minRoXtraVersion": "8.009.0",
+  "maxRoXtraVersion": "100.0.0",
+  "actions": [
+    {
+      "id": "createRoxFile",
+      "label": "Erstelle eine roXtra Datei",
+      "configMethod": "createRoxFileConfig",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
+      "serviceMethod": "createRoxFile",
+      "fields": [
         {
-            "id": "createRoxFile",
-            "label": "Erstelle eine roXtra Datei",
-            "configMethod": "createRoxFileConfig",
-            "settings": "main.js",
-            "serviceFile": "main.js",
-            "serviceMethod": "createRoxFile",
-            "fields": [
-                {
-                    "name": "roxFile",
-                    "type": "select",
-                    "onload": "fields ProcessHubFileUpload"
-                },
-                
-                {
-                    "name": "title",
-                    "type": "select",
-                    "onload": "fields"
-                },
-
-                {
-                    "name": "docType",
-                    "type": "text"
-                },
-
-                {
-                    "name": "description",
-                    "type": "select",
-                    "onload": "fields"
-                },
-
-                {
-                    "name": "destinationID",
-                    "type": "text"
-                },
-
-                {
-                    "name": "destinationType",
-                    "type": "text"
-                },
-
-                {
-                    "name": "fileIDFieldName",
-                    "type": "text"
-                }
-            ]
+          "name": "roxFile",
+          "type": "select",
+          "onload": "fields ProcessHubFileUpload"
         },
+
         {
-            "id": "setRoxFileField",
-            "label": "Setze ein Feld einer roXtra Datei",
-            "configMethod": "setRoxFileFieldConfig",
-            "settings": "main.js",
-            "serviceFile": "main.js",
-            "serviceMethod": "setRoxFileField",
-            "fields": [
-                {
-                    "name": "fileId",
-                    "type": "text"
-                },
+          "name": "title",
+          "type": "select",
+          "onload": "fields"
+        },
 
-                {
-                    "name": "fieldId",
-                    "type": "text"
-                },
+        {
+          "name": "docType",
+          "type": "text"
+        },
 
-                {
-                    "name": "value",
-                    "type": "select",
-                    "onload": "fields"
-                }
-            ]
+        {
+          "name": "description",
+          "type": "select",
+          "onload": "fields"
+        },
+
+        {
+          "name": "destinationID",
+          "type": "text"
+        },
+
+        {
+          "name": "destinationType",
+          "type": "text"
+        },
+
+        {
+          "name": "fileIDFieldName",
+          "type": "text"
         }
-    ]
+      ]
+    },
+    {
+      "id": "setRoxFileField",
+      "label": "Setze ein Feld einer roXtra Datei",
+      "configMethod": "setRoxFileFieldConfig",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
+      "serviceMethod": "setRoxFileField",
+      "fields": [
+        {
+          "name": "fileId",
+          "type": "text"
+        },
+
+        {
+          "name": "fieldId",
+          "type": "text"
+        },
+
+        {
+          "name": "value",
+          "type": "select",
+          "onload": "fields"
+        }
+      ]
+    }
+  ]
 }

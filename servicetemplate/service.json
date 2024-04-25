@@ -1,46 +1,46 @@
 {
-    "id": "servicetemplate-service",
-    "name": "Service Template",
-    "minRoXtraVersion": "8.009.0",
-    "maxRoXtraVersion": "100.0.0",
-    "actions": [
+  "id": "servicetemplate-service",
+  "name": "Service Template",
+  "minRoXtraVersion": "8.009.0",
+  "maxRoXtraVersion": "100.0.0",
+  "actions": [
+    {
+      "id": "service1",
+      "label": "Service 1 von Service Template",
+      "configMethod": "service1Config",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
+      "serviceMethod": "service1",
+      "fields": [
         {
-            "id": "service1",
-            "label": "Service 1 von Service Template",
-            "configMethod": "service1Config",
-            "settings": "main.js",
-            "serviceFile": "main.js",
-            "serviceMethod": "service1",
-            "fields": [
-                {
-                    "name": "inputField",
-                    "type": "text"
-                },
-                {
-                    "name": "selectField",
-                    "type": "select",
-                    "onload": "fields"
-                }
-            ]
+          "name": "inputField",
+          "type": "text"
         },
         {
-            "id": "service2",
-            "label": "Service 2 von Service Template",
-            "configMethod": "service2Config",
-            "settings": "main.js",
-            "serviceFile": "main.js",
-            "serviceMethod": "service2",
-            "fields": [
-                {
-                    "name": "inputField",
-                    "type": "text"
-                },
-                {
-                    "name": "selectField",
-                    "type": "select",
-                    "onload": "fields"
-                }
-            ]
+          "name": "selectField",
+          "type": "select",
+          "onload": "fields"
         }
-    ]
+      ]
+    },
+    {
+      "id": "service2",
+      "label": "Service 2 von Service Template",
+      "configMethod": "service2Config",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
+      "serviceMethod": "service2",
+      "fields": [
+        {
+          "name": "inputField",
+          "type": "text"
+        },
+        {
+          "name": "selectField",
+          "type": "select",
+          "onload": "fields"
+        }
+      ]
+    }
+  ]
 }

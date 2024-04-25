@@ -3,6 +3,12 @@ import { IServiceActionConfigField } from "processhub-sdk/lib/data/datainterface
 import { replaceObjectReferences } from "processhub-sdk/lib/data/datatools.js";
 import { IServiceConfigSchema, IServiceConfigSecret, readConfigFile } from "processhub-sdk/lib/servicetask/configfile.js";
 import { IServiceTaskLogger } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { fileURLToPath } from "url";
+import path from "path";
+// eslint-disable-next-line no-underscore-dangle, @typescript-eslint/naming-convention
+const __filename = fileURLToPath(import.meta.url);
+// eslint-disable-next-line no-underscore-dangle, @typescript-eslint/naming-convention
+const __dirname = path.dirname(__filename);
 
 export async function getConnectionPool(fields: IServiceActionConfigField[], logger: IServiceTaskLogger): Promise<sql.ConnectionPool> {
   const configFile = (await readConfigFile<IServiceConfigSecret>(__dirname + "./../config.json", IServiceConfigSchema, logger)) || { secret: {} };

@@ -7,8 +7,8 @@
       "id": "csvreader",
       "label": "CSV Datei lesen",
       "configMethod": "csvreaderConfig",
-      "settings": "main.js",
-      "serviceFile": "main.js",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
       "serviceMethod": "csvreader",
       "fields": [
         {

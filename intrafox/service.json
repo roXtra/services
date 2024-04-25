@@ -1,66 +1,66 @@
 {
-    "id": "intrafoxservice",
-    "name": "Intrafox Maßnahmen Service",
-    "minRoXtraVersion": "8.009.0",
-    "actions": [
+  "id": "intrafoxservice",
+  "name": "Intrafox Maßnahmen Service",
+  "minRoXtraVersion": "8.009.0",
+  "actions": [
+    {
+      "id": "getActivityByNumber",
+      "label": "Nummernfilter für Maßnahmen",
+      "configMethod": "getActivityByNumberConfig",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
+      "serviceMethod": "getActivityByNumber",
+      "fields": [
         {
-            "id": "getActivityByNumber",
-            "label": "Nummernfilter für Maßnahmen",
-            "configMethod": "getActivityByNumberConfig",
-            "settings": "main.js",
-            "serviceFile": "main.js",
-            "serviceMethod": "getActivityByNumber",
-            "fields": [
-                {
-                    "name": "token",
-                    "type": "text"
-                },
-                {
-                    "name": "username",
-                    "type": "select",
-                    "onload": "fields"
-                },
-                {
-                    "name": "activityNumber",
-                    "type": "select",
-                    "onload": "fields"
-                }
-            ]
+          "name": "token",
+          "type": "text"
         },
-
         {
-            "id": "createActivity",
-            "label": "Erstelle Maßnahme",
-            "configMethod": "createActivityConfig",
-            "settings": "main.js",
-            "serviceFile": "main.js",
-            "serviceMethod": "createActivity",
-            "fields": [
-                {
-                    "name": "token",
-                    "type": "text"
-                },
-                {
-                    "name": "username",
-                    "type": "select",
-                    "onload": "fields"
-                },
-                {
-                    "name": "activityAbbrevation",
-                    "type": "select",
-                    "onload": "fields"
-                },
-                {
-                    "name": "activityDescription",
-                    "type": "select",
-                    "onload": "fields"
-                },
-                {
-                    "name": "activityExpirationdate",
-                    "type": "select",
-                    "onload": "fields ProcessHubDate"
-                }
-            ]
+          "name": "username",
+          "type": "select",
+          "onload": "fields"
+        },
+        {
+          "name": "activityNumber",
+          "type": "select",
+          "onload": "fields"
         }
-    ]
+      ]
+    },
+
+    {
+      "id": "createActivity",
+      "label": "Erstelle Maßnahme",
+      "configMethod": "createActivityConfig",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
+      "serviceMethod": "createActivity",
+      "fields": [
+        {
+          "name": "token",
+          "type": "text"
+        },
+        {
+          "name": "username",
+          "type": "select",
+          "onload": "fields"
+        },
+        {
+          "name": "activityAbbrevation",
+          "type": "select",
+          "onload": "fields"
+        },
+        {
+          "name": "activityDescription",
+          "type": "select",
+          "onload": "fields"
+        },
+        {
+          "name": "activityExpirationdate",
+          "type": "select",
+          "onload": "fields ProcessHubDate"
+        }
+      ]
+    }
+  ]
 }

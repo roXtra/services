@@ -1,36 +1,36 @@
 {
-    "id": "systemsettings-service",
-    "name": "Systemeinstellungen",
-    "minRoXtraVersion": "9.23.0",
-    "maxRoXtraVersion": "100.0.0",
-    "actions": [
+  "id": "systemsettings-service",
+  "name": "Systemeinstellungen",
+  "minRoXtraVersion": "9.23.0",
+  "maxRoXtraVersion": "100.0.0",
+  "actions": [
+    {
+      "id": "loopcount",
+      "label": "BPMN Enginge Loop Counter",
+      "configMethod": "loopCountConfig",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
+      "serviceMethod": "loopCount",
+      "fields": [
         {
-            "id": "loopcount",
-            "label": "BPMN Enginge Loop Counter",
-            "configMethod": "loopCountConfig",
-            "settings": "main.js",
-            "serviceFile": "main.js",
-            "serviceMethod": "loopCount",
-            "fields": [
-                {
-                    "name": "maxIterations",
-                    "type": "text"
-                }
-            ]
-        },
-        {
-            "id": "transactiontimeout",
-            "label": "Transaktions-Timeout",
-            "configMethod": "transactionTimeoutConfig",
-            "settings": "main.js",
-            "serviceFile": "main.js",
-            "serviceMethod": "transactionTimeout",
-            "fields": [
-                {
-                    "name": "transactionTimeout",
-                    "type": "text"
-                }
-            ]
+          "name": "maxIterations",
+          "type": "text"
         }
-    ]
+      ]
+    },
+    {
+      "id": "transactiontimeout",
+      "label": "Transaktions-Timeout",
+      "configMethod": "transactionTimeoutConfig",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
+      "serviceMethod": "transactionTimeout",
+      "fields": [
+        {
+          "name": "transactionTimeout",
+          "type": "text"
+        }
+      ]
+    }
+  ]
 }

@@ -7,8 +7,8 @@
       "id": "generate",
       "label": "generiere ICS Datei",
       "configMethod": "generateConfig",
-      "settings": "main.js",
-      "serviceFile": "main.js",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
       "serviceMethod": "generate",
       "fields": [
         { "name": "titleField", "type": "select", "onload": "fields" },
