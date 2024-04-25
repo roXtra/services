@@ -1,9 +1,8 @@
-import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue.js";
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
-import Methods from "./sapServiceMethods.js";
+import Methods from "./sapServiceMethods.mjs";
 
-export async function selectSAPQuery(environment: IServiceTaskEnvironment): Promise<boolean> {
+export async function deleteSAPQuery(environment: IServiceTaskEnvironment): Promise<boolean> {
   const processObject: BpmnProcess = new BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
@@ -23,7 +22,6 @@ export async function selectSAPQuery(environment: IServiceTaskEnvironment): Prom
   const password = fields.find((f) => f.key === "password")?.value;
   const tenant = fields.find((f) => f.key === "tenant")?.value;
   const tableName = fields.find((f) => f.key === "tableName")?.value;
-  const columns = fields.find((f) => f.key === "columns")?.value;
   const where = fields.find((f) => f.key === "where")?.value;
 
   if (ipAddress === undefined) {
@@ -44,9 +42,6 @@ export async function selectSAPQuery(environment: IServiceTaskEnvironment): Prom
   if (tableName === undefined) {
     throw new Error("tableName is undefined, cannot proceed!");
   }
-  if (columns === undefined) {
-    throw new Error("columns is undefined, cannot proceed!");
-  }
   if (where === undefined) {
     throw new Error("where is undefined, cannot proceed!");
   }
@@ -59,20 +54,13 @@ export async function selectSAPQuery(environment: IServiceTaskEnvironment): Prom
     databaseName: tenant,
   };
 
-  const newValue: IFieldValue = {
-    value: "",
-    type: "ProcessHubTextArea",
-  };
+  const insertQuery = await Methods.buildDeleteQuery(environment, tableName, where, instance, processObject);
 
-  const selectQuery = await Methods.buildSelectQuery(environment, tableName, columns, where, instance, processObject);
-
-  if (selectQuery === undefined) {
-    throw new Error("selectQuery is undefined, cannot proceed!");
+  if (insertQuery === undefined) {
+    throw new Error("insertQuery is undefined, cannot proceed!");
   }
 
-  const result = await Methods.execQuery(connectionParams, selectQuery, async (rows: Array<{ [key: string]: unknown }>) => {
-    return await Methods.serviceOutputLogic(rows, newValue, environment, instance, "Ergebnis", "CSV Export");
+  return await Methods.execQuery(connectionParams, insertQuery, async () => {
+    return await environment.instances.updateInstance(environment.instanceDetails);
   });
-
-  return result;
 }
