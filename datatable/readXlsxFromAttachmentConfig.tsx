@@ -2,17 +2,17 @@ import { tl } from "processhub-sdk/lib/tl.js";
 import { Language } from "processhub-sdk/lib/tl.js";
 import { DataTableErrorCode } from "./common.js";
 
-export function readXlsxConfig(userLanguage: Language): React.JSX.Element {
+export function readXlsxFromAttachmentConfig(userLanguage: Language): React.JSX.Element {
   return (
     <div id="service-form" className="ui form center">
       <table className="table table-striped table-bordered">
         <tbody>
           <tr>
             <td>
-              <span>{tl("Dateipfad", userLanguage)}</span>
+              <span>{tl("Dateianhangsfeld", userLanguage)}</span>
             </td>
             <td>
-              <input id="filePath" />
+              <select id="inputField" />
             </td>
           </tr>
 
@@ -49,9 +49,9 @@ export function readXlsxConfig(userLanguage: Language): React.JSX.Element {
         <tbody>
           <tr>
             <td colSpan={2}>
-              <h3>{tl("Dateipfad", userLanguage)}</h3>
+              <h3>{tl("Dateianhangsfeld", userLanguage)}</h3>
               <div>
-                <p>{tl("Der Pfad zu einer .xlsx oder .csv-Datei auf dem Server.", userLanguage)}</p>
+                <p>{tl("Ein Feld vom Typ 'Dateianhang', das eine .xlsx- oder .csv-Datei enthält.", userLanguage)}</p>
               </div>
               <h3>{tl("Name des Arbeitsblatts", userLanguage)}</h3>
               <div>
@@ -80,7 +80,7 @@ export function readXlsxConfig(userLanguage: Language): React.JSX.Element {
               </div>
               <h3>{tl("Felder", userLanguage)}</h3>
               <p>
-                {DataTableErrorCode.FILE_ERROR}: {tl("Die angegebene Datei konnte nicht gelesen werden.", userLanguage)}
+                {DataTableErrorCode.INPUT_FIELD_ERROR}: {tl("Das angegebene Feld enthält keine xlsx- oder csv-Datei.", userLanguage)}
               </p>
               <p>
                 {DataTableErrorCode.SHEET_ERROR}: {tl("Das Arbeitsblatt konnte nicht gelesen werden.", userLanguage)}
