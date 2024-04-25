@@ -8,8 +8,8 @@
       "id": "readXlsx",
       "label": "Daten aus Excel-Datei lesen und in Feld vom Typ 'Tabellarische Daten' schreiben",
       "configMethod": "readXlsxConfig",
-      "settings": "main.js",
-      "serviceFile": "main.js",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
       "serviceMethod": "readXlsx",
       "fields": [
         {

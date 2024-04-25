@@ -3,16 +3,14 @@
   "minRoXtraVersion": "8.009.0",
   "name": "Antragsnr. erzeugen",
   "actions": [
-    { 
+    {
       "id": "antragsnr",
-      "label": "Antragsnr. erzeugen", 
+      "label": "Antragsnr. erzeugen",
       "configMethod": "antragsnrconfig",
-      "settings": "main.js",
-      "serviceFile": "main.js",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
       "serviceMethod": "antragsnrAction",
-      "fields": [
-        { "name": "targetfield", "type": "text" }
-      ]
+      "fields": [{ "name": "targetfield", "type": "text" }]
     }
   ]
 }

@@ -8,8 +8,8 @@
       "id": "setsupervisor",
       "label": "Vorgesetzten zuordnen",
       "configMethod": "setsupervisorConfig",
-      "settings": "main.js",
-      "serviceFile": "main.js",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
       "serviceMethod": "setsupervisor",
       "fields": [
         {

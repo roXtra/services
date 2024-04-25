@@ -3,22 +3,22 @@
   "name": "MySQL Service",
   "minRoXtraVersion": "8.009.0",
   "actions": [
-    { 
+    {
       "id": "executeQuery",
-      "label": "Abfrage ausführen", 
+      "label": "Abfrage ausführen",
       "configMethod": "executeQueryConfig",
-      "settings": "main.js",
-      "serviceFile": "main.js",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
       "serviceMethod": "executeQuery",
       "fields": [
-        { "name": "server", "type": "text" }, 
-        { "name": "username", "type": "text" }, 
-        { "name": "password", "type": "text" }, 
-        { "name": "database", "type": "text" }, 
-        { "name": "port", "type": "text" }, 
-        { "name": "query", "type": "text" }, 
-        { "name": "targetField", "type": "select", "onload": "fields" } 
+        { "name": "server", "type": "text" },
+        { "name": "username", "type": "text" },
+        { "name": "password", "type": "text" },
+        { "name": "database", "type": "text" },
+        { "name": "port", "type": "text" },
+        { "name": "query", "type": "text" },
+        { "name": "targetField", "type": "select", "onload": "fields" }
       ]
-    } 
+    }
   ]
 }

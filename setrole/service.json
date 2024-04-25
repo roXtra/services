@@ -8,8 +8,8 @@
       "id": "setRoleViaCSV",
       "label": "Setze Rolle anhand einer CSV Datei",
       "configMethod": "setRoleViaCSVConfig",
-      "settings": "main.js",
-      "serviceFile": "main.js",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
       "serviceMethod": "setRoleViaCSV",
       "fields": [
         {

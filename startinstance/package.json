@@ -15,7 +15,7 @@
     "zip": "bestzip \"$Env:npm_package_config_servicename.zip\" \"$Env:npm_package_config_servicename\"",
     "copyandzip": "npm run copyfiles && npm run zip && Remove-Item -Recurse $Env:npm_package_config_servicename",
     "webpack": "webpack --env servicename=$Env:npm_package_config_servicename --config ../webpack.config.mjs",
-    "copymain": "copyfiles -u 1 dist/main.js disttests"
+    "copymain": "copyfiles -u 1 dist/main.mjs disttests"
   },
   "engines": {
     "node": "20",

@@ -15,7 +15,7 @@ export default (env) => {
     },
     output: {
       path: path.resolve(__dirname, env.servicename, "dist"),
-      filename: "[name].js",
+      filename: "[name].mjs",
       library: {
         type: "module",
       },

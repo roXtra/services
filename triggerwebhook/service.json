@@ -8,8 +8,8 @@
       "id": "triggerwebhookPost",
       "label": "Trigger Webhook POST",
       "configMethod": "triggerwebhookPostConfig",
-      "settings": "main.js",
-      "serviceFile": "main.js",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
       "serviceMethod": "triggerwebhookPost",
       "fields": [
         {
