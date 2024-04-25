@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+  xmlns:processhub="http://processhub.com/schema/1.0/bpmn" id="Definition_98169FE382297A4C">
+  <bpmn:extensionElements>
+    <processhub:inputOutput>
+      <processhub:inputParameter name="roxtra-version">9.89.0</processhub:inputParameter>
+    </processhub:inputOutput>
+  </bpmn:extensionElements>
+  <bpmn:collaboration id="Collaboration_E6DE588CCBF13ACD">
+    <bpmn:participant id="Participant_321E80FC56ED68BA" name="datatableservice" processRef="Process_43DAD558456F09B5" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_43DAD558456F09B5" isExecutable="true">
+    <bpmn:extensionElements>
+      <processhub:inputOutput>
+        <processhub:inputParameter name="processhub-userform">[{"name":"Titel","type":"ProcessHubTextInput","isRequired":false,"config":{"conditionExpression":"","conditionBuilderMode":true,"validationExpression":"","validationBuilderMode":true},"inlineEditingActive":false},{"name":"Feld_1","type":"ProcessHubTextInput","isRequired":false,"config":{"conditionExpression":"","conditionBuilderMode":true,"validationExpression":"","validationBuilderMode":true},"inlineEditingActive":false},{"name":"Feld_2","type":"ProcessHubTextArea","isRequired":false,"config":{"conditionExpression":"","conditionBuilderMode":true,"validationExpression":"","validationBuilderMode":true},"inlineEditingActive":false},{"name":"Anlagen","type":"ProcessHubFileUpload","isRequired":false,"config":{"conditionExpression":"","conditionBuilderMode":true,"validationExpression":"","validationBuilderMode":true},"inlineEditingActive":false},{"name":"Büros","type":"ProcessHubDataTable","isRequired":false,"config":{"conditionExpression":"","conditionBuilderMode":true,"validationExpression":"","validationBuilderMode":true,"columns":[{"id":"96DDF889F78994E6","name":"Name","type":"text"},{"id":"1859CD1A2D6B88E2","name":"Adresse","type":"text"},{"id":"D44F89AB9E64AD80","name":"Telefonnummer","type":"text"},{"id":"4BD3A40AFE367810","name":"Kostenstelle","type":"numeric"}]},"inlineEditingActive":false,"id":"9F9F313A96A90EEF","index":0}]</processhub:inputParameter>
+      </processhub:inputOutput>
+    </bpmn:extensionElements>
+    <bpmn:laneSet id="LaneSet_416C5E5D7909ADD8">
+      <bpmn:lane id="Lane_7A0DD19E05A33282" name="Ersteller">
+        <bpmn:flowNodeRef>StartEvent_46870383D9ABAF12</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>UserTask_6168AC9A765160C2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ServiceTask_88CD77E856071A65</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_8EE2836B993DE74A" name="Bearbeiter">
+        <bpmn:flowNodeRef>UserTask_08C19E7168544817</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_B58E159C8480795B</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="StartEvent_46870383D9ABAF12">
+      <bpmn:extensionElements>
+        <processhub:inputOutput>
+          <processhub:inputParameter name="processhub-userform">[{"name":"Titel","type":"ProcessHubTextInput","isRequired":false,"config":{"conditionExpression":"","conditionBuilderMode":true,"validationExpression":"","validationBuilderMode":true},"inlineEditingActive":false},{"name":"Feld_1","type":"ProcessHubTextInput","isRequired":false,"config":{"conditionExpression":"","conditionBuilderMode":true,"validationExpression":"","validationBuilderMode":true},"inlineEditingActive":false},{"name":"Feld_2","type":"ProcessHubTextArea","isRequired":false,"config":{"conditionExpression":"","conditionBuilderMode":true,"validationExpression":"","validationBuilderMode":true},"inlineEditingActive":false},{"name":"Anlagen","type":"ProcessHubFileUpload","isRequired":false,"config":{"conditionExpression":"","conditionBuilderMode":true,"validationExpression":"","validationBuilderMode":true},"inlineEditingActive":false}]</processhub:inputParameter>
+          <processhub:inputParameter name="roleowners-editable">true</processhub:inputParameter>
+        </processhub:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>SequenceFlow_215DD0FECB2A0EEE</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="UserTask_6168AC9A765160C2" name="Aufgabe 1">
+      <bpmn:extensionElements>
+        <processhub:inputOutput>
+          <processhub:inputParameter name="processhub-userform">[{"name":"Büros","type":"ProcessHubDataTable","isRequired":false,"config":{"conditionExpression":"","conditionBuilderMode":true,"validationExpression":"","validationBuilderMode":true,"columns":[{"id":"96DDF889F78994E6","name":"Name","type":"text"},{"id":"1859CD1A2D6B88E2","name":"Adresse","type":"text"},{"id":"D44F89AB9E64AD80","name":"Telefonnummer","type":"text"},{"id":"4BD3A40AFE367810","name":"Kostenstelle","type":"numeric"}]},"inlineEditingActive":false,"id":"9F9F313A96A90EEF","index":0}]</processhub:inputParameter>
+          <processhub:inputParameter name="all-fields-editable">false</processhub:inputParameter>
+          <processhub:inputParameter name="view-all-fields">true</processhub:inputParameter>
+          <processhub:inputParameter name="allow-task-claim">true</processhub:inputParameter>
+          <processhub:inputParameter name="send-mail-notification">true</processhub:inputParameter>
+          <processhub:inputParameter name="save-decision-in-fields">false</processhub:inputParameter>
+          <processhub:inputParameter name="custom-field-contents-value" />
+          <processhub:inputParameter name="due-at-duration">NaN</processhub:inputParameter>
+          <processhub:inputParameter name="due-at-can-be-edit">false</processhub:inputParameter>
+        </processhub:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_E9BEA7FA9C9E41D1</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_CEAEBE9712149E70</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="UserTask_08C19E7168544817" name="Aufgabe 2">
+      <bpmn:incoming>SequenceFlow_CEAEBE9712149E70</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_4D7795DA89A9B2D0</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="EndEvent_B58E159C8480795B">
+      <bpmn:incoming>SequenceFlow_4D7795DA89A9B2D0</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_CEAEBE9712149E70" sourceRef="UserTask_6168AC9A765160C2" targetRef="UserTask_08C19E7168544817" />
+    <bpmn:sequenceFlow id="SequenceFlow_4D7795DA89A9B2D0" sourceRef="UserTask_08C19E7168544817" targetRef="EndEvent_B58E159C8480795B" />
+    <bpmn:serviceTask id="ServiceTask_88CD77E856071A65">
+      <bpmn:extensionElements>
+        <processhub:inputOutput>
+          <processhub:inputParameter name="service-task-config-object">{"selectedServiceId":"datatable-service","selectedActionId":"readXlsx","fields":[{"key":"filePath","type":"text","value":"./testfiles/liste.xlsx"},{"key":"sheetName","type":"text","value":""},{"key":"rowFilter","type":"text","value":""},{"key":"dataTableField","type":"select","value":"Büros"}]}</processhub:inputParameter>
+        </processhub:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_215DD0FECB2A0EEE</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_E9BEA7FA9C9E41D1</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_215DD0FECB2A0EEE" sourceRef="StartEvent_46870383D9ABAF12" targetRef="ServiceTask_88CD77E856071A65" />
+    <bpmn:sequenceFlow id="SequenceFlow_E9BEA7FA9C9E41D1" sourceRef="ServiceTask_88CD77E856071A65" targetRef="UserTask_6168AC9A765160C2" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram name="BPMNDiagram_4EB6CA3A34A246F5">
+    <bpmndi:BPMNPlane bpmnElement="Collaboration_E6DE588CCBF13ACD">
+      <bpmndi:BPMNShape id="BPMNShape_70055DF777974FC1" bpmnElement="Lane_7A0DD19E05A33282">
+        <dc:Bounds x="430" y="0" width="550" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1EC8B886589A457A" bpmnElement="Lane_8EE2836B993DE74A">
+        <dc:Bounds x="430" y="120" width="550" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_81DCE7F47E89B399" bpmnElement="Participant_321E80FC56ED68BA">
+        <dc:Bounds x="400" y="0" width="580" height="240" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_7B1229C3EB384376" bpmnElement="StartEvent_46870383D9ABAF12">
+        <dc:Bounds x="500" y="42" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_34845F02F912A58F" bpmnElement="UserTask_6168AC9A765160C2">
+        <dc:Bounds x="756" y="20" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_8201B3AAEF25ECA1" bpmnElement="UserTask_08C19E7168544817">
+        <dc:Bounds x="756" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_07A011326D601934" bpmnElement="EndEvent_B58E159C8480795B">
+        <dc:Bounds x="916" y="162" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_F8E9562F60AF13AF" bpmnElement="SequenceFlow_CEAEBE9712149E70" sourceElement="BPMNShape_34845F02F912A58F" targetElement="BPMNShape_8201B3AAEF25ECA1">
+        <di:waypoint x="806" y="100" />
+        <di:waypoint x="806" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_FAD21C85F500CDDC" bpmnElement="SequenceFlow_4D7795DA89A9B2D0" sourceElement="BPMNShape_8201B3AAEF25ECA1" targetElement="BPMNShape_07A011326D601934">
+        <di:waypoint x="856" y="180" />
+        <di:waypoint x="886" y="180" />
+        <di:waypoint x="886" y="180" />
+        <di:waypoint x="916" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="BPMNShape_3B96F1150484E60A" bpmnElement="ServiceTask_88CD77E856071A65">
+        <dc:Bounds x="580" y="20" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_A279ED3791947C85" bpmnElement="SequenceFlow_215DD0FECB2A0EEE" sourceElement="BPMNShape_7B1229C3EB384376" targetElement="BPMNShape_3B96F1150484E60A">
+        <di:waypoint x="536" y="60" />
+        <di:waypoint x="580" y="60" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_426F3EDC39511D64" bpmnElement="SequenceFlow_E9BEA7FA9C9E41D1" sourceElement="BPMNShape_3B96F1150484E60A" targetElement="BPMNShape_34845F02F912A58F">
+        <di:waypoint x="680" y="60" />
+        <di:waypoint x="756" y="60" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

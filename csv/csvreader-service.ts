@@ -30,6 +30,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
   const sheetName = fields.find((f) => f.key === "sheetName")?.value || "";
   let query = fields.find((f) => f.key === "query")?.value || "";
 
+  XLSX.set_fs(fs);
   let xlsxfile;
   try {
     xlsxfile = XLSX.readFile(filePath);
