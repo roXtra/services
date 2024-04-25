@@ -23,7 +23,7 @@ describe("services", () => {
 
     async function performtriggerwebhookPostTest(bpmnPath: string, fieldTestdataValue: string, fieldContentTypeValue: string, configPath?: string): Promise<boolean> {
       const env = createEnvironment(bpmnPath, fieldTestdataValue, fieldContentTypeValue);
-      return serviceLogic(env, configPath);
+      return serviceLogic(env, configPath ?? "./config.json");
     }
 
     afterEach(() => {

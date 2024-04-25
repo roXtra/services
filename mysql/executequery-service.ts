@@ -5,18 +5,12 @@ import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
 import { parseAndInsertStringWithFieldContent, replaceObjectReferences } from "processhub-sdk/lib/data/datatools.js";
 import { IServiceConfigSchema, IServiceConfigSecret, readConfigFile } from "processhub-sdk/lib/servicetask/configfile.js";
-import { fileURLToPath } from "url";
-import path from "path";
-// eslint-disable-next-line no-underscore-dangle, @typescript-eslint/naming-convention
-const __filename = fileURLToPath(import.meta.url);
-// eslint-disable-next-line no-underscore-dangle, @typescript-eslint/naming-convention
-const __dirname = path.dirname(__filename);
 
 enum ErrorCodes {
   DB_ERROR = "DB_ERROR",
 }
 
-export async function executeQuery(environment: IServiceTaskEnvironment): Promise<boolean> {
+export async function executeQuery(environment: IServiceTaskEnvironment, configPath: string): Promise<boolean> {
   const processObject: BpmnProcess = new BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
@@ -59,7 +53,7 @@ export async function executeQuery(environment: IServiceTaskEnvironment): Promis
     throw new Error("targetField is undefined, cannot proceed with service!");
   }
 
-  const configFile = (await readConfigFile<IServiceConfigSecret>(__dirname + "./../config.json", IServiceConfigSchema, environment.logger)) || { secret: {} };
+  const configFile = (await readConfigFile<IServiceConfigSecret>(configPath, IServiceConfigSchema, environment.logger)) || { secret: {} };
 
   password = replaceObjectReferences(password, "secret", configFile.secret);
 

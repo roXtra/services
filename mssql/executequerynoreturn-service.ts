@@ -6,7 +6,7 @@ import { getConnectionPool } from "./database.js";
 import { ErrorCodes } from "./executequery-service.js";
 import { parseAndInsertStringWithFieldContent } from "processhub-sdk/lib/data/datatools.js";
 
-export async function executeQueryNoReturn(environment: IServiceTaskEnvironment): Promise<boolean> {
+export async function executeQueryNoReturn(environment: IServiceTaskEnvironment, configPath: string): Promise<boolean> {
   const processObject: BpmnProcess = new BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
@@ -43,7 +43,7 @@ export async function executeQueryNoReturn(environment: IServiceTaskEnvironment)
     throw new Error("query is undefined after parseAndInsertStringWithFieldContent, cannot proceed with service!");
   }
 
-  const pool = await getConnectionPool(fields, environment.logger);
+  const pool = await getConnectionPool(fields, environment.logger, configPath);
   try {
     await pool.connect();
     await pool.request().query(query);
