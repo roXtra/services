@@ -9,7 +9,7 @@ export enum ErrorCodes {
   DB_ERROR = "DB_ERROR",
 }
 
-export async function executeQuery(environment: IServiceTaskEnvironment): Promise<boolean> {
+export async function executeQuery(environment: IServiceTaskEnvironment, configPath: string): Promise<boolean> {
   const processObject: BpmnProcess = new BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
@@ -39,7 +39,7 @@ export async function executeQuery(environment: IServiceTaskEnvironment): Promis
     throw new Error("fieldContents are undefined, cannot proceed with service!");
   }
 
-  const pool = await getConnectionPool(fields, environment.logger);
+  const pool = await getConnectionPool(fields, environment.logger, configPath);
   // Connect to your database
   try {
     await pool.connect();

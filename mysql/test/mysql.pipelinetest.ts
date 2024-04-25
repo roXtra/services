@@ -21,13 +21,13 @@ describe("mysql", () => {
 
   it("executes mysql service", async () => {
     let env = createEnvironment(taskIds.Create);
-    await executeQuery(env);
+    await executeQuery(env, "./config.json");
 
     env = createEnvironment(taskIds.Insert);
-    await executeQuery(env);
+    await executeQuery(env, "./config.json");
 
     env = createEnvironment(taskIds.Select);
-    await executeQuery(env);
+    await executeQuery(env, "./config.json");
 
     expect(env.instanceDetails.extras.fieldContents?.["Result"]).to.deep.equal({ value: "Heino", type: "ProcessHubTextInput" });
   });

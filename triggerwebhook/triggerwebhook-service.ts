@@ -4,15 +4,9 @@ import { parseAndInsertStringWithFieldContent, replaceObjectReferences } from "p
 import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror.js";
 import axios, { AxiosError } from "axios";
 import { IServiceConfigSchema, IServiceConfigSecret, readConfigFile } from "processhub-sdk/lib/servicetask/configfile.js";
-import { fileURLToPath } from "url";
-import path from "path";
-// eslint-disable-next-line no-underscore-dangle, @typescript-eslint/naming-convention
-const __filename = fileURLToPath(import.meta.url);
-// eslint-disable-next-line no-underscore-dangle, @typescript-eslint/naming-convention
-const __dirname = path.dirname(__filename);
 
 // Extract the serviceLogic that testing is possible
-export async function serviceLogic(environment: IServiceTaskEnvironment, configPath: string = __dirname + "./../config.json"): Promise<boolean> {
+export async function serviceLogic(environment: IServiceTaskEnvironment, configPath: string): Promise<boolean> {
   const processObject: BpmnProcess = new BpmnProcess();
   await processObject.loadXml(environment.bpmnXml);
   const taskObject = processObject.getExistingTask(processObject.processId(), environment.bpmnTaskId);
@@ -102,6 +96,6 @@ export async function serviceLogic(environment: IServiceTaskEnvironment, configP
   }
 }
 
-export async function triggerwebhookPost(environment: IServiceTaskEnvironment): Promise<boolean> {
-  return serviceLogic(environment);
+export async function triggerwebhookPost(environment: IServiceTaskEnvironment, configPath: string): Promise<boolean> {
+  return serviceLogic(environment, configPath);
 }
