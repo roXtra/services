@@ -91,9 +91,6 @@ export function readFileData(
           case "numeric":
             data[col.name] = Number(value);
             break;
-          case "date":
-            data[col.name] = new Date(value);
-            break;
           case "text":
             data[col.name] = String(value);
             break;
