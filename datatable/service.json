@@ -27,7 +27,35 @@
         {
           "name": "dataTableField",
           "type": "select",
-          "onload": "fields"
+          "onload": "fields ProcessHubDataTable"
+        }
+      ]
+    },
+    {
+      "id": "readXlsxFromAttachment",
+      "label": "Daten aus Anhangsfeld lesen und in Feld vom Typ 'Tabellarische Daten' schreiben",
+      "configMethod": "readXlsxFromAttachmentConfig",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
+      "serviceMethod": "readXlsxFromAttachment",
+      "fields": [
+        {
+          "name": "inputField",
+          "type": "select",
+          "onload": "fields ProcessHubFileUpload"
+        },
+        {
+          "name": "sheetName",
+          "type": "text"
+        },
+        {
+          "name": "rowFilter",
+          "type": "text"
+        },
+        {
+          "name": "dataTableField",
+          "type": "select",
+          "onload": "fields ProcessHubDataTable"
         }
       ]
     }

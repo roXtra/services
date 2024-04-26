@@ -147,7 +147,7 @@ module.exports = {
     "react/react-in-jsx-scope": "off",
     "@typescript-eslint/triple-slash-reference": "off",
     "@typescript-eslint/explicit-function-return-type": [
-      "error",
+      "off",
       {
         allowExpressions: true,
       },
