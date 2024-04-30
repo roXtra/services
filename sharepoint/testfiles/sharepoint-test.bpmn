@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:processhub="http://processhub.com/schema/1.0/bpmn" id="Definition_2CFBA8CCC4BD433E">
+  <bpmn:extensionElements>
+    <processhub:inputOutput>
+      <processhub:inputParameter name="roxtra-version">9.89.0</processhub:inputParameter>
+    </processhub:inputOutput>
+  </bpmn:extensionElements>
+  <bpmn:collaboration id="Collaboration_340B9E852659CD64">
+    <bpmn:participant id="Participant_9382B080DE4E255F" name="sharepoint-test" processRef="Process_3F6F128F458E8AF2" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_3F6F128F458E8AF2" isExecutable="true">
+    <bpmn:extensionElements>
+      <processhub:inputOutput>
+        <processhub:inputParameter name="processhub-userform">[{"name":"Anlagen","type":"ProcessHubFileUpload","isRequired":false,"config":{"conditionExpression":"","conditionBuilderMode":true,"validationExpression":"","validationBuilderMode":true},"inlineEditingActive":false}]</processhub:inputParameter>
+      </processhub:inputOutput>
+    </bpmn:extensionElements>
+    <bpmn:laneSet id="LaneSet_6707EDB2B71848A7">
+      <bpmn:lane id="Lane_7A0DD19E05A33282" name="Ersteller">
+        <bpmn:flowNodeRef>StartEvent_221FDCCA0EB53699</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>UserTask_00FF257B7DA9B251</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ServiceTask_F4EE1E08D0729D68</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_8EE2836B993DE74A" name="Bearbeiter">
+        <bpmn:flowNodeRef>UserTask_424161AC21E41FEF</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_1AA58DCD6DB7A6C1</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="StartEvent_221FDCCA0EB53699">
+      <bpmn:extensionElements>
+        <processhub:inputOutput>
+          <processhub:inputParameter name="processhub-userform">[{"name":"Anlagen","type":"ProcessHubFileUpload","isRequired":false,"config":{"conditionExpression":"","conditionBuilderMode":true,"validationExpression":"","validationBuilderMode":true},"inlineEditingActive":false}]</processhub:inputParameter>
+          <processhub:inputParameter name="roleowners-editable">true</processhub:inputParameter>
+        </processhub:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>SequenceFlow_304227642A946801</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="UserTask_00FF257B7DA9B251" name="Aufgabe 1">
+      <bpmn:incoming>SequenceFlow_A9C897F32DEA5099</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_9ECCDB76086A708B</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="UserTask_424161AC21E41FEF" name="Aufgabe 2">
+      <bpmn:incoming>SequenceFlow_9ECCDB76086A708B</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_C4D5FC4495ABF8E4</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="EndEvent_1AA58DCD6DB7A6C1">
+      <bpmn:incoming>SequenceFlow_C4D5FC4495ABF8E4</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_9ECCDB76086A708B" sourceRef="UserTask_00FF257B7DA9B251" targetRef="UserTask_424161AC21E41FEF" />
+    <bpmn:sequenceFlow id="SequenceFlow_C4D5FC4495ABF8E4" sourceRef="UserTask_424161AC21E41FEF" targetRef="EndEvent_1AA58DCD6DB7A6C1" />
+    <bpmn:serviceTask id="ServiceTask_F4EE1E08D0729D68">
+      <bpmn:extensionElements>
+        <processhub:inputOutput>
+          <processhub:inputParameter name="service-task-config-object">{"selectedServiceId":"sharepoint-service","selectedActionId":"readFile","fields":[{"key":"sharepointUrl","type":"text","value":"https://sharepointtest.sharepoint.com/"},{"key":"tenantId","type":"text","value":"d7521bf8-1dd8-44f6-9718-01aeedc53e9c"},{"key":"clientId","type":"text","value":"4b2135e4-df66-47e5-b5ae-5d7f9ae2003f"},{"key":"certThumbprint","type":"text","value":"6D281A69221B43BEC1D3229B3B670FB74642C47A"},{"key":"certPrivateKeyPath","type":"text","value":"testfiles/key.pem"},{"key":"fileUrl","type":"text","value":"https://sharepointtest.sharepoint.com/:x:/r/Freigegebene%20Dokumente/liste.xlsx?d=wef0730fc72314ed5a9f7869d7f9a681f&amp;csf=1&amp;web=1&amp;e=4x43Ws"},{"key":"targetField","type":"select","value":"Anlagen"}]}</processhub:inputParameter>
+        </processhub:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_304227642A946801</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_A9C897F32DEA5099</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_304227642A946801" sourceRef="StartEvent_221FDCCA0EB53699" targetRef="ServiceTask_F4EE1E08D0729D68" />
+    <bpmn:sequenceFlow id="SequenceFlow_A9C897F32DEA5099" sourceRef="ServiceTask_F4EE1E08D0729D68" targetRef="UserTask_00FF257B7DA9B251" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram name="BPMNDiagram_30EB373BA132DF1A">
+    <bpmndi:BPMNPlane bpmnElement="Collaboration_340B9E852659CD64">
+      <bpmndi:BPMNShape id="BPMNShape_34084153E3DA4148" bpmnElement="Lane_7A0DD19E05A33282">
+        <dc:Bounds x="430" y="0" width="550" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_FE5C254D268A163E" bpmnElement="Lane_8EE2836B993DE74A">
+        <dc:Bounds x="430" y="120" width="550" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_AF6B33821C4B1F13" bpmnElement="Participant_9382B080DE4E255F">
+        <dc:Bounds x="400" y="0" width="580" height="240" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_7F47B54009197081" bpmnElement="StartEvent_221FDCCA0EB53699">
+        <dc:Bounds x="500" y="42" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_4E93510F64E7F3BD" bpmnElement="UserTask_00FF257B7DA9B251">
+        <dc:Bounds x="770" y="20" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_AAF8F557402FB30F" bpmnElement="UserTask_424161AC21E41FEF">
+        <dc:Bounds x="756" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_2378701F46D3C324" bpmnElement="EndEvent_1AA58DCD6DB7A6C1">
+        <dc:Bounds x="916" y="162" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_59E7644251C9B880" bpmnElement="SequenceFlow_9ECCDB76086A708B" sourceElement="BPMNShape_4E93510F64E7F3BD" targetElement="BPMNShape_AAF8F557402FB30F">
+        <di:waypoint x="820" y="100" />
+        <di:waypoint x="820" y="120" />
+        <di:waypoint x="806" y="120" />
+        <di:waypoint x="806" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_65E3D44DB24D9F31" bpmnElement="SequenceFlow_C4D5FC4495ABF8E4" sourceElement="BPMNShape_AAF8F557402FB30F" targetElement="BPMNShape_2378701F46D3C324">
+        <di:waypoint x="856" y="180" />
+        <di:waypoint x="886" y="180" />
+        <di:waypoint x="886" y="180" />
+        <di:waypoint x="916" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="BPMNShape_DE66DFF8BD1BFC44" bpmnElement="ServiceTask_F4EE1E08D0729D68">
+        <dc:Bounds x="590" y="20" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_1062E28E02A80D48" bpmnElement="SequenceFlow_304227642A946801" sourceElement="BPMNShape_7F47B54009197081" targetElement="BPMNShape_DE66DFF8BD1BFC44">
+        <di:waypoint x="536" y="60" />
+        <di:waypoint x="590" y="60" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_F1CBB98272DDCAE9" bpmnElement="SequenceFlow_A9C897F32DEA5099" sourceElement="BPMNShape_DE66DFF8BD1BFC44" targetElement="BPMNShape_4E93510F64E7F3BD">
+        <di:waypoint x="690" y="60" />
+        <di:waypoint x="770" y="60" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

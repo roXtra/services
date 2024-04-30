@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "jsx": "react-jsx",
+    "allowJs": true,
+    "outDir": "disttests",
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "lib": ["ES2022", "dom"],
+    "skipLibCheck": true,
+    "composite": true
+  },
+  "include": ["./**/*"],
+  "exclude": ["./dist/**/*", "./disttests/**/*", "./node_modules"]
+}

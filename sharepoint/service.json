@@ -1,0 +1,47 @@
+{
+  "id": "sharepoint-service",
+  "name": "SharePoint Service",
+  "minRoXtraVersion": "8.009.0",
+  "maxRoXtraVersion": "100.0.0",
+  "actions": [
+    {
+      "id": "readFile",
+      "label": "Datei aus SharePoint lesen und in Dateianhangsfeld speichern",
+      "configMethod": "readFileConfig",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
+      "serviceMethod": "readFile",
+      "fields": [
+        {
+          "name": "sharepointUrl",
+          "type": "text"
+        },
+        {
+          "name": "tenantId",
+          "type": "text"
+        },
+        {
+          "name": "clientId",
+          "type": "text"
+        },
+        {
+          "name": "certThumbprint",
+          "type": "text"
+        },
+        {
+          "name": "certPrivateKeyPath",
+          "type": "text"
+        },
+        {
+          "name": "fileUrl",
+          "type": "text"
+        },
+        {
+          "name": "targetField",
+          "type": "select",
+          "onload": "fields ProcessHubFileUpload"
+        }
+      ]
+    }
+  ]
+}
