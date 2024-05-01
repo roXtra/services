@@ -27,14 +27,14 @@
     "joi": "^17.13.0",
     "mssql": "10.0.2",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.90.0/release.tgz",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.6",
     "@types/mssql": "^9.1.5",
     "@types/node": "^20.12.7",
-    "@types/react": "^18.2.79",
+    "@types/react": "^18.3.1",
     "bestzip": "^2.2.1",
     "chai": "^4.4.1",
     "copyfiles": "^2.4.1",
