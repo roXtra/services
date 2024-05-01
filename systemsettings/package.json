@@ -20,7 +20,7 @@
   },
   "engines": {
     "node": "20",
-    "npm": "10"
+    "npm": "10.7.0"
   },
   "dependencies": {
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.90.0/release.tgz",
