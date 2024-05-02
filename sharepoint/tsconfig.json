@@ -14,7 +14,8 @@
     "strict": true,
     "lib": ["ES2022", "dom"],
     "skipLibCheck": true,
-    "composite": true
+    "composite": true,
+    "declaration": true
   },
   "include": ["./**/*"],
   "exclude": ["./dist/**/*", "./disttests/**/*", "./node_modules"]

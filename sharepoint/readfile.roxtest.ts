@@ -1,9 +1,10 @@
 import { expect } from "chai";
-import { readFile, readFileConfig } from "./main.js";
+import { readFileConfig, readFile } from "./main.js";
 import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools.js";
 import fs from "fs";
 import sinon from "sinon";
 import { ISharePointConfig, sharePoint } from "./sharepoint.js";
+import { serviceLogic } from "./readfile.js";
 
 describe("services", () => {
   describe("sharepoint", () => {
@@ -43,8 +44,7 @@ describe("services", () => {
         environment.instances.uploadAttachment = uploadAttachmentStub;
 
         environment.bpmnTaskId = "ServiceTask_F4EE1E08D0729D68";
-        const result = await readFile(environment);
-        expect(result).to.equal(true);
+        await serviceLogic(environment);
 
         expect(uploadAttachmentStub.calledOnce).to.equal(true);
         expect(uploadAttachmentStub.getCall(0).args[1]).to.equal("liste.xlsx");

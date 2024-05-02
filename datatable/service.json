@@ -58,6 +58,53 @@
           "onload": "fields ProcessHubDataTable"
         }
       ]
+    },
+    {
+      "id": "readXlsxFromSharepoint",
+      "label": "Daten aus Sharepoint lesen und in Feld vom Typ 'Tabellarische Daten' schreiben",
+      "configMethod": "readXlsxFromSharepointConfig",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
+      "serviceMethod": "readXlsxFromSharepoint",
+      "fields": [
+        {
+          "name": "sharepointUrl",
+          "type": "text"
+        },
+        {
+          "name": "tenantId",
+          "type": "text"
+        },
+        {
+          "name": "clientId",
+          "type": "text"
+        },
+        {
+          "name": "certThumbprint",
+          "type": "text"
+        },
+        {
+          "name": "certPrivateKeyPath",
+          "type": "text"
+        },
+        {
+          "name": "fileUrl",
+          "type": "text"
+        },
+        {
+          "name": "sheetName",
+          "type": "text"
+        },
+        {
+          "name": "rowFilter",
+          "type": "text"
+        },
+        {
+          "name": "dataTableField",
+          "type": "select",
+          "onload": "fields ProcessHubDataTable"
+        }
+      ]
     }
   ]
 }
