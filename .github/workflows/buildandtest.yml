@@ -10,24 +10,24 @@ jobs:
     name: Build and Test
     runs-on: ubuntu-latest
     steps:
-    - name: Start MySQL Docker Container
-      run: docker run -p 3306:3306 --name mysql-test -e MYSQL_ROOT_PASSWORD=12345 -e MYSQL_DATABASE=test -d mysql:latest
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ env.NODE_VERSION }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ env.NODE_VERSION }}
-    - name: Install dependencies
-      run: npm install
-    - name: Run Format Checker
-      run: npm run check:format
-      working-directory: ./
-      timeout-minutes: 10
-    - name: Build and Test services
-      run: npm run buildonly
-    - name: Setup MySQL
-      run: docker exec -i mysql-test sh -c 'exec mysql -uroot -p"12345"' < setup.sql
-      working-directory: ./mysql/test/testfiles
-    - name: Run MySQL Service Pipeline Test 
-      run: npm run test:pipeline
-      working-directory: ./mysql
+      - name: Start MySQL Docker Container
+        run: docker run -p 3306:3306 --name mysql-test -e MYSQL_ROOT_PASSWORD=12345 -e MYSQL_DATABASE=test -d mysql:latest --mysql-native-password=ON
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Install dependencies
+        run: npm install
+      - name: Run Format Checker
+        run: npm run check:format
+        working-directory: ./
+        timeout-minutes: 10
+      - name: Build and Test services
+        run: npm run buildonly
+      - name: Setup MySQL
+        run: docker exec -i mysql-test sh -c 'exec mysql --default-auth=mysql_native_password -uroot -p"12345"' < setup.sql
+        working-directory: ./mysql/test/testfiles
+      - name: Run MySQL Service Pipeline Test
+        run: npm run test:pipeline
+        working-directory: ./mysql
