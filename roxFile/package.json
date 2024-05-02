@@ -28,14 +28,14 @@
     "axios": "^1.6.8",
     "json-query": "^2.2.2",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.90.0/release.tgz",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@types/chai": "^4.3.14",
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.12.7",
-    "@types/react": "^18.2.79",
+    "@types/react": "^18.3.1",
     "bestzip": "^2.2.1",
     "chai": "^4.4.1",
     "copyfiles": "^2.4.1",
