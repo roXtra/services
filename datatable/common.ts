@@ -48,13 +48,24 @@ export function checkResultField(bpmnProcess: BpmnProcess, dataTableField: strin
   return fieldConfig;
 }
 
+/**
+ * Reads data from an xlsx file
+ * @param environment - The service task environment.
+ * @param language - The language used for error messages.
+ * @param rowFilter - The filter expression to apply to each row.
+ * @param fieldConfig - The configuration for the DataTable field.
+ * @param sheetName - The name of the sheet to read from the file - if undefined, the first sheet is read.
+ * @param file - Can be set to a string containing the file path or a Buffer containing the file data.
+ * @returns The structured DataTableFieldValue object containing the read data.
+ * @throws BpmnError if there is an error reading the file or applying the filter.
+ */
 export function readFileData(
   environment: IServiceTaskEnvironment,
   language: string,
   rowFilter: string,
   fieldConfig: IDataTableFieldConfig,
   sheetName: string | undefined,
-  filePath: string,
+  file: string | Buffer,
 ) {
   const fieldValue: IDataTableFieldValue = {
     rows: [],
@@ -62,7 +73,7 @@ export function readFileData(
   XLSX.set_fs(fs);
   let xlsxfile: XLSX.WorkBook;
   try {
-    xlsxfile = XLSX.readFile(filePath);
+    xlsxfile = typeof file === "string" ? XLSX.readFile(file) : XLSX.read(file);
   } catch (e) {
     environment.logger.error(`XLSX.readFile exception: ${String(e)}`);
     throw new BpmnError(DataTableErrorCode.FILE_ERROR, tl(`Fehler beim Lesen der Datei: ` + String(e), language));

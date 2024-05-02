@@ -50,7 +50,6 @@ module.exports = {
         varsIgnorePattern: "",
       },
     ],
-    "@typescript-eslint/indent": ["error", 2],
     "@typescript-eslint/no-floating-promises": "error",
     "@typescript-eslint/prefer-namespace-keyword": "error",
     semi: "off",

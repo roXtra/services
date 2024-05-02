@@ -1,5 +1,5 @@
-const dirTree = require("directory-tree");
-const { execSync } = require("child_process");
+import dirTree from "directory-tree";
+import { execSync } from "child_process";
 
 // If renamed, adjust name in trigger_release_creation.yml
 const processHubSDKVersion = "v9.90.0";
@@ -13,6 +13,7 @@ const runMode = args[0];
 let errorOccurred = false;
 
 // Script Procedure
+doForEachService(installDeps);
 doForEachService(buildService);
 if (runMode === "bundle") {
   doForEachService(bundleService);
@@ -50,6 +51,24 @@ function doForEachService(func) {
   );
 }
 
+function installDeps(directoryPath) {
+  const childProcessOptions = {
+    cwd: directoryPath,
+    stdio: childProcessStdioOptions,
+    timeout: childProcessTimeout,
+  };
+
+  // Install current processhub-sdk for child
+  execSync(`npm i --save https://github.com/roXtra/processhub-sdk/releases/download/${processHubSDKVersion}/release.tgz`, childProcessOptions);
+  console.log("Installed current processhub SDK for " + directoryPath);
+
+  // npm install
+  execSync("npm ci", childProcessOptions);
+  console.log("Executed npm install for " + directoryPath);
+
+  return 0;
+}
+
 function buildService(directoryPath) {
   try {
     const childProcessOptions = {
@@ -57,14 +76,6 @@ function buildService(directoryPath) {
       stdio: childProcessStdioOptions,
       timeout: childProcessTimeout,
     };
-
-    // Install current processhub-sdk for child
-    execSync(`npm i --save https://github.com/roXtra/processhub-sdk/releases/download/${processHubSDKVersion}/release.tgz`, childProcessOptions);
-    console.log("Installed current processhub SDK for " + directoryPath);
-
-    // npm install
-    execSync("npm ci", childProcessOptions);
-    console.log("Executed npm install for " + directoryPath);
 
     // Lint
     execSync("npm run lint", childProcessOptions);

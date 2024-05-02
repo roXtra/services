@@ -13,9 +13,10 @@
     "esModuleInterop": true,
     "strict": true,
     "lib": ["ES2022", "dom"],
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "composite": true,
+    "declaration": true
   },
   "include": ["./**/*"],
-  "exclude": ["./dist/**/*", "./disttests/**/*", "./node_modules"],
-  "references": [{ "path": "../sharepoint" }]
+  "exclude": ["./dist/**/*", "./disttests/**/*", "./node_modules"]
 }
