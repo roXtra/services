@@ -9,6 +9,7 @@ import fs from "fs";
 
 export enum DataTableErrorCode {
   FILE_ERROR = "FILE_ERROR",
+  DATA_ERROR = "DATA_ERROR",
   SHEET_ERROR = "SHEET_ERROR",
   FILTER_ERROR = "FILTER_ERROR",
   INPUT_FIELD_ERROR = "INPUT_FIELD_ERROR",
@@ -100,7 +101,14 @@ export function readFileData(
       if (value !== undefined) {
         switch (col.type) {
           case "numeric":
-            data[col.name] = Number(value);
+            {
+              const numValue = Number(value);
+              if (isNaN(numValue)) {
+                environment.logger.error(`Invalid numeric value when reading data from spreadsheet: ${col.name} (${String(value)})`);
+                throw new BpmnError(DataTableErrorCode.DATA_ERROR, tl("Ungültiger numerischer Wert: ", language) + col.name + " (" + String(value) + ")");
+              }
+              data[col.name] = numValue;
+            }
             break;
           case "text":
             data[col.name] = String(value);

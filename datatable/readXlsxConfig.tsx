@@ -9,6 +9,10 @@ export const ErrorHelp = ({ userLanguage }: { userLanguage: string }) => (
       {DataTableErrorCode.FILE_ERROR}: {tl("Die angegebene Datei konnte nicht gelesen werden.", userLanguage)}
     </p>
     <p>
+      {DataTableErrorCode.DATA_ERROR}:{" "}
+      {tl("Die Daten aus der Quelldatei konnten den Spalten des Feldes nicht zugeordnet werden, weil die Typen nicht kompatibel sind.", userLanguage)}
+    </p>
+    <p>
       {DataTableErrorCode.SHEET_ERROR}: {tl("Das Arbeitsblatt konnte nicht gelesen werden.", userLanguage)}
     </p>
     <p>
