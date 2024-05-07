@@ -8,7 +8,7 @@
     "servicename": "mysql"
   },
   "scripts": {
-    "lint": "eslint --ext .ts,.tsx \"**/*.{ts,tsx}\"",
+    "lint": "eslint \"**/*.{ts,tsx}\"",
     "test": "cross-env HOTRELOAD=no DEBUG=bpmn-engine:123* mocha ./disttests/**/*.roxtest.js --exit --recursive --timeout 40000 --require source-map-support/register",
     "test:pipeline": "cross-env HOTRELOAD=no DEBUG=bpmn-engine:123* mocha ./disttests/**/*.pipelinetest.js --exit --recursive --timeout 40000 --require source-map-support/register",
     "build": "$(if (Test-Path ./disttests) { Remove-Item -Recurse ./disttests }) && tsc && npm run webpack && npm run copymain",

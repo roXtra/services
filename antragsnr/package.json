@@ -8,7 +8,7 @@
     "servicename": "antragsnr"
   },
   "scripts": {
-    "lint": "eslint --ext .ts,.tsx \"**/*.{ts,tsx}\"",
+    "lint": "eslint \"**/*.{ts,tsx}\"",
     "test": "cross-env HOTRELOAD=no DEBUG=bpmn-engine:123* mocha ./disttests/**/*.roxtest.js --exit --recursive --timeout 40000 --require source-map-support/register",
     "build": "$(if (Test-Path ./disttests) { Remove-Item -Recurse ./disttests }) && tsc && npm run webpack && npm run copymain",
     "copyfiles": "copyfiles service.json configtemplate.json dist/* $Env:npm_package_config_servicename",
