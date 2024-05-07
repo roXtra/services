@@ -9,7 +9,7 @@
     "servicename": "datatable"
   },
   "scripts": {
-    "lint": "eslint --ext .ts,.tsx \"**/*.{ts,tsx}\"",
+    "lint": "eslint \"**/*.{ts,tsx}\"",
     "test": "mocha ./disttests/**/*.roxtest.js --exit --recursive --timeout 40000 --require source-map-support/register",
     "build": "$(if (Test-Path ./disttests) { Remove-Item -Recurse ./disttests }) && $(if (Test-Path ./dist) { Remove-Item -Recurse ./dist })  && tsc -b && npm run webpack && npm run copymain",
     "copyfiles": "copyfiles service.json configtemplate.json dist/* $Env:npm_package_config_servicename",
