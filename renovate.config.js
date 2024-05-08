@@ -30,6 +30,13 @@ module.exports = {
       allowedVersions: "^10.0.0",
     },
     {
+      description: "Don't bump engines field in package.json",
+      matchPackageNames: ["node", "npm"],
+      matchManagers: ["npm"],
+      matchDepTypes: ["engines"],
+      rangeStrategy: "auto",
+    },
+    {
       matchPackageNames: ["react", "react-dom", "@types/react"],
       allowedVersions: "^18.0.0",
     },
