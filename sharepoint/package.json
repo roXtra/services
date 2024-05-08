@@ -41,7 +41,7 @@
     "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
     "mocha": "^10.4.0",
-    "sinon": "^17.0.1",
+    "sinon": "^17.0.2",
     "ts-loader": "^9.5.1",
     "typescript": "^5.4.5",
     "webpack": "^5.91.0",
