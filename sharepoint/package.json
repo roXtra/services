@@ -23,8 +23,8 @@
     "npm": "10"
   },
   "dependencies": {
-    "@pnp/nodejs": "^4.0.1",
-    "@pnp/queryable": "^4.0.1",
+    "@pnp/nodejs": "^4.1.0",
+    "@pnp/queryable": "^4.1.0",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.92.0/release.tgz",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
