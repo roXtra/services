@@ -19,11 +19,11 @@
     "copymain": "cp dist/main.mjs disttests/main.js"
   },
   "engines": {
-    "node": "20",
+    "node": "22",
     "npm": "10"
   },
   "dependencies": {
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.92.0/release.tgz",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.93.0-1/release.tgz",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz"
