@@ -18,5 +18,5 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "typescript.tsdk": "node_modules\\typescript\\lib",
-  "eslint.experimental.useFlatConfig": true
+  "eslint.useFlatConfig": true
 }
