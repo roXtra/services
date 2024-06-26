@@ -1,5 +1,5 @@
 import * as mysql from "mysql";
-import { FieldType, FieldValueType, IFieldValue } from "processhub-sdk/lib/data/ifieldvalue.js";
+import { FieldType, FieldValueType } from "processhub-sdk/lib/data/ifieldvalue.js";
 import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror.js";
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
@@ -110,7 +110,9 @@ export async function executeQuery(environment: IServiceTaskEnvironment, configP
           type: targetFieldType,
         };
       }
-      (environment.instanceDetails.extras.fieldContents[targetField] as IFieldValue).value = res[0]["result"];
+      // The property environment.instanceDetails.extras.fieldContents[targetField] is definitely assigned here as it is checked or initialized in the lines above
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+      environment.instanceDetails.extras.fieldContents[targetField]!.value = res[0]["result"];
       await environment.instances.updateInstance(environment.instanceDetails);
     }
   } catch (ex) {

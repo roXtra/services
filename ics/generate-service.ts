@@ -172,10 +172,12 @@ export async function generate(environment: IServiceTaskEnvironment): Promise<bo
     if (instance.extras.fieldContents[targetField] == null) {
       instance.extras.fieldContents[targetField] = { type: "ProcessHubFileUpload", value: undefined };
     }
-    if ((instance.extras.fieldContents[targetField] as IFieldValue).type !== "ProcessHubFileUpload") {
+    if (instance.extras.fieldContents[targetField]?.type !== "ProcessHubFileUpload") {
       throw new BpmnError(ErrorCodes.ATTACHMENT_ERROR, "Es ist kein FileUpload Feld hinterlegt!.");
     }
-    (instance.extras.fieldContents[targetField] as IFieldValue).value = [url];
+    // The property instance.extras.fieldContents[targetField] is definitely defined as it was checked or initialized some lines above
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+    instance.extras.fieldContents[targetField]!.value = [url];
     await environment.instances.updateInstance(instance);
 
     return true;
