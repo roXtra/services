@@ -78,12 +78,7 @@ jobs:
           git push -u origin release-v${{ steps.version-upgrade.outputs.newversion }}
           git push origin v${{ steps.version-upgrade.outputs.newversion }}
       - name: Create PR for new Version
-        uses: repo-sync/pull-request@v2
-        with:
-          source_branch: "release-v${{ steps.version-upgrade.outputs.newversion }}"
-          destination_branch: "master"
-          pr_title: "Release v${{ steps.version-upgrade.outputs.newversion }}"
-          pr_body: Updates version to v${{ steps.version-upgrade.outputs.newversion }}
-          github_token: ${{ secrets.DEVBOT_GH_TOKEN }}
-          pr_assignee: "${{ env.prassignee }}"
-          pr_draft: false
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh pr create --base master --head release-v${{ steps.version-upgrade.outputs.newversion }} --title "Release v${{ steps.version-upgrade.outputs.newversion }}" --body "Updates version to v${{ steps.version-upgrade.outputs.newversion }}" --assignee "${{ env.prassignee }}"
