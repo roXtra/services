@@ -4,6 +4,8 @@ on: [push]
 
 env:
   NODE_VERSION: 22
+  MYSQL_CONTAINER_VERSION: lts
+  MYSQL_CONTAINER_NAME: mysql-test
 
 jobs:
   build:
@@ -11,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Start MySQL Docker Container
-        run: docker run -p 3306:3306 --name mysql-test -e MYSQL_ROOT_PASSWORD=12345 -e MYSQL_DATABASE=test -d mysql:latest --mysql-native-password=ON
+        run: docker run -p 3306:3306 --name ${{ env.MYSQL_CONTAINER_NAME }} -e MYSQL_ROOT_PASSWORD=12345 -e MYSQL_DATABASE=test -d mysql:${{ env.MYSQL_CONTAINER_VERSION }} --mysql-native-password=ON
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v4
@@ -26,8 +28,10 @@ jobs:
       - name: Build and Test services
         run: npm run buildonly
       - name: Setup MySQL
-        run: docker exec -i mysql-test sh -c 'exec mysql --default-auth=mysql_native_password -uroot -p"12345"' < setup.sql
+        run: docker exec -i ${{ env.MYSQL_CONTAINER_NAME }} sh -c 'exec mysql --default-auth=mysql_native_password -uroot -p"12345"' < setup.sql
         working-directory: ./mysql/test/testfiles
       - name: Run MySQL Service Pipeline Test
         run: npm run test:pipeline
         working-directory: ./mysql
+      - name: Stop MySQL Docker Container
+        run: docker stop ${{ env.MYSQL_CONTAINER_NAME }}
