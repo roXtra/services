@@ -58,6 +58,7 @@ export default tseslint.config(
       },
     },
     rules: {
+      "@typescript-eslint/no-non-null-assertion": "error",
       "linebreak-style": ["error", "unix"],
       "no-cond-assign": "error",
       "capitalized-comments": [
