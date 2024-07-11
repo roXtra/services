@@ -177,7 +177,7 @@ export async function generate(environment: IServiceTaskEnvironment): Promise<bo
     }
     // The property instance.extras.fieldContents[targetField] is definitely defined as it was checked or initialized some lines above
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-    instance.extras.fieldContents[targetField]!.value = [url];
+    instance.extras.fieldContents[targetField].value = [url];
     await environment.instances.updateInstance(instance);
 
     return true;

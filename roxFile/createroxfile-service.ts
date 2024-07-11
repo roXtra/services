@@ -86,9 +86,11 @@ export async function serviceLogic(environment: IServiceTaskEnvironment, roxtraF
 
   let relativePath = roxFile[0].split("modules/files/")[1];
   const pathParts = relativePath.split("/");
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   pathParts[pathParts.length - 1] = decodeURLSafeBase64(getLastArrayEntry(pathParts)!);
   relativePath = pathParts.join("/");
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const titleWithEnding = generateTitleWithDataType(title, getLastArrayEntry(pathParts)!);
 
   const filePath = decodeURIComponent(environment.fileStore.getPhysicalPath(relativePath));

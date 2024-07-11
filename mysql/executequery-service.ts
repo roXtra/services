@@ -53,7 +53,7 @@ export async function executeQuery(environment: IServiceTaskEnvironment, configP
     throw new Error("targetField is undefined, cannot proceed with service!");
   }
 
-  const configFile = (await readConfigFile<IServiceConfigSecret>(configPath, IServiceConfigSchema, environment.logger)) || { secret: {} };
+  const configFile = (await readConfigFile<IServiceConfigSecret>(configPath, environment.logger, IServiceConfigSchema)) || { secret: {} };
 
   password = replaceObjectReferences(password, "secret", configFile.secret);
 
@@ -112,7 +112,7 @@ export async function executeQuery(environment: IServiceTaskEnvironment, configP
       }
       // The property environment.instanceDetails.extras.fieldContents[targetField] is definitely assigned here as it is checked or initialized in the lines above
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-      environment.instanceDetails.extras.fieldContents[targetField]!.value = res[0]["result"];
+      environment.instanceDetails.extras.fieldContents[targetField].value = res[0]["result"];
       await environment.instances.updateInstance(environment.instanceDetails);
     }
   } catch (ex) {

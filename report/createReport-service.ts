@@ -27,7 +27,7 @@ export function initReportUploadField(url: string, instance: IInstanceDetails, r
     }
     // The property environment.instanceDetails.extras.fieldContents[targetField] is definitely assigned here as it is checked or initialized in the lines above
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-    instance.extras.fieldContents[reportFieldName]!.value = [url];
+    instance.extras.fieldContents[reportFieldName].value = [url];
   } else {
     throw new BpmnError(ErrorCodes.ATTACHMENT_ERROR, "Der Bericht konnte dem Vorgang nicht angehängt werden.");
   }

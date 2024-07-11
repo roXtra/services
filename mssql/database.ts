@@ -5,7 +5,7 @@ import { IServiceConfigSchema, IServiceConfigSecret, readConfigFile } from "proc
 import { IServiceTaskLogger } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
 
 export async function getConnectionPool(fields: IServiceActionConfigField[], logger: IServiceTaskLogger, configPath: string): Promise<sql.ConnectionPool> {
-  const configFile = (await readConfigFile<IServiceConfigSecret>(configPath, IServiceConfigSchema, logger)) || { secret: {} };
+  const configFile = (await readConfigFile<IServiceConfigSecret>(configPath, logger, IServiceConfigSchema)) || { secret: {} };
 
   const server = fields.find((f) => f.key === "server")?.value;
   const user = fields.find((f) => f.key === "username")?.value;
