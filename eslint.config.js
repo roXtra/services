@@ -193,7 +193,7 @@ export default tseslint.config(
    * Test specific rules
    */
   {
-    files: ["**/*.test.ts*"],
+    files: ["**/*.test.ts*", "**/*.roxtest.ts*"],
     rules: {
       "@typescript-eslint/no-unnecessary-type-assertion": "off",
       "@typescript-eslint/no-non-null-assertion": "off",

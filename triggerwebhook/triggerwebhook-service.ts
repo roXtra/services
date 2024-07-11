@@ -34,7 +34,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment, configP
     throw new BpmnError(ErrorCode.ConfigInvalid, "Webhook address is empty - cannot perform webhook call!");
   }
 
-  const configFile = (await readConfigFile<IServiceConfigSecret>(configPath, IServiceConfigSchema, environment.logger)) || { secret: {} };
+  const configFile = (await readConfigFile<IServiceConfigSecret>(configPath, environment.logger, IServiceConfigSchema)) || { secret: {} };
   const usersConfig = await environment.roxApi.getUsersConfig();
 
   const replaceFieldContentsInFieldValue = (value: string): string | undefined => {
