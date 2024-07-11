@@ -26,18 +26,16 @@ describe("services", () => {
         const result = await readXlsxFromAttachment(environment);
         expect(result).to.equal(true);
         const resultField = environment.instanceDetails.extras.fieldContents["Büros"];
-        if (resultField) {
-          expect(resultField.type).to.equal("ProcessHubDataTable");
-          const fieldValue = resultField.value as IDataTableFieldValue;
-          expect(fieldValue).to.not.be.undefined;
-          expect(fieldValue.rows.length).to.equal(20);
-          for (const row of fieldValue.rows) {
-            expect(row.selected).to.equal(false);
-            expect(typeof row.data.Name).to.equal("string");
-            expect(typeof row.data.Adresse).to.equal("string");
-            expect(typeof row.data.Telefonnummer).to.equal("string");
-            expect(typeof row.data.Kostenstelle).to.equal("number");
-          }
+        expect(resultField!.type).to.equal("ProcessHubDataTable");
+        const fieldValue = resultField!.value as IDataTableFieldValue;
+        expect(fieldValue).to.not.be.undefined;
+        expect(fieldValue.rows.length).to.equal(20);
+        for (const row of fieldValue.rows) {
+          expect(row.selected).to.equal(false);
+          expect(typeof row.data.Name).to.equal("string");
+          expect(typeof row.data.Adresse).to.equal("string");
+          expect(typeof row.data.Telefonnummer).to.equal("string");
+          expect(typeof row.data.Kostenstelle).to.equal("number");
         }
       });
     });
