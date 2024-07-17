@@ -36,7 +36,7 @@
     "@types/mocha": "^10.0.7",
     "bestzip": "^2.2.1",
     "copyfiles": "^2.4.1",
-    "directory-tree": "^3.5.1",
+    "directory-tree": "^3.5.2",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-deprecation": "^3.0.0",
