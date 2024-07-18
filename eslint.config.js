@@ -73,7 +73,6 @@ export default tseslint.config(
       "no-trailing-spaces": "error",
       "no-unsafe-finally": "error",
       "no-var": "error",
-      "default-param-last": "off",
       eqeqeq: [
         "error",
         "always",
@@ -186,7 +185,6 @@ export default tseslint.config(
       ],
       "@typescript-eslint/no-non-null-assertion": "error",
       "@typescript-eslint/no-useless-empty-export": "error",
-      "@typescript-eslint/default-param-last": "error",
     },
   },
   /**
