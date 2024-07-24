@@ -38,6 +38,6 @@
     "eslint": "^8.57.0",
     "mocha": "^10.7.0",
     "ts-loader": "^9.5.1",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.4"
   }
 }
