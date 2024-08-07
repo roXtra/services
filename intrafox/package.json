@@ -31,7 +31,7 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@types/chai": "^4.3.16",
+    "@types/chai": "^4.3.17",
     "@types/dateformat": "^5.0.2",
     "@types/mocha": "^10.0.7",
     "@types/node": "^20.14.2",
