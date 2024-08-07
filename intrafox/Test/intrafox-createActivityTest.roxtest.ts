@@ -103,7 +103,7 @@ describe("services", () => {
         expirationDate,
       ).catch((err: BpmnError) => err);
 
-      expect(isBpmnError(rejectionError)).to.be.true;
+      expect(isBpmnError(rejectionError)).to.equal(true);
       const actualError = rejectionError as BpmnError;
       const expectedError = new BpmnError(ErrorCodes.API_ERROR, "Ein Fehler ist aufgetreten, ARGS wurden falsch gesetzt.");
       expect(actualError.errorCode).to.equal(expectedError.errorCode);
@@ -138,7 +138,7 @@ describe("services", () => {
         expirationDate,
       ).catch((err: BpmnError) => err);
 
-      expect(isBpmnError(rejectionError)).to.be.true;
+      expect(isBpmnError(rejectionError)).to.equal(true);
       const actualError = rejectionError as BpmnError;
       const expectedError = new BpmnError(ErrorCodes.API_ERROR, "Ein Fehler ist aufgetreten, Authentifizierungstoken ist ungültig.");
       expect(actualError.errorCode).to.equal(expectedError.errorCode);

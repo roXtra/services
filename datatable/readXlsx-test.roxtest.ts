@@ -17,7 +17,7 @@ describe("services", () => {
         const environment = createEmptyTestServiceEnvironment(fs.readFileSync("./testfiles/datatableservice.bpmn", "utf8"));
         environment.bpmnTaskId = "ServiceTask_88CD77E856071A65";
         const fieldValue = await readXlsxFile(environment);
-        expect(fieldValue).to.not.be.undefined;
+        expect(fieldValue).not.to.equal(undefined);
         expect(fieldValue.rows.length).to.equal(20);
         for (const row of fieldValue.rows) {
           expect(row.selected).to.equal(false);
@@ -72,7 +72,7 @@ describe("services", () => {
           "",
           "./testfiles/validnumbers.xlsx",
         );
-        expect(fieldValue).to.not.be.undefined;
+        expect(fieldValue).not.to.equal(undefined);
         console.log(fieldValue.rows);
         expect(fieldValue.rows.length).to.equal(19);
         const numbers = fieldValue.rows.map((r) => r.data.Kostenstelle);

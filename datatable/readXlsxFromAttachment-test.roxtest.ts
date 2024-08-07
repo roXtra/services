@@ -28,7 +28,7 @@ describe("services", () => {
         const resultField = environment.instanceDetails.extras.fieldContents["Büros"];
         expect(resultField!.type).to.equal("ProcessHubDataTable");
         const fieldValue = resultField!.value as IDataTableFieldValue;
-        expect(fieldValue).to.not.be.undefined;
+        expect(fieldValue).not.to.equal(undefined);
         expect(fieldValue.rows.length).to.equal(20);
         for (const row of fieldValue.rows) {
           expect(row.selected).to.equal(false);
