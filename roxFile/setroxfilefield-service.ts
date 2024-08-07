@@ -13,7 +13,7 @@ let efAccessToken: string;
 function handleSelectField(selectID: string, value: string, selection: ISelection): string | undefined {
   switch (selectID) {
     case SelectTypes.COMPLEXSELECT: {
-      return JSONQuery("SelectionsList[Value = " + value.split(",")[0].trim() + "].GUID", { data: selection }).value;
+      return JSONQuery("SelectionsList[Value = " + value.split(",")[0].trim() + "].GUID", { data: selection }).value as string;
     }
     case SelectTypes.MULTISELECT: {
       let multiGUIDString = "";
@@ -23,10 +23,10 @@ function handleSelectField(selectID: string, value: string, selection: ISelectio
       return multiGUIDString.substring(0, multiGUIDString.length - 1);
     }
     case SelectTypes.TREESELECT: {
-      return JSONQuery("TreeSelectionsList[Value = " + value + "].GUID", { data: selection }).value;
+      return JSONQuery("TreeSelectionsList[Value = " + value + "].GUID", { data: selection }).value as string;
     }
     case SelectTypes.SELECT: {
-      return JSONQuery("SimpleSelectionsList[Value = " + value + "].ID", { data: selection }).value;
+      return JSONQuery("SimpleSelectionsList[Value = " + value + "].ID", { data: selection }).value as string;
     }
   }
 }
@@ -68,7 +68,7 @@ async function getFieldDetails<T>(fileID: string, fieldID: string, environment: 
     fields: fileDetails.Fields,
   };
 
-  return JSONQuery("fields[Id = {fieldID}]", { data: data }).value;
+  return JSONQuery("fields[Id = {fieldID}]", { data: data }).value as T;
 }
 
 export async function serviceLogic(environment: IServiceTaskEnvironment, roxFileApi: IRoXtraFileApi): Promise<IInstanceDetails> {

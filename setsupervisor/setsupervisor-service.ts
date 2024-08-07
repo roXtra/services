@@ -96,6 +96,7 @@ export async function setsupervisor(environment: IServiceTaskEnvironment): Promi
   await serviceLogic(environment);
   try {
     await environment.instances.updateInstance(environment.instanceDetails);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     throw new BpmnError(ErrorCodes.INSTANCE_ERROR, "Die Instanz konnte nicht aktualisiert werden!");
   }

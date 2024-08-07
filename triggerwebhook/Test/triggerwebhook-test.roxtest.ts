@@ -51,7 +51,7 @@ describe("services", () => {
       expect(result).to.equal(true);
 
       // Ensure a webhook request was made with the correct data
-      expect(nockServer.isDone()).to.be.true;
+      expect(nockServer.isDone()).to.equal(true);
     });
 
     it("calls webhook address with field in url and correct field data and secret in headers and body", async () => {
@@ -79,7 +79,7 @@ describe("services", () => {
       expect(result).to.equal(true);
 
       // Ensure a webhook request was made with the correct data
-      expect(nockServer.isDone()).to.be.true;
+      expect(nockServer.isDone()).to.equal(true);
     });
   });
 

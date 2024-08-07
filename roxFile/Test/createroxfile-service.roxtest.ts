@@ -61,7 +61,7 @@ describe("services", () => {
           };
 
           const instance = await serviceLogicCreateroxfile(environment, testApi);
-          expect(instance.extras.fieldContents?.["CreatedRoxFileId"]).not.to.be.undefined;
+          expect(instance.extras.fieldContents?.["CreatedRoxFileId"]).not.to.equal(undefined);
           expect((instance.extras.fieldContents?.["CreatedRoxFileId"] as IFieldValue).value).to.equal(newRoxFileId);
         });
       });
