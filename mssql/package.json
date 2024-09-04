@@ -26,7 +26,7 @@
   "dependencies": {
     "joi": "^17.13.3",
     "mssql": "11.0.1",
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.98.0/release.tgz",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.99.0-2/release.tgz",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
