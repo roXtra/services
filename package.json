@@ -32,7 +32,7 @@
     "react": "^18.3.1"
   },
   "devDependencies": {
-    "@types/chai": "^4.3.19",
+    "@types/chai": "^4.3.20",
     "@types/mocha": "^10.0.8",
     "bestzip": "^2.2.1",
     "copyfiles": "^2.4.1",
