@@ -25,7 +25,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.100.0/release.tgz",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.101.0/release.tgz",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
