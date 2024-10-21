@@ -1,0 +1,47 @@
+{
+  "name": "@eformservice/complaintnr",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "config": {
+    "servicename": "complaintnr"
+  },
+  "scripts": {
+    "lint": "eslint \"**/*.{ts,tsx}\"",
+    "test": "cross-env HOTRELOAD=no DEBUG=bpmn-engine:123* mocha ./disttests/**/*.roxtest.js --exit --recursive --timeout 40000 --require source-map-support/register",
+    "build": "$(if (Test-Path ./disttests) { Remove-Item -Recurse ./disttests }) && tsc && npm run webpack && npm run copymain",
+    "copyfiles": "copyfiles service.json configtemplate.json dist/* $Env:npm_package_config_servicename",
+    "zip": "bestzip \"$Env:npm_package_config_servicename.zip\" \"$Env:npm_package_config_servicename\"",
+    "copyandzip": "npm run copyfiles && npm run zip && Remove-Item -Recurse $Env:npm_package_config_servicename",
+    "webpack": "webpack --env servicename=$Env:npm_package_config_servicename --config ../webpack.config.mjs",
+    "copymain": "cp dist/main.mjs disttests/main.js"
+  },
+  "engines": {
+    "node": "22",
+    "npm": "10"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.101.0/release.tgz",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/chai": "^5.0.0",
+    "@types/mocha": "^10.0.9",
+    "@types/node": "^20.14.2",
+    "@types/react": "^18.3.11",
+    "bestzip": "^2.2.1",
+    "chai": "^4.5.0",
+    "copyfiles": "^2.4.1",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.57.1",
+    "mocha": "^10.7.3",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.6.3",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4"
+  }
+}
