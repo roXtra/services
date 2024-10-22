@@ -1,0 +1,16 @@
+{
+  "id": "complaintnr",
+  "minRoXtraVersion": "8.009.0",
+  "name": "BeschwerdeNr. erzeugen",
+  "actions": [
+    {
+      "id": "complaintnr",
+      "label": "BeschwerdeNr. erzeugen",
+      "configMethod": "complaintnrConfig",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
+      "serviceMethod": "complaintnrAction",
+      "fields": [{ "name": "targetfield", "type": "text" }]
+    }
+  ]
+}
