@@ -40,7 +40,7 @@ export async function startinstance(environment: IServiceTaskEnvironment): Promi
   const workspaceId = workspaceAndProcessId.split("/")[0];
   const processId = workspaceAndProcessId.split("/")[1];
 
-  const accessToken = await environment.roxApi.getRoxtraTokenByUserId(executingUserId);
+  const accessToken = await environment.roxApi.getAccessTokenFromAuth(executingUserId);
 
   const oldFieldContents = environment.instanceDetails.extras.fieldContents;
   const newFieldContents: IFieldContentMap = {};

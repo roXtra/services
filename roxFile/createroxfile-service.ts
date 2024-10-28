@@ -120,7 +120,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment, roxtraF
 }
 
 export async function createRoxFile(environment: IServiceTaskEnvironment): Promise<boolean> {
-  APIUrl = environment.serverConfig.roXtra.efApiEndpoint;
+  APIUrl = environment.roxApi.getEfApiEndpoint();
   efAccessToken = await environment.roxApi.getEfApiToken();
 
   await serviceLogic(environment, new RoXtraFileApi());
