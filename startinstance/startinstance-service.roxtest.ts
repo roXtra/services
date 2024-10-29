@@ -32,7 +32,7 @@ describe("services", () => {
           };
 
           // eslint-disable-next-line @typescript-eslint/unbound-method, @typescript-eslint/require-await
-          environment.roxApi.getRoxtraTokenByUserId = async (userId: string): Promise<string> => {
+          environment.roxApi.getAccessTokenFromAuth = async (userId: string): Promise<string> => {
             // Must match the value defined in startservice.bpmn
             expect(userId).to.equal("7133");
             return testAccessToken;
