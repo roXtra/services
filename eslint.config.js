@@ -185,6 +185,7 @@ export default tseslint.config(
       ],
       "@typescript-eslint/no-non-null-assertion": "error",
       "@typescript-eslint/no-useless-empty-export": "error",
+      "@typescript-eslint/no-base-to-string": "warn",
     },
   },
   /**
