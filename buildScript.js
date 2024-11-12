@@ -2,7 +2,7 @@ import dirTree from "directory-tree";
 import { execSync } from "child_process";
 
 // If renamed, adjust name in trigger_release_creation.yml
-const processHubSDKVersion = "v9.103.0";
+const processHubSDKVersion = "v9.104.0-5";
 
 const childProcessStdioOptions = [0, 1, 2];
 const childProcessTimeout = 300000;
