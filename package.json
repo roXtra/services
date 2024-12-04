@@ -44,7 +44,7 @@
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.37.2",
     "globals": "^15.13.0",
-    "mocha": "^10.8.2",
+    "mocha": "^11.0.0",
     "prettier": "^3.4.2",
     "ts-loader": "^9.5.1",
     "typescript": "^5.7.2",
