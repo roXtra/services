@@ -3,9 +3,7 @@ import * as IntrafoxTypes from "./IntrafoxTypes.js";
 import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror.js";
 import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
 import { Language, tl } from "processhub-sdk/lib/tl.js";
-import dateformatImport from "dateformat";
-
-const dateformat = dateformatImport.default || dateformatImport;
+import dateformat from "dateformat";
 
 async function post<T>(url: string, requestBody: IntrafoxTypes.IIntraFoxBody, token: string): Promise<T> {
   const headers = { "X-INTRAFOX-ROXTRA-TOKEN": token };
