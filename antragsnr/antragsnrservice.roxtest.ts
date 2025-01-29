@@ -19,23 +19,24 @@ describe("services", () => {
       return env;
     }
 
-    function performAntragsnrTest(bpmnXmlPath: string, bpmnTaskId: string, instances: IInstanceDetails[], tragetField: string): IServiceTaskEnvironment {
+    async function performAntragsnrTest(bpmnXmlPath: string, bpmnTaskId: string, instances: IInstanceDetails[], tragetField: string): Promise<IServiceTaskEnvironment> {
       const env = createEnvironment(bpmnXmlPath, bpmnTaskId);
+      env.instances.getAllInstancesForProcess = () => Promise.resolve(instances);
       const processDetails: IProcessDetails = {
         processId: "",
         workspaceId: "",
         displayName: "",
         description: "",
-        extras: { instances: instances },
+        extras: { instances: [] },
         type: "backend",
       };
 
-      serviceLogic(processDetails, env, tragetField);
+      await serviceLogic(processDetails, env, tragetField);
 
       return env;
     }
 
-    it("execute antragsnr service test_8fd1ba08-f8a1-4caa-b685-27b3ee946038", () => {
+    it("execute antragsnr service test_8fd1ba08-f8a1-4caa-b685-27b3ee946038", async () => {
       const targetFieldName = "target";
 
       const instances: IInstanceDetails[] = [
@@ -80,12 +81,12 @@ describe("services", () => {
         },
       ];
 
-      const env = performAntragsnrTest("./testfiles/antragsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName);
+      const env = await performAntragsnrTest("./testfiles/antragsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName);
 
       assert.equal((env.instanceDetails.extras.fieldContents![targetFieldName] as IFieldValue).value as string, "2018/01");
     });
 
-    it("execute antragsnr service test_8fd1ba08-f8a1-4caa-b685-27b3ee946038", () => {
+    it("execute antragsnr service test_8fd1ba08-f8a1-4caa-b685-27b3ee946038", async () => {
       const targetFieldName = "target";
 
       const instances: IInstanceDetails[] = [
@@ -130,12 +131,12 @@ describe("services", () => {
         },
       ];
 
-      const env = performAntragsnrTest("./testfiles/antragsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName);
+      const env = await performAntragsnrTest("./testfiles/antragsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName);
 
       assert.equal((env.instanceDetails.extras.fieldContents![targetFieldName] as IFieldValue).value as string, "2018/02");
     });
 
-    it("execute antragsnr service test_8fd1ba08-f8a1-4caa-b685-27b3ee946038", () => {
+    it("execute antragsnr service test_8fd1ba08-f8a1-4caa-b685-27b3ee946038", async () => {
       const targetFieldName = "target";
 
       const instances: IInstanceDetails[] = [
@@ -180,7 +181,7 @@ describe("services", () => {
         },
       ];
 
-      const env = performAntragsnrTest("./testfiles/antragsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName);
+      const env = await performAntragsnrTest("./testfiles/antragsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName);
 
       assert.equal((env.instanceDetails.extras.fieldContents![targetFieldName] as IFieldValue).value as string, "2018/03");
     });
