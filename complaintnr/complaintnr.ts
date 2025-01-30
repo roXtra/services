@@ -1,5 +1,5 @@
 import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue.js";
-import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
+import { IInstanceDetails, InstanceExtras } from "processhub-sdk/lib/instance/instanceinterfaces.js";
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
 import { IProcessDetails, ProcessExtras } from "processhub-sdk/lib/process/processinterfaces.js";
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
@@ -26,8 +26,8 @@ function getNumberOfInstancesOfSpecificMonth(instances: IInstanceDetails[], year
   return instancesOfTheMonth.length;
 }
 
-export function serviceLogic(processDetails: IProcessDetails, environment: IServiceTaskEnvironment, targetField: string): void {
-  const instances = processDetails.extras.instances;
+export async function serviceLogic(processDetails: IProcessDetails, environment: IServiceTaskEnvironment, targetField: string) {
+  const instances = await environment.instances.getAllInstancesForProcess(processDetails.processId, InstanceExtras.None);
 
   if (instances === undefined) {
     throw new Error("instances are undefined, cannot proceed with service!");
@@ -82,7 +82,7 @@ export async function complaintnrAction(environment: IServiceTaskEnvironment): P
   }
 
   const processDetails = await environment.processes.getProcessDetails(environment.instanceDetails.processId, ProcessExtras.ExtrasInstances);
-  serviceLogic(processDetails, environment, targetField);
+  await serviceLogic(processDetails, environment, targetField);
   await environment.instances.updateInstance(environment.instanceDetails);
   return true;
 }

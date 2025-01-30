@@ -1,5 +1,5 @@
 import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue.js";
-import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
+import { IInstanceDetails, InstanceExtras } from "processhub-sdk/lib/instance/instanceinterfaces.js";
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
 import { IProcessDetails, ProcessExtras } from "processhub-sdk/lib/process/processinterfaces.js";
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
@@ -25,10 +25,10 @@ function getNumberOfInstancesOfSpecificYear(instances: IInstanceDetails[], year:
   return instancesOfTheYear.length;
 }
 
-export function serviceLogic(processDetails: IProcessDetails, environment: IServiceTaskEnvironment, targetField: string): void {
-  const instances = processDetails.extras.instances;
+export async function serviceLogic(processDetails: IProcessDetails, environment: IServiceTaskEnvironment, targetField: string): Promise<void> {
+  const allInstances = await environment.instances.getAllInstancesForProcess(processDetails.processId, InstanceExtras.None);
 
-  if (instances === undefined) {
+  if (allInstances === undefined) {
     throw new Error("instances are undefined, cannot proceed with service!");
   }
   if (environment.instanceDetails.createdAt === undefined) {
@@ -39,7 +39,7 @@ export function serviceLogic(processDetails: IProcessDetails, environment: IServ
   }
 
   const instanceYear = environment.instanceDetails.createdAt.getFullYear();
-  const numberOfInstances = getNumberOfInstancesOfSpecificYear(instances, instanceYear);
+  const numberOfInstances = getNumberOfInstancesOfSpecificYear(allInstances, instanceYear);
   const nr: string = numberOfInstances < 10 ? instanceYear.toString() + "/0" + numberOfInstances.toString() : instanceYear.toString() + "/" + numberOfInstances.toString();
 
   const newValue: IFieldValue = {
@@ -71,7 +71,7 @@ export async function antragsnrAction(environment: IServiceTaskEnvironment): Pro
   }
 
   const processDetails = await environment.processes.getProcessDetails(environment.instanceDetails.processId, ProcessExtras.ExtrasInstances);
-  serviceLogic(processDetails, environment, targetField);
+  await serviceLogic(processDetails, environment, targetField);
   await environment.instances.updateInstance(environment.instanceDetails);
   return true;
 }
