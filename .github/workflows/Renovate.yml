@@ -2,8 +2,8 @@ name: Dependency Update Check
 on:
   schedule:
     # The "*" character has special semantics in YAML, so this string has to be quoted
-    # Execute Wednesdays every 30 minutes
-    - cron: '0/30 5-19 * * 3'
+    # Execute Thursdays every 30 minutes
+    - cron: '0/30 5-19 * * 4'
   workflow_dispatch:
 jobs:
   renovate:
