@@ -43,7 +43,7 @@
     "eslint-plugin-no-only-tests": "^3.3.0",
     "eslint-plugin-prettier": "^5.2.3",
     "eslint-plugin-react": "^7.37.4",
-    "globals": "^15.14.0",
+    "globals": "^15.15.0",
     "mocha": "^11.1.0",
     "prettier": "^3.4.2",
     "ts-loader": "^9.5.2",
