@@ -32,6 +32,27 @@ export function triggerwebhookPostConfig(userLanguage: Language): React.JSX.Elem
               <textarea id="bodyData" />
             </td>
           </tr>
+
+          <tr>
+            <td>
+              <span>{tl("Response Body in Feld schreiben?", userLanguage)}</span>
+            </td>
+            <td>
+              <select id="writeResponseInTargetField" defaultValue="false">
+                <option value="true">Ja</option>
+                <option value="false">Nein</option>
+              </select>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <span>{tl("Response Body", userLanguage)}</span>
+            </td>
+            <td>
+              <select id="responseTargetField" />
+            </td>
+          </tr>
         </tbody>
       </table>
 
@@ -65,6 +86,14 @@ export function triggerwebhookPostConfig(userLanguage: Language): React.JSX.Elem
                     userLanguage,
                   )}
                 </p>
+              </div>
+              <h3>{tl("Response Body in Feld schreiben?", userLanguage)}</h3>
+              <div>
+                <p>{tl("Definiert, ob die Antwort der Anfrage in das definierte Feld 'Response Body' geschrieben wird.", userLanguage)}</p>
+              </div>
+              <h3>{tl("Response Body", userLanguage)}</h3>
+              <div>
+                <p>{tl("Das Textfeld, in das die Antwort der Anfrage bei erfolgreicher Ausführung geschrieben wird.", userLanguage)}</p>
               </div>
             </td>
           </tr>

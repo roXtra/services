@@ -4,6 +4,7 @@ import { parseAndInsertStringWithFieldContent, replaceObjectReferences } from "p
 import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror.js";
 import axios, { AxiosError } from "axios";
 import { IServiceConfigSchema, IServiceConfigSecret, readConfigFile } from "processhub-sdk/lib/servicetask/configfile.js";
+import { FieldType } from "processhub-sdk/lib/data/ifieldvalue.js";
 
 // Extract the serviceLogic that testing is possible
 export async function serviceLogic(environment: IServiceTaskEnvironment, configPath: string): Promise<boolean> {
@@ -29,6 +30,8 @@ export async function serviceLogic(environment: IServiceTaskEnvironment, configP
   const webhookAddress = fields.find((f) => f.key === "webhookAddress")?.value;
   const webhookHeaders = fields.find((f) => f.key === "headers")?.value.split(/\r\n|\r|\n/g);
   const webhookBody = fields.find((f) => f.key === "bodyData")?.value;
+  const writeResponseToTargetField = fields.find((f) => f.key === "writeResponseInTargetField")?.value;
+  const responseTargetFieldName = fields.find((f) => f.key === "responseTargetField")?.value;
 
   if (!webhookAddress) {
     throw new BpmnError(ErrorCode.ConfigInvalid, "Webhook address is empty - cannot perform webhook call!");
@@ -76,8 +79,39 @@ export async function serviceLogic(environment: IServiceTaskEnvironment, configP
     throw new BpmnError(ErrorCode.ConfigInvalid, "Webhook address is empty after replacing fields - cannot perform webhook call!");
   }
 
+  if (environment.instanceDetails.extras.fieldContents === undefined) {
+    throw new Error("fieldContents are undefined, cannot proceed with service!");
+  }
+
   try {
-    await axios.post(webhookAddressWithFieldValues, webhookBodyWithFieldValues, { headers: webhookHeadersWithFieldValues });
+    const requestResult = await axios.post(webhookAddressWithFieldValues, webhookBodyWithFieldValues, {
+      headers: webhookHeadersWithFieldValues,
+      // Set responseType to text so that it is a string
+      responseType: "text",
+    });
+
+    if (writeResponseToTargetField === "true" && responseTargetFieldName !== undefined) {
+      // A target field for a response is configured
+
+      // Ensure target field exists in the process
+      if (!environment.instanceDetails.extras.fieldContents?.[responseTargetFieldName]) {
+        const fields = processObject.getFieldDefinitions();
+        const field = fields.find((f) => f.name === responseTargetFieldName);
+        const targetFieldType: FieldType = field ? field.type : "ProcessHubTextInput";
+
+        environment.instanceDetails.extras.fieldContents[responseTargetFieldName] = {
+          value: undefined,
+          type: targetFieldType,
+        };
+      }
+
+      // Get string response - this is a string as responseType is set to "text"
+      const responseAsString = requestResult.data as string;
+      environment.instanceDetails.extras.fieldContents[responseTargetFieldName].value = responseAsString;
+      // Update the instance
+      await environment.instances.updateInstance(environment.instanceDetails);
+    }
+
     return true;
   } catch (error) {
     if (error instanceof AxiosError) {

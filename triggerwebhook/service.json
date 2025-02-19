@@ -23,7 +23,9 @@
         {
           "name": "bodyData",
           "type": "text"
-        }
+        },
+        { "name": "writeResponseInTargetField", "type": "select" },
+        { "name": "responseTargetField", "type": "select", "onload": "fields" }
       ]
     }
   ]
