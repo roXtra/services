@@ -12,6 +12,7 @@
       "serviceFile": "main.mjs",
       "serviceMethod": "triggerwebhookPost",
       "fields": [
+        { "name": "webhookMethod", "type": "select" },
         {
           "name": "webhookAddress",
           "type": "text"

@@ -8,6 +8,20 @@ export function triggerwebhookPostConfig(userLanguage: Language): React.JSX.Elem
         <tbody>
           <tr>
             <td>
+              <span>{tl("HTTP Method", userLanguage)}</span>
+            </td>
+            <td>
+              <select id="webhookMethod" defaultValue="POST">
+                <option value="GET">GET</option>
+                <option value="POST">POST</option>
+                <option value="PUT">PUT</option>
+                <option value="DELETE">DELETE</option>
+              </select>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
               <span>{tl("Webhook URL", userLanguage)}</span>
             </td>
             <td>
@@ -60,6 +74,10 @@ export function triggerwebhookPostConfig(userLanguage: Language): React.JSX.Elem
         <tbody>
           <tr>
             <td colSpan={2}>
+              <h3>{tl("Erklärung HTTP Method", userLanguage)}</h3>
+              <div>
+                <p>{tl("Die HTTP Methode, die zum Aufruf des Webhooks verwendet wird.", userLanguage)}</p>
+              </div>
               <h3>{tl("Erklärung Webhook Adresse", userLanguage)}</h3>
               <div>
                 <p>
@@ -86,6 +104,7 @@ export function triggerwebhookPostConfig(userLanguage: Language): React.JSX.Elem
                     userLanguage,
                   )}
                 </p>
+                <p>{tl("Der Body wird nur für Anfragen mit der HTTP Methode POST oder PUT mitgesendet.", userLanguage)}</p>
               </div>
               <h3>{tl("Response Body in Feld schreiben?", userLanguage)}</h3>
               <div>
