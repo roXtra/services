@@ -2,7 +2,7 @@ import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
 import { parseAndInsertStringWithFieldContent, replaceObjectReferences } from "processhub-sdk/lib/data/datatools.js";
 import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror.js";
-import axios, { AxiosError } from "axios";
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { IServiceConfigSchema, IServiceConfigSecret, readConfigFile } from "processhub-sdk/lib/servicetask/configfile.js";
 import { FieldType } from "processhub-sdk/lib/data/ifieldvalue.js";
 
@@ -27,6 +27,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment, configP
   }
 
   // Get webhook fields
+  const webhookMethod = fields.find((f) => f.key === "webhookMethod")?.value;
   const webhookAddress = fields.find((f) => f.key === "webhookAddress")?.value;
   const webhookHeaders = fields.find((f) => f.key === "headers")?.value.split(/\r\n|\r|\n/g);
   const webhookBody = fields.find((f) => f.key === "bodyData")?.value;
@@ -84,11 +85,32 @@ export async function serviceLogic(environment: IServiceTaskEnvironment, configP
   }
 
   try {
-    const requestResult = await axios.post(webhookAddressWithFieldValues, webhookBodyWithFieldValues, {
+    const requestConfig: AxiosRequestConfig<string> = {
       headers: webhookHeadersWithFieldValues,
       // Set responseType to text so that it is a string
       responseType: "text",
-    });
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let requestResult: AxiosResponse<any, any>;
+
+    switch (webhookMethod) {
+      case "GET":
+        requestResult = await axios.get(webhookAddressWithFieldValues, requestConfig);
+        break;
+      case "PUT":
+        requestResult = await axios.put(webhookAddressWithFieldValues, webhookBodyWithFieldValues, requestConfig);
+        break;
+      case "DELETE":
+        requestResult = await axios.delete(webhookAddressWithFieldValues, requestConfig);
+        break;
+      case "POST":
+      // Default is the fallback for older service tasks configured before this option existed - back then it was always a POST
+      // eslint-disable-next-line no-fallthrough
+      default:
+        requestResult = await axios.post(webhookAddressWithFieldValues, webhookBodyWithFieldValues, requestConfig);
+        break;
+    }
 
     if (writeResponseToTargetField === "true" && responseTargetFieldName !== undefined) {
       // A target field for a response is configured
