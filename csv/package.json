@@ -24,6 +24,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "chai": "^5.2.0",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.112.0/release.tgz",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -35,7 +36,6 @@
     "@types/node": "^22.13.10",
     "@types/react": "^18.3.19",
     "bestzip": "^2.2.1",
-    "chai": "^4.5.0",
     "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.57.1",
