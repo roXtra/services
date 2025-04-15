@@ -111,7 +111,6 @@ export async function executeQuery(environment: IServiceTaskEnvironment, configP
         };
       }
       // The property environment.instanceDetails.extras.fieldContents[targetField] is definitely assigned here as it is checked or initialized in the lines above
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       environment.instanceDetails.extras.fieldContents[targetField].value = res[0]["result"];
       await environment.instances.updateInstance(environment.instanceDetails);
     }

@@ -37,9 +37,8 @@
     "bestzip": "^2.2.1",
     "copyfiles": "^2.4.1",
     "directory-tree": "^3.5.2",
-    "eslint": "^8.57.1",
+    "eslint": "^9.24.0",
     "eslint-config-prettier": "^10.1.2",
-    "eslint-plugin-deprecation": "^3.0.0",
     "eslint-plugin-no-only-tests": "^3.3.0",
     "eslint-plugin-prettier": "^5.2.6",
     "eslint-plugin-react": "^7.37.5",
@@ -48,6 +47,6 @@
     "prettier": "^3.5.3",
     "ts-loader": "^9.5.2",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.29.1"
+    "typescript-eslint": "^8.30.1"
   }
 }
