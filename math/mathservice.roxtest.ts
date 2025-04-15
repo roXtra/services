@@ -37,9 +37,9 @@ describe("services", () => {
     function createEnvironment(bpmnXmlPath: string, bpmnTaskId: string, number1: number, number2: number): IServiceTaskEnvironment {
       const env = createEmptyTestServiceEnvironment(fs.readFileSync(bpmnXmlPath, "utf8"));
       env.bpmnTaskId = bpmnTaskId;
-      // eslint-disable-next-line @typescript-eslint/naming-convention, deprecation/deprecation
+      // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-deprecated
       env.fieldContents = { Feld_1: { type: "ProcessHubNumber", value: number1 }, Feld_2: { type: "ProcessHubNumber", value: number2 } };
-      // eslint-disable-next-line deprecation/deprecation
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
       env.instanceDetails.extras.fieldContents = env.fieldContents;
 
       return env;
