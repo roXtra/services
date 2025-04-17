@@ -25,6 +25,11 @@
           "name": "selectReportField",
           "type": "select",
           "onload": "fields ProcessHubFileUpload"
+        },
+        {
+          "name": "selectFilenameField",
+          "type": "select",
+          "onload": "fields ProcessHubTextInput"
         }
       ]
     }
