@@ -32,6 +32,15 @@ export function createReportConfig(userLanguage: Language): React.JSX.Element {
               <select id="selectReportField" />
             </td>
           </tr>
+
+          <tr>
+            <td>
+              <span>{tl("Feld für Dateinamen (optional)", userLanguage)}</span>
+            </td>
+            <td>
+              <select id="selectFilenameField" />
+            </td>
+          </tr>
         </tbody>
       </table>
 
@@ -56,6 +65,15 @@ export function createReportConfig(userLanguage: Language): React.JSX.Element {
               <h3>{tl("Feld für Berichtsanhang", userLanguage)}</h3>
               <div>
                 <p>{tl("Wählen Sie das Feld aus in dem die Berichtsdatei angehängt werden soll.", userLanguage)}</p>
+              </div>
+              <h3>{tl("Feld für Dateinamen", userLanguage)}</h3>
+              <div>
+                <p>
+                  {tl(
+                    "Wählen Sie ein Textfeld aus, aus dem der Dateiname für den Bericht gelesen wird. Wird kein Feld angegeben, wird der Name der Berichtsvorlage verwendet.",
+                    userLanguage,
+                  )}
+                </p>
               </div>
             </td>
           </tr>

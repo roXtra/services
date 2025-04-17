@@ -1,5 +1,5 @@
 import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
-import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror.js";
+import { BpmnError, ErrorCode as BpmnErrorCode } from "processhub-sdk/lib/instance/bpmnerror.js";
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
 import { IGenerateReportRequestType } from "processhub-sdk/lib/instance/legacyapi.js";
@@ -8,11 +8,30 @@ enum ErrorCodes {
   ATTACHMENT_ERROR = "ATTACHMENT_ERROR",
 }
 
-async function getReport(environment: IServiceTaskEnvironment, reportDraftID: string, reportType: IGenerateReportRequestType): Promise<string> {
+export async function uploadReport(
+  environment: IServiceTaskEnvironment,
+  reportDraftID: string,
+  reportType: IGenerateReportRequestType,
+  fileNameFieldName: string | undefined,
+): Promise<string> {
   const instance = environment.instanceDetails;
 
   const reply = await environment.instances.generateInstanceReport(instance.processId, [instance.instanceId], reportDraftID, reportType);
-  const url = await environment.instances.uploadAttachment(instance.instanceId, reply.fileName, Buffer.from(reply.doc, "base64"));
+
+  let fileName: string | undefined;
+  if (fileNameFieldName) {
+    const filenameField = instance.extras.fieldContents?.[fileNameFieldName];
+    if (filenameField?.type !== "ProcessHubTextInput") {
+      throw new BpmnError(BpmnErrorCode.ConfigInvalid, `The field ${fileNameFieldName} does not exist or is not a text input field.`);
+    }
+    // Fallback to the default filename if the field is empty, do not throw an error
+    if (typeof filenameField?.value === "string") {
+      fileName = filenameField.value;
+    }
+  }
+
+  environment.logger.info(`Uploading report with filename ${fileName || reply.fileName} and type ${reportType} for instance ${instance.instanceId}`);
+  const url = await environment.instances.uploadAttachment(instance.instanceId, fileName || reply.fileName, Buffer.from(reply.doc, "base64"));
 
   return url;
 }
@@ -26,7 +45,6 @@ export function initReportUploadField(url: string, instance: IInstanceDetails, r
       instance.extras.fieldContents[reportFieldName] = { type: "ProcessHubFileUpload", value: undefined };
     }
     // The property environment.instanceDetails.extras.fieldContents[targetField] is definitely assigned here as it is checked or initialized in the lines above
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     instance.extras.fieldContents[reportFieldName].value = [url];
   } else {
     throw new BpmnError(ErrorCodes.ATTACHMENT_ERROR, "Der Bericht konnte dem Vorgang nicht angehängt werden.");
@@ -51,6 +69,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
   const reportDraftID = fields.find((f) => f.key === "selectReportDraft")?.value;
   const reportType = fields.find((f) => f.key === "selectReportType")?.value;
   const reportFieldName = fields.find((f) => f.key === "selectReportField")?.value;
+  const filenameFieldName = fields.find((f) => f.key === "selectFilenameField")?.value;
 
   if (reportFieldName === undefined) {
     throw new Error("reportFieldName is undefined, cannot proceed!");
@@ -61,7 +80,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
   }
 
   if (reportType === "docx" || reportType === "pdf") {
-    const response = await getReport(environment, reportDraftID, reportType);
+    const response = await uploadReport(environment, reportDraftID, reportType, filenameFieldName);
     initReportUploadField(response, instance, reportFieldName);
   } else {
     throw new Error(`Invalid report type ${String(reportType)}`);
