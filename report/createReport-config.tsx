@@ -70,7 +70,7 @@ export function createReportConfig(userLanguage: Language): React.JSX.Element {
               <div>
                 <p>
                   {tl(
-                    "Wählen Sie ein Textfeld aus, aus dem der Dateiname des Berichts übernommen werden soll. Wenn kein Feld ausgewählt ist, wird der Name der Berichtsvorlage verwendet.",
+                    "Wählen Sie ein Textfeld aus, aus dem der Dateiname des Berichts übernommen werden soll. Der Dateiname muss inklusive der Endung angegeben werden. Wenn kein Feld ausgewählt ist, wird der Name der Berichtsvorlage verwendet.",
                     userLanguage,
                   )}
                 </p>
