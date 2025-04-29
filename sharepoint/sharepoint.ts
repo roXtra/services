@@ -50,6 +50,7 @@ export interface ISharePointConfig {
 }
 
 async function readFileFromUrl(config: ISharePointConfig) {
+  const parsedUrl = new URL(config.sharepointUrl);
   const sp = spfi(config.sharepointUrl).using(
     SPDefault({
       msal: {
@@ -63,7 +64,7 @@ async function readFileFromUrl(config: ISharePointConfig) {
             },
           },
         },
-        scopes: [`${config.sharepointUrl}.default`],
+        scopes: [`${parsedUrl.origin}/.default`],
       },
     }),
   );
