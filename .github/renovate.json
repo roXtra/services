@@ -10,6 +10,6 @@
   },
   "rangeStrategy": "bump",
   "prCreation": "not-pending",
-  "assignees": ["@BCaspari", "@MHofmann-rossmanith", "@VFritsch"],
+  "assignees": ["@BCaspari", "@MHofmann-rossmanith", "@VFritsch", "@LGrueneberg-R"],
   "assigneesSampleSize": 1
 }
