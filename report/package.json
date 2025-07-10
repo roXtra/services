@@ -32,7 +32,7 @@
   "devDependencies": {
     "@types/chai": "^5.2.2",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^22.16.2",
+    "@types/node": "^22.16.3",
     "@types/react": "^18.3.23",
     "@types/sinon": "^17.0.4",
     "bestzip": "^2.2.1",
