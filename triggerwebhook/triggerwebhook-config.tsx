@@ -16,6 +16,7 @@ export function triggerwebhookPostConfig(userLanguage: Language): React.JSX.Elem
                 <option value="POST">POST</option>
                 <option value="PUT">PUT</option>
                 <option value="DELETE">DELETE</option>
+                <option value="PATCH">PATCH</option>
               </select>
             </td>
           </tr>
