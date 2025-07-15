@@ -104,6 +104,9 @@ export async function serviceLogic(environment: IServiceTaskEnvironment, configP
       case "DELETE":
         requestResult = await axios.delete(webhookAddressWithFieldValues, requestConfig);
         break;
+      case "PATCH":
+        requestResult = await axios.patch(webhookAddressWithFieldValues, webhookBodyWithFieldValues, requestConfig);
+        break;
       case "POST":
       // Default is the fallback for older service tasks configured before this option existed - back then it was always a POST
       // eslint-disable-next-line no-fallthrough
