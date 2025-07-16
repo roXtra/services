@@ -1,0 +1,46 @@
+{
+  "id": "skribble-service",
+  "name": "Skribble Service",
+  "minRoXtraVersion": "8.009.0",
+  "maxRoXtraVersion": "100.0.0",
+  "actions": [
+    {
+      "id": "signFile",
+      "label": "Signaturanfrage erstellen",
+      "configMethod": "signFileConfig",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
+      "serviceMethod": "signFile",
+      "fields": [
+        { "name": "message", "type": "text" },
+        {
+          "name": "sourceField",
+          "type": "select",
+          "onload": "fields ProcessHubFileUpload"
+        },
+        { "name": "signatureUrlField", "type": "select", "onload": "fields ProcessHubTextInput" },
+        { "name": "signatureQuality", "type": "select" },
+        { "name": "triggerWebhook", "type": "select" },
+        { "name": "signatureIdField", "type": "select", "onload": "fields ProcessHubTextInput" },
+        { "name": "skribbleNotify", "type": "select" }
+      ]
+    },
+    {
+      "id": "downloadFile",
+      "label": "Dokument herunterladen",
+      "configMethod": "downloadFileConfig",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
+      "serviceMethod": "downloadFile",
+      "fields": [
+        {
+          "name": "targetField",
+          "type": "select",
+          "onload": "fields ProcessHubFileUpload"
+        },
+        { "name": "signatureIdField", "type": "select", "onload": "fields ProcessHubTextInput" },
+        { "name": "deleteDocumentFromSkribble", "type": "select" }
+      ]
+    }
+  ]
+}

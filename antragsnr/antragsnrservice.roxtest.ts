@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as fs from "fs";
 import { assert } from "chai";
 import { serviceLogic } from "./main.js";
