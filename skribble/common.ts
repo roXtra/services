@@ -14,7 +14,7 @@ export async function loadConfig(environment: IServiceTaskEnvironment, language:
   const config = extensionValues.serviceTaskConfigObject;
 
   if (config === undefined) {
-    throw new BpmnError(ErrorCode.ConfigInvalid, tl("Der Service ist nicht korrekt konfiguiriert, die Konfiguration konnte nicht geladen werden.", language));
+    throw new BpmnError(ErrorCode.ConfigInvalid, tl("Der Service ist nicht korrekt konfiguriert, die Konfiguration konnte nicht geladen werden.", language));
   }
   return { config, bpmnProcess };
 }
