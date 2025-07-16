@@ -8,6 +8,7 @@ import { IServiceTaskConfigObject } from "processhub-sdk/lib/process/processinte
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
 import { Bpmn } from "modeler/bpmn/bpmn";
 import { getWebhookTriggerRoute } from "processhub-sdk/lib/webhhooks/webhhooks.js";
+import omit from "lodash/omit.js";
 
 function getPhysicalPath(attachmentUrl: string, environment: IServiceTaskEnvironment) {
   let relativePath = attachmentUrl.split("modules/files/")[1];
@@ -62,7 +63,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment, skribbl
   environment.logger.info(`Skribble login was successful.`);
 
   const signatureRequest: ISignatureRequest = await buildSignatureRequest(config, environment, bpmnProcess);
-  environment.logger.info(`Sending skribble signature request: ${JSON.stringify(signatureRequest)}`);
+  environment.logger.info(`Sending skribble signature request: ${JSON.stringify(omit(signatureRequest, "content"))}`);
   const signatureResponse = await skribbleApi.createSignatureRequest(token, signatureRequest);
   environment.logger.info(`Skribble signature request response: ${JSON.stringify(signatureResponse)}`);
 
@@ -136,8 +137,7 @@ async function buildSignatureRequest(config: IServiceTaskConfigObject, environme
     if (webhookCatchEvent) {
       webhookTriggerRoute =
         environment.serverConfig.Webserver.baseUrl +
-        "/modules" +
-        getWebhookTriggerRoute(environment.instanceDetails.processId, webhookCatchEvent.id, environment.instanceDetails.instanceId);
+        getWebhookTriggerRoute(environment.instanceDetails.processId, webhookCatchEvent.id, environment.instanceDetails.instanceId.toLowerCase());
     } else {
       throw new BpmnError(ErrorCode.ConfigInvalid, "No webhook catch event found in the process to trigger.");
     }

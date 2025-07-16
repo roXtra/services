@@ -117,7 +117,7 @@ describe("services", () => {
         content: "VEVTVA==",
         quality: "AES",
         legislation: "EIDAS",
-        callback_success_url: "http://localhost:5051/modules/webhook/v1/trigger//BoundaryEvent_6801F3B0685A7268",
+        callback_success_url: "http://localhost:5051/webhook/v1/trigger//BoundaryEvent_6801F3B0685A7268",
         signatures: [
           {
             account_email: "test@example.com",
