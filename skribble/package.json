@@ -24,6 +24,7 @@
     "npm": "10"
   },
   "dependencies": {
+    "lodash": "^4.17.21",
     "@pnp/nodejs": "^4.15.0",
     "@pnp/queryable": "^4.15.0",
     "chai": "^5.2.1",
@@ -32,6 +33,7 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@types/lodash": "^4.17.20",
     "@types/node": "^22.16.4",
     "@types/react": "^19.1.8",
     "@types/sinon": "^17.0.4",
