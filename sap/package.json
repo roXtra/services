@@ -23,19 +23,19 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@sap/hana-client": "2.25.22",
+    "@sap/hana-client": "2.25.29",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.120.0/release.tgz",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
-    "@types/node": "^22.16.3",
+    "@types/node": "^22.16.4",
     "@types/react": "^18.3.23",
     "bestzip": "^2.2.1",
     "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
-    "eslint": "^9.30.1",
+    "eslint": "^9.31.0",
     "mocha": "^11.7.1",
     "ts-loader": "^9.5.2",
     "typescript": "^5.8.3"
