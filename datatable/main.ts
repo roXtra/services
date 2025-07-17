@@ -6,3 +6,6 @@ export * from "./readXlsxFromAttachmentConfig.js";
 
 export { readXlsxFromSharepoint } from "./readXlsxFromSharepoint.js";
 export * from "./readXlsxFromSharepointConfig.js";
+
+export { readCsvOrXlsx, readCsvOrXlsxFile } from "./readCsvOrXlsxFromRoxtraFile.js";
+export * from "./readCsvOrXlsxFromRoxtraFileConfig.js";
