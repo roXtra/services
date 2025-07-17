@@ -105,6 +105,47 @@
           "onload": "fields ProcessHubDataTable"
         }
       ]
+    },
+    {
+      "id": "readCsvOrXlsx",
+      "label": "Daten von roXtra-Dokument über ID aus CSV/XLSX-Datei lesen und in Feld vom Typ 'Tabellarische Daten' schreiben",
+      "configMethod": "readCsvOrXlsxConfig",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
+      "serviceMethod": "readCsvOrXlsx",
+      "fields": [
+        {
+          "name": "roxtraFileID",
+          "type": "text"
+        },
+        {
+          "name": "sheetName",
+          "type": "text"
+        },
+        {
+          "name": "rowFilter",
+          "type": "text"
+        },
+        {
+          "name": "dataTableField",
+          "type": "select",
+          "onload": "fields ProcessHubDataTable"
+        },
+        {
+          "name": "roxtraFileFetchMode",
+          "type": "select",
+          "options": [
+            {
+              "label": "Userbezogen",
+              "value": "user"
+            },
+            {
+              "label": "Systembezogen",
+              "value": "system"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
