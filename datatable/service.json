@@ -107,12 +107,12 @@
       ]
     },
     {
-      "id": "readCsvOrXlsx",
+      "id": "readCsvOrXlsxFromRoxtraFile",
       "label": "Daten von roXtra-Dokument über ID aus CSV/XLSX-Datei lesen und in Feld vom Typ 'Tabellarische Daten' schreiben",
-      "configMethod": "readCsvOrXlsxConfig",
+      "configMethod": "readCsvOrXlsxFromRoxtraFileConfig",
       "settings": "main.mjs",
       "serviceFile": "main.mjs",
-      "serviceMethod": "readCsvOrXlsx",
+      "serviceMethod": "readCsvOrXlsxFromRoxtraFile",
       "fields": [
         {
           "name": "roxtraFileID",
