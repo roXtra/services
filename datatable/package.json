@@ -16,7 +16,8 @@
     "zip": "bestzip \"$Env:npm_package_config_servicename.zip\" \"$Env:npm_package_config_servicename\"",
     "copyandzip": "npm run copyfiles && npm run zip && Remove-Item -Recurse $Env:npm_package_config_servicename",
     "webpack": "webpack --env servicename=$Env:npm_package_config_servicename --config ../webpack.config.mjs",
-    "copymain": "cp dist/main.mjs disttests/main.js"
+    "copymain": "cp dist/main.mjs disttests/main.js",
+    "deploy:local": "copyfiles dist/* service.json ../../ProcessHub/app/node_modules/@eformservice/$Env:npm_package_config_servicename"
   },
   "engines": {
     "node": "22",
