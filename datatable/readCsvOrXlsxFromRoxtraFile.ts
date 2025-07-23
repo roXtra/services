@@ -47,7 +47,7 @@ export async function readCsvOrXlsxFile(environment: IServiceTaskEnvironment, re
   const fieldConfig = checkResultField(bpmnProcess, dataTableField, language);
   const APIUrl = environment.roxApi.getEfApiEndpoint();
   const efAccessToken = await environment.roxApi.getEfApiToken();
-  const file = await readXlsxApi.getDocumentCall(APIUrl, efAccessToken, token, fileID);
+  const file = await readXlsxApi.getDocumentCall(APIUrl, fileID, efAccessToken, token);
 
   const fieldValue = readFileData(environment, language, rowFilter, fieldConfig, sheetName, file);
 
