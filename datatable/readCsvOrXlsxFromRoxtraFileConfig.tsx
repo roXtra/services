@@ -50,26 +50,6 @@ const SheetFilterTargetHelp = ({ userLanguage }: { userLanguage: string }) => (
   </>
 );
 
-const FileFetchModeHelp = ({ userLanguage }: { userLanguage: string }) => (
-  <>
-    <h3>{tl("Dokument Auswahlmodus", userLanguage)}</h3>
-    <div>
-      <p>
-        {tl(
-          "Im userbezogenen Modus wird das Dokument im Kontext des ausführenden Benutzers aus dem Modul “Dokumente” abgerufen. Sollte der Benutzer keine Zugriffsrechte auf das Dokument haben, wird ein Fehler ausgelöst.",
-          userLanguage,
-        )}
-      </p>
-      <p>
-        {tl(
-          "Im systembezogenen Modus wird das Dokument unabhängig von den Benutzerrechten abgerufen, sodass der ServiceTask das Dokument als „System“ ermittelt.",
-          userLanguage,
-        )}
-      </p>
-    </div>
-  </>
-);
-
 export function readCsvOrXlsxFromRoxtraFileConfig(userLanguage: Language): React.JSX.Element {
   return (
     <div id="service-form" className="ui form center">
@@ -110,18 +90,6 @@ export function readCsvOrXlsxFromRoxtraFileConfig(userLanguage: Language): React
               <select id="dataTableField" />
             </td>
           </tr>
-
-          <tr>
-            <td>
-              <span>{tl("Dokument Auswahlmodus", userLanguage)}</span>
-            </td>
-            <td>
-              <select id="roxtraFileFetchMode" defaultValue="user">
-                <option value="user">{tl("Userbezogen (Standard)", userLanguage)}</option>
-                <option value="system">{tl("Systembezogen", userLanguage)}</option>
-              </select>
-            </td>
-          </tr>
         </tbody>
       </table>
 
@@ -134,7 +102,6 @@ export function readCsvOrXlsxFromRoxtraFileConfig(userLanguage: Language): React
                 <p>{tl("Die ID zu einem roXtra-Dokument dass eine .xlsx oder .csv-Datei enthält.", userLanguage)}</p>
               </div>
               <SheetFilterTargetHelp userLanguage={userLanguage} />
-              <FileFetchModeHelp userLanguage={userLanguage} />
               <ErrorHelp userLanguage={userLanguage} />
             </td>
           </tr>

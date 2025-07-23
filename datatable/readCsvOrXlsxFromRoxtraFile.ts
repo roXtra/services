@@ -19,7 +19,6 @@ export async function readCsvOrXlsx(environment: IServiceTaskEnvironment): Promi
 
 export async function readCsvOrXlsxFile(environment: IServiceTaskEnvironment, readXlsxApi: ReadXlsxApi): Promise<IDataTableFieldValue> {
   const language = environment.sender.language || "en-US";
-  let token: string;
 
   const { config, bpmnProcess } = await loadConfig(environment, language);
 
@@ -29,7 +28,6 @@ export async function readCsvOrXlsxFile(environment: IServiceTaskEnvironment, re
   const sheetName = fields.find((f) => f.key === "sheetName")?.value || "";
   const dataTableField = fields.find((f) => f.key === "dataTableField")?.value || "";
   const rowFilter = fields.find((f) => f.key === "rowFilter")?.value || "";
-  const fileFetchMode = fields.find((f) => f.key === "roxtraFileFetchMode")?.value || "user";
 
   if (!fileID) {
     throw new BpmnError(ErrorCode.ConfigInvalid, tl("Die ID des roXtra-Dokuments wurde nicht gesetzt.", language));
@@ -38,11 +36,7 @@ export async function readCsvOrXlsxFile(environment: IServiceTaskEnvironment, re
     throw new BpmnError(ErrorCode.ConfigInvalid, tl("Das Ergebnisfeld ist leer.", language));
   }
 
-  if (fileFetchMode === "user") {
-    token = environment.roxApi.getApiToken();
-  } else {
-    token = await environment.roxApi.getAccessTokenFromAuth("-1");
-  }
+  const token = environment.roxApi.getApiToken();
 
   const fieldConfig = checkResultField(bpmnProcess, dataTableField, language);
   const APIUrl = environment.roxApi.getEfApiEndpoint();
