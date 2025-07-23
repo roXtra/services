@@ -10,7 +10,8 @@ import { ReadXlsxApi } from "./readXlsxApi.js";
  * @param environment service env
  * @returns true in case of success
  */
-export async function readCsvOrXlsx(environment: IServiceTaskEnvironment, readXlsxApi: ReadXlsxApi): Promise<boolean> {
+export async function readCsvOrXlsx(environment: IServiceTaskEnvironment): Promise<boolean> {
+  const readXlsxApi = new ReadXlsxApi();
   await readCsvOrXlsxFile(environment, readXlsxApi);
   await environment.instances.updateInstance(environment.instanceDetails);
   return true;

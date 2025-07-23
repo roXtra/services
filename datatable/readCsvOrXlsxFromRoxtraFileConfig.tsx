@@ -107,7 +107,7 @@ export function readCsvOrXlsxFromRoxtraFileConfig(userLanguage: Language): React
               <span>{tl("Ergebnisfeld", userLanguage)}</span>
             </td>
             <td>
-              <input id="dataTableField" />
+              <select id="dataTableField" />
             </td>
           </tr>
 
