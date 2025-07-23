@@ -36,7 +36,7 @@ export async function readCsvOrXlsxFile(environment: IServiceTaskEnvironment, re
     throw new BpmnError(ErrorCode.ConfigInvalid, tl("Das Ergebnisfeld ist leer.", language));
   }
 
-  const token = await environment.roxApi.getApiToken();
+  const token = environment.roxApi.getApiToken();
 
   const fieldConfig = checkResultField(bpmnProcess, dataTableField, language);
   const APIUrl = environment.roxApi.getEfApiEndpoint();
