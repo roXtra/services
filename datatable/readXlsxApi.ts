@@ -14,6 +14,7 @@ async function get<T>(apiUrl: string, eftoken: string, token: string): Promise<A
   const req: AxiosRequestConfig = {
     method: "GET",
     headers: headers,
+    responseType: "arraybuffer",
   };
   return await axios<T>(apiUrl, req);
 }

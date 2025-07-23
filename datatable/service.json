@@ -112,7 +112,7 @@
       "configMethod": "readCsvOrXlsxFromRoxtraFileConfig",
       "settings": "main.mjs",
       "serviceFile": "main.mjs",
-      "serviceMethod": "readCsvOrXlsxFromRoxtraFile",
+      "serviceMethod": "readCsvOrXlsx",
       "fields": [
         {
           "name": "roxtraFileID",
