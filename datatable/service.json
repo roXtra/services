@@ -130,20 +130,6 @@
           "name": "dataTableField",
           "type": "select",
           "onload": "fields ProcessHubDataTable"
-        },
-        {
-          "name": "roxtraFileFetchMode",
-          "type": "select",
-          "options": [
-            {
-              "label": "Userbezogen",
-              "value": "user"
-            },
-            {
-              "label": "Systembezogen",
-              "value": "system"
-            }
-          ]
         }
       ]
     }
