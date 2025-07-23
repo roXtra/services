@@ -28,7 +28,7 @@
     "axios": "^1.10.0",
     "chai": "^5.2.1",
     "json-query": "^2.2.2",
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.120.0/release.tgz",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.121.0/release.tgz",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
