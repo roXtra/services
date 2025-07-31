@@ -39,7 +39,7 @@
     "@types/sinon": "^17.0.4",
     "bestzip": "^2.2.1",
     "copyfiles": "^2.4.1",
-    "cross-env": "^7.0.3",
+    "cross-env": "^10.0.0",
     "eslint": "^9.31.0",
     "sinon": "^21.0.0",
     "ts-loader": "^9.5.2",
