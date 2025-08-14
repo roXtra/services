@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Start MySQL Docker Container
         run: docker run -p 3306:3306 --name ${{ env.MYSQL_CONTAINER_NAME }} -e MYSQL_ROOT_PASSWORD=12345 -e MYSQL_DATABASE=test -d mysql:${{ env.MYSQL_CONTAINER_VERSION }} --mysql-native-password=ON
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Use Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v4
         with:
