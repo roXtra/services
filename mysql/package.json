@@ -39,7 +39,7 @@
     "bestzip": "^2.2.1",
     "copyfiles": "^2.4.1",
     "cross-env": "^10.0.0",
-    "eslint": "^9.32.0",
+    "eslint": "^9.33.0",
     "mocha": "^11.7.1",
     "ts-loader": "^9.5.2",
     "typescript": "^5.9.2",
