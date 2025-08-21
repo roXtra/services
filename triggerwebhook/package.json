@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "axios": "^1.11.0",
-    "chai": "^5.2.1",
+    "chai": "^5.3.1",
     "joi": "^18.0.1",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.123.0/release.tgz",
     "react": "^18.3.1",
@@ -33,7 +33,7 @@
   "devDependencies": {
     "@types/chai": "^5.2.2",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^22.17.1",
+    "@types/node": "^22.17.2",
     "@types/react": "^18.3.23",
     "bestzip": "^2.2.1",
     "copyfiles": "^2.4.1",
@@ -43,7 +43,7 @@
     "nock": "^14.0.10",
     "ts-loader": "^9.5.2",
     "typescript": "^5.9.2",
-    "webpack": "^5.101.2",
+    "webpack": "^5.101.3",
     "webpack-cli": "^6.0.1"
   }
 }
