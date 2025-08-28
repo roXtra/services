@@ -37,7 +37,7 @@
     "cross-env": "^10.0.0",
     "eslint": "^9.34.0",
     "mocha": "^11.7.1",
-    "ts-loader": "^9.5.2",
+    "ts-loader": "^9.5.4",
     "typescript": "^5.9.2"
   }
 }
