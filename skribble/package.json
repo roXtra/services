@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.17.20",
-    "@types/node": "^22.18.9",
+    "@types/node": "^22.18.10",
     "@types/react": "^19.1.8",
     "@types/sinon": "^17.0.4",
     "bestzip": "^2.2.1",
