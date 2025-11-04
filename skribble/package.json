@@ -20,7 +20,7 @@
     "deploy:local": "copyfiles dist/* service.json ../../ProcessHub/app/node_modules/@eformservice/$Env:npm_package_config_servicename"
   },
   "engines": {
-    "node": "22",
+    "node": "24",
     "npm": "10"
   },
   "dependencies": {
