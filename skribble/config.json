@@ -1,5 +1,6 @@
 {
   "userName": "",
   "apiKey": "",
-  "baseUrl": "https://api.skribble.de/v2"
+  "baseUrl": "https://api.skribble.de/v2",
+  "callbackUrlBase": ""
 }
