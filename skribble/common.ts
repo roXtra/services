@@ -20,7 +20,7 @@ export async function loadConfig(environment: IServiceTaskEnvironment, language:
 }
 
 export async function readConfigFile(configPath: string) {
-  let configFile: { userName: string; apiKey: string; baseUrl: string } = { userName: "", apiKey: "", baseUrl: "" };
+  let configFile: { userName: string; apiKey: string; baseUrl: string; callbackUrlBase: string } = { userName: "", apiKey: "", baseUrl: "", callbackUrlBase: "" };
   try {
     configFile = JSON.parse(await fs.readFile(configPath, "utf8"));
   } catch (e) {

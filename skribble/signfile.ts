@@ -55,14 +55,26 @@ function findNearestWebHookCatchEvent(bpmnProcess: BpmnProcess, environment: ISe
   return undefined;
 }
 
-export async function serviceLogic(environment: IServiceTaskEnvironment, skribbleApi: ISkribbleApi) {
+function getCallbackUrlBase(configFile: { callbackUrlBase: string }, environment: IServiceTaskEnvironment) {
+  if (configFile.callbackUrlBase) {
+    let trimmed = configFile.callbackUrlBase.trim();
+    if (trimmed.endsWith("/")) {
+      trimmed = trimmed.slice(0, -1);
+    }
+    return trimmed + "/modules";
+  } else {
+    return environment.serverConfig.Webserver.baseUrl;
+  }
+}
+
+export async function serviceLogic(environment: IServiceTaskEnvironment, skribbleApi: ISkribbleApi, configFile: Awaited<ReturnType<typeof readConfigFile>>) {
   const { config, bpmnProcess } = await loadConfig(environment, environment.sender.language || "en-US");
 
   environment.logger.info(`Logging in to Skribble...`);
   const token = await skribbleApi.login();
   environment.logger.info(`Skribble login was successful.`);
 
-  const signatureRequest: ISignatureRequest = await buildSignatureRequest(config, environment, bpmnProcess);
+  const signatureRequest: ISignatureRequest = await buildSignatureRequest(config, environment, bpmnProcess, configFile);
   environment.logger.info(`Sending skribble signature request: ${JSON.stringify(omit(signatureRequest, "content"))}`);
   const signatureResponse = await skribbleApi.createSignatureRequest(token, signatureRequest);
   environment.logger.info(`Skribble signature request response: ${JSON.stringify(signatureResponse)}`);
@@ -88,7 +100,12 @@ export async function serviceLogic(environment: IServiceTaskEnvironment, skribbl
   }
 }
 
-async function buildSignatureRequest(config: IServiceTaskConfigObject, environment: IServiceTaskEnvironment, bpmnProcess: BpmnProcess) {
+async function buildSignatureRequest(
+  config: IServiceTaskConfigObject,
+  environment: IServiceTaskEnvironment,
+  bpmnProcess: BpmnProcess,
+  configFile: Awaited<ReturnType<typeof readConfigFile>>,
+): Promise<ISignatureRequest> {
   /* Read the source file from the attachment field */
   const sourceFieldName = config.fields.find((f) => f.key === "sourceField")?.value;
   if (!sourceFieldName) {
@@ -136,7 +153,7 @@ async function buildSignatureRequest(config: IServiceTaskConfigObject, environme
     const webhookCatchEvent = findNearestWebHookCatchEvent(bpmnProcess, environment);
     if (webhookCatchEvent) {
       webhookTriggerRoute =
-        environment.serverConfig.Webserver.baseUrl +
+        getCallbackUrlBase(configFile, environment) +
         getWebhookTriggerRoute(environment.instanceDetails.processId, webhookCatchEvent.id, environment.instanceDetails.instanceId.toLowerCase());
     } else {
       throw new BpmnError(ErrorCode.ConfigInvalid, "No webhook catch event found in the process to trigger.");
@@ -166,7 +183,7 @@ export async function signFile(environment: IServiceTaskEnvironment, configPath:
   environment.logger.info(`Using Skribble base URL: ${configFile.baseUrl}, user: ${configFile.userName}`);
   const skribbleApi = new SkribbleApi(configFile.baseUrl, configFile.userName, configFile.apiKey);
 
-  await serviceLogic(environment, skribbleApi);
+  await serviceLogic(environment, skribbleApi, configFile);
   await environment.instances.updateInstance(environment.instanceDetails);
   return true;
 }
