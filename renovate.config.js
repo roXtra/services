@@ -22,7 +22,7 @@ module.exports = {
     },
     {
       matchPackageNames: ["node", "@types/node"],
-      allowedVersions: "^22.0.0",
+      allowedVersions: "^24.0.0",
     },
     {
       matchPackageNames: ["npm"],

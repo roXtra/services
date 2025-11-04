@@ -3,7 +3,7 @@ name: Build and Test
 on: [push]
 
 env:
-  NODE_VERSION: 22
+  NODE_VERSION: 24
   MYSQL_CONTAINER_VERSION: lts
   MYSQL_CONTAINER_NAME: mysql-test
 
