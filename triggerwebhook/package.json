@@ -39,7 +39,7 @@
     "copyfiles": "^2.4.1",
     "cross-env": "^10.1.0",
     "eslint": "^9.38.0",
-    "mocha": "^11.7.4",
+    "mocha": "^11.7.5",
     "nock": "^14.0.10",
     "ts-loader": "^9.5.4",
     "typescript": "^5.9.3",
