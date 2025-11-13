@@ -27,7 +27,7 @@
     "chai": "^6.2.0",
     "joi": "^18.0.1",
     "mssql": "12.1.0",
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.129.0/release.tgz",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.129.0-1/release.tgz",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
