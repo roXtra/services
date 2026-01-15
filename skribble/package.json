@@ -33,7 +33,7 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@types/lodash": "^4.17.21",
+    "@types/lodash": "^4.17.23",
     "@types/node": "^22.19.6",
     "@types/react": "^19.1.8",
     "@types/sinon": "^21.0.0",
