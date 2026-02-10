@@ -19,7 +19,7 @@
     "copymain": "cp dist/main.mjs disttests/main.js"
   },
   "engines": {
-    "node": "22",
+    "node": "24",
     "npm": "10"
   },
   "author": "",
