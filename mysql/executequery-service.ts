@@ -1,4 +1,4 @@
-import * as mysql from "mysql";
+import * as mysql from "mysql2";
 import { FieldType, FieldValueType } from "processhub-sdk/lib/data/ifieldvalue.js";
 import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror.js";
 import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
@@ -87,7 +87,7 @@ export async function executeQuery(environment: IServiceTaskEnvironment, configP
       if (query === undefined) {
         throw new Error("query is undefined after parseAndInsertStringWithFieldContent, cannot proceed with service!");
       }
-      connection.query(query, function (error: mysql.MysqlError | null, results: { result: FieldValueType | undefined | null }[]) {
+      connection.query(query, function (error: Error | null, results: { result: FieldValueType | undefined | null }[]) {
         if (error) reject(error);
         resolve(results);
       });
