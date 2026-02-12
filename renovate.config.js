@@ -39,5 +39,10 @@ module.exports = {
       matchPackageNames: ["react", "react-dom", "@types/react"],
       allowedVersions: "^18.0.0",
     },
+	// Lock eslint to 9.39.2 because of https://rossmanith.atlassian.net/browse/RM-850
+	{
+		matchPackageNames: ["eslint"],
+		allowedVersions: "9.39.2",
+	},
   ],
 };
