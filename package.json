@@ -38,7 +38,7 @@
     "bestzip": "^2.2.1",
     "copyfiles": "^2.4.1",
     "directory-tree": "^3.6.0",
-    "eslint": "^9.39.2",
+    "eslint": "9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-no-only-tests": "^3.3.0",
     "eslint-plugin-prettier": "^5.5.5",
