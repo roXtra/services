@@ -24,8 +24,8 @@
     "npm": "10"
   },
   "dependencies": {
-    "@pnp/nodejs": "^4.17.0",
-    "@pnp/queryable": "^4.17.0",
+    "@pnp/nodejs": "^4.18.0",
+    "@pnp/queryable": "^4.18.0",
     "chai": "^6.2.2",
     "lodash": "^4.17.23",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.134.0/release.tgz",
@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.17.24",
-    "@types/node": "^22.19.11",
+    "@types/node": "^22.19.12",
     "@types/react": "^19.1.8",
     "@types/sinon": "^21.0.0",
     "bestzip": "^2.2.1",
