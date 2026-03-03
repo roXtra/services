@@ -87,9 +87,9 @@ export async function executeQuery(environment: IServiceTaskEnvironment, configP
       if (query === undefined) {
         throw new Error("query is undefined after parseAndInsertStringWithFieldContent, cannot proceed with service!");
       }
-      connection.query(query, function (error: Error | null, results: { result: FieldValueType | undefined | null }[]) {
+      connection.query({ sql: query }, function (error, results) {
         if (error) reject(error);
-        resolve(results);
+        resolve(results as { result: FieldValueType | undefined | null }[]);
       });
     });
     connection.end();
