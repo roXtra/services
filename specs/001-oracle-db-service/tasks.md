@@ -23,16 +23,16 @@ contracts/
 
 **Purpose**: Project initialization — create the `oracle/` service directory with all boilerplate and config files required by every user story.
 
-- [ ] T001 Create `oracle/package.json` with dependencies (`oracledb`, `processhub-sdk`, `react`, `react-dom`, `chai`) and devDependencies (`@types/oracledb`, `@types/mocha`,
+- [x] T001 Create `oracle/package.json` with dependencies (`oracledb`, `processhub-sdk`, `react`, `react-dom`, `chai`) and devDependencies (`@types/oracledb`, `@types/mocha`,
       `@types/node`, `@types/react`, `typescript`, `mocha`, `ts-loader`, `webpack`, `webpack-cli`, `bestzip`, `copyfiles`, `cross-env`, `eslint`), engines `node: 22, npm: 10`
       in `oracle/package.json`
-- [ ] T002 [P] Create `oracle/tsconfig.json` with `strict: true`, target ES2022, module NodeNext, jsx react-jsx, matching MSSQL/MySQL pattern in `oracle/tsconfig.json`
-- [ ] T003 [P] Create `oracle/tsconfig-webpack.json` extending `../tsconfig-webpack.json` with `files: ["main.ts"]` in `oracle/tsconfig-webpack.json`
-- [ ] T004 [P] Create `oracle/service.json` with two actions (`executeQuery`, `executeQueryNoReturn`) and field definitions per service contract in `oracle/service.json`.
+- [x] T002 [P] Create `oracle/tsconfig.json` with `strict: true`, target ES2022, module NodeNext, jsx react-jsx, matching MSSQL/MySQL pattern in `oracle/tsconfig.json`
+- [x] T003 [P] Create `oracle/tsconfig-webpack.json` extending `../tsconfig-webpack.json` with `files: ["main.ts"]` in `oracle/tsconfig-webpack.json`
+- [x] T004 [P] Create `oracle/service.json` with two actions (`executeQuery`, `executeQueryNoReturn`) and field definitions per service contract in `oracle/service.json`.
       Note: includes explicit `port` field (following MySQL pattern, not MSSQL which has no port field)
-- [ ] T005 [P] Create `oracle/configtemplate.json` with `{ "secret": { "password": "" } }` in `oracle/configtemplate.json`
-- [ ] T006 [P] Create `oracle/main.ts` re-exporting all config and service modules in `oracle/main.ts`
-- [ ] T007 [P] Create `oracle/.npmignore` and `oracle/.npmrc` matching MSSQL/MySQL pattern in `oracle/.npmignore` and `oracle/.npmrc`
+- [x] T005 [P] Create `oracle/configtemplate.json` with `{ "secret": { "password": "" } }` in `oracle/configtemplate.json`
+- [x] T006 [P] Create `oracle/main.ts` re-exporting all config and service modules in `oracle/main.ts`
+- [x] T007 [P] Create `oracle/.npmignore` and `oracle/.npmrc` matching MSSQL/MySQL pattern in `oracle/.npmignore` and `oracle/.npmrc`
 
 **Checkpoint**: `oracle/` directory exists with all boilerplate files. `npm install` succeeds. Webpack can resolve `main.ts`.
 
@@ -44,7 +44,7 @@ contracts/
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T008 Create `oracle/oracleservice.roxtest.ts` bundle test verifying that `executeQuery`, `executeQueryConfig`, `executeQueryNoReturn`, and `executeQueryNoReturnConfig`
+- [x] T008 Create `oracle/oracleservice.roxtest.ts` bundle test verifying that `executeQuery`, `executeQueryConfig`, `executeQueryNoReturn`, and `executeQueryNoReturnConfig`
       are exported as functions (Mocha + Chai, matching MSSQL pattern) in `oracle/oracleservice.roxtest.ts`
 
 **Checkpoint**: Bundle test exists and FAILS (exports not yet implemented). Red phase of Red-Green-Refactor confirmed.
@@ -61,18 +61,18 @@ contracts/
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T009 [US1] Verify `oracleservice.roxtest.ts` includes assertion for `executeQuery` export type `"function"` in `oracle/oracleservice.roxtest.ts` (already created in
+- [x] T009 [US1] Verify `oracleservice.roxtest.ts` includes assertion for `executeQuery` export type `"function"` in `oracle/oracleservice.roxtest.ts` (already created in
       T008, validate it covers US1)
 
 ### Implementation for User Story 1
 
-- [ ] T010 [US1] Implement `executeQuery` service method in `oracle/executequery-service.ts`: extract config fields (server, port, username, password, serviceName, useTls,
+- [x] T010 [US1] Implement `executeQuery` service method in `oracle/executequery-service.ts`: extract config fields (server, port, username, password, serviceName, useTls,
       query, targetField), validate all required fields, resolve password secrets via `replaceObjectReferences`, build connect string using TLS logic
       (`useTls === "true" ? "tcps://" : ""` + `{server}:{port}/{serviceName}` — see research.md R5), create connection via
       `oracledb.getConnection({ user, password, connectString })`, substitute `field['...']`/`role['...']` tokens via `parseAndInsertStringWithFieldContent`, execute query
       with `{ outFormat: oracledb.OUT_FORMAT_OBJECT, autoCommit: true }`, if rows returned write `rows[0].result` to target field and update instance, close connection in
       `finally` block, log errors via `console.error` and throw `BpmnError(DB_ERROR)` on failure
-- [ ] T011 [US1] Verify bundle test passes for `executeQuery` and `executeQueryConfig` exports — run `npm test` in `oracle/`
+- [x] T011 [US1] Verify bundle test passes for `executeQuery` and `executeQueryConfig` exports — run `npm test` in `oracle/`
 
 **Checkpoint**: User Story 1 is fully functional. `executeQuery` connects to Oracle, runs SELECT, writes result to process field. Bundle test passes for US1 exports.
 
@@ -88,16 +88,16 @@ contracts/
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T012 [US2] Verify `oracleservice.roxtest.ts` includes assertion for `executeQueryNoReturn` export type `"function"` in `oracle/oracleservice.roxtest.ts` (already created
+- [x] T012 [US2] Verify `oracleservice.roxtest.ts` includes assertion for `executeQueryNoReturn` export type `"function"` in `oracle/oracleservice.roxtest.ts` (already created
       in T008, validate it covers US2)
 
 ### Implementation for User Story 2
 
-- [ ] T013 [US2] Implement `executeQueryNoReturn` service method in `oracle/executequerynoreturn-service.ts`: import `ErrorCodes` from `./executequery-service.js`, extract
+- [x] T013 [US2] Implement `executeQueryNoReturn` service method in `oracle/executequerynoreturn-service.ts`: import `ErrorCodes` from `./executequery-service.js`, extract
       config fields (server, port, username, password, serviceName, useTls, query — no targetField), validate all required fields, resolve password secrets, build connect
       string using TLS logic (`useTls === "true" ? "tcps://" : ""` + `{server}:{port}/{serviceName}`), create connection, substitute tokens, execute query with
       `{ autoCommit: true }`, skip result extraction, close connection in `finally` block, log errors via `console.error` and throw `BpmnError(ErrorCodes.DB_ERROR)` on failure
-- [ ] T014 [US2] Verify bundle test passes for `executeQueryNoReturn` and `executeQueryNoReturnConfig` exports — run `npm test` in `oracle/`
+- [x] T014 [US2] Verify bundle test passes for `executeQueryNoReturn` and `executeQueryNoReturnConfig` exports — run `npm test` in `oracle/`
 
 **Checkpoint**: User Stories 1 AND 2 work independently. Both service methods connect, execute, handle errors, and close connections correctly.
 
@@ -113,17 +113,17 @@ contracts/
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T015 [US3] Verify `oracleservice.roxtest.ts` includes assertions for `executeQueryConfig` and `executeQueryNoReturnConfig` export types `"function"` in
+- [x] T015 [US3] Verify `oracleservice.roxtest.ts` includes assertions for `executeQueryConfig` and `executeQueryNoReturnConfig` export types `"function"` in
       `oracle/oracleservice.roxtest.ts` (already created in T008, validate it covers US3)
 
 ### Implementation for User Story 3
 
-- [ ] T016 [P] [US3] Implement `executeQueryConfig` React component in `oracle/executequery-config.tsx`: render form inputs for Server, Port, Benutzername, Passwort, Service
+- [x] T016 [P] [US3] Implement `executeQueryConfig` React component in `oracle/executequery-config.tsx`: render form inputs for Server, Port, Benutzername, Passwort, Service
       Name, TLS (checkbox, default unchecked), Abfrage (with query syntax help text showing `field['...']`, `role['...']`, `secret['...']` examples), and Ergebnis (target
       field select) — German labels matching MSSQL/MySQL config pattern
-- [ ] T017 [P] [US3] Implement `executeQueryNoReturnConfig` React component in `oracle/executequerynoreturn-config.tsx`: same form as `executeQueryConfig` minus the Ergebnis
+- [x] T017 [P] [US3] Implement `executeQueryNoReturnConfig` React component in `oracle/executequerynoreturn-config.tsx`: same form as `executeQueryConfig` minus the Ergebnis
       (target field) selector, add error documentation noting `DB_ERROR` may occur — German labels matching MSSQL `executeQueryNoReturn` config pattern
-- [ ] T018 [US3] Verify bundle test passes for all 4 exports — run `npm test` in `oracle/`
+- [x] T018 [US3] Verify bundle test passes for all 4 exports — run `npm test` in `oracle/`
 
 **Checkpoint**: All 3 user stories are independently functional. Config UI renders correctly. All bundle tests pass.
 
@@ -133,13 +133,13 @@ contracts/
 
 **Purpose**: Build verification, final integration checks, documentation.
 
-- [ ] T019 Run `npm install` in `oracle/` and verify zero dependency errors
-- [ ] T020 Run `npm run buildbundle` from repository root and verify `oracle/` service is included in `services.zip` output. Confirm `buildScript.js` auto-discovers the
+- [x] T019 Run `npm install` in `oracle/` and verify zero dependency errors
+- [x] T020 Run `npm run buildbundle` from repository root and verify `oracle/` service is included in `services.zip` output. Confirm `buildScript.js` auto-discovers the
       `oracle/` directory; if not, add it to the build manifest
-- [ ] T021 Run ESLint and Prettier checks on all `oracle/` source files and fix any violations
-- [ ] T022 Verify `oracle/service.json` action field definitions match implemented config field keys exactly
-- [ ] T023 Run quickstart.md validation: walk through build → install → configure → verify flow described in `specs/001-oracle-db-service/quickstart.md`
-- [ ] T024 [US3] Create Cypress E2E smoke test for the Oracle service configuration UI: verify that the `executeQuery` config form renders all expected fields (Server, Port,
+- [x] T021 Run ESLint and Prettier checks on all `oracle/` source files and fix any violations
+- [x] T022 Verify `oracle/service.json` action field definitions match implemented config field keys exactly
+- [x] T023 Run quickstart.md validation: walk through build → install → configure → verify flow described in `specs/001-oracle-db-service/quickstart.md`
+- [x] T024 [US3] Create Cypress E2E smoke test for the Oracle service configuration UI: verify that the `executeQuery` config form renders all expected fields (Server, Port,
       Benutzername, Passwort, Service Name, TLS, Abfrage, Ergebnis) and the `executeQueryNoReturn` form renders the same fields minus Ergebnis. Requires a running roXtra test
       instance — if unavailable, document deferral reason and create a placeholder test spec
 
