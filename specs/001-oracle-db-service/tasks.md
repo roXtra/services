@@ -28,7 +28,8 @@ contracts/
       in `oracle/package.json`
 - [ ] T002 [P] Create `oracle/tsconfig.json` with `strict: true`, target ES2022, module NodeNext, jsx react-jsx, matching MSSQL/MySQL pattern in `oracle/tsconfig.json`
 - [ ] T003 [P] Create `oracle/tsconfig-webpack.json` extending `../tsconfig-webpack.json` with `files: ["main.ts"]` in `oracle/tsconfig-webpack.json`
-- [ ] T004 [P] Create `oracle/service.json` with two actions (`executeQuery`, `executeQueryNoReturn`) and field definitions per service contract in `oracle/service.json`
+- [ ] T004 [P] Create `oracle/service.json` with two actions (`executeQuery`, `executeQueryNoReturn`) and field definitions per service contract in `oracle/service.json`.
+      Note: includes explicit `port` field (following MySQL pattern, not MSSQL which has no port field)
 - [ ] T005 [P] Create `oracle/configtemplate.json` with `{ "secret": { "password": "" } }` in `oracle/configtemplate.json`
 - [ ] T006 [P] Create `oracle/main.ts` re-exporting all config and service modules in `oracle/main.ts`
 - [ ] T007 [P] Create `oracle/.npmignore` and `oracle/.npmrc` matching MSSQL/MySQL pattern in `oracle/.npmignore` and `oracle/.npmrc`
@@ -66,10 +67,11 @@ contracts/
 ### Implementation for User Story 1
 
 - [ ] T010 [US1] Implement `executeQuery` service method in `oracle/executequery-service.ts`: extract config fields (server, port, username, password, serviceName, useTls,
-      query, targetField), validate all required fields, resolve password secrets via `replaceObjectReferences`, build connect string
-      (`[tcps://]{server}:{port}/{serviceName}`), create connection via `oracledb.getConnection()`, substitute `field['...']`/`role['...']` tokens via
-      `parseAndInsertStringWithFieldContent`, execute query with `{ outFormat: oracledb.OUT_FORMAT_OBJECT, autoCommit: true }`, if rows returned write `rows[0].result` to
-      target field and update instance, close connection in `finally` block, log errors via `console.error` and throw `BpmnError(DB_ERROR)` on failure
+      query, targetField), validate all required fields, resolve password secrets via `replaceObjectReferences`, build connect string using TLS logic
+      (`useTls === "true" ? "tcps://" : ""` + `{server}:{port}/{serviceName}` — see research.md R5), create connection via
+      `oracledb.getConnection({ user, password, connectString })`, substitute `field['...']`/`role['...']` tokens via `parseAndInsertStringWithFieldContent`, execute query
+      with `{ outFormat: oracledb.OUT_FORMAT_OBJECT, autoCommit: true }`, if rows returned write `rows[0].result` to target field and update instance, close connection in
+      `finally` block, log errors via `console.error` and throw `BpmnError(DB_ERROR)` on failure
 - [ ] T011 [US1] Verify bundle test passes for `executeQuery` and `executeQueryConfig` exports — run `npm test` in `oracle/`
 
 **Checkpoint**: User Story 1 is fully functional. `executeQuery` connects to Oracle, runs SELECT, writes result to process field. Bundle test passes for US1 exports.
@@ -91,9 +93,10 @@ contracts/
 
 ### Implementation for User Story 2
 
-- [ ] T013 [US2] Implement `executeQueryNoReturn` service method in `oracle/executequerynoreturn-service.ts`: extract config fields (server, port, username, password,
-      serviceName, useTls, query — no targetField), validate all required fields, resolve password secrets, build connect string, create connection, substitute tokens, execute
-      query with `{ autoCommit: true }`, skip result extraction, close connection in `finally` block, log errors via `console.error` and throw `BpmnError(DB_ERROR)` on failure
+- [ ] T013 [US2] Implement `executeQueryNoReturn` service method in `oracle/executequerynoreturn-service.ts`: import `ErrorCodes` from `./executequery-service.js`, extract
+      config fields (server, port, username, password, serviceName, useTls, query — no targetField), validate all required fields, resolve password secrets, build connect
+      string using TLS logic (`useTls === "true" ? "tcps://" : ""` + `{server}:{port}/{serviceName}`), create connection, substitute tokens, execute query with
+      `{ autoCommit: true }`, skip result extraction, close connection in `finally` block, log errors via `console.error` and throw `BpmnError(ErrorCodes.DB_ERROR)` on failure
 - [ ] T014 [US2] Verify bundle test passes for `executeQueryNoReturn` and `executeQueryNoReturnConfig` exports — run `npm test` in `oracle/`
 
 **Checkpoint**: User Stories 1 AND 2 work independently. Both service methods connect, execute, handle errors, and close connections correctly.
@@ -131,10 +134,14 @@ contracts/
 **Purpose**: Build verification, final integration checks, documentation.
 
 - [ ] T019 Run `npm install` in `oracle/` and verify zero dependency errors
-- [ ] T020 Run `npm run buildbundle` from repository root and verify `oracle/` service is included in `services.zip` output
+- [ ] T020 Run `npm run buildbundle` from repository root and verify `oracle/` service is included in `services.zip` output. Confirm `buildScript.js` auto-discovers the
+      `oracle/` directory; if not, add it to the build manifest
 - [ ] T021 Run ESLint and Prettier checks on all `oracle/` source files and fix any violations
 - [ ] T022 Verify `oracle/service.json` action field definitions match implemented config field keys exactly
 - [ ] T023 Run quickstart.md validation: walk through build → install → configure → verify flow described in `specs/001-oracle-db-service/quickstart.md`
+- [ ] T024 [US3] Create Cypress E2E smoke test for the Oracle service configuration UI: verify that the `executeQuery` config form renders all expected fields (Server, Port,
+      Benutzername, Passwort, Service Name, TLS, Abfrage, Ergebnis) and the `executeQueryNoReturn` form renders the same fields minus Ergebnis. Requires a running roXtra test
+      instance — if unavailable, document deferral reason and create a placeholder test spec
 
 ---
 
