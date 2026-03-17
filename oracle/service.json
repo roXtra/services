@@ -1,0 +1,42 @@
+{
+  "id": "oracle-service",
+  "name": "Oracle Service",
+  "minRoXtraVersion": "8.009.0",
+  "actions": [
+    {
+      "id": "executeQuery",
+      "label": "Abfrage ausführen",
+      "configMethod": "executeQueryConfig",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
+      "serviceMethod": "executeQuery",
+      "fields": [
+        { "name": "server", "type": "text" },
+        { "name": "port", "type": "text" },
+        { "name": "username", "type": "text" },
+        { "name": "password", "type": "text" },
+        { "name": "serviceName", "type": "text" },
+        { "name": "useTls", "type": "text" },
+        { "name": "query", "type": "text" },
+        { "name": "targetField", "type": "select", "onload": "fields" }
+      ]
+    },
+    {
+      "id": "executeQueryNoReturn",
+      "label": "Abfrage ohne Return ausführen",
+      "configMethod": "executeQueryNoReturnConfig",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
+      "serviceMethod": "executeQueryNoReturn",
+      "fields": [
+        { "name": "server", "type": "text" },
+        { "name": "port", "type": "text" },
+        { "name": "username", "type": "text" },
+        { "name": "password", "type": "text" },
+        { "name": "serviceName", "type": "text" },
+        { "name": "useTls", "type": "text" },
+        { "name": "query", "type": "text" }
+      ]
+    }
+  ]
+}
