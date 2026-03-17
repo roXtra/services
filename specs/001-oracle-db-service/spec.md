@@ -4,6 +4,17 @@
 Oracle-Datenbanken, ausgerichtet an den bestehenden ServiceTasks für MS SQL und MySQL (gleicher Tech-Stack, Coding-Guidelines, Ordnerstruktur, Telemetrie, Fehler- und
 Rückgabemuster)."
 
+## Clarifications
+
+### Session 2026-03-17
+
+- Q: Should the Oracle driver run in thin mode (pure JS) or thick mode (requires Oracle Instant Client)? → A: Thin mode only — pure JavaScript, no native dependencies on the
+  server.
+- Q: Should the service use a connection pool or a single connection per call? → A: Single connection per call — create, execute, close (like MySQL).
+- Q: Should Oracle connections support Service Name only, or also legacy SID? → A: Service Name only — single field, Oracle-recommended since 10g.
+- Q: What is the logging policy for database errors? → A: Log errors via `console.error` on all database failures (matching MySQL pattern).
+- Q: Should Oracle connections use TLS/SSL encryption? → A: Optional TLS toggle in the config UI — user decides per service task.
+
 ## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 — Execute Query with Result (Priority: P1)
@@ -52,8 +63,8 @@ data change in the database.
 
 ### User Story 3 — Service Configuration UI (Priority: P3)
 
-A process designer uses the roXtra service configuration interface to set up Oracle connection parameters (server, port, username, password, database/service name, query,
-target field) with inline help and secret support — matching the look and feel of the existing MSSQL and MySQL configuration screens.
+A process designer uses the roXtra service configuration interface to set up Oracle connection parameters (server, port, username, password, service name, query, target field)
+with inline help and secret support — matching the look and feel of the existing MSSQL and MySQL configuration screens.
 
 **Why this priority**: Usability for the designer; a consistent configuration experience reduces training effort and support requests.
 
@@ -63,7 +74,7 @@ match Oracle conventions.
 **Acceptance Scenarios**:
 
 1. **Given** a process designer opens the Oracle `executeQuery` service task configuration, **When** the form loads, **Then** input fields for Server, Port, Username,
-   Password, Database (Service Name), Query, and Target Field are displayed with German labels consistent with the MSSQL/MySQL services.
+   Password, Service Name, Query, TLS toggle, and Target Field are displayed with German labels consistent with the MSSQL/MySQL services.
 2. **Given** a process designer opens the Oracle `executeQueryNoReturn` service task configuration, **When** the form loads, **Then** the same fields appear except the Target
    Field, matching the MSSQL `executeQueryNoReturn` pattern.
 3. **Given** a process designer enters `secret['password']` in the password field, **When** the service executes, **Then** the password is resolved from the server-side
@@ -91,26 +102,34 @@ match Oracle conventions.
 - **FR-003**: Both methods MUST substitute `field['FieldName']` and `role['LaneName']` tokens in the query string with actual process-instance values before execution.
 - **FR-004**: Both methods MUST support password resolution from a server-side `config.json` via the `secret['key']` syntax.
 - **FR-005**: Both methods MUST throw a BPMN error with code `DB_ERROR` and a descriptive message on any database or connection failure.
-- **FR-006**: Both methods MUST validate that all required configuration fields (server, username, password, database/service name, query) are defined before attempting a
+- **FR-006**: Both methods MUST validate that all required configuration fields (server, port, username, password, service name, query) are defined before attempting a
   connection.
-- **FR-007**: The configuration UI MUST expose input fields for Server, Port, Username, Password, Database (Service Name), and Query — plus a Target Field selector for
-  `executeQuery`.
+- **FR-007**: The configuration UI MUST expose input fields for Server, Port, Username, Password, Service Name, Query, and a TLS toggle (enabled/disabled, default: disabled) —
+  plus a Target Field selector for `executeQuery`.
 - **FR-008**: The service directory MUST include a `configtemplate.json` with a `secret.password` placeholder, matching the MSSQL/MySQL pattern.
 - **FR-009**: The service MUST follow the established ProcessHub service directory structure: `main.ts`, `service.json`, `package.json`, `tsconfig.json`,
   `tsconfig-webpack.json`, config/service TypeScript files, and a `.roxtest.ts` bundle test file.
-- **FR-010**: The connection to the Oracle database MUST be reliably closed after each execution, even if the query fails.
+- **FR-010**: The service MUST use a **single connection per call** (create → execute → close). The connection MUST be reliably closed after each execution, even if the query
+  fails. Connection pooling is out of scope.
+- **FR-011**: Both methods MUST log all database and connection errors via `console.error` before throwing the `DB_ERROR` BPMN error, ensuring failures are visible in server
+  logs.
+- **FR-012**: Both methods MUST support an optional TLS toggle. When TLS is enabled, the connection string MUST use the `tcps` protocol. When disabled (default), a plain TCP
+  connection is used.
 
 ### Key Entities
 
-- **Oracle Connection**: Represents the set of parameters needed to establish a database session — server hostname/IP, port, username, password, and database or service name.
+- **Oracle Connection**: Represents the set of parameters needed to establish a database session — server hostname/IP, port, username, password, and service name. SID-based
+  connections are out of scope.
 - **Service Method Configuration**: The user-facing configuration for each service method — query text, token references, target field (for `executeQuery`), and secret
   references.
 - **Query Result**: The single-row, single-column (`result`) value returned from a SELECT query and written to a process field.
 
 ## Assumptions
 
-- The Oracle driver will follow the same Node.js ecosystem conventions (npm package, TypeScript type definitions) as the existing `mssql` and `mysql2` drivers.
-- Oracle connection strings use a host + port + service-name pattern (the most common configuration); TNS-based connections are out of scope for the initial version.
+- The Oracle driver (`oracledb` npm package) MUST run in **thin mode** (pure JavaScript, zero native dependencies). Thick mode (Oracle Instant Client) is out of scope. This
+  matches the zero-native-dependency deployment model of `mssql` and `mysql2`.
+- Oracle connection strings use a host + port + **service name** pattern (Oracle-recommended since 10g); TNS-based connections and legacy SID connections are out of scope for
+  the initial version.
 - The `result` column alias convention (query must alias the desired return value as `result`) is carried over from MSSQL/MySQL and does not need to change.
 - Error codes and BPMN error patterns (`BpmnError`, `ErrorCodes.DB_ERROR`) are already available in the `processhub-sdk` and will be reused.
 - German-language labels in the configuration UI are the default, consistent with existing services.
