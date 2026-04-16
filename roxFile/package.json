@@ -44,7 +44,7 @@
     "mocha": "^11.7.5",
     "nock": "^14.0.12",
     "ts-loader": "^9.5.7",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.2",
     "webpack": "^5.106.2",
     "webpack-cli": "^7.0.2"
   }
