@@ -22,7 +22,7 @@
     "npm": "10"
   },
   "overrides": {
-    "@sinonjs/fake-timers": "15.2.2"
+    "@sinonjs/fake-timers": "15.3.2"
   },
   "author": "",
   "license": "ISC",
