@@ -13,6 +13,7 @@
     "esModuleInterop": true,
     "strict": true,
     "lib": ["ES2022", "dom"],
+    "types": ["mocha", "node"],
     "skipLibCheck": true
   },
   "include": ["./**/*"],

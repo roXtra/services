@@ -12,7 +12,8 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "strict": true,
-    "lib": ["ES2022", "dom"]
+    "lib": ["ES2022", "dom"],
+    "types": ["mocha", "node"]
   },
   "include": ["./**/*"],
   "exclude": ["./dist/**/*", "./disttests/**/*", "./node_modules"]
