@@ -4,7 +4,7 @@ on: [push]
 
 env:
   NODE_VERSION: 22
-  MYSQL_CONTAINER_VERSION: lts
+  MYSQL_CONTAINER_VERSION: 8.4
   MYSQL_CONTAINER_NAME: mysql-test
 
 jobs:
