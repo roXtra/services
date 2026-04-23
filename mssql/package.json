@@ -26,14 +26,14 @@
   "dependencies": {
     "chai": "^6.2.2",
     "joi": "^18.1.2",
-    "mssql": "12.3.0",
+    "mssql": "12.5.0",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.137.0/release.tgz",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
-    "@types/mssql": "^9.1.11",
+    "@types/mssql": "^12.3.0",
     "@types/node": "^22.19.17",
     "@types/react": "^18.3.28",
     "bestzip": "^2.2.3",
