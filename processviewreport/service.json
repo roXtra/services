@@ -1,0 +1,36 @@
+{
+  "id": "processviewreport-service",
+  "name": "Process View Report",
+  "minRoXtraVersion": "8.009.0",
+  "actions": [
+    {
+      "id": "processviewreport",
+      "label": "Bericht aus öffentlicher Ansicht erzeugen",
+      "configMethod": "processviewreportConfig",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
+      "serviceMethod": "processviewreport",
+      "fields": [
+        {
+          "name": "processId",
+          "type": "select",
+          "onload": "allProcesses"
+        },
+        {
+          "name": "publicViewId",
+          "type": "text"
+        },
+        {
+          "name": "reportField",
+          "type": "select",
+          "onload": "fields ProcessHubFileUpload"
+        },
+        {
+          "name": "fileNameField",
+          "type": "select",
+          "onload": "fields ProcessHubTextInput"
+        }
+      ]
+    }
+  ]
+}
