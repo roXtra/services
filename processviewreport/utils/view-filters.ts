@@ -1,6 +1,6 @@
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
 import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
-import { getResolvedValue, toStr } from "./utilize.js";
+import { getResolvedValue, toStr } from "./field-resolver.js";
 
 interface IGridFilterCondition {
   field: string;

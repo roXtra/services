@@ -1,6 +1,6 @@
 import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
-import { IGridOptions } from "./filter.js";
-import { getResolvedValue, toStr } from "./utilize.js";
+import { IGridOptions } from "./view-filters.js";
+import { getResolvedValue, toStr } from "./field-resolver.js";
 
 /**
  * Apply sorting from gridOptions.
