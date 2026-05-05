@@ -11,6 +11,9 @@ import { UserExtras } from "processhub-sdk/lib/user/userinterfaces.js";
 import { tl } from "processhub-sdk/lib/tl.js";
 import { getJson } from "processhub-sdk/lib/legacyapi/apirequests.js";
 import { ProcessRequestRoutes, IGetArchiveViewsRequest, IGetArchiveViewsReply, IBaseStateColumn } from "processhub-sdk/lib/process/legacyapi.js";
+import { applyViewFilters, IGridOptions } from "./grid-options/filter.js";
+import { applyViewSorting } from "./grid-options/sortinstances.js";
+import { decodeFieldKey, toStr } from "./grid-options/utilize.js";
 
 enum ErrorCodes {
   PERMISSION_ERROR = "PERMISSION_ERROR",
@@ -102,6 +105,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
 
   // Get visible columns from the view (only columns that are shown and not hidden)
   const viewColumns = viewDetails.columns.filter((col) => col.show && !col.hidden);
+  const gridOptions = JSON.parse(viewDetails.gridOptions) as IGridOptions;
 
   // Load all instances with field contents, role owners, and todos
   const instances = await environment.instances.getAllInstancesForProcess(
@@ -110,7 +114,6 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
   );
 
   environment.logger.debug(`Loaded ${instances.length} instances`);
-  environment.logger.debug(`View filters: ${JSON.stringify(viewDetails.customFilters)}`);
 
   if (instances.length > 0) {
     const sampleFc = instances[0].extras?.fieldContents || {};
@@ -118,21 +121,23 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
     environment.logger.debug(`View column fields: ${JSON.stringify(viewColumns.map((c) => c.field))}`);
   }
 
-  // Generate XLSX using only the columns defined in the view
-  // Apply filters from the view before generating
+  // Apply filters from gridOptions if available
   let filteredInstances = instances;
-  if (viewDetails.customFilters && viewDetails.customFilters.length > 0) {
-    environment.logger.debug(`Applying ${viewDetails.customFilters.length} custom filters: ${JSON.stringify(viewDetails.customFilters)}`);
-    filteredInstances = applyViewFilters(instances, viewDetails.customFilters, viewColumns);
-    environment.logger.debug(`After filtering: ${filteredInstances.length} of ${instances.length} instances remain`);
+  if (gridOptions?.filter) {
+    environment.logger.debug(`Applying gridOptions filter: ${JSON.stringify(gridOptions.filter)}`);
+    filteredInstances = applyViewFilters(instances, gridOptions.filter, environment);
+    environment.logger.debug(`Instances after filtering: ${filteredInstances.length}`);
+  } else {
+    environment.logger.debug("No gridOptions filter to apply: " + JSON.stringify(gridOptions));
   }
 
   // Apply sorting from gridOptions if available
-  if (viewDetails.gridOptions) {
-    environment.logger.debug(`Applying gridOptions sorting: ${viewDetails.gridOptions}`);
-    filteredInstances = applyViewSorting(filteredInstances, viewDetails.gridOptions, viewColumns);
+  if (gridOptions?.sort && gridOptions.sort.length > 0) {
+    environment.logger.debug(`Applying gridOptions sorting: ${JSON.stringify(gridOptions.sort)}`);
+    filteredInstances = applyViewSorting(filteredInstances, gridOptions);
   }
 
+  // Generate XLSX using only the columns defined in the view
   const xlsxBuffer = generateXLSX(filteredInstances, viewColumns, environment);
 
   // Determine file name
@@ -183,10 +188,6 @@ export function instanceToRow(instance: IInstanceDetails, viewColumns: IBaseStat
   const workspaceId = instance.workspaceId;
 
   environment.logger.debug(`Processing instance ${instanceId} with workspace ${workspaceId}`);
-  const test = true;
-  if (test) {
-    return row;
-  }
 
   for (const col of viewColumns) {
     const fieldKey = col.field;
@@ -299,218 +300,10 @@ function formatFieldValue(value: unknown, type?: string): unknown {
   return value;
 }
 
-/**
- * Decode field key from view column format.
- * Format: field_<base64(fieldName)><fieldType>
- * Base64 padding '=' is replaced with '_' in the column field.
- * Example: field_VGl0ZWw_ProcessHubTextInput -> "Titel"
- */
-function decodeFieldKey(fieldKey: string): string {
-  // Strip "field_" prefix
-  const withoutPrefix = fieldKey.substring("field_".length);
-
-  // Known field type suffixes
-  const knownTypes = [
-    "ProcessHubFileUpload",
-    "ProcessHubTextInput",
-    "ProcessHubTextArea",
-    "ProcessHubDate",
-    "ProcessHubDateTime",
-    "ProcessHubDropdown",
-    "ProcessHubNumericInput",
-    "ProcessHubChecklist",
-    "ProcessHubRiskAssessment",
-    "ProcessHubSignature",
-    "ProcessHubRoleOwner",
-  ];
-
-  let base64Part = withoutPrefix;
-  for (const type of knownTypes) {
-    if (withoutPrefix.endsWith(type)) {
-      base64Part = withoutPrefix.substring(0, withoutPrefix.length - type.length);
-      break;
-    }
-  }
-
-  // Restore base64 padding: trailing '_' -> '='
-  const restored = base64Part.replace(/_/g, "=");
-
-  try {
-    return Buffer.from(restored, "base64").toString("utf-8");
-  } catch {
-    return fieldKey;
-  }
-}
-
-/**
- * Get the resolved value for a given instance and column field (for filter/sort purposes).
- */
-function getResolvedValue(instance: IInstanceDetails, fieldKey: string, viewColumns: IBaseStateColumn[]): unknown {
-  const fc = instance.extras?.fieldContents || {};
-  const roleOwners = instance.extras?.roleOwners || {};
-  const todos = instance.extras?.todos || [];
-
-  if (fieldKey.startsWith("field_")) {
-    const fieldName = decodeFieldKey(fieldKey);
-    const fcVal = fc[fieldName];
-    if (fcVal !== undefined) return fcVal.value ?? "";
-    return "";
-  }
-
-  // Also try direct fieldContents lookup by key
-  if (fc[fieldKey] !== undefined) {
-    return fc[fieldKey]?.value ?? "";
-  }
-
-  if (fieldKey.startsWith("lane_")) {
-    const laneId = fieldKey.replace("lane_", "");
-    const owners = roleOwners[laneId];
-    return owners && owners.length > 0 ? owners.map((o) => o.displayName || o.memberId).join(", ") : "";
-  }
-
-  if (fieldKey === "state") return instance.state ?? 0;
-  if (fieldKey === "createdAtDate" || fieldKey === "createdAt") return instance.createdAt ?? "";
-  if (fieldKey === "completedAtDate" || fieldKey === "completedAt") return instance.completedAt ?? "";
-  if (fieldKey === "todos") return todos.map((t) => t.displayName || t.bpmnTaskId).join(", ");
-  if (fieldKey === "idLowercase") return instance.instanceId?.toLowerCase() ?? "";
-  if (fieldKey === "title") return instance.title ?? "";
-
-  const col = viewColumns.find((c) => c.field === fieldKey);
-  if (col && fieldKey.startsWith("startevent_")) {
-    if (col.title?.toLowerCase().includes("end")) return (instance.reachedEndEvents || []).join(", ");
-    return instance.takenStartEvent || "";
-  }
-
-  return instance[fieldKey as keyof IInstanceDetails] ?? "";
-}
-
-interface IViewFilter {
-  field?: string;
-  operator: string;
-  value?: unknown;
-  ignoreCase?: boolean;
-}
-
-// Function applyViewFilters(instances: IInstanceDetails[], filters: unknown[], viewColumns: IBaseStateColumn[]): IInstanceDetails[] {
-// }
-
-/**
- * Apply custom filters from the view to instances.
- * Filter field might use either the column field key or the decoded field name.
- */
-function applyViewFilters(instances: IInstanceDetails[], filters: unknown[], viewColumns: IBaseStateColumn[]): IInstanceDetails[] {
-  const typedFilters = filters as IViewFilter[];
-  return instances.filter((inst) => {
-    for (const filter of typedFilters) {
-      if (!filter.field || typeof filter.field !== "string") continue;
-
-      // Try resolving the filter field - it may be the column field key directly,
-      // or it may be the decoded field name that needs to be looked up in fieldContents
-      let val = getResolvedValue(inst, filter.field, viewColumns);
-
-      // If that didn't find anything, try looking up by matching column field or direct fc lookup
-      if (val === "" || val == null) {
-        const fc = inst.extras?.fieldContents || {};
-        // Check if filter.field is a direct fieldContents key (e.g. "Titel")
-        if (fc[filter.field] !== undefined) {
-          val = fc[filter.field]?.value ?? "";
-        }
-      }
-
-      if (!matchesFilter(val, filter)) return false;
-    }
-    return true;
-  });
-}
-
-function toStr(val: unknown): string {
-  if (val == null) return "";
-  if (typeof val === "string") return val;
-  if (typeof val === "number" || typeof val === "boolean") return val.toString();
-  return JSON.stringify(val);
-}
-
-function matchesFilter(value: unknown, filter: IViewFilter): boolean {
-  const filterVal = filter.value;
-  const strValue = toStr(value);
-  const strFilter = toStr(filterVal);
-  const cmpValue = filter.ignoreCase ? strValue.toLowerCase() : strValue;
-  const cmpFilter = filter.ignoreCase ? strFilter.toLowerCase() : strFilter;
-
-  switch (filter.operator) {
-    case "eq":
-      return cmpValue === cmpFilter;
-    case "neq":
-      return cmpValue !== cmpFilter;
-    case "contains":
-      return cmpValue.includes(cmpFilter);
-    case "doesnotcontain":
-      return !cmpValue.includes(cmpFilter);
-    case "startswith":
-      return cmpValue.startsWith(cmpFilter);
-    case "endswith":
-      return cmpValue.endsWith(cmpFilter);
-    case "isnull":
-    case "isempty":
-      return !value || strValue === "";
-    case "isnotnull":
-    case "isnotempty":
-      return !!value && strValue !== "";
-    case "gt":
-      return Number(value) > Number(filterVal);
-    case "gte":
-      return Number(value) >= Number(filterVal);
-    case "lt":
-      return Number(value) < Number(filterVal);
-    case "lte":
-      return Number(value) <= Number(filterVal);
-    default:
-      return true;
-  }
-}
-
-/**
- * Apply sorting from gridOptions JSON string.
- */
-function applyViewSorting(instances: IInstanceDetails[], gridOptions: string, viewColumns: IBaseStateColumn[]): IInstanceDetails[] {
-  try {
-    const options = JSON.parse(gridOptions) as { sort?: { field?: string; column?: string; dir?: string; direction?: string }[] };
-    const sort = options.sort;
-    if (!Array.isArray(sort) || sort.length === 0) return instances;
-
-    return [...instances].sort((a, b) => {
-      for (const s of sort) {
-        const field = s.field || s.column;
-        const dir = s.dir || s.direction || "asc";
-        if (!field) continue;
-
-        const valA = getResolvedValue(a, field, viewColumns);
-        const valB = getResolvedValue(b, field, viewColumns);
-
-        let cmp = 0;
-        if (valA instanceof Date && valB instanceof Date) {
-          cmp = new Date(valA).getTime() - new Date(valB).getTime();
-        } else if (typeof valA === "number" && typeof valB === "number") {
-          cmp = valA - valB;
-        } else {
-          const strA = toStr(valA);
-          const strB = toStr(valB);
-          cmp = strA.localeCompare(strB, "de-DE");
-        }
-
-        if (cmp !== 0) return dir === "desc" ? -cmp : cmp;
-      }
-      return 0;
-    });
-  } catch {
-    return instances;
-  }
-}
-
 function formatDateOnly(date: Date | undefined): string {
   if (!date) return "";
-  const d = new Date(date);
-  return d.toLocaleDateString("de-DE");
+  const d = date instanceof Date ? date.toISOString() : String(date);
+  return d.slice(0, 10);
 }
 
 function stateToString(state: State | undefined): string {
