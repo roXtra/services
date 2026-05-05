@@ -47,7 +47,7 @@ export function processviewreportConfig(userLanguage: Language): React.JSX.Eleme
               <h3>{tl("Hinweise zur Konfiguration", userLanguage)}</h3>
               <div>
                 <p>{tl("Geben Sie den Prozess an, dessen öffentliche Ansicht benutzt werden soll.", userLanguage)}</p>
-                <p>{tl("Die ID der öffentlichen Ansicht kann aus der Ansichtskonfiguration kopiert werden.", userLanguage)}</p>
+                <p>{tl("Die ID der öffentlichen Ansicht kann aus der Ansichtskonfiguration entnommen werden.", userLanguage)}</p>
                 <p>{tl("Der erzeugte Bericht wird als Datei im angegebenen Zielfeld gespeichert und kann von nachfolgenden Tasks verwendet werden.", userLanguage)}</p>
 
                 <h3>{tl("Mögliche Fehler", userLanguage)}</h3>
@@ -55,6 +55,7 @@ export function processviewreportConfig(userLanguage: Language): React.JSX.Eleme
                 <p>{tl("VIEW_NOT_FOUND: Die angegebene öffentliche Ansicht konnte nicht gefunden werden.", userLanguage)}</p>
                 <p>{tl("PERMISSION_ERROR: Der auslösende Benutzer hat keine Berechtigung für den Prozess.", userLanguage)}</p>
                 <p>{tl("TIMER_START: Der Service darf nicht im Systemkontext (TimerStartEvent) ausgeführt werden.", userLanguage)}</p>
+                <p>{tl("ATTACHMENT_ERROR: Fehler beim Anhängen der Datei.", userLanguage)}</p>
               </div>
             </td>
           </tr>

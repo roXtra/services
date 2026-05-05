@@ -15,7 +15,6 @@
     "lib": ["ES2022", "dom"],
     "types": ["mocha", "node"]
   },
-    "files": ["./main.ts"],
   "include": ["./**/*"],
   "exclude": ["./dist/**/*", "./node_modules"]
 }
