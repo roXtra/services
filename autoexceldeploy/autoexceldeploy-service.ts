@@ -4,6 +4,7 @@ import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicet
 import { ProcessExtras } from "processhub-sdk/lib/process/processinterfaces.js";
 import { InstanceExtras } from "processhub-sdk/lib/instance/instanceinterfaces.js";
 import { WorkspaceExtras } from "processhub-sdk/lib/workspace/workspaceinterfaces.js";
+import { DefaultRoles } from "processhub-sdk/lib/process/processrights.js";
 import { isPotentialRoleOwner } from "processhub-sdk/lib/process/processrights.js";
 import { UserExtras } from "processhub-sdk/lib/user/userinterfaces.js";
 import { tl } from "processhub-sdk/lib/tl.js";
@@ -59,23 +60,24 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
   const processDetails = await environment.processes.getProcessDetails(processId, ProcessExtras.ExtrasProcessRolesWithMemberNames);
 
   // Permission check
-  const workspace = await environment.workspaces.getWorkspaceDetails(processDetails.workspaceId, WorkspaceExtras.ExtrasMembers);
+  // ExtrasGroups is required by isPotentialRoleOwner (throws without workspace.extras.groups)
+  const workspace = await environment.workspaces.getWorkspaceDetails(processDetails.workspaceId, WorkspaceExtras.ExtrasMembers | WorkspaceExtras.ExtrasGroups);
   const user = await environment.users.getUserDetails(userId, UserExtras.ExtrasWorkspaces);
 
   const isMember = Array.isArray(user?.extras?.workspaces) && user.extras.workspaces.some((w) => w.workspaceId === workspace?.workspaceId);
   let allowed = false;
-  if (isMember) allowed = true;
-  else if (workspace && processDetails) {
-    const lanes = processObject.getLanes(false) || [];
-    for (const lane of lanes) {
-      try {
-        if (isPotentialRoleOwner(userId, lane.id, workspace, processDetails)) {
-          allowed = true;
-          break;
-        }
-      } catch {
-        // Ignore and continue
-      }
+  if (workspace && processDetails) {
+    if (isMember) {
+      // Workspace member must also hold a relevant process role (DashboardViewer, Owner, or Manager)
+      allowed =
+        isPotentialRoleOwner(userId, DefaultRoles.DashboardViewer, workspace, processDetails, true) ||
+        isPotentialRoleOwner(userId, DefaultRoles.Owner, workspace, processDetails, true) ||
+        isPotentialRoleOwner(userId, DefaultRoles.Manager, workspace, processDetails, true);
+    } else {
+      // Non-member: only allow explicit Owner or Manager role assignment
+      allowed =
+        isPotentialRoleOwner(userId, DefaultRoles.Owner, workspace, processDetails, true) ||
+        isPotentialRoleOwner(userId, DefaultRoles.Manager, workspace, processDetails, true);
     }
   }
 
