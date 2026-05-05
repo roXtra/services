@@ -1,11 +1,11 @@
 {
-  "name": "@eformservice/processviewreport",
+  "name": "@eformservice/autoexceldeploy",
   "type": "module",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "config": {
-    "servicename": "processviewreport"
+    "servicename": "autoexceldeploy"
   },
   "scripts": {
     "lint": "eslint \"**/*.{ts,tsx}\"",

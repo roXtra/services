@@ -1,15 +1,15 @@
 {
-  "id": "processviewreport-service",
-  "name": "Process View Report",
+  "id": "autoexceldeploy-service",
+  "name": "Auto Excel Deploy",
   "minRoXtraVersion": "8.009.0",
   "actions": [
     {
-      "id": "processviewreport",
+      "id": "autoexceldeploy",
       "label": "Bericht aus öffentlicher Ansicht erzeugen",
-      "configMethod": "processviewreportConfig",
+      "configMethod": "autoexceldeployConfig",
       "settings": "main.mjs",
       "serviceFile": "main.mjs",
-      "serviceMethod": "processviewreport",
+      "serviceMethod": "autoexceldeploy",
       "fields": [
         {
           "name": "processId",

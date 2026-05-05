@@ -152,7 +152,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
   instance.extras.fieldContents[targetField] = { type: "ProcessHubFileUpload", value: [uploadUrl] };
 }
 
-export async function processviewreport(environment: IServiceTaskEnvironment): Promise<boolean> {
+export async function autoexceldeploy(environment: IServiceTaskEnvironment): Promise<boolean> {
   await serviceLogic(environment);
   await environment.instances.updateInstance(environment.instanceDetails);
   return true;

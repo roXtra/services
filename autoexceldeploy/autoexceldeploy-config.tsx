@@ -1,7 +1,7 @@
 import { tl } from "processhub-sdk/lib/tl.js";
 import { Language } from "processhub-sdk/lib/tl.js";
 
-export function processviewreportConfig(userLanguage: Language): React.JSX.Element {
+export function autoexceldeployConfig(userLanguage: Language): React.JSX.Element {
   return (
     <div id="service-form" className="ui form center">
       <table className="table table-striped table-bordered">

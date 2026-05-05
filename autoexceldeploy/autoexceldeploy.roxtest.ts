@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { processviewreportConfig, processviewreport } from "./main.js";
+import { autoexceldeployConfig, autoexceldeploy } from "./main.js";
 import { decodeFieldKey, getResolvedValue, toStr } from "./utils/field-resolver.js";
 import { applyViewFilters, IGridOptions } from "./utils/view-filters.js";
 import { applyViewSorting } from "./utils/view-sorting.js";
@@ -34,8 +34,8 @@ function makeInstance(overrides: Partial<IInstanceDetails> & { fieldContents?: R
 
 describe("services", () => {
   it("bundle test", () => {
-    expect(typeof processviewreportConfig === "function").to.equal(true);
-    expect(typeof processviewreport === "function").to.equal(true);
+    expect(typeof autoexceldeployConfig === "function").to.equal(true);
+    expect(typeof autoexceldeploy === "function").to.equal(true);
   });
 });
 
