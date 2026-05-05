@@ -1,3 +1,4 @@
+import { FieldTypeOptions } from "processhub-sdk/lib/data/ifieldvalue.js";
 import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
 
 /**
@@ -9,23 +10,8 @@ export function decodeFieldKey(fieldKey: string): string {
   // Strip "field_" prefix
   const withoutPrefix = fieldKey.substring("field_".length);
 
-  // Known field type suffixes
-  const knownTypes = [
-    "ProcessHubFileUpload",
-    "ProcessHubTextInput",
-    "ProcessHubTextArea",
-    "ProcessHubDate",
-    "ProcessHubDateTime",
-    "ProcessHubDropdown",
-    "ProcessHubNumericInput",
-    "ProcessHubChecklist",
-    "ProcessHubRiskAssessment",
-    "ProcessHubSignature",
-    "ProcessHubRoleOwner",
-  ];
-
   let base64Part = withoutPrefix;
-  for (const type of knownTypes) {
+  for (const type of FieldTypeOptions) {
     if (withoutPrefix.endsWith(type)) {
       base64Part = withoutPrefix.substring(0, withoutPrefix.length - type.length);
       break;
