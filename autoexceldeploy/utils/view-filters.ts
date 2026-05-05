@@ -95,14 +95,6 @@ function matchesFilter(value: unknown, filter: IGridFilterCondition): boolean {
     case "isnotnull":
     case "isnotempty":
       return !!value && value !== undefined && cmpValue !== "" && (!Array.isArray(value) || value.length > 0);
-    case "gt":
-      return Number(value) > Number(filterValue);
-    case "gte":
-      return Number(value) >= Number(filterValue);
-    case "lt":
-      return Number(value) < Number(filterValue);
-    case "lte":
-      return Number(value) <= Number(filterValue);
     default:
       return true;
   }
