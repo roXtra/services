@@ -1,11 +1,9 @@
 import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
 
 /**
- * Decode field key from view column format.
- * Format: field_<base64(fieldName)><fieldType>
- * Base64 padding '=' is replaced with '_' in the column field.
- * Example: field_VGl0ZWw_ProcessHubTextInput -> "Titel"
+ * Get the resolved value for a given field key from an instance.
+ * @param fieldKey The field key to resolve (e.g. "field_VGl0ZWw_ProcessHubTextInput", "lane_Lane_7A0DD19E05A33282", "state", etc.)
+ * @returns The resolved value for the field key, checking fieldContents, roleOwners, direct properties, and computed fields.
  */
 export function decodeFieldKey(fieldKey: string): string {
   // Strip "field_" prefix
@@ -44,7 +42,13 @@ export function decodeFieldKey(fieldKey: string): string {
   }
 }
 
-export function getResolvedValue(instance: IInstanceDetails, fieldKey: string, environment?: IServiceTaskEnvironment): unknown {
+/**
+ * Get the resolved value for a given field key from an instance.
+ * @param instance The instance details object to resolve the field value from.
+ * @param fieldKey The field key to resolve (e.g. "field_VGl0ZWw_ProcessHubTextInput", "lane_Lane_7A0DD19E05A33282", "state", etc.)
+ * @returns The resolved value for the field key, checking fieldContents, roleOwners, direct properties, and computed fields.
+ */
+export function getResolvedValue(instance: IInstanceDetails, fieldKey: string): unknown {
   const fc = instance.extras?.fieldContents || {};
   const roleOwners = instance.extras?.roleOwners || {};
   const todos = instance.extras?.todos || [];
@@ -52,7 +56,6 @@ export function getResolvedValue(instance: IInstanceDetails, fieldKey: string, e
   if (fieldKey.startsWith("field_")) {
     const fieldName = decodeFieldKey(fieldKey);
     const fieldValue = fc[fieldName];
-    environment?.logger.debug(`Resolving field value for instance ${instance.instanceId}: field ${fieldName} with raw value ${toStr(fieldValue?.value)}`);
     if (fieldValue !== undefined) {
       return fieldValue.value ?? "";
     }
@@ -85,9 +88,14 @@ export function getResolvedValue(instance: IInstanceDetails, fieldKey: string, e
   return instance[fieldKey as keyof IInstanceDetails] ?? "";
 }
 
-export function toStr(val: unknown): string {
-  if (val == null) return "";
-  if (typeof val === "string") return val;
-  if (typeof val === "number" || typeof val === "boolean") return val.toString();
-  return JSON.stringify(val);
+/**
+ * Convert a value to string for comparison in filters.
+ * @param value The value to convert to string.
+ * @returns The string representation of the value, or empty string for null/undefined.
+ */
+export function toStr(value: unknown): string {
+  if (value == null) return "";
+  if (typeof value === "string") return value;
+  if (typeof value === "number" || typeof value === "boolean") return value.toString();
+  return JSON.stringify(value);
 }

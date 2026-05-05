@@ -1,17 +1,26 @@
 import { IInstanceDetails, State } from "processhub-sdk/lib/instance/instanceinterfaces.js";
 import { IBaseStateColumn } from "processhub-sdk/lib/process/legacyapi.js";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
 import { decodeFieldKey, toStr } from "./field-resolver.js";
 import { getBackendUrl } from "processhub-sdk/lib/config.js";
 import * as XLSX from "xlsx";
+import { tl } from "processhub-sdk/lib/tl.js";
+
+interface IHyperlinkCell {
+  xlsxUrl: string;
+  label: string;
+}
+
+function isHyperlink(v: unknown): v is IHyperlinkCell {
+  return typeof v === "object" && v !== null && "xlsxUrl" in v;
+}
 
 /**
  * Generate XLSX buffer from instances using the columns defined in the view.
  */
-export function generateXLSX(instances: IInstanceDetails[], viewColumns: IBaseStateColumn[], environment: IServiceTaskEnvironment): Buffer {
+export function generateXLSX(instances: IInstanceDetails[], viewColumns: IBaseStateColumn[], language: string): Buffer {
   const rows: Record<string, unknown>[] = [];
   for (const instance of instances) {
-    rows.push(instanceToRow(instance, viewColumns, environment));
+    rows.push(instanceToRow(instance, viewColumns, language));
   }
   return generateXLSXFromRows(rows, viewColumns);
 }
@@ -21,7 +30,7 @@ export function generateXLSX(instances: IInstanceDetails[], viewColumns: IBaseSt
  * Checks extras.fieldContents, extras.roleOwners (lane_*), direct instance properties,
  * and computed fields (link, idLowercase, state).
  */
-export function instanceToRow(instance: IInstanceDetails, viewColumns: IBaseStateColumn[], environment: IServiceTaskEnvironment): Record<string, unknown> {
+export function instanceToRow(instance: IInstanceDetails, viewColumns: IBaseStateColumn[], language: string): Record<string, unknown> {
   const row: Record<string, unknown> = {};
   const fc = instance.extras?.fieldContents || {};
   const roleOwners = instance.extras?.roleOwners || {};
@@ -29,8 +38,6 @@ export function instanceToRow(instance: IInstanceDetails, viewColumns: IBaseStat
 
   const instanceId = instance.instanceId;
   const workspaceId = instance.workspaceId;
-
-  environment.logger.debug(`Processing instance ${instanceId} with workspace ${workspaceId}`);
 
   for (const col of viewColumns) {
     const fieldKey = col.field;
@@ -61,7 +68,8 @@ export function instanceToRow(instance: IInstanceDetails, viewColumns: IBaseStat
 
     // Computed/virtual fields
     if (fieldKey === "link") {
-      row[col.title || fieldKey] = `${getBackendUrl()}/p/i/${workspaceId}/${instanceId}`;
+      const url = `${getBackendUrl()}/p/i/${workspaceId}/${instanceId}`;
+      row[col.title || fieldKey] = { xlsxUrl: url, label: "Link" };
       continue;
     }
     if (fieldKey === "idLowercase") {
@@ -71,7 +79,7 @@ export function instanceToRow(instance: IInstanceDetails, viewColumns: IBaseStat
 
     // State as readable text
     if (fieldKey === "state") {
-      row[col.title || fieldKey] = stateToString(instance.state);
+      row[col.title || fieldKey] = stateToString(instance.state, language);
       continue;
     }
 
@@ -124,17 +132,27 @@ function formatFieldValue(value: unknown, type?: string): unknown {
   if (value == null) return "";
   if (Array.isArray(value)) {
     if (value.length === 0) return "";
-    // FileUpload: array of URLs or file objects
-    return value
-      .map((v) => {
-        if (typeof v === "string") {
-          // Extract filename from URL if possible
-          const parts = v.split("/");
-          return parts[parts.length - 1] || v;
-        }
-        return toStr(v);
-      })
-      .join(", ");
+    if (type === "ProcessHubFileUpload") {
+      // Single file: return as clickable hyperlink
+      if (value.length === 1 && typeof value[0] === "string") {
+        const url = value[0];
+        const parts = url.split("/");
+        const label = decodeURIComponent(parts[parts.length - 1] || url);
+        return { xlsxUrl: url, label };
+      }
+      // Multiple files: join filenames as plain text (one cell can't hold multiple hyperlinks)
+      return value
+        .map((v) => {
+          if (typeof v === "string") {
+            const parts = v.split("/");
+            return decodeURIComponent(parts[parts.length - 1] || v);
+          }
+          return toStr(v);
+        })
+        .join(", ");
+    }
+    // Non-FileUpload arrays
+    return value.map((v) => (typeof v === "string" ? v : toStr(v))).join(", ");
   }
   if (typeof value === "string" && type === "ProcessHubTextArea") {
     // Strip HTML tags
@@ -149,16 +167,16 @@ function formatDateOnly(date: Date | undefined): string {
   return d.slice(0, 10);
 }
 
-function stateToString(state: State | undefined): string {
+function stateToString(state: State | undefined, language: string): string {
   switch (state) {
     case State.Running:
-      return "Laufend";
+      return tl("Laufend", language);
     case State.Finished:
-      return "Beendet";
+      return tl("Beendet", language);
     case State.Canceled:
-      return "Abgebrochen";
+      return tl("Abgebrochen", language);
     case State.Error:
-      return "Fehler";
+      return tl("Fehler", language);
     default:
       return "";
   }
@@ -169,7 +187,55 @@ function stateToString(state: State | undefined): string {
  */
 export function generateXLSXFromRows(rows: Record<string, unknown>[], viewColumns: IBaseStateColumn[]): Buffer {
   const headers = viewColumns.map((col) => col.title || col.field);
-  const sheet = XLSX.utils.json_to_sheet(rows, { header: headers });
+
+  // Separate hyperlink metadata from plain values before passing to json_to_sheet
+  const hyperlinkCells = new Map<string, string>(); // "rowIdx:header" -> url
+  const plainRows = rows.map((row, rowIdx) => {
+    const plain: Record<string, unknown> = {};
+    for (const [key, val] of Object.entries(row)) {
+      if (isHyperlink(val)) {
+        hyperlinkCells.set(`${rowIdx}:${key}`, val.xlsxUrl);
+        plain[key] = val.label;
+      } else {
+        plain[key] = val;
+      }
+    }
+    return plain;
+  });
+
+  const sheet = XLSX.utils.json_to_sheet(plainRows, { header: headers });
+
+  // Post-process: write =HYPERLINK formula into marked cells
+  if (hyperlinkCells.size > 0) {
+    const range = XLSX.utils.decode_range(sheet["!ref"] || "A1");
+
+    // Build header-value -> column-index map from row 0
+    const headerColMap = new Map<string, number>();
+    for (let c = range.s.c; c <= range.e.c; c++) {
+      const hCell = sheet[XLSX.utils.encode_cell({ r: 0, c })] as { v?: string | number } | undefined;
+      if (hCell?.v != null) headerColMap.set(String(hCell.v), c);
+    }
+
+    for (let r = 1; r <= range.e.r; r++) {
+      const rowIdx = r - 1;
+      for (const [header, colIdx] of headerColMap) {
+        const url = hyperlinkCells.get(`${rowIdx}:${header}`);
+        if (!url) continue;
+        const addr = XLSX.utils.encode_cell({ r, c: colIdx });
+        const cell = sheet[addr] as { v?: string | number; f?: string; t?: string } | undefined;
+        if (cell) {
+          const label = typeof cell.v === "string" || typeof cell.v === "number" ? String(cell.v) : "Link";
+          // Escape double quotes inside url/label to avoid breaking the formula
+          const safeUrl = url.replace(/"/g, "'");
+          const safeLabel = label.replace(/"/g, "'");
+          cell.f = `HYPERLINK("${safeUrl}","${safeLabel}")`;
+          cell.v = label;
+          cell.t = "s";
+        }
+      }
+    }
+  }
+
   const workbook = { Sheets: { Report: sheet }, SheetNames: ["Report"] };
   return XLSX.write(workbook, { bookType: "xlsx", type: "buffer" }) as Buffer;
 }

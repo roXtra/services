@@ -3,7 +3,10 @@ import { IGridOptions } from "./view-filters.js";
 import { getResolvedValue, toStr } from "./field-resolver.js";
 
 /**
- * Apply sorting from gridOptions.
+ * Apply sorting to instances based on gridOptions.sort.
+ * @param instances The list of instances to sort.
+ * @param gridOptions The grid options containing sort definitions.
+ * @returns The sorted list of instances.
  */
 export function applyViewSorting(instances: IInstanceDetails[], gridOptions: IGridOptions): IInstanceDetails[] {
   const sort = gridOptions.sort;

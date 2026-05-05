@@ -9,9 +9,9 @@ import { UserExtras } from "processhub-sdk/lib/user/userinterfaces.js";
 import { tl } from "processhub-sdk/lib/tl.js";
 import { getJson } from "processhub-sdk/lib/legacyapi/apirequests.js";
 import { ProcessRequestRoutes, IGetArchiveViewsRequest, IGetArchiveViewsReply } from "processhub-sdk/lib/process/legacyapi.js";
-import { applyViewFilters, IGridOptions } from "./view-utils/view-filters.js";
-import { applyViewSorting } from "./view-utils/view-sorting.js";
-import { generateXLSX } from "./disttests/processviewreport-service.js";
+import { applyViewFilters, IGridOptions } from "./utils/view-filters.js";
+import { applyViewSorting } from "./utils/view-sorting.js";
+import { generateXLSX } from "./utils/xlsx-generator.js";
 
 enum ErrorCodes {
   PERMISSION_ERROR = "PERMISSION_ERROR",
@@ -86,10 +86,8 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
   // Fetch archive views and find the configured public view
   const accessToken = await environment.roxApi.getAccessTokenFromAuth(userId);
   const archiveViewsReply = (await getJson<IGetArchiveViewsRequest>(ProcessRequestRoutes.GetArchiveViews, { processId }, { accessToken })) as unknown as IGetArchiveViewsReply;
-  environment.logger.debug(`Fetched archive views reply: ${JSON.stringify(archiveViewsReply)}`);
 
   const views = archiveViewsReply.views || {};
-  environment.logger.debug(`Fetched archive views: ${JSON.stringify(Object.keys(views))}`);
 
   // Find the view by name (not by ID)
   const viewEntry = Object.entries(views).find(([, v]) => v.viewName === publicViewId);
@@ -111,32 +109,24 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
     InstanceExtras.ExtrasFieldContents | InstanceExtras.ExtrasRoleOwners | InstanceExtras.ExtrasTodos,
   );
 
-  environment.logger.debug(`Loaded ${instances.length} instances`);
-
-  if (instances.length > 0) {
-    const sampleFc = instances[0].extras?.fieldContents || {};
-    environment.logger.debug(`Sample instance fieldContents keys: ${JSON.stringify(Object.keys(sampleFc))}`);
-    environment.logger.debug(`View column fields: ${JSON.stringify(viewColumns.map((c) => c.field))}`);
-  }
+  environment.logger.debug(`Found ${instances.length} instances`);
 
   // Apply filters from gridOptions if available
   let filteredInstances = instances;
   if (gridOptions?.filter) {
-    environment.logger.debug(`Applying gridOptions filter: ${JSON.stringify(gridOptions.filter)}`);
-    filteredInstances = applyViewFilters(instances, gridOptions.filter, environment);
+    environment.logger.debug(`Applying gridOptions filter in Service Task ${environment.bpmnTaskId}`);
+    filteredInstances = applyViewFilters(instances, gridOptions.filter);
     environment.logger.debug(`Instances after filtering: ${filteredInstances.length}`);
-  } else {
-    environment.logger.debug("No gridOptions filter to apply: " + JSON.stringify(gridOptions));
   }
 
   // Apply sorting from gridOptions if available
   if (gridOptions?.sort && gridOptions.sort.length > 0) {
-    environment.logger.debug(`Applying gridOptions sorting: ${JSON.stringify(gridOptions.sort)}`);
+    environment.logger.debug(`Applying gridOptions sorting in Service Task ${environment.bpmnTaskId}: ${JSON.stringify(gridOptions.sort)}`);
     filteredInstances = applyViewSorting(filteredInstances, gridOptions);
   }
 
   // Generate XLSX using only the columns defined in the view
-  const xlsxBuffer: Buffer = generateXLSX(filteredInstances, viewColumns, environment);
+  const xlsxBuffer: Buffer = generateXLSX(filteredInstances, viewColumns, language);
 
   // Determine file name
   const instance = environment.instanceDetails;
@@ -148,7 +138,9 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
   } else {
     fileName = `${processId}_report_${Date.now()}.xlsx`;
   }
+  environment.logger.debug(`Determined file name for report: ${fileName}`);
 
+  // Upload the file and get the URL
   const uploadUrl = await environment.instances.uploadAttachment(instance.instanceId, fileName, xlsxBuffer);
   if (!uploadUrl) {
     throw new BpmnError(ErrorCodes.ATTACHMENT_ERROR, tl("Der Bericht konnte nicht als Datei angehängt werden.", language));

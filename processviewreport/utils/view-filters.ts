@@ -1,4 +1,3 @@
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
 import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
 import { getResolvedValue, toStr } from "./field-resolver.js";
 
@@ -15,6 +14,7 @@ interface IGridFilterGroup {
 
 type IGridFilterEntry = IGridFilterCondition | IGridFilterGroup;
 
+// Type guard to check if a filter entry is a group (has logic and filters) or a condition
 export function isFilterGroup(entry: IGridFilterEntry): entry is IGridFilterGroup {
   return "logic" in entry && "filters" in entry;
 }
@@ -34,27 +34,28 @@ export interface IGridOptions {
 /**
  * Apply the gridOptions filter to instances.
  * Supports recursive nested filter groups with "and"/"or" logic.
+ * @param instances The list of instances to filter.
+ * @param filterGroup The filter group containing conditions and logic.
+ * @returns The filtered list of instances that match the filter group conditions.
  */
-export function applyViewFilters(instances: IInstanceDetails[], filterGroup: IGridFilterGroup, environment: IServiceTaskEnvironment): IInstanceDetails[] {
-  return instances.filter((instance) => evaluateFilterGroup(instance, filterGroup, environment));
+export function applyViewFilters(instances: IInstanceDetails[], filterGroup: IGridFilterGroup): IInstanceDetails[] {
+  return instances.filter((instance) => evaluateFilterGroup(instance, filterGroup));
 }
 
 /**
  * Recursively evaluate a filter group (and/or) against an instance.
+ * @param instance The instance to evaluate.
+ * @param group The filter group to evaluate.
+ * @return True if the instance matches the filter group, false otherwise.
  */
-function evaluateFilterGroup(instance: IInstanceDetails, group: IGridFilterGroup, environment: IServiceTaskEnvironment): boolean {
+function evaluateFilterGroup(instance: IInstanceDetails, group: IGridFilterGroup): boolean {
   const results = group.filters.map((entry) => {
     if (isFilterGroup(entry)) {
-      return evaluateFilterGroup(instance, entry, environment);
+      return evaluateFilterGroup(instance, entry);
     }
-    // It's a condition
     const fieldKey = entry.field;
-    const value = getResolvedValue(instance, fieldKey, environment);
-    environment.logger.debug(
-      `Evaluating filter on instance ${instance.instanceId}: field ${fieldKey} with value ${toStr(value)} against condition ${entry.operator} ${toStr(entry.value)}`,
-    );
+    const value = getResolvedValue(instance, fieldKey);
     const matchValue = matchesFilter(value, entry);
-    environment.logger.debug(`Filter condition result: ${matchValue}`);
     return matchValue;
   });
 
@@ -65,6 +66,12 @@ function evaluateFilterGroup(instance: IInstanceDetails, group: IGridFilterGroup
   return results.every((r) => r);
 }
 
+/**
+ * Evaluate a single filter condition against a value.
+ * @param value The value to evaluate.
+ * @param filter The filter condition to apply.
+ * @returns True if the value matches the filter condition, false otherwise.
+ */
 function matchesFilter(value: unknown, filter: IGridFilterCondition): boolean {
   const filterValue = filter.value;
   const cmpValue = toStr(value).toLocaleLowerCase();
