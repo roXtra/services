@@ -49,6 +49,10 @@ export function applyViewFilters(instances: IInstanceDetails[], filterGroup: IGr
  * @return True if the instance matches the filter group, false otherwise.
  */
 function evaluateFilterGroup(instance: IInstanceDetails, group: IGridFilterGroup): boolean {
+  if (group.filters.length === 0) {
+    return true;
+  }
+
   const results = group.filters.map((entry) => {
     if (isFilterGroup(entry)) {
       return evaluateFilterGroup(instance, entry);
@@ -76,6 +80,10 @@ function matchesFilter(value: unknown, filter: IGridFilterCondition): boolean {
   const filterValue = filter.value;
   const cmpValue = toStr(value).toLocaleLowerCase();
   const cmpFilter = toStr(filterValue).toLocaleLowerCase();
+  const dateOnlyValue = toDateOnlyKey(value);
+  const dateOnlyFilter = toDateOnlyKey(filterValue);
+  const numericValue = toComparableNumber(value);
+  const numericFilter = toComparableNumber(filterValue);
   switch (filter.operator) {
     case "eq":
       return cmpValue === cmpFilter;
@@ -95,7 +103,71 @@ function matchesFilter(value: unknown, filter: IGridFilterCondition): boolean {
     case "isnotnull":
     case "isnotempty":
       return !!value && value !== undefined && cmpValue !== "" && (!Array.isArray(value) || value.length > 0);
+    case "gt":
+      if (dateOnlyValue !== null && dateOnlyFilter !== null) return dateOnlyValue > dateOnlyFilter;
+      return numericValue !== null && numericFilter !== null && numericValue > numericFilter;
+    case "gte":
+      if (dateOnlyValue !== null && dateOnlyFilter !== null) return dateOnlyValue >= dateOnlyFilter;
+      return numericValue !== null && numericFilter !== null && numericValue >= numericFilter;
+    case "lt":
+      if (dateOnlyValue !== null && dateOnlyFilter !== null) return dateOnlyValue < dateOnlyFilter;
+      return numericValue !== null && numericFilter !== null && numericValue < numericFilter;
+    case "lte":
+      if (dateOnlyValue !== null && dateOnlyFilter !== null) return dateOnlyValue <= dateOnlyFilter;
+      return numericValue !== null && numericFilter !== null && numericValue <= numericFilter;
     default:
       return true;
   }
+}
+
+function toDateOnlyKey(value: unknown): string | null {
+  if (value instanceof Date) {
+    return value.toISOString().slice(0, 10);
+  }
+
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
+      return trimmed;
+    }
+  }
+
+  return null;
+}
+
+function toComparableNumber(value: unknown): number | null {
+  if (value === null || value === undefined) {
+    return null;
+  }
+
+  if (value instanceof Date) {
+    return stripMilliseconds(value.getTime());
+  }
+
+  if (typeof value === "number") {
+    return Number.isFinite(value) ? value : null;
+  }
+
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (trimmed === "") {
+      return null;
+    }
+
+    const numeric = Number(trimmed);
+    if (Number.isFinite(numeric)) {
+      return numeric;
+    }
+
+    const parsedDate = Date.parse(trimmed);
+    if (Number.isFinite(parsedDate)) {
+      return stripMilliseconds(parsedDate);
+    }
+  }
+
+  return null;
+}
+
+function stripMilliseconds(timestamp: number): number {
+  return Math.floor(timestamp / 1000) * 1000;
 }

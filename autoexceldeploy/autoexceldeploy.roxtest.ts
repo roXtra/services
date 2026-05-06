@@ -240,6 +240,57 @@ describe("applyViewFilters", () => {
     expect(result).to.have.length(1);
     expect(result[0].instanceId).to.equal("ccc");
   });
+
+  it("compares ISO date strings with time using gt", () => {
+    const dateInstances: IInstanceDetails[] = [
+      makeInstance({ instanceId: "before", createdAt: new Date("2026-05-06T10:00:00.000Z") } as Partial<IInstanceDetails>),
+      makeInstance({ instanceId: "after", createdAt: new Date("2026-05-06T10:00:01.000Z") } as Partial<IInstanceDetails>),
+    ];
+
+    const group = {
+      logic: "and" as const,
+      filters: [{ field: "createdAt", operator: "gt", value: "2026-05-06T10:00:00Z" }],
+    };
+
+    const result = applyViewFilters(dateInstances, group);
+    expect(result).to.have.length(1);
+    expect(result[0].instanceId).to.equal("after");
+  });
+
+  it("normalizes milliseconds for datetime comparisons", () => {
+    const dateInstances: IInstanceDetails[] = [makeInstance({ instanceId: "same-second", createdAt: new Date("2026-05-06T10:00:00.900Z") } as Partial<IInstanceDetails>)];
+
+    const gteGroup = {
+      logic: "and" as const,
+      filters: [{ field: "createdAt", operator: "gte", value: "2026-05-06T10:00:00.100Z" }],
+    };
+
+    const ltGroup = {
+      logic: "and" as const,
+      filters: [{ field: "createdAt", operator: "lt", value: "2026-05-06T10:00:00.100Z" }],
+    };
+
+    const gteResult = applyViewFilters(dateInstances, gteGroup);
+    const ltResult = applyViewFilters(dateInstances, ltGroup);
+
+    expect(gteResult).to.have.length(1);
+    expect(ltResult).to.have.length(0);
+  });
+
+  it("treats date-only lte as calendar-date comparison", () => {
+    const dateInstances: IInstanceDetails[] = [
+      makeInstance({ instanceId: "same-day", createdAt: new Date("2026-05-06T15:45:12.123Z") } as Partial<IInstanceDetails>),
+    ];
+
+    const group = {
+      logic: "and" as const,
+      filters: [{ field: "createdAt", operator: "lte", value: "2026-05-06" }],
+    };
+
+    const result = applyViewFilters(dateInstances, group);
+    expect(result).to.have.length(1);
+    expect(result[0].instanceId).to.equal("same-day");
+  });
 });
 
 // ---------------------------------------------------------------------------
