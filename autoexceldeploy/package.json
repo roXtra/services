@@ -1,11 +1,11 @@
 {
-  "name": "@eformservice/noop",
+  "name": "@eformservice/autoexceldeploy",
   "type": "module",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "config": {
-    "servicename": "noop"
+    "servicename": "autoexceldeploy"
   },
   "scripts": {
     "lint": "eslint \"**/*.{ts,tsx}\"",
@@ -27,18 +27,21 @@
     "chai": "^6.2.2",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.137.0-1/release.tgz",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz"
   },
   "devDependencies": {
     "@types/chai": "^5.2.3",
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.19.17",
     "@types/react": "^18.3.28",
+    "@types/sinon": "^21.0.1",
     "bestzip": "^2.2.3",
     "copyfiles": "^2.4.1",
     "cross-env": "^10.1.0",
     "eslint": "9.39.2",
     "mocha": "^11.7.5",
+    "sinon": "^21.1.2",
     "ts-loader": "^9.5.7",
     "typescript": "^6.0.3",
     "webpack": "^5.106.2",
