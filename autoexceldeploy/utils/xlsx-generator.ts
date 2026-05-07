@@ -2,7 +2,8 @@ import { IInstanceDetails, State } from "processhub-sdk/lib/instance/instanceint
 import { IBaseStateColumn } from "processhub-sdk/lib/process/legacyapi.js";
 import { decodeFieldKey, toStr } from "./field-resolver.js";
 import { getBackendUrl } from "processhub-sdk/lib/config.js";
-import * as XLSX from "xlsx";
+import { Workbook } from "@progress/kendo-ooxml";
+import type { WorkbookSheetRow, WorkbookSheetRowCell } from "@progress/kendo-ooxml";
 import { tl } from "processhub-sdk/lib/tl.js";
 
 interface IHyperlinkCell {
@@ -10,14 +11,14 @@ interface IHyperlinkCell {
   label: string;
 }
 
-function isHyperlink(v: unknown): v is IHyperlinkCell {
-  return typeof v === "object" && v !== null && "xlsxUrl" in v;
+function isHyperlink(value: unknown): value is IHyperlinkCell {
+  return typeof value === "object" && value !== null && "xlsxUrl" in value;
 }
 
 /**
  * Generate XLSX buffer from instances using the columns defined in the view.
  */
-export function generateXLSX(instances: IInstanceDetails[], viewColumns: IBaseStateColumn[], language: string): Buffer {
+export async function generateXLSX(instances: IInstanceDetails[], viewColumns: IBaseStateColumn[], language: string): Promise<Buffer> {
   const rows: Record<string, unknown>[] = [];
   for (const instance of instances) {
     rows.push(instanceToRow(instance, viewColumns, language));
@@ -126,21 +127,23 @@ export function instanceToRow(instance: IInstanceDetails, viewColumns: IBaseStat
 
 /**
  * Format a field value for display in XLSX.
- * Handles arrays (FileUpload), HTML (TextArea), etc.
+ * Handles all ProcessHub field types (RadioButton, Checklist, TreeView, etc.).
  */
 function formatFieldValue(value: unknown, type?: string): unknown {
   if (value == null) return "";
+
+  // --- Array types ---
   if (Array.isArray(value)) {
     if (value.length === 0) return "";
+
+    // FileUpload: array of URL strings
     if (type === "ProcessHubFileUpload") {
-      // Single file: return as clickable hyperlink
       if (value.length === 1 && typeof value[0] === "string") {
         const url = value[0];
         const parts = url.split("/");
         const label = decodeURIComponent(parts[parts.length - 1] || url);
         return { xlsxUrl: url, label };
       }
-      // Multiple files: join filenames as plain text (one cell can't hold multiple hyperlinks)
       return value
         .map((v) => {
           if (typeof v === "string") {
@@ -151,14 +154,108 @@ function formatFieldValue(value: unknown, type?: string): unknown {
         })
         .join(", ");
     }
-    // Non-FileUpload arrays
+
+    // RoxFileLink: array of { roxFileName, roxFileId, ... }
+    if (type === "ProcessHubRoxFileLink") {
+      return value
+        .map((v) => {
+          if (typeof v === "object" && v !== null && "roxFileName" in v) {
+            return (v as { roxFileName?: string }).roxFileName ?? "";
+          }
+          return toStr(v);
+        })
+        .filter(Boolean)
+        .join(", ");
+    }
+
     return value.map((v) => (typeof v === "string" ? v : toStr(v))).join(", ");
   }
-  if (typeof value === "string" && type === "ProcessHubTextArea") {
-    // Strip HTML tags
-    return value.replace(/<[^>]*>/g, "").trim();
+
+  // --- String types ---
+  if (typeof value === "string") {
+    if (type === "ProcessHubTextArea") {
+      return value.replace(/<[^>]*>/g, "").trim();
+    }
+    return value;
   }
-  return value;
+
+  // --- Non-string primitives ---
+  if (typeof value !== "object") return value;
+
+  // --- Object types ---
+
+  // RadioButton: { radioButtons: [{ name }], selectedRadio: number }
+  if (type === "ProcessHubRadioButton" && "radioButtons" in value && "selectedRadio" in value) {
+    const rb = value as { radioButtons: Array<{ name?: string } | undefined>; selectedRadio: number | undefined };
+    const idx = rb.selectedRadio;
+    if (idx != null && rb.radioButtons[idx] != null) {
+      return rb.radioButtons[idx]?.name ?? "";
+    }
+    return "";
+  }
+
+  // Checklist / Decision: { [label: string]: boolean } – return checked labels
+  if (type === "ProcessHubChecklist" || type === "ProcessHubDecision") {
+    return Object.entries(value as Record<string, boolean>)
+      .filter(([, checked]) => checked)
+      .map(([key]) => key)
+      .join(", ");
+  }
+
+  // Tasks: { tasks: [{ checked, text }] }
+  if (type === "ProcessHubTasks" && "tasks" in value) {
+    const tasks = (value as { tasks: Array<{ checked: boolean; text: string }> }).tasks;
+    return tasks.map((t) => (t.checked ? `[x] ${t.text}` : `[ ] ${t.text}`)).join(", ");
+  }
+
+  // TreeView: { entries: [{ name, checked, subItems }] } – collect all checked names recursively
+  if (type === "ProcessHubTreeView" && "entries" in value) {
+    type TEntry = { name: string; checked: boolean; subItems: TEntry[] };
+    const collectChecked = (entries: TEntry[]): string[] => {
+      const result: string[] = [];
+      for (const e of entries) {
+        if (e.checked) result.push(e.name);
+        result.push(...collectChecked(e.subItems));
+      }
+      return result;
+    };
+    return collectChecked((value as { entries: TEntry[] }).entries).join(", ");
+  }
+
+  // DateRange: { start: Date, end: Date }
+  if (type === "ProcessHubDateRange" && "start" in value && "end" in value) {
+    const dr = value as { start: Date | string | null | undefined; end: Date | string | null | undefined };
+    const fmtDate = (d: Date | string | null | undefined): string => {
+      if (!d) return "";
+      const s = d instanceof Date ? d.toISOString() : String(d);
+      return s.slice(0, 10);
+    };
+    return `${fmtDate(dr.start)} – ${fmtDate(dr.end)}`;
+  }
+
+  // SVGDropdown: { text: string, svgData: ... }
+  if (type === "ProcessHubSVGDropdown" && "text" in value) {
+    return (value as { text: string }).text;
+  }
+
+  // ProcessLink: { linkedInstances: [{ title?, instanceId }] }
+  if (type === "ProcessHubProcessLink" && "linkedInstances" in value) {
+    const pl = value as { linkedInstances: Array<{ title?: string; instanceId: string }> };
+    return pl.linkedInstances.map((i) => i.title || i.instanceId).join(", ");
+  }
+
+  // RoxFile: { url?, ... }
+  if (type === "ProcessHubRoxFile" && "url" in value) {
+    return (value as { url?: string }).url ?? "";
+  }
+
+  // Signature: SVG data, not text-representable
+  if (type === "ProcessHubSignature") {
+    return "";
+  }
+
+  // Fallback: convert unrecognized objects to string so cells are never empty
+  return toStr(value);
 }
 
 function formatDateOnly(date: Date | undefined): string {
@@ -183,59 +280,57 @@ function stateToString(state: State | undefined, language: string): string {
 }
 
 /**
+ * Safely converts any value to a type accepted by Kendo OOXML cell values.
+ * Prevents empty cells when raw objects or unexpected types reach the sheet.
+ */
+function toKendoValue(value: unknown): string | number | boolean | Date {
+  if (value == null) return "";
+  if (typeof value === "string" || typeof value === "number" || typeof value === "boolean" || value instanceof Date) return value;
+  return toStr(value);
+}
+
+/**
  * Generate XLSX buffer from already prepared rows, preserving column order from view.
  */
-export function generateXLSXFromRows(rows: Record<string, unknown>[], viewColumns: IBaseStateColumn[]): Buffer {
+export async function generateXLSXFromRows(rows: Record<string, unknown>[], viewColumns: IBaseStateColumn[]): Promise<Buffer> {
   const headers = viewColumns.map((col) => col.title || col.field);
 
-  // Separate hyperlink metadata from plain values before passing to json_to_sheet
-  const hyperlinkCells = new Map<string, string>(); // "rowIdx:header" -> url
-  const plainRows = rows.map((row, rowIdx) => {
-    const plain: Record<string, unknown> = {};
-    for (const [key, val] of Object.entries(row)) {
-      if (isHyperlink(val)) {
-        hyperlinkCells.set(`${rowIdx}:${key}`, val.xlsxUrl);
-        plain[key] = val.label;
-      } else {
-        plain[key] = val;
-      }
-    }
-    return plain;
+  // Column widths – IBaseStateColumn.width is a string like "150px" or "150"
+  const sheetColumns = viewColumns.map((col) => {
+    const px = col.width ? parseInt(col.width, 10) : 150;
+    return { width: px };
   });
 
-  const sheet = XLSX.utils.json_to_sheet(plainRows, { header: headers });
+  // Header row – grey background, white bold text
+  const headerRow: WorkbookSheetRow = {
+    cells: headers.map((header): WorkbookSheetRowCell => ({ value: header, background: "#4F4F4F", color: "#FFFFFF" })),
+    type: "header",
+  };
 
-  // Post-process: write =HYPERLINK formula into marked cells
-  if (hyperlinkCells.size > 0) {
-    const range = XLSX.utils.decode_range(sheet["!ref"] || "A1");
-
-    // Build header-value -> column-index map from row 0
-    const headerColMap = new Map<string, number>();
-    for (let c = range.s.c; c <= range.e.c; c++) {
-      const hCell = sheet[XLSX.utils.encode_cell({ r: 0, c })] as { v?: string | number } | undefined;
-      if (hCell?.v != null) headerColMap.set(String(hCell.v), c);
-    }
-
-    for (let r = 1; r <= range.e.r; r++) {
-      const rowIdx = r - 1;
-      for (const [header, colIdx] of headerColMap) {
-        const url = hyperlinkCells.get(`${rowIdx}:${header}`);
-        if (!url) continue;
-        const addr = XLSX.utils.encode_cell({ r, c: colIdx });
-        const cell = sheet[addr] as { v?: string | number; f?: string; t?: string } | undefined;
-        if (cell) {
-          const label = typeof cell.v === "string" || typeof cell.v === "number" ? String(cell.v) : "Link";
-          // Escape double quotes inside url/label to avoid breaking the formula
-          const safeUrl = url.replace(/"/g, "'");
-          const safeLabel = label.replace(/"/g, "'");
-          cell.f = `HYPERLINK("${safeUrl}","${safeLabel}")`;
-          cell.v = label;
-          cell.t = "s";
-        }
+  // Data rows
+  const dataRows: WorkbookSheetRow[] = rows.map((row) => ({
+    cells: headers.map((header): WorkbookSheetRowCell => {
+      const value = row[header];
+      if (isHyperlink(value)) {
+        // Escape double quotes inside url/label to avoid breaking the formula
+        const safeUrl = value.xlsxUrl.replace(/"/g, "'");
+        const safeLabel = value.label.replace(/"/g, "'");
+        return {
+          formula: `HYPERLINK("${safeUrl}","${safeLabel}")`,
+          value: value.label,
+          format: "[Blue]",
+          underline: true,
+        };
       }
-    }
-  }
+      return { value: toKendoValue(value) };
+    }),
+  }));
 
-  const workbook = { Sheets: { Report: sheet }, SheetNames: ["Report"] };
-  return XLSX.write(workbook, { bookType: "xlsx", type: "buffer" }) as Buffer;
+  const workbook = new Workbook({
+    sheets: [{ name: "Report", columns: sheetColumns, rows: [headerRow, ...dataRows] }],
+  });
+
+  const dataUrl = await workbook.toDataURL();
+  const base64 = dataUrl.split(",")[1];
+  return Buffer.from(base64, "base64");
 }

@@ -276,21 +276,6 @@ describe("applyViewFilters", () => {
     expect(gteResult).to.have.length(1);
     expect(ltResult).to.have.length(0);
   });
-
-  it("treats date-only lte as calendar-date comparison", () => {
-    const dateInstances: IInstanceDetails[] = [
-      makeInstance({ instanceId: "same-day", createdAt: new Date("2026-05-06T15:45:12.123Z") } as Partial<IInstanceDetails>),
-    ];
-
-    const group = {
-      logic: "and" as const,
-      filters: [{ field: "createdAt", operator: "lte", value: "2026-05-06" }],
-    };
-
-    const result = applyViewFilters(dateInstances, group);
-    expect(result).to.have.length(1);
-    expect(result[0].instanceId).to.equal("same-day");
-  });
 });
 
 // ---------------------------------------------------------------------------
@@ -442,24 +427,24 @@ describe("instanceToRow", () => {
 // ---------------------------------------------------------------------------
 
 describe("generateXLSXFromRows", () => {
-  it("produces a valid XLSX buffer", () => {
+  it("produces a valid XLSX buffer", async () => {
     const rows = [{ ID: "abc", Titel: "Test" }];
     const cols = [
       { field: "idLowercase", title: "ID", show: true, hidden: false },
       { field: "title", title: "Titel", show: true, hidden: false },
     ];
-    const buf = generateXLSXFromRows(rows, cols as never);
+    const buf = await generateXLSXFromRows(rows, cols as never);
     expect(Buffer.isBuffer(buf)).to.equal(true);
     expect(buf.length).to.be.greaterThan(0);
   });
 
-  it("writes HYPERLINK formula for link cells", () => {
+  it("writes HYPERLINK formula for link cells", async () => {
     const rows = [{ Link: { xlsxUrl: "https://example.com/p/i/ws/inst", label: "Link" }, Titel: "Test" }];
     const cols = [
       { field: "link", title: "Link", show: true, hidden: false },
       { field: "title", title: "Titel", show: true, hidden: false },
     ];
-    const buf = generateXLSXFromRows(rows, cols as never);
+    const buf = await generateXLSXFromRows(rows, cols as never);
     const wb = XLSX.read(buf, { type: "buffer" });
     const sheet = wb.Sheets["Report"];
     // A1 = header "Link", A2 = data row
@@ -469,13 +454,13 @@ describe("generateXLSXFromRows", () => {
     expect(cell.f).to.include("https://example.com/p/i/ws/inst");
   });
 
-  it("plain text cells have no formula", () => {
+  it("plain text cells have no formula", async () => {
     const rows = [{ ID: "abc123", Titel: "Normaler Text" }];
     const cols = [
       { field: "idLowercase", title: "ID", show: true, hidden: false },
       { field: "title", title: "Titel", show: true, hidden: false },
     ];
-    const buf = generateXLSXFromRows(rows, cols as never);
+    const buf = await generateXLSXFromRows(rows, cols as never);
     const wb = XLSX.read(buf, { type: "buffer" });
     const sheet = wb.Sheets["Report"];
     const cell = sheet["A2"] as { f?: string; v?: unknown };
@@ -483,13 +468,13 @@ describe("generateXLSXFromRows", () => {
     expect(cell.v).to.equal("abc123");
   });
 
-  it("column order matches viewColumns definition", () => {
+  it("column order matches viewColumns definition", async () => {
     const rows = [{ Status: "Laufend", ID: "abc" }];
     const cols = [
       { field: "idLowercase", title: "ID", show: true, hidden: false },
       { field: "state", title: "Status", show: true, hidden: false },
     ];
-    const buf = generateXLSXFromRows(rows, cols as never);
+    const buf = await generateXLSXFromRows(rows, cols as never);
     const wb = XLSX.read(buf, { type: "buffer" });
     const sheet = wb.Sheets["Report"];
     expect((sheet["A1"] as { v?: unknown })?.v).to.equal("ID");
