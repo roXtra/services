@@ -81,22 +81,12 @@ function matchesFilter(value: unknown, filter: IGridFilterCondition): boolean {
   const cmpValue = toStr(value).toLocaleLowerCase();
   const cmpFilter = toStr(filterValue).toLocaleLowerCase();
   const numericValue = toComparableNumber(value);
-  // For date-only filter strings (YYYY-MM-DD), lte/gt must use end-of-day so
-  // that instances timestamped during that day are included correctly.
-  const dateOnlyFilter = /^\d{4}-\d{2}-\d{2}$/.test(toStr(filterValue).trim());
-  const numericFilter = dateOnlyFilter && (filter.operator === "lte" || filter.operator === "gt") ? toEndOfDay(toStr(filterValue).trim()) : toComparableNumber(filterValue);
+  const numericFilter = toComparableNumber(filterValue);
   switch (filter.operator) {
     case "eq":
-      // Date-only eq: compare truncated-to-day timestamps
-      if (dateOnlyFilter && numericValue !== null) {
-        return toStartOfDay(numericValue) === toComparableNumber(filterValue);
-      }
-      return cmpValue === cmpFilter;
+      return numericValue !== null ? toComparableNumber(value) === toComparableNumber(filterValue) : cmpValue === cmpFilter;
     case "neq":
-      if (dateOnlyFilter && numericValue !== null) {
-        return toStartOfDay(numericValue) !== toComparableNumber(filterValue);
-      }
-      return cmpValue !== cmpFilter;
+      return numericValue !== null ? toComparableNumber(value) !== toComparableNumber(filterValue) : cmpValue !== cmpFilter;
     case "contains":
       return cmpValue.includes(cmpFilter);
     case "doesnotcontain":
@@ -159,16 +149,4 @@ function toComparableNumber(value: unknown): number | null {
 
 function stripMilliseconds(timestamp: number): number {
   return Math.floor(timestamp / 1000) * 1000;
-}
-
-/** Returns the start-of-day (00:00:00.000 UTC) timestamp for a given ms timestamp. */
-function toStartOfDay(timestamp: number): number {
-  return Math.floor(timestamp / 86_400_000) * 86_400_000;
-}
-
-/** Parses a YYYY-MM-DD string and returns end-of-day (23:59:59.999 UTC) as a stripped timestamp. */
-function toEndOfDay(dateStr: string): number | null {
-  const base = Date.parse(dateStr);
-  if (!Number.isFinite(base)) return null;
-  return stripMilliseconds(base + 86_400_000 - 1);
 }
