@@ -37,13 +37,24 @@ export function decodeFieldKey(fieldKey: string): string {
 export function resolveFieldDisplayValue(value: unknown, type?: string): unknown {
   if (value == null) return "";
 
+  // --- Date type ---
+  if (type === "ProcessHubDate") {
+    return formatDateOnly(value as string);
+  }
+
+  // --- DateTime type ---
+  if (type === "ProcessHubDateTime") {
+    return formatDate(value as string);
+  }
+
+  // --- String types ---
   if (typeof value === "string") {
     if (type === "ProcessHubTextArea") return value.replace(/<[^>]*>/g, "").trim();
     return value;
   }
 
-  // Primitives pass through unchanged (important for numeric / date sort comparisons)
-  if (typeof value === "number" || typeof value === "boolean" || value instanceof Date) {
+  // --- Primitive types ---
+  if (typeof value === "number" || typeof value === "boolean") {
     return value;
   }
 
@@ -161,6 +172,7 @@ export function getResolvedValue(instance: IInstanceDetails, fieldKey: string): 
   const roleOwners = instance.extras?.roleOwners || {};
   const todos = instance.extras?.todos || [];
 
+  // Field contents (extras.fieldContents with base64-encoded field keys)
   if (fieldKey.startsWith("field_")) {
     const fieldName = decodeFieldKey(fieldKey);
     const fieldValue = fc[fieldName];
@@ -170,37 +182,47 @@ export function getResolvedValue(instance: IInstanceDetails, fieldKey: string): 
     return "";
   }
 
+  // Lane/role owner fields
   if (fieldKey.startsWith("lane_")) {
     const laneId = fieldKey.replace("lane_", "");
     const owners = roleOwners[laneId];
     return owners && owners.length > 0 ? owners.map((o) => o.displayName || o.memberId).join(", ") : "";
   }
 
+  // Computed/virtual fields
   if (fieldKey === "state") return instance.state ?? 0;
-  if (fieldKey === "createdAt") return instance.createdAt ?? "";
-  if (fieldKey === "createdAtDate") {
-    return formatDateOnly(instance.createdAt);
-  }
-  if (fieldKey === "completedAt") return instance.completedAt ?? "";
-  if (fieldKey === "completedAtDate") {
-    return formatDateOnly(instance.completedAt);
-  }
+  if (fieldKey === "createdAt") return formatDate(instance.createdAt);
+  if (fieldKey === "createdAtDate") return formatDateOnly(instance.createdAt);
+  if (fieldKey === "completedAt") return formatDate(instance.completedAt);
+  if (fieldKey === "completedAtDate") return formatDateOnly(instance.completedAt);
   if (fieldKey === "todos") return todos.map((t) => t.displayName || t.bpmnTaskId).join(", ");
   if (fieldKey === "idLowercase") return instance.instanceId?.toLowerCase() ?? "";
-  if (fieldKey === "title") return instance.title ?? "";
 
+  // Direct instance properties as fallback
   const fieldValue = instance[fieldKey as keyof IInstanceDetails];
-  if (fieldValue instanceof Date) return fieldValue.toISOString();
   return fieldValue ?? "";
 }
 
 /**
  * Return a date with out time
+ * @param date The input date which may be a Date object, an ISO string, or null/undefined.
+ * @returns A Date object with time set to 00:00:00, or Invalid Date if input is null/undefined.
  */
 export function formatDateOnly(date: Date | string | null | undefined): Date {
   if (!date) return new Date(NaN);
   const d = date instanceof Date ? date : new Date(date);
   return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+}
+
+/**
+ * Return a date with time
+ * @param date The input date which may be a Date object, an ISO string, or null/undefined.
+ * @returns A Date object with time included (time set to 00:00:00 if original value was date-only), or Invalid Date if input is null/undefined.
+ */
+export function formatDate(date: Date | string | null | undefined): Date {
+  if (!date) return new Date(NaN);
+  const d = date instanceof Date ? date : new Date(date);
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds());
 }
 
 /**

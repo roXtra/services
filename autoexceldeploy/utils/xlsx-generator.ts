@@ -1,6 +1,6 @@
 import { IInstanceDetails, State } from "processhub-sdk/lib/instance/instanceinterfaces.js";
 import { IBaseStateColumn } from "processhub-sdk/lib/process/legacyapi.js";
-import { decodeFieldKey, toStr, resolveFieldDisplayValue, formatDateOnly } from "./field-resolver.js";
+import { decodeFieldKey, toStr, resolveFieldDisplayValue, getResolvedValue } from "./field-resolver.js";
 import { getBackendUrl } from "processhub-sdk/lib/config.js";
 import { Workbook } from "@progress/kendo-ooxml";
 import type { WorkbookSheetRow, WorkbookSheetRowCell } from "@progress/kendo-ooxml";
@@ -84,16 +84,6 @@ export function instanceToRow(instance: IInstanceDetails, viewColumns: IBaseStat
       continue;
     }
 
-    // Date-only variants
-    if (fieldKey === "createdAtDate") {
-      row[col.title || fieldKey] = formatDateOnly(instance.createdAt);
-      continue;
-    }
-    if (fieldKey === "completedAtDate") {
-      row[col.title || fieldKey] = formatDateOnly(instance.completedAt);
-      continue;
-    }
-
     // Todos (pending tasks)
     if (fieldKey === "todos") {
       if (todos.length > 0) {
@@ -114,9 +104,15 @@ export function instanceToRow(instance: IInstanceDetails, viewColumns: IBaseStat
       continue;
     }
 
+    // Virtual date-only fields (computed from createdAt / completedAt)
+    if (fieldKey === "createdAtDate" || fieldKey === "completedAtDate") {
+      row[col.title || fieldKey] = getResolvedValue(instance, fieldKey);
+      continue;
+    }
+
     // Direct instance properties (title, createdAt, completedAt, cancellationReason, etc.)
     if (instance[fieldKey as keyof IInstanceDetails] !== undefined) {
-      row[col.title || fieldKey] = instance[fieldKey as keyof IInstanceDetails];
+      row[col.title || fieldKey] = getResolvedValue(instance, fieldKey);
       continue;
     }
 
