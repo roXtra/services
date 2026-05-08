@@ -25,11 +25,9 @@
   "license": "ISC",
   "dependencies": {
     "@progress/kendo-ooxml": "^1.9.4",
-    "chai": "^6.2.2",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.137.0-1/release.tgz",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz"
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@types/chai": "^5.2.3",
@@ -38,6 +36,7 @@
     "@types/react": "^18.3.28",
     "@types/sinon": "^21.0.1",
     "bestzip": "^2.2.3",
+    "chai": "^6.2.2",
     "copyfiles": "^2.4.1",
     "cross-env": "^10.1.0",
     "eslint": "9.39.2",
@@ -46,6 +45,7 @@
     "ts-loader": "^9.5.7",
     "typescript": "^6.0.3",
     "webpack": "^5.106.2",
-    "webpack-cli": "^7.0.2"
+    "webpack-cli": "^7.0.2",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz"
   }
 }

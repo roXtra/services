@@ -80,14 +80,22 @@ function matchesFilter(value: unknown, filter: IGridFilterCondition): boolean {
   const filterValue = filter.value;
   const cmpValue = toStr(value).toLocaleLowerCase();
   const cmpFilter = toStr(filterValue).toLocaleLowerCase();
-  const dateOnlyValue = toDateOnlyKey(value);
-  const dateOnlyFilter = toDateOnlyKey(filterValue);
   const numericValue = toComparableNumber(value);
-  const numericFilter = toComparableNumber(filterValue);
+  // For date-only filter strings (YYYY-MM-DD), lte/gt must use end-of-day so
+  // that instances timestamped during that day are included correctly.
+  const dateOnlyFilter = /^\d{4}-\d{2}-\d{2}$/.test(toStr(filterValue).trim());
+  const numericFilter = dateOnlyFilter && (filter.operator === "lte" || filter.operator === "gt") ? toEndOfDay(toStr(filterValue).trim()) : toComparableNumber(filterValue);
   switch (filter.operator) {
     case "eq":
+      // Date-only eq: compare truncated-to-day timestamps
+      if (dateOnlyFilter && numericValue !== null) {
+        return toStartOfDay(numericValue) === toComparableNumber(filterValue);
+      }
       return cmpValue === cmpFilter;
     case "neq":
+      if (dateOnlyFilter && numericValue !== null) {
+        return toStartOfDay(numericValue) !== toComparableNumber(filterValue);
+      }
       return cmpValue !== cmpFilter;
     case "contains":
       return cmpValue.includes(cmpFilter);
@@ -104,35 +112,16 @@ function matchesFilter(value: unknown, filter: IGridFilterCondition): boolean {
     case "isnotempty":
       return !!value && value !== undefined && cmpValue !== "" && (!Array.isArray(value) || value.length > 0);
     case "gt":
-      if (dateOnlyValue !== null && dateOnlyFilter !== null) return dateOnlyValue > dateOnlyFilter;
       return numericValue !== null && numericFilter !== null && numericValue > numericFilter;
     case "gte":
-      if (dateOnlyValue !== null && dateOnlyFilter !== null) return dateOnlyValue >= dateOnlyFilter;
       return numericValue !== null && numericFilter !== null && numericValue >= numericFilter;
     case "lt":
-      if (dateOnlyValue !== null && dateOnlyFilter !== null) return dateOnlyValue < dateOnlyFilter;
       return numericValue !== null && numericFilter !== null && numericValue < numericFilter;
     case "lte":
-      if (dateOnlyValue !== null && dateOnlyFilter !== null) return dateOnlyValue <= dateOnlyFilter;
       return numericValue !== null && numericFilter !== null && numericValue <= numericFilter;
     default:
       return true;
   }
-}
-
-function toDateOnlyKey(value: unknown): string | null {
-  if (value instanceof Date) {
-    return value.toISOString().slice(0, 10);
-  }
-
-  if (typeof value === "string") {
-    const trimmed = value.trim();
-    if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
-      return trimmed;
-    }
-  }
-
-  return null;
 }
 
 function toComparableNumber(value: unknown): number | null {
@@ -170,4 +159,16 @@ function toComparableNumber(value: unknown): number | null {
 
 function stripMilliseconds(timestamp: number): number {
   return Math.floor(timestamp / 1000) * 1000;
+}
+
+/** Returns the start-of-day (00:00:00.000 UTC) timestamp for a given ms timestamp. */
+function toStartOfDay(timestamp: number): number {
+  return Math.floor(timestamp / 86_400_000) * 86_400_000;
+}
+
+/** Parses a YYYY-MM-DD string and returns end-of-day (23:59:59.999 UTC) as a stripped timestamp. */
+function toEndOfDay(dateStr: string): number | null {
+  const base = Date.parse(dateStr);
+  if (!Number.isFinite(base)) return null;
+  return stripMilliseconds(base + 86_400_000 - 1);
 }

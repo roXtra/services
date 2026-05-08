@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { autoexceldeployConfig, autoexceldeploy } from "./main.js";
-import { decodeFieldKey, getResolvedValue, toStr } from "./utils/field-resolver.js";
+import { decodeFieldKey, formatDateOnly, getResolvedValue, toStr } from "./utils/field-resolver.js";
 import { applyViewFilters, IGridOptions } from "./utils/view-filters.js";
 import { applyViewSorting } from "./utils/view-sorting.js";
 import { instanceToRow, generateXLSXFromRows } from "./utils/xlsx-generator.js";
@@ -126,19 +126,19 @@ describe("getResolvedValue", () => {
     expect(getResolvedValue(instance, "title")).to.equal("Mein Titel");
   });
 
-  it("resolves createdAtDate as YYYY-MM-DD only", () => {
+  it("resolves createdAtDate as date-only", () => {
     const instance = makeInstance({ createdAt: new Date("2025-03-15T10:30:00Z") } as Partial<IInstanceDetails>);
-    expect(getResolvedValue(instance, "createdAtDate")).to.equal("2025-03-15");
+    expect(getResolvedValue(instance, "createdAtDate")).to.deep.equal(formatDateOnly(new Date("2025-03-15T10:30:00Z")));
   });
 
-  it("resolves completedAtDate as YYYY-MM-DD only", () => {
+  it("resolves completedAtDate as date-only", () => {
     const instance = makeInstance({ completedAt: new Date("2025-06-01T23:59:59Z") } as Partial<IInstanceDetails>);
-    expect(getResolvedValue(instance, "completedAtDate")).to.equal("2025-06-01");
+    expect(getResolvedValue(instance, "completedAtDate")).to.deep.equal(formatDateOnly(new Date("2025-06-01T23:59:59Z")));
   });
 
   it("returns empty string for completedAtDate when completedAt is not set", () => {
     const instance = makeInstance();
-    expect(getResolvedValue(instance, "completedAtDate")).to.equal("");
+    expect(getResolvedValue(instance, "completedAtDate")).to.deep.equal(formatDateOnly(undefined));
   });
 
   it("resolves state as numeric State enum value", () => {
@@ -418,7 +418,7 @@ describe("instanceToRow", () => {
     const instance = makeInstance({ createdAt: new Date("2025-03-15T10:30:00Z") } as Partial<IInstanceDetails>);
     const cols = [{ field: "createdAtDate", title: "Startdatum", show: true, hidden: false }];
     const row = instanceToRow(instance, cols as never, language);
-    expect(row["Startdatum"]).to.equal("2025-03-15");
+    expect(row["Startdatum"]).to.deep.equal(formatDateOnly(new Date("2025-03-15")));
   });
 });
 
@@ -479,5 +479,168 @@ describe("generateXLSXFromRows", () => {
     const sheet = wb.Sheets["Report"];
     expect((sheet["A1"] as { v?: unknown })?.v).to.equal("ID");
     expect((sheet["B1"] as { v?: unknown })?.v).to.equal("Status");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Test full process of filtering, sorting, mapping to rows, and generating XLSX to ensure all steps work together as expected.
+// ---------------------------------------------------------------------------
+
+describe("Test full process: filter > sort > instanceToRow > generateXLSXFromRows", () => {
+  // "Status" base64 = "U3RhdHVz" -> no padding needed -> "U3RhdHVz"
+  // "Abteilung" base64 = "QWJ0ZWlsdW5n" -> "QWJ0ZWlsdW5n"
+  const COL_STATUS_KEY = "field_U3RhdHVz_ProcessHubTextInput";
+  const COL_ABTEILUNG_KEY = "field_QWJ0ZWlsdW5n_ProcessHubTextInput";
+
+  const language = "de";
+  const viewColumns = [
+    { field: "idLowercase", title: "ID", show: true, hidden: false },
+    { field: "title", title: "Titel", show: true, hidden: false },
+    { field: "createdAtDate", title: "Erstellt am", show: true, hidden: false },
+    { field: COL_STATUS_KEY, title: "Status", show: true, hidden: false },
+    { field: COL_ABTEILUNG_KEY, title: "Abteilung", show: true, hidden: false },
+    { field: "state", title: "Zustand", show: true, hidden: false },
+  ] as never;
+
+  const instances: IInstanceDetails[] = [
+    makeInstance({
+      instanceId: "AAA001",
+      title: "Urlaub Müller",
+      state: State.Finished,
+      createdAt: new Date("2026-01-10T08:00:00Z"),
+      fieldContents: {
+        Status: { value: "genehmigt", type: "ProcessHubTextInput" },
+        Abteilung: { value: "Vertrieb", type: "ProcessHubTextInput" },
+      },
+    } as Partial<IInstanceDetails>),
+    makeInstance({
+      instanceId: "BBB002",
+      title: "Urlaub Schmidt",
+      state: State.Running,
+      createdAt: new Date("2026-03-05T09:00:00Z"),
+      fieldContents: {
+        Status: { value: "ausstehend", type: "ProcessHubTextInput" },
+        Abteilung: { value: "Vertrieb", type: "ProcessHubTextInput" },
+      },
+    } as Partial<IInstanceDetails>),
+    makeInstance({
+      instanceId: "CCC003",
+      title: "Krankmeldung Weber",
+      state: State.Finished,
+      createdAt: new Date("2026-02-20T10:00:00Z"),
+      fieldContents: {
+        Status: { value: "genehmigt", type: "ProcessHubTextInput" },
+        Abteilung: { value: "IT", type: "ProcessHubTextInput" },
+      },
+    } as Partial<IInstanceDetails>),
+    makeInstance({
+      instanceId: "DDD004",
+      title: "Urlaub Fischer",
+      state: State.Canceled,
+      createdAt: new Date("2026-01-25T11:00:00Z"),
+      fieldContents: {
+        Status: { value: "abgelehnt", type: "ProcessHubTextInput" },
+        Abteilung: { value: "Vertrieb", type: "ProcessHubTextInput" },
+      },
+    } as Partial<IInstanceDetails>),
+    makeInstance({
+      instanceId: "EEE005",
+      title: "Fortbildung Bauer",
+      state: State.Running,
+      createdAt: new Date("2026-04-01T07:00:00Z"),
+      fieldContents: {
+        Status: { value: "genehmigt", type: "ProcessHubTextInput" },
+        Abteilung: { value: "IT", type: "ProcessHubTextInput" },
+      },
+    } as Partial<IInstanceDetails>),
+  ];
+
+  it("Apply filter Abteilung=Vertrieb (and) Status=genehmigt, then sort by createdAtDate asc", () => {
+    const gridOptions: IGridOptions = {
+      filter: {
+        logic: "and",
+        filters: [
+          { field: COL_ABTEILUNG_KEY, operator: "eq", value: "Vertrieb" },
+          { field: COL_STATUS_KEY, operator: "eq", value: "genehmigt" },
+        ],
+      },
+      sort: [{ field: "createdAtDate", dir: "asc" }],
+    };
+
+    const filtered = applyViewFilters(instances, gridOptions.filter!);
+    const sorted = applyViewSorting(filtered, gridOptions);
+
+    // Only AAA001 (Vertrieb + genehmigt), BBB002 (ausstehend) and DDD004 (abgelehnt) are filtered out
+    expect(sorted.map((i) => i.instanceId)).to.deep.equal(["AAA001"]);
+  });
+
+  it("Apply filter Abteilung=Vertrieb (or group: genehmigt or ausstehend), then sort by createdAtDate desc", () => {
+    const gridOptions: IGridOptions = {
+      filter: {
+        logic: "and",
+        filters: [
+          { field: COL_ABTEILUNG_KEY, operator: "eq", value: "Vertrieb" },
+          {
+            logic: "or",
+            filters: [
+              { field: COL_STATUS_KEY, operator: "eq", value: "genehmigt" },
+              { field: COL_STATUS_KEY, operator: "eq", value: "ausstehend" },
+            ],
+          },
+        ],
+      },
+      sort: [{ field: "createdAtDate", dir: "desc" }],
+    };
+
+    const filtered = applyViewFilters(instances, gridOptions.filter!);
+    const sorted = applyViewSorting(filtered, gridOptions);
+
+    // AAA001 (Jan) + BBB002 (März), desc > BBB002 zuerst
+    expect(sorted.map((i) => i.instanceId)).to.deep.equal(["BBB002", "AAA001"]);
+  });
+
+  it("Apply filter createdAtDate >= 2026-02-01, then sort by title asc and check XLSX content", async () => {
+    const gridOptions: IGridOptions = {
+      filter: {
+        logic: "and",
+        filters: [{ field: "createdAtDate", operator: "gte", value: "2026-02-01" }],
+      },
+      sort: [{ field: "title", dir: "asc" }],
+    };
+
+    const filtered = applyViewFilters(instances, gridOptions.filter!);
+    const sorted = applyViewSorting(filtered, gridOptions);
+
+    // Feb: CCC003, März: BBB002, Apr: EEE005 > title asc: Fortbildung, Krankmeldung, Urlaub Schmidt
+    expect(sorted.map((i) => i.instanceId)).to.deep.equal(["EEE005", "CCC003", "BBB002"]);
+
+    const rows = sorted.map((inst) => instanceToRow(inst, viewColumns, language));
+    const buf = await generateXLSXFromRows(rows, viewColumns);
+
+    const wb = XLSX.read(buf, { type: "buffer" });
+    const sheet = wb.Sheets["Report"];
+
+    // Header row (row 1)
+    expect((sheet["A1"] as { v?: unknown })?.v).to.equal("ID");
+    expect((sheet["B1"] as { v?: unknown })?.v).to.equal("Titel");
+    expect((sheet["C1"] as { v?: unknown })?.v).to.equal("Erstellt am");
+
+    // Excel serial helper: mirrors Kendo OOXML's local-date serialisation
+    const toExcelSerial = (d: Date) => Math.round((Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) - Date.UTC(1899, 11, 30)) / 86400000);
+
+    // First data row (row 2) = EEE005
+    expect((sheet["A2"] as { v?: unknown })?.v).to.equal("eee005");
+    expect((sheet["B2"] as { v?: unknown })?.v).to.equal("Fortbildung Bauer");
+    expect((sheet["C2"] as { v?: unknown })?.v).to.equal(toExcelSerial(formatDateOnly(new Date("2026-04-01T07:00:00Z"))));
+    expect((sheet["D2"] as { v?: unknown })?.v).to.equal("genehmigt");
+    expect((sheet["F2"] as { v?: unknown })?.v).to.equal("Laufend");
+
+    // Second data row (row 3) = CCC003
+    expect((sheet["A3"] as { v?: unknown })?.v).to.equal("ccc003");
+    expect((sheet["C3"] as { v?: unknown })?.v).to.equal(toExcelSerial(formatDateOnly(new Date("2026-02-20T10:00:00Z"))));
+    expect((sheet["F3"] as { v?: unknown })?.v).to.equal("Beendet");
+
+    // Third data row (row 4) = BBB002
+    expect((sheet["A4"] as { v?: unknown })?.v).to.equal("bbb002");
   });
 });
