@@ -128,7 +128,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
   }
 
   // Generate XLSX using only the columns defined in the view
-  const xlsxBuffer: Buffer = generateXLSX(filteredInstances, viewColumns, language);
+  const xlsxBuffer: Buffer = await generateXLSX(filteredInstances, viewColumns, language);
 
   // Determine file name
   const instance = environment.instanceDetails;

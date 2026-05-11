@@ -49,6 +49,10 @@ export function applyViewFilters(instances: IInstanceDetails[], filterGroup: IGr
  * @return True if the instance matches the filter group, false otherwise.
  */
 function evaluateFilterGroup(instance: IInstanceDetails, group: IGridFilterGroup): boolean {
+  if (group.filters.length === 0) {
+    return true;
+  }
+
   const results = group.filters.map((entry) => {
     if (isFilterGroup(entry)) {
       return evaluateFilterGroup(instance, entry);
@@ -76,11 +80,13 @@ function matchesFilter(value: unknown, filter: IGridFilterCondition): boolean {
   const filterValue = filter.value;
   const cmpValue = toStr(value).toLocaleLowerCase();
   const cmpFilter = toStr(filterValue).toLocaleLowerCase();
+  const numericValue = toComparableNumber(value);
+  const numericFilter = toComparableNumber(filterValue);
   switch (filter.operator) {
     case "eq":
-      return cmpValue === cmpFilter;
+      return numericValue !== null ? toComparableNumber(value) === toComparableNumber(filterValue) : cmpValue === cmpFilter;
     case "neq":
-      return cmpValue !== cmpFilter;
+      return numericValue !== null ? toComparableNumber(value) !== toComparableNumber(filterValue) : cmpValue !== cmpFilter;
     case "contains":
       return cmpValue.includes(cmpFilter);
     case "doesnotcontain":
@@ -95,7 +101,52 @@ function matchesFilter(value: unknown, filter: IGridFilterCondition): boolean {
     case "isnotnull":
     case "isnotempty":
       return !!value && value !== undefined && cmpValue !== "" && (!Array.isArray(value) || value.length > 0);
+    case "gt":
+      return numericValue !== null && numericFilter !== null && numericValue > numericFilter;
+    case "gte":
+      return numericValue !== null && numericFilter !== null && numericValue >= numericFilter;
+    case "lt":
+      return numericValue !== null && numericFilter !== null && numericValue < numericFilter;
+    case "lte":
+      return numericValue !== null && numericFilter !== null && numericValue <= numericFilter;
     default:
       return true;
   }
+}
+
+function toComparableNumber(value: unknown): number | null {
+  if (value === null || value === undefined) {
+    return null;
+  }
+
+  if (value instanceof Date) {
+    return stripMilliseconds(value.getTime());
+  }
+
+  if (typeof value === "number") {
+    return Number.isFinite(value) ? value : null;
+  }
+
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (trimmed === "") {
+      return null;
+    }
+
+    const numeric = Number(trimmed);
+    if (Number.isFinite(numeric)) {
+      return numeric;
+    }
+
+    const parsedDate = Date.parse(trimmed);
+    if (Number.isFinite(parsedDate)) {
+      return stripMilliseconds(parsedDate);
+    }
+  }
+
+  return null;
+}
+
+function stripMilliseconds(timestamp: number): number {
+  return Math.floor(timestamp / 1000) * 1000;
 }
