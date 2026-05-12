@@ -1,10 +1,9 @@
-import { IInstanceDetails, State } from "processhub-sdk/lib/instance/instanceinterfaces.js";
+import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
 import { IBaseStateColumn } from "processhub-sdk/lib/process/legacyapi.js";
 import { decodeFieldKey, toStr, resolveFieldDisplayValue, getResolvedValue } from "./field-resolver.js";
 import { getBackendUrl } from "processhub-sdk/lib/config.js";
 import { Workbook } from "@progress/kendo-ooxml";
 import type { WorkbookSheetRow, WorkbookSheetRowCell } from "@progress/kendo-ooxml";
-import { tl } from "processhub-sdk/lib/tl.js";
 
 interface IHyperlinkCell {
   xlsxUrl: string;
@@ -80,7 +79,7 @@ export function instanceToRow(instance: IInstanceDetails, viewColumns: IBaseStat
 
     // State as readable text
     if (fieldKey === "state") {
-      row[col.title || fieldKey] = stateToString(instance.state, language);
+      row[col.title || fieldKey] = getResolvedValue(instance, fieldKey, language);
       continue;
     }
 
@@ -139,21 +138,6 @@ function formatFieldValue(value: unknown, type?: string): unknown {
   }
 
   return resolveFieldDisplayValue(value, type);
-}
-
-function stateToString(state: State | undefined, language: string): string {
-  switch (state) {
-    case State.Running:
-      return tl("Laufend", language);
-    case State.Finished:
-      return tl("Beendet", language);
-    case State.Canceled:
-      return tl("Abgebrochen", language);
-    case State.Error:
-      return tl("Fehler", language);
-    default:
-      return "";
-  }
 }
 
 /**

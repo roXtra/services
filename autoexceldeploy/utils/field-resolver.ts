@@ -1,5 +1,6 @@
 import { FieldTypeOptions } from "processhub-sdk/lib/data/ifieldvalue.js";
-import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
+import { IInstanceDetails, State } from "processhub-sdk/lib/instance/instanceinterfaces.js";
+import { tl } from "processhub-sdk/lib/tl.js";
 
 /**
  * Get the resolved value for a given field key from an instance.
@@ -167,7 +168,7 @@ export function resolveFieldDisplayValue(value: unknown, type?: string): unknown
  * @param fieldKey The field key to resolve (e.g. "field_VGl0ZWw_ProcessHubTextInput", "lane_Lane_7A0DD19E05A33282", "state", etc.)
  * @returns The resolved value for the field key, checking fieldContents, roleOwners, direct properties, and computed fields.
  */
-export function getResolvedValue(instance: IInstanceDetails, fieldKey: string): unknown {
+export function getResolvedValue(instance: IInstanceDetails, fieldKey: string, language: string = "de"): unknown {
   const fc = instance.extras?.fieldContents || {};
   const roleOwners = instance.extras?.roleOwners || {};
   const todos = instance.extras?.todos || [];
@@ -190,7 +191,7 @@ export function getResolvedValue(instance: IInstanceDetails, fieldKey: string): 
   }
 
   // Computed/virtual fields
-  if (fieldKey === "state") return instance.state ?? 0;
+  if (fieldKey === "state") return stateToString(instance.state ?? State.Error, language);
   if (fieldKey === "createdAt") return formatDate(instance.createdAt);
   if (fieldKey === "createdAtDate") return formatDateOnly(instance.createdAt);
   if (fieldKey === "completedAt") return formatDate(instance.completedAt);
@@ -206,23 +207,40 @@ export function getResolvedValue(instance: IInstanceDetails, fieldKey: string): 
 /**
  * Return a date with out time
  * @param date The input date which may be a Date object, an ISO string, or null/undefined.
- * @returns A Date object with time set to 00:00:00, or Invalid Date if input is null/undefined.
+ * @returns A Date object with time set to 00:00:00, or null if input is null/undefined.
  */
-export function formatDateOnly(date: Date | string | null | undefined): Date {
-  if (!date) return new Date(NaN);
+export function formatDateOnly(date: Date | string | null | undefined): Date | null {
+  if (!date) return null;
   const d = date instanceof Date ? date : new Date(date);
+  if (isNaN(d.getTime())) return null;
   return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 }
 
 /**
  * Return a date with time
  * @param date The input date which may be a Date object, an ISO string, or null/undefined.
- * @returns A Date object with time included (time set to 00:00:00 if original value was date-only), or Invalid Date if input is null/undefined.
+ * @returns A Date object with time included (time set to 00:00:00 if original value was date-only), or null if input is null/undefined.
  */
-export function formatDate(date: Date | string | null | undefined): Date {
-  if (!date) return new Date(NaN);
+export function formatDate(date: Date | string | null | undefined): Date | null {
+  if (!date) return null;
   const d = date instanceof Date ? date : new Date(date);
+  if (isNaN(d.getTime())) return null;
   return new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds());
+}
+
+function stateToString(state: State | undefined, language: string): string {
+  switch (state) {
+    case State.Running:
+      return tl("Laufend", language);
+    case State.Finished:
+      return tl("Beendet", language);
+    case State.Canceled:
+      return tl("Abgebrochen", language);
+    case State.Error:
+      return tl("Fehler", language);
+    default:
+      return "";
+  }
 }
 
 /**

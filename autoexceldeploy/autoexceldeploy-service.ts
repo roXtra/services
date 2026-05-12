@@ -111,6 +111,8 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
     InstanceExtras.ExtrasFieldContents | InstanceExtras.ExtrasRoleOwners | InstanceExtras.ExtrasTodos,
   );
 
+  instances.reverse(); // Show newest instances first by default (can be overridden by view sorting)
+
   environment.logger.debug(`Found ${instances.length} instances`);
 
   // Apply filters from gridOptions if available

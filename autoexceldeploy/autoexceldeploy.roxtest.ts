@@ -143,7 +143,7 @@ describe("getResolvedValue", () => {
 
   it("resolves state as numeric State enum value", () => {
     const instance = makeInstance({ state: State.Finished });
-    expect(getResolvedValue(instance, "state")).to.equal(State.Finished);
+    expect(getResolvedValue(instance, "state")).to.equal("Beendet");
   });
 
   it("resolves todos to joined displayNames", () => {
@@ -631,13 +631,13 @@ describe("Test full process: filter > sort > instanceToRow > generateXLSXFromRow
     // First data row (row 2) = EEE005
     expect((sheet["A2"] as { v?: unknown })?.v).to.equal("eee005");
     expect((sheet["B2"] as { v?: unknown })?.v).to.equal("Fortbildung Bauer");
-    expect((sheet["C2"] as { v?: unknown })?.v).to.equal(toExcelSerial(formatDateOnly(new Date("2026-04-01T07:00:00Z"))));
+    expect((sheet["C2"] as { v?: unknown })?.v).to.equal(toExcelSerial(formatDateOnly(new Date("2026-04-01T07:00:00Z")) as Date));
     expect((sheet["D2"] as { v?: unknown })?.v).to.equal("genehmigt");
     expect((sheet["F2"] as { v?: unknown })?.v).to.equal("Laufend");
 
     // Second data row (row 3) = CCC003
     expect((sheet["A3"] as { v?: unknown })?.v).to.equal("ccc003");
-    expect((sheet["C3"] as { v?: unknown })?.v).to.equal(toExcelSerial(formatDateOnly(new Date("2026-02-20T10:00:00Z"))));
+    expect((sheet["C3"] as { v?: unknown })?.v).to.equal(toExcelSerial(formatDateOnly(new Date("2026-02-20T10:00:00Z")) as Date));
     expect((sheet["F3"] as { v?: unknown })?.v).to.equal("Beendet");
 
     // Third data row (row 4) = BBB002
