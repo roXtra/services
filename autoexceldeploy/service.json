@@ -18,7 +18,8 @@
         },
         {
           "name": "publicViewId",
-          "type": "text"
+          "type": "select",
+          "onload": "allPublicViews"
         },
         {
           "name": "reportField",

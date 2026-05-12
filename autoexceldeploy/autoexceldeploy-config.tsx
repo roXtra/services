@@ -17,10 +17,10 @@ export function autoexceldeployConfig(userLanguage: Language): React.JSX.Element
 
           <tr>
             <td>
-              <span>{tl("Öffentliche Ansicht (ID)", userLanguage)}</span>
+              <span>{tl("Öffentliche Ansicht", userLanguage)}</span>
             </td>
             <td>
-              <input id="publicViewId" />
+              <select id="publicViewId" />
             </td>
           </tr>
 
