@@ -1,5 +1,6 @@
 import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
 import { getResolvedValue, toStr } from "./field-resolver.js";
+import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
 
 interface IGridFilterCondition {
   field: string;
@@ -38,8 +39,8 @@ export interface IGridOptions {
  * @param filterGroup The filter group containing conditions and logic.
  * @returns The filtered list of instances that match the filter group conditions.
  */
-export function applyViewFilters(instances: IInstanceDetails[], filterGroup: IGridFilterGroup): IInstanceDetails[] {
-  return instances.filter((instance) => evaluateFilterGroup(instance, filterGroup));
+export function applyViewFilters(instances: IInstanceDetails[], filterGroup: IGridFilterGroup, environment?: IServiceTaskEnvironment): IInstanceDetails[] {
+  return instances.filter((instance) => evaluateFilterGroup(instance, filterGroup, environment));
 }
 
 /**
@@ -48,18 +49,18 @@ export function applyViewFilters(instances: IInstanceDetails[], filterGroup: IGr
  * @param group The filter group to evaluate.
  * @return True if the instance matches the filter group, false otherwise.
  */
-function evaluateFilterGroup(instance: IInstanceDetails, group: IGridFilterGroup): boolean {
+function evaluateFilterGroup(instance: IInstanceDetails, group: IGridFilterGroup, environment?: IServiceTaskEnvironment): boolean {
   if (group.filters.length === 0) {
     return true;
   }
 
   const results = group.filters.map((entry) => {
     if (isFilterGroup(entry)) {
-      return evaluateFilterGroup(instance, entry);
+      return evaluateFilterGroup(instance, entry, environment);
     }
     const fieldKey = entry.field;
     const value = getResolvedValue(instance, fieldKey);
-    const matchValue = matchesFilter(value, entry);
+    const matchValue = matchesFilter(value, entry, environment);
     return matchValue;
   });
 
@@ -76,17 +77,20 @@ function evaluateFilterGroup(instance: IInstanceDetails, group: IGridFilterGroup
  * @param filter The filter condition to apply.
  * @returns True if the value matches the filter condition, false otherwise.
  */
-function matchesFilter(value: unknown, filter: IGridFilterCondition): boolean {
+function matchesFilter(value: unknown, filter: IGridFilterCondition, environment?: IServiceTaskEnvironment): boolean {
   const filterValue = filter.value;
   const cmpValue = toStr(value).toLocaleLowerCase();
   const cmpFilter = toStr(filterValue).toLocaleLowerCase();
   const numericValue = toComparableNumber(value);
   const numericFilter = toComparableNumber(filterValue);
+  environment?.logger.debug(
+    `Comparing value "${cmpValue}" (numeric: ${numericValue}) with filter "${cmpFilter}" (numeric: ${numericFilter}) using operator "${filter.operator}"`,
+  );
   switch (filter.operator) {
     case "eq":
-      return numericValue !== null ? toComparableNumber(value) === toComparableNumber(filterValue) : cmpValue === cmpFilter;
+      return numericValue !== null && numericFilter !== null ? numericValue === numericFilter : cmpValue === cmpFilter;
     case "neq":
-      return numericValue !== null ? toComparableNumber(value) !== toComparableNumber(filterValue) : cmpValue !== cmpFilter;
+      return numericValue !== null && numericFilter !== null ? numericValue !== numericFilter : cmpValue !== cmpFilter;
     case "contains":
       return cmpValue.includes(cmpFilter);
     case "doesnotcontain":
