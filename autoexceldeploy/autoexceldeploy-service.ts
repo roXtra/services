@@ -8,7 +8,7 @@ import { DefaultRoles } from "processhub-sdk/lib/process/processrights.js";
 import { isPotentialRoleOwner } from "processhub-sdk/lib/process/processrights.js";
 import { UserExtras } from "processhub-sdk/lib/user/userinterfaces.js";
 import { tl } from "processhub-sdk/lib/tl.js";
-import { getJson } from "processhub-sdk/lib/legacyapi/apirequests.js";
+import { postJson } from "processhub-sdk/lib/legacyapi/apirequests.js";
 import { ProcessRequestRoutes, IGetArchiveViewsRequest, IGetArchiveViewsReply } from "processhub-sdk/lib/process/legacyapi.js";
 import { applyViewFilters, IGridOptions } from "./utils/view-filters.js";
 import { applyViewSorting } from "./utils/view-sorting.js";
@@ -40,6 +40,8 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
   const publicViewId = fields.find((f) => f.key === "publicViewId")?.value;
   const reportField = fields.find((f) => f.key === "reportField")?.value;
   const fileNameField = fields.find((f) => f.key === "fileNameField")?.value;
+
+  environment.logger.debug(`Configuration - processId: ${processId}, publicViewId: ${publicViewId}, reportField: ${reportField}, fileNameField: ${fileNameField}`);
 
   if (!processId || !publicViewId) {
     throw new BpmnError(ErrorCodes.CONFIG_INVALID, tl("Prozess-ID und öffentliche Ansichts-ID müssen konfiguriert sein.", language));
@@ -86,18 +88,16 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
   }
 
   // Fetch archive views and find the configured public view
+  // const accessToken = await environment.roxApi.getAccessTokenFromAuth(userId);
   const accessToken = await environment.roxApi.getAccessTokenFromAuth(userId);
-  const archiveViewsReply = (await getJson<IGetArchiveViewsRequest>(ProcessRequestRoutes.GetArchiveViews, { processId }, { accessToken })) as unknown as IGetArchiveViewsReply;
+  const request: IGetArchiveViewsRequest = { processId };
+  const response = (await postJson(ProcessRequestRoutes.GetArchiveViews, request, { accessToken })) as IGetArchiveViewsReply;
 
-  const views = archiveViewsReply.views || {};
+  const views = response.views || {};
 
-  // Find the view by name (not by ID)
-  const viewEntry = Object.entries(views).find(([, v]) => v.viewName === publicViewId);
-  if (!viewEntry) {
-    throw new BpmnError(ErrorCodes.VIEW_NOT_FOUND, tl("Die angegebene öffentliche Ansicht konnte nicht gefunden werden.", language));
-  }
-  const viewDetails = viewEntry[1];
-  if (!viewDetails.publicView) {
+  // Get view by id and check if it's public
+  const viewDetails = views[publicViewId];
+  if (!viewDetails || !viewDetails.publicView) {
     throw new BpmnError(ErrorCodes.VIEW_NOT_FOUND, tl("Die angegebene Ansicht ist nicht öffentlich.", language));
   }
 
@@ -110,6 +110,12 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
     processId,
     InstanceExtras.ExtrasFieldContents | InstanceExtras.ExtrasRoleOwners | InstanceExtras.ExtrasTodos,
   );
+
+  instances.sort((a, b) => {
+    if (a.createdAt === undefined) return 1;
+    if (b.createdAt === undefined) return -1;
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(); // Show newest instances first by default (can be overridden by view sorting)
+  });
 
   environment.logger.debug(`Found ${instances.length} instances`);
 
