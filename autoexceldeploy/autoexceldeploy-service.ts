@@ -92,14 +92,11 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
   const accessToken = await environment.roxApi.getAccessTokenFromAuth(userId);
   const request: IGetArchiveViewsRequest = { processId };
   const response = (await postJson(ProcessRequestRoutes.GetArchiveViews, request, { accessToken })) as IGetArchiveViewsReply;
-  environment.logger.debug(`API response for archive views of processId ${processId}: ${JSON.stringify(response)}`);
 
   const views = response.views || {};
-  environment.logger.debug(`Fetched ${Object.keys(views).length} archive views for processId ${processId}: ${JSON.stringify(Object.keys(views))}`);
 
   // Get view by id and check if it's public
   const viewDetails = views[publicViewId];
-  environment.logger.debug(`Fetched view details for viewId ${publicViewId}: ${JSON.stringify(viewDetails)}`);
   if (!viewDetails || !viewDetails.publicView) {
     throw new BpmnError(ErrorCodes.VIEW_NOT_FOUND, tl("Die angegebene Ansicht ist nicht öffentlich.", language));
   }
@@ -114,7 +111,11 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
     InstanceExtras.ExtrasFieldContents | InstanceExtras.ExtrasRoleOwners | InstanceExtras.ExtrasTodos,
   );
 
-  instances.reverse(); // Show newest instances first by default (can be overridden by view sorting)
+  instances.sort((a, b) => {
+    if (a.createdAt === undefined) return 1;
+    if (b.createdAt === undefined) return -1;
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(); // Show newest instances first by default (can be overridden by view sorting)
+  });
 
   environment.logger.debug(`Found ${instances.length} instances`);
 
