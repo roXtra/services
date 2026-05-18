@@ -1,11 +1,11 @@
 {
   "id": "autoexceldeploy-service",
-  "name": "Auto Excel Deploy",
+  "name": "Excel-Berichtserstellung für Vorgangslisten ",
   "minRoXtraVersion": "8.009.0",
   "actions": [
     {
       "id": "autoexceldeploy",
-      "label": "Bericht aus öffentlicher Ansicht erzeugen",
+      "label": "Excel-Bericht aus öffentlicher Ansicht erzeugen",
       "configMethod": "autoexceldeployConfig",
       "settings": "main.mjs",
       "serviceFile": "main.mjs",

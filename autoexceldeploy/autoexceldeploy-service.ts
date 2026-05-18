@@ -44,7 +44,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
   environment.logger.debug(`Configuration - processId: ${processId}, publicViewId: ${publicViewId}, reportField: ${reportField}, fileNameField: ${fileNameField}`);
 
   if (!processId || !publicViewId) {
-    throw new BpmnError(ErrorCodes.CONFIG_INVALID, tl("Prozess-ID und öffentliche Ansichts-ID müssen konfiguriert sein.", language));
+    throw new BpmnError(ErrorCodes.CONFIG_INVALID, tl("Die Prozess-ID und öffentliche Ansicht müssen konfiguriert sein.", language));
   }
 
   const userId = environment.sender.userId;
