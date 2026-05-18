@@ -1,0 +1,37 @@
+{
+  "id": "autoexceldeploy-service",
+  "name": "Excel-Berichtserstellung für Vorgangslisten ",
+  "minRoXtraVersion": "8.009.0",
+  "actions": [
+    {
+      "id": "autoexceldeploy",
+      "label": "Excel-Bericht aus öffentlicher Ansicht erzeugen",
+      "configMethod": "autoexceldeployConfig",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
+      "serviceMethod": "autoexceldeploy",
+      "fields": [
+        {
+          "name": "processId",
+          "type": "select",
+          "onload": "allProcesses"
+        },
+        {
+          "name": "publicViewId",
+          "type": "select",
+          "onload": "allPublicViews"
+        },
+        {
+          "name": "reportField",
+          "type": "select",
+          "onload": "fields ProcessHubFileUpload"
+        },
+        {
+          "name": "fileNameField",
+          "type": "select",
+          "onload": "fields ProcessHubTextInput"
+        }
+      ]
+    }
+  ]
+}
