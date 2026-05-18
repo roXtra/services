@@ -1,4 +1,12 @@
-import { FieldTypeOptions } from "processhub-sdk/lib/data/ifieldvalue.js";
+import { FieldTypeOptions, FieldType, FieldValueType } from "processhub-sdk/lib/data/ifieldvalue.js";
+import { IRadioButtonGroupFieldValue } from "processhub-sdk/lib/data/fields/radiobutton.js";
+import { ITreeViewEntry, ITreeViewFieldValue } from "processhub-sdk/lib/data/fields/treeview.js";
+import { ITasksFieldValue } from "processhub-sdk/lib/data/fields/tasks.js";
+import { IDateRangeFieldValue } from "processhub-sdk/lib/data/fields/daterange.js";
+import { ISVGDropdownOption } from "processhub-sdk/lib/data/fields/svgdropdown.js";
+import { IProcessLinkValue } from "processhub-sdk/lib/data/fields/processlink.js";
+import { IRoxFileFieldValue } from "processhub-sdk/lib/data/fields/roxfilefield.js";
+import { IRoxFileLinkValue } from "processhub-sdk/lib/data/fields/roxfilelink.js";
 import { IInstanceDetails, State } from "processhub-sdk/lib/instance/instanceinterfaces.js";
 import { tl } from "processhub-sdk/lib/tl.js";
 
@@ -35,7 +43,7 @@ export function decodeFieldKey(fieldKey: string): string {
  * @param type Optional field type to guide formatting (e.g. "ProcessHubFileUpload", "ProcessHubRadioButton", etc.)
  * @returns The resolved display value, formatted according to type if provided.
  */
-export function resolveFieldDisplayValue(value: unknown, type?: string): unknown {
+export function resolveFieldDisplayValue(value: FieldValueType | null | undefined, type?: FieldType): unknown {
   if (value == null) return "";
 
   // --- Date type ---
@@ -76,13 +84,8 @@ export function resolveFieldDisplayValue(value: unknown, type?: string): unknown
     }
 
     if (type === "ProcessHubRoxFileLink") {
-      return value
-        .map((v) => {
-          if (typeof v === "object" && v !== null && "roxFileName" in v) {
-            return (v as { roxFileName?: string }).roxFileName ?? "";
-          }
-          return toStr(v);
-        })
+      return (value as IRoxFileLinkValue)
+        .map((v) => v.roxFileName ?? "")
         .filter(Boolean)
         .join(", ");
     }
@@ -95,7 +98,7 @@ export function resolveFieldDisplayValue(value: unknown, type?: string): unknown
 
   // RadioButton: { radioButtons: [{ name }], selectedRadio: number }
   if (type === "ProcessHubRadioButton" && "radioButtons" in value && "selectedRadio" in value) {
-    const rb = value as { radioButtons: Array<{ name?: string } | undefined>; selectedRadio: number | undefined };
+    const rb = value as IRadioButtonGroupFieldValue;
     const idx = rb.selectedRadio;
     if (idx != null && rb.radioButtons[idx] != null) return rb.radioButtons[idx]?.name ?? "";
     return "";
@@ -111,14 +114,13 @@ export function resolveFieldDisplayValue(value: unknown, type?: string): unknown
 
   // Tasks: { tasks: [{ checked, text }] }
   if (type === "ProcessHubTasks" && "tasks" in value) {
-    const tasks = (value as { tasks: Array<{ checked: boolean; text: string }> }).tasks;
+    const tasks = (value as ITasksFieldValue).tasks;
     return tasks.map((t) => (t.checked ? `[x] ${t.text}` : `[ ] ${t.text}`)).join(", ");
   }
 
   // TreeView: { entries: [{ name, checked, subItems }] } – collect all checked names recursively
   if (type === "ProcessHubTreeView" && "entries" in value) {
-    type TEntry = { name: string; checked: boolean; subItems: TEntry[] };
-    const collectChecked = (entries: TEntry[]): string[] => {
+    const collectChecked = (entries: ITreeViewEntry[]): string[] => {
       const result: string[] = [];
       for (const e of entries) {
         if (e.checked) result.push(e.name);
@@ -126,12 +128,12 @@ export function resolveFieldDisplayValue(value: unknown, type?: string): unknown
       }
       return result;
     };
-    return collectChecked((value as { entries: TEntry[] }).entries).join(", ");
+    return collectChecked((value as ITreeViewFieldValue).entries).join(", ");
   }
 
   // DateRange: { start: Date, end: Date }
   if (type === "ProcessHubDateRange" && "start" in value && "end" in value) {
-    const dr = value as { start: Date | string | null | undefined; end: Date | string | null | undefined };
+    const dr = value as IDateRangeFieldValue;
     const fmtDate = (d: Date | string | null | undefined): string => {
       if (!d) return "";
       const s = d instanceof Date ? d.toISOString() : String(d);
@@ -142,18 +144,18 @@ export function resolveFieldDisplayValue(value: unknown, type?: string): unknown
 
   // SVGDropdown: { text: string, svgData: ... }
   if (type === "ProcessHubSVGDropdown" && "text" in value) {
-    return (value as { text: string }).text;
+    return (value as ISVGDropdownOption).text;
   }
 
   // ProcessLink: { linkedInstances: [{ title?, instanceId }] }
   if (type === "ProcessHubProcessLink" && "linkedInstances" in value) {
-    const pl = value as { linkedInstances: Array<{ title?: string; instanceId: string }> };
+    const pl = value as IProcessLinkValue;
     return pl.linkedInstances.map((i) => i.title || i.instanceId).join(", ");
   }
 
   // RoxFile: { url?, ... }
   if (type === "ProcessHubRoxFile" && "url" in value) {
-    return (value as { url?: string }).url ?? "";
+    return (value as IRoxFileFieldValue).url ?? "";
   }
 
   // Signature: SVG data, not text-representable

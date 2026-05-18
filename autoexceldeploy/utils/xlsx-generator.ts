@@ -1,5 +1,6 @@
 import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
 import { IBaseStateColumn } from "processhub-sdk/lib/process/legacyapi.js";
+import { FieldType, FieldValueType } from "processhub-sdk/lib/data/ifieldvalue.js";
 import { decodeFieldKey, toStr, resolveFieldDisplayValue, getResolvedValue } from "./field-resolver.js";
 import { getBackendUrl } from "processhub-sdk/lib/config.js";
 import { Workbook } from "@progress/kendo-ooxml";
@@ -126,7 +127,7 @@ export function instanceToRow(instance: IInstanceDetails, viewColumns: IBaseStat
  * exception: a single-file ProcessHubFileUpload is returned as a hyperlink object
  * { xlsxUrl, label } so Kendo OOXML can render it as a clickable cell.
  */
-function formatFieldValue(value: unknown, type?: string): unknown {
+function formatFieldValue(value: FieldValueType | null | undefined, type?: FieldType): unknown {
   if (value == null) return "";
 
   // FileUpload single-file: return XLSX hyperlink object instead of plain text
