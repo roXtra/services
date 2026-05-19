@@ -29,7 +29,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
   const extensionValues = BpmnProcess.getExtensionValues(taskObject);
   const config = extensionValues.serviceTaskConfigObject;
 
-  const language = environment.sender.language || "de-DE";
+  const language = environment.instanceDetails.startedBy?.user?.language || "de-DE";
 
   if (config === undefined) {
     throw new BpmnError(ErrorCodes.CONFIG_INVALID, tl("Fehlende oder fehlerhafte Konfiguration.", language));
@@ -47,7 +47,8 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
     throw new BpmnError(ErrorCodes.CONFIG_INVALID, tl("Die Prozess-ID und öffentliche Ansicht müssen konfiguriert sein.", language));
   }
 
-  const userId = environment.sender.userId;
+  // Use the user who started the instance for permission checks, not the current task executor (sender)
+  const userId = environment.instanceDetails.startedBy?.memberId;
 
   // TimerStartEvent check: if the takenStartEvent references a start event with a timer definition, abort
   const takenStartEvent = environment.instanceDetails.takenStartEvent;
@@ -57,6 +58,10 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
     if (match && /timerEventDefinition/.test(match[1])) {
       throw new BpmnError(ErrorCodes.TIMER_START, tl("Der Service darf nicht im Systemkontext (TimerStartEvent) ausgeführt werden.", language));
     }
+  }
+
+  if (!userId) {
+    throw new BpmnError(ErrorCodes.PERMISSION_ERROR, tl("Die Prozessinstanz hat keinen gültigen Startbenutzer.", language));
   }
 
   const processDetails = await environment.processes.getProcessDetails(processId, ProcessExtras.ExtrasProcessRolesWithMemberNames);
