@@ -44,7 +44,7 @@
     "sinon": "^21.1.2",
     "ts-loader": "^9.5.7",
     "typescript": "^6.0.3",
-    "webpack": "^5.106.2",
+    "webpack": "^5.107.0",
     "webpack-cli": "^7.0.2",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz"
   }
