@@ -34,8 +34,6 @@ export async function generateXLSX(instances: IInstanceDetails[], viewColumns: I
 export function instanceToRow(instance: IInstanceDetails, viewColumns: IBaseStateColumn[], language: string): Record<string, unknown> {
   const row: Record<string, unknown> = {};
   const fc = instance.extras?.fieldContents || {};
-  const roleOwners = instance.extras?.roleOwners || {};
-  const todos = instance.extras?.todos || [];
 
   const instanceId = instance.instanceId;
   const workspaceId = instance.workspaceId;
@@ -57,13 +55,7 @@ export function instanceToRow(instance: IInstanceDetails, viewColumns: IBaseStat
 
     // Lane/role owner fields (e.g. lane_Lane_7A0DD19E05A33282)
     if (fieldKey.startsWith("lane_")) {
-      const laneId = fieldKey.replace("lane_", "");
-      const owners = roleOwners[laneId];
-      if (owners && owners.length > 0) {
-        row[col.title || fieldKey] = owners.map((o) => o.displayName || o.memberId).join(", ");
-      } else {
-        row[col.title || fieldKey] = "";
-      }
+      row[col.title || fieldKey] = getResolvedValue(instance, fieldKey);
       continue;
     }
 
@@ -86,11 +78,7 @@ export function instanceToRow(instance: IInstanceDetails, viewColumns: IBaseStat
 
     // Todos (pending tasks)
     if (fieldKey === "todos") {
-      if (todos.length > 0) {
-        row[col.title || fieldKey] = todos.map((t) => t.displayName || t.bpmnTaskId).join(", ");
-      } else {
-        row[col.title || fieldKey] = "";
-      }
+      row[col.title || fieldKey] = getResolvedValue(instance, fieldKey);
       continue;
     }
 

@@ -101,9 +101,91 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
   const views = response.views || {};
 
   // Get view by id and check if it's public
-  const viewDetails = views[publicViewId];
-  if (!viewDetails || !viewDetails.publicView) {
-    throw new BpmnError(ErrorCodes.VIEW_NOT_FOUND, tl("Die angegebene Ansicht ist nicht öffentlich.", language));
+  let viewDetails = views[publicViewId];
+  if (publicViewId !== "default") {
+    if (!viewDetails || !viewDetails.publicView) {
+      throw new BpmnError(ErrorCodes.VIEW_NOT_FOUND, tl("Die angegebene Ansicht ist nicht öffentlich.", language));
+    }
+  } else {
+    // Default view: If publicViewId is "default"
+    viewDetails = {
+      gridOptions: JSON.stringify({
+        skip: 0,
+        take: 100,
+        sort: [],
+        filter: {
+          logic: "and",
+          filters: [
+            {
+              field: "state",
+              operator: "eq",
+              value: tl("Laufend", language),
+            },
+          ],
+        },
+      }),
+      publicView: true,
+      viewName: tl("Standard", language),
+      columns: [
+        {
+          field: "link",
+          filterable: false,
+          show: true,
+          sortable: false,
+          title: "Link",
+          width: "75px",
+          hidden: false,
+          filter: undefined,
+        },
+        {
+          filterable: true,
+          filter: "text",
+          field: "idLowercase",
+          show: true,
+          title: "ID",
+          width: "150px",
+          hidden: false,
+        },
+        {
+          filterable: true,
+          filter: "text",
+          field: "title",
+          show: true,
+          title: tl("Vorgang", language),
+          width: "150px",
+          hidden: false,
+        },
+        {
+          filterable: true,
+          filter: "date",
+          field: "createdAt",
+          format: "{0:dd.MM.yyyy HH:mm}",
+          show: true,
+          title: tl("Gestartet", language),
+          width: "146px",
+          hidden: false,
+        },
+        {
+          filterable: true,
+          filter: "date",
+          field: "completedAt",
+          format: "{0:dd.MM.yyyy HH:mm}",
+          show: true,
+          title: tl("Abgeschlossen", language),
+          width: "146px",
+          hidden: false,
+        },
+        {
+          filterable: true,
+          filter: "text",
+          field: "state",
+          show: true,
+          title: tl("Status", language),
+          width: "110px",
+          hidden: false,
+        },
+      ],
+    };
   }
 
   // Get visible columns from the view (only columns that are shown and not hidden)
@@ -115,6 +197,24 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
     processId,
     InstanceExtras.ExtrasFieldContents | InstanceExtras.ExtrasRoleOwners | InstanceExtras.ExtrasTodos,
   );
+
+  // Check for lane_ fields and add them to viewColumns (only for default view)
+  if (publicViewId === "default") {
+    for (const lane of processObject.getLanes(false)) {
+      const fieldKey = `lane_${lane.id}`;
+      if (!viewColumns.some((col) => col.field === fieldKey)) {
+        viewColumns.push({
+          field: fieldKey,
+          title: lane.name || lane.id,
+          filterable: true,
+          filter: "text",
+          show: true,
+          width: "150px",
+          hidden: false,
+        });
+      }
+    }
+  }
 
   instances.sort((a, b) => {
     if (a.createdAt === undefined) return 1;
