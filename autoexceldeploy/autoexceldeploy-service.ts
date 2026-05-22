@@ -64,7 +64,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
     throw new BpmnError(ErrorCodes.PERMISSION_ERROR, tl("Die Prozessinstanz hat keinen gültigen Startbenutzer.", language));
   }
 
-  const processDetails = await environment.processes.getProcessDetails(processId, ProcessExtras.ExtrasProcessRolesWithMemberNames);
+  const processDetails = await environment.processes.getProcessDetails(processId, ProcessExtras.ExtrasProcessRolesWithMemberNames | ProcessExtras.ExtrasBpmnXml);
 
   // Permission check
   // ExtrasGroups is required by isPotentialRoleOwner (throws without workspace.extras.groups)
@@ -199,8 +199,10 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
   );
 
   // Check for lane_ fields and add them to viewColumns (only for default view)
-  if (publicViewId === "default") {
-    for (const lane of processObject.getLanes(false)) {
+  if (publicViewId === "default" && processDetails.extras.bpmnXml) {
+    const selectedProcessBpmn: BpmnProcess = new BpmnProcess();
+    await selectedProcessBpmn.loadXml(processDetails.extras.bpmnXml);
+    for (const lane of selectedProcessBpmn.getLanes(false)) {
       const fieldKey = `lane_${lane.id}`;
       if (!viewColumns.some((col) => col.field === fieldKey)) {
         viewColumns.push({
