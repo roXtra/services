@@ -38,7 +38,7 @@
     "@types/node": "^22.19.19",
     "@types/react": "^18.3.29",
     "@types/sinon": "^21.0.1",
-    "bestzip": "^2.2.5",
+    "bestzip": "^3.0.1",
     "copyfiles": "^2.4.1",
     "cross-env": "^10.1.0",
     "eslint": "9.39.2",
