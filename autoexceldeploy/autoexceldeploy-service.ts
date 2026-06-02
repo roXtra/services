@@ -132,7 +132,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
           filterable: false,
           show: true,
           sortable: false,
-          title: "Link",
+          title: tl("Link", language),
           width: "75px",
           hidden: false,
           filter: undefined,
@@ -142,7 +142,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
           filter: "text",
           field: "idLowercase",
           show: true,
-          title: "ID",
+          title: tl("ID", language),
           width: "150px",
           hidden: false,
         },
@@ -211,7 +211,6 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
           filterable: true,
           filter: "text",
           show: true,
-          width: "150px",
           hidden: false,
         });
       }

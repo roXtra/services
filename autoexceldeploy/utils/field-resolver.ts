@@ -9,6 +9,7 @@ import { IRoxFileFieldValue } from "processhub-sdk/lib/data/fields/roxfilefield.
 import { IRoxFileLinkValue } from "processhub-sdk/lib/data/fields/roxfilelink.js";
 import { IInstanceDetails, State } from "processhub-sdk/lib/instance/instanceinterfaces.js";
 import { tl } from "processhub-sdk/lib/tl.js";
+import { IDataTableFieldValue } from "processhub-sdk/lib/data/fields/datatable.js";
 
 /**
  * Get the resolved value for a given field key from an instance.
@@ -160,6 +161,15 @@ export function resolveFieldDisplayValue(value: FieldValueType | null | undefine
 
   // Signature: SVG data, not text-representable
   if (type === "ProcessHubSignature") return "";
+
+  if (type === "ProcessHubDataTable") {
+    const data = value as IDataTableFieldValue;
+    return data.rows
+      .filter((row) => row.data && Object.keys(row.data).length > 0 && row.selected)
+      .map((row) => Object.values(row.data)[0] ?? "")
+      .map((cell) => toStr(cell))
+      .join(", ");
+  }
 
   return toStr(value);
 }
