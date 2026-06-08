@@ -1,6 +1,7 @@
 import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
 import { IGridOptions } from "./view-filters.js";
 import { getResolvedValue, toStr } from "./field-resolver.js";
+import { IGenerateXLSXOptions } from "./xlsx-generator.js";
 
 /**
  * Apply sorting to instances based on gridOptions.sort.
@@ -8,7 +9,7 @@ import { getResolvedValue, toStr } from "./field-resolver.js";
  * @param gridOptions The grid options containing sort definitions.
  * @returns The sorted list of instances.
  */
-export function applyViewSorting(instances: IInstanceDetails[], gridOptions: IGridOptions): IInstanceDetails[] {
+export function applyViewSorting(instances: IInstanceDetails[], gridOptions: IGridOptions, options: IGenerateXLSXOptions): IInstanceDetails[] {
   const sort = gridOptions.sort;
   if (!Array.isArray(sort) || sort.length === 0) return instances;
 
@@ -18,8 +19,8 @@ export function applyViewSorting(instances: IInstanceDetails[], gridOptions: IGr
       const dir = s.dir || "asc";
       if (!field) continue;
 
-      const valA = getResolvedValue(a, field);
-      const valB = getResolvedValue(b, field);
+      const valA = getResolvedValue(a, field, options);
+      const valB = getResolvedValue(b, field, options);
 
       let cmp = 0;
       // Date comparison

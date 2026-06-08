@@ -12,7 +12,9 @@ import { postJson } from "processhub-sdk/lib/legacyapi/apirequests.js";
 import { ProcessRequestRoutes, IGetArchiveViewsRequest, IGetArchiveViewsReply } from "processhub-sdk/lib/process/legacyapi.js";
 import { applyViewFilters, IGridOptions } from "./utils/view-filters.js";
 import { applyViewSorting } from "./utils/view-sorting.js";
-import { generateXLSX } from "./utils/xlsx-generator.js";
+import { generateXLSX, IGenerateXLSXOptions } from "./utils/xlsx-generator.js";
+import { DefaultColumns } from "./utils/field-keys.js";
+import { getLaneKey } from "./utils/field-resolver.js";
 
 enum ErrorCodes {
   PERMISSION_ERROR = "PERMISSION_ERROR",
@@ -117,7 +119,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
           logic: "and",
           filters: [
             {
-              field: "state",
+              field: DefaultColumns.state.field,
               operator: "eq",
               value: tl("Laufend", language),
             },
@@ -128,7 +130,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
       viewName: tl("Standard", language),
       columns: [
         {
-          field: "link",
+          field: DefaultColumns.link.field,
           filterable: false,
           show: true,
           sortable: false,
@@ -138,27 +140,27 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
           filter: undefined,
         },
         {
+          field: DefaultColumns.id.field,
           filterable: true,
           filter: "text",
-          field: "idLowercase",
           show: true,
           title: tl("ID", language),
           width: "150px",
           hidden: false,
         },
         {
+          field: DefaultColumns.title.field,
           filterable: true,
           filter: "text",
-          field: "title",
           show: true,
           title: tl("Vorgang", language),
           width: "150px",
           hidden: false,
         },
         {
+          field: DefaultColumns.createdAt.field,
           filterable: true,
           filter: "date",
-          field: "createdAt",
           format: "{0:dd.MM.yyyy HH:mm}",
           show: true,
           title: tl("Gestartet", language),
@@ -166,9 +168,9 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
           hidden: false,
         },
         {
+          field: DefaultColumns.completedAt.field,
           filterable: true,
           filter: "date",
-          field: "completedAt",
           format: "{0:dd.MM.yyyy HH:mm}",
           show: true,
           title: tl("Abgeschlossen", language),
@@ -176,9 +178,9 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
           hidden: false,
         },
         {
+          field: DefaultColumns.state.field,
           filterable: true,
           filter: "text",
-          field: "state",
           show: true,
           title: tl("Status", language),
           width: "110px",
@@ -203,7 +205,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
     const selectedProcessBpmn: BpmnProcess = new BpmnProcess();
     await selectedProcessBpmn.loadXml(processDetails.extras.bpmnXml);
     for (const lane of selectedProcessBpmn.getLanes(false)) {
-      const fieldKey = `lane_${lane.id}`;
+      const fieldKey = getLaneKey(lane.id);
       if (!viewColumns.some((col) => col.field === fieldKey)) {
         viewColumns.push({
           field: fieldKey,
@@ -225,22 +227,32 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
 
   environment.logger.debug(`Found ${instances.length} instances`);
 
+  const options: IGenerateXLSXOptions = {
+    language,
+    module: {
+      name: "processes",
+      urlPrefix: "p",
+      title: "Prozesse",
+    },
+    instanceCount: processDetails.instanceCount,
+  };
+
   // Apply filters from gridOptions if available
   let filteredInstances = instances;
   if (gridOptions?.filter) {
     environment.logger.debug(`Applying gridOptions filter in Service Task ${environment.bpmnTaskId}`);
-    filteredInstances = applyViewFilters(instances, gridOptions.filter);
+    filteredInstances = applyViewFilters(instances, gridOptions.filter, options);
     environment.logger.debug(`Instances after filtering: ${filteredInstances.length}`);
   }
 
   // Apply sorting from gridOptions if available
   if (gridOptions?.sort && gridOptions.sort.length > 0) {
     environment.logger.debug(`Applying gridOptions sorting in Service Task ${environment.bpmnTaskId}: ${JSON.stringify(gridOptions.sort)}`);
-    filteredInstances = applyViewSorting(filteredInstances, gridOptions);
+    filteredInstances = applyViewSorting(filteredInstances, gridOptions, options);
   }
 
   // Generate XLSX using only the columns defined in the view
-  const xlsxBuffer: Buffer = await generateXLSX(filteredInstances, viewColumns, language);
+  const xlsxBuffer: Buffer = await generateXLSX(filteredInstances, viewColumns, options);
 
   // Determine file name
   const instance = environment.instanceDetails;
@@ -266,7 +278,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
   instance.extras.fieldContents[targetField] = { type: "ProcessHubFileUpload", value: [uploadUrl] };
 }
 
-export async function autoexceldeploy(environment: IServiceTaskEnvironment): Promise<boolean> {
+export async function process(environment: IServiceTaskEnvironment): Promise<boolean> {
   await serviceLogic(environment);
   await environment.instances.updateInstance(environment.instanceDetails);
   return true;

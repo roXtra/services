@@ -1,11 +1,12 @@
 import { expect } from "chai";
-import { autoexceldeployConfig, autoexceldeploy } from "./main.js";
-import { decodeFieldKey, formatDateOnly, getResolvedValue, toStr } from "./utils/field-resolver.js";
+import { process, processServiceLogic } from "./main.js";
+import { decodeFieldKey, formatDateOnly, getFieldKey, getLaneKey, getResolvedValue, toStr } from "./utils/field-resolver.js";
 import { applyViewFilters, IGridOptions } from "./utils/view-filters.js";
 import { applyViewSorting } from "./utils/view-sorting.js";
-import { instanceToRow, generateXLSXFromRows } from "./utils/xlsx-generator.js";
+import { instanceToRow, generateXLSXFromRows, IGenerateXLSXOptions } from "./utils/xlsx-generator.js";
 import { IInstanceDetails, State } from "processhub-sdk/lib/instance/instanceinterfaces.js";
 import * as XLSX from "xlsx";
+import { DefaultColumns } from "./utils/field-keys.js";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -34,8 +35,8 @@ function makeInstance(overrides: Partial<IInstanceDetails> & { fieldContents?: R
 
 describe("services", () => {
   it("bundle test", () => {
-    expect(typeof autoexceldeployConfig === "function").to.equal(true);
-    expect(typeof autoexceldeploy === "function").to.equal(true);
+    expect(typeof process === "function").to.equal(true);
+    expect(typeof processServiceLogic === "function").to.equal(true);
   });
 });
 
@@ -90,21 +91,23 @@ describe("toStr", () => {
 // ---------------------------------------------------------------------------
 
 describe("getResolvedValue", () => {
+  const options = { language: "de", module: { name: "processes", urlPrefix: "p", title: "Prozesse" } } as IGenerateXLSXOptions;
+
   it("returns the .value of a field_* key from fieldContents", () => {
     const instance = makeInstance({ fieldContents: { Titel: { value: "Mein Vorgang", type: "ProcessHubTextInput" } } });
-    const result = getResolvedValue(instance, "field_VGl0ZWw_ProcessHubTextInput");
+    const result = getResolvedValue(instance, getFieldKey("Titel", "ProcessHubTextInput"), options);
     expect(result).to.equal("Mein Vorgang");
   });
 
   it("returns empty string when field_* key is missing from fieldContents", () => {
     const instance = makeInstance();
-    expect(getResolvedValue(instance, "field_VGl0ZWw_ProcessHubTextInput")).to.equal("");
+    expect(getResolvedValue(instance, getFieldKey("Titel", "ProcessHubTextInput"), options)).to.equal("");
   });
 
   it("returns empty string when field value is null (empty field)", () => {
     const instance = makeInstance({ fieldContents: { Titel: { value: null, type: "ProcessHubTextInput" } } });
     // This is the critical fix: must return "" not the whole object
-    expect(getResolvedValue(instance, "field_VGl0ZWw_ProcessHubTextInput")).to.equal("");
+    expect(getResolvedValue(instance, getFieldKey("Titel", "ProcessHubTextInput"), options)).to.equal("");
   });
 
   it("resolves lane_ key to displayName of owner", () => {
@@ -113,37 +116,37 @@ describe("getResolvedValue", () => {
       /* eslint-disable-next-line @typescript-eslint/naming-convention */
       Lane_ABC: [{ displayName: "Max Mustermann", memberId: "user-1" }],
     };
-    expect(getResolvedValue(instance, "lane_Lane_ABC")).to.equal("Max Mustermann");
+    expect(getResolvedValue(instance, getLaneKey("Lane_ABC"), options)).to.equal("Max Mustermann");
   });
 
   it("resolves idLowercase to lowercase instanceId", () => {
     const instance = makeInstance({ instanceId: "ABCD1234" });
-    expect(getResolvedValue(instance, "idLowercase")).to.equal("abcd1234");
+    expect(getResolvedValue(instance, DefaultColumns.id.field, options)).to.equal("abcd1234");
   });
 
   it("resolves title", () => {
     const instance = makeInstance({ title: "Mein Titel" });
-    expect(getResolvedValue(instance, "title")).to.equal("Mein Titel");
+    expect(getResolvedValue(instance, DefaultColumns.title.field, options)).to.equal("Mein Titel");
   });
 
   it("resolves createdAtDate as date-only", () => {
     const instance = makeInstance({ createdAt: new Date("2025-03-15T10:30:00Z") } as Partial<IInstanceDetails>);
-    expect(getResolvedValue(instance, "createdAtDate")).to.deep.equal(formatDateOnly(new Date("2025-03-15T10:30:00Z")));
+    expect(getResolvedValue(instance, DefaultColumns.createdAtDate.field, options)).to.deep.equal(formatDateOnly(new Date("2025-03-15T10:30:00Z")));
   });
 
   it("resolves completedAtDate as date-only", () => {
     const instance = makeInstance({ completedAt: new Date("2025-06-01T23:59:59Z") } as Partial<IInstanceDetails>);
-    expect(getResolvedValue(instance, "completedAtDate")).to.deep.equal(formatDateOnly(new Date("2025-06-01T23:59:59Z")));
+    expect(getResolvedValue(instance, DefaultColumns.completedAtDate.field, options)).to.deep.equal(formatDateOnly(new Date("2025-06-01T23:59:59Z")));
   });
 
   it("returns empty string for completedAtDate when completedAt is not set", () => {
     const instance = makeInstance();
-    expect(getResolvedValue(instance, "completedAtDate")).to.deep.equal(formatDateOnly(undefined));
+    expect(getResolvedValue(instance, DefaultColumns.completedAtDate.field, options)).to.deep.equal(formatDateOnly(undefined));
   });
 
   it("resolves state as numeric State enum value", () => {
     const instance = makeInstance({ state: State.Finished });
-    expect(getResolvedValue(instance, "state")).to.equal("Beendet");
+    expect(getResolvedValue(instance, DefaultColumns.state.field, options)).to.equal("Beendet");
   });
 
   it("resolves todos to joined displayNames", () => {
@@ -152,7 +155,7 @@ describe("getResolvedValue", () => {
       { displayName: "Aufgabe A", bpmnTaskId: "t1" },
       { displayName: "Aufgabe B", bpmnTaskId: "t2" },
     ];
-    expect(getResolvedValue(instance, "todos")).to.equal("Aufgabe A, Aufgabe B");
+    expect(getResolvedValue(instance, DefaultColumns.todos.field, options)).to.equal("Aufgabe A, Aufgabe B");
   });
 });
 
@@ -161,6 +164,8 @@ describe("getResolvedValue", () => {
 // ---------------------------------------------------------------------------
 
 describe("applyViewFilters", () => {
+  const options = { language: "de", module: { name: "processes", urlPrefix: "p", title: "Prozesse" } } as IGenerateXLSXOptions;
+
   const instances: IInstanceDetails[] = [
     makeInstance({ instanceId: "aaa", title: "Alpha Vorgang" }),
     makeInstance({ instanceId: "bbb", title: "Beta Test" }),
@@ -168,44 +173,44 @@ describe("applyViewFilters", () => {
   ];
 
   it("filters with contains on title", () => {
-    const group = { logic: "and" as const, filters: [{ field: "title", operator: "contains", value: "test" }] };
-    const result = applyViewFilters(instances, group);
+    const group = { logic: "and" as const, filters: [{ field: DefaultColumns.title.field, operator: "contains", value: "test" }] };
+    const result = applyViewFilters(instances, group, options);
     expect(result).to.have.length(2);
     expect(result.map((i) => i.instanceId)).to.deep.equal(["bbb", "ccc"]);
   });
 
   it("filters with doesnotcontain", () => {
-    const group = { logic: "and" as const, filters: [{ field: "title", operator: "doesnotcontain", value: "test" }] };
-    const result = applyViewFilters(instances, group);
+    const group = { logic: "and" as const, filters: [{ field: DefaultColumns.title.field, operator: "doesnotcontain", value: "test" }] };
+    const result = applyViewFilters(instances, group, options);
     expect(result).to.have.length(1);
     expect(result[0].instanceId).to.equal("aaa");
   });
 
   it("filters with eq on idLowercase", () => {
-    const group = { logic: "and" as const, filters: [{ field: "idLowercase", operator: "eq", value: "bbb" }] };
-    const result = applyViewFilters(instances, group);
+    const group = { logic: "and" as const, filters: [{ field: DefaultColumns.id.field, operator: "eq", value: "bbb" }] };
+    const result = applyViewFilters(instances, group, options);
     expect(result).to.have.length(1);
     expect(result[0].instanceId).to.equal("bbb");
   });
 
   it("isempty returns true when field value is null", () => {
     const instance = makeInstance({ fieldContents: { Titel: { value: null, type: "ProcessHubTextInput" } } });
-    const group = { logic: "and" as const, filters: [{ field: "field_VGl0ZWw_ProcessHubTextInput", operator: "isempty", value: "" }] };
-    const result = applyViewFilters([instance], group);
+    const group = { logic: "and" as const, filters: [{ field: getFieldKey("Titel", "ProcessHubTextInput"), operator: "isempty", value: "" }] };
+    const result = applyViewFilters([instance], group, options);
     expect(result).to.have.length(1);
   });
 
   it("isempty returns false when field has value", () => {
     const instance = makeInstance({ fieldContents: { Titel: { value: "Hallo", type: "ProcessHubTextInput" } } });
-    const group = { logic: "and" as const, filters: [{ field: "field_VGl0ZWw_ProcessHubTextInput", operator: "isempty", value: "" }] };
-    const result = applyViewFilters([instance], group);
+    const group = { logic: "and" as const, filters: [{ field: getFieldKey("Titel", "ProcessHubTextInput"), operator: "isempty", value: "" }] };
+    const result = applyViewFilters([instance], group, options);
     expect(result).to.have.length(0);
   });
 
   it("isnotempty returns false when field value is null", () => {
     const instance = makeInstance({ fieldContents: { Titel: { value: null, type: "ProcessHubTextInput" } } });
-    const group = { logic: "and" as const, filters: [{ field: "field_VGl0ZWw_ProcessHubTextInput", operator: "isnotempty", value: "" }] };
-    const result = applyViewFilters([instance], group);
+    const group = { logic: "and" as const, filters: [{ field: getFieldKey("Titel", "ProcessHubTextInput"), operator: "isnotempty", value: "" }] };
+    const result = applyViewFilters([instance], group, options);
     expect(result).to.have.length(0);
   });
 
@@ -213,17 +218,17 @@ describe("applyViewFilters", () => {
     const group = {
       logic: "and" as const,
       filters: [
-        { field: "title", operator: "contains", value: "test" },
+        { field: DefaultColumns.title.field, operator: "contains", value: "test" },
         {
           logic: "or" as const,
           filters: [
-            { field: "idLowercase", operator: "eq", value: "bbb" },
-            { field: "idLowercase", operator: "eq", value: "zzz" },
+            { field: DefaultColumns.id.field, operator: "eq", value: "bbb" },
+            { field: DefaultColumns.id.field, operator: "eq", value: "zzz" },
           ],
         },
       ],
     };
-    const result = applyViewFilters(instances, group);
+    const result = applyViewFilters(instances, group, options);
     expect(result).to.have.length(1);
     expect(result[0].instanceId).to.equal("bbb");
   });
@@ -232,11 +237,11 @@ describe("applyViewFilters", () => {
     const group = {
       logic: "and" as const,
       filters: [
-        { field: "title", operator: "contains", value: "test" },
-        { field: "idLowercase", operator: "contains", value: "ccc" },
+        { field: DefaultColumns.title.field, operator: "contains", value: "test" },
+        { field: DefaultColumns.id.field, operator: "contains", value: "ccc" },
       ],
     };
-    const result = applyViewFilters(instances, group);
+    const result = applyViewFilters(instances, group, options);
     expect(result).to.have.length(1);
     expect(result[0].instanceId).to.equal("ccc");
   });
@@ -249,10 +254,10 @@ describe("applyViewFilters", () => {
 
     const group = {
       logic: "and" as const,
-      filters: [{ field: "createdAt", operator: "gt", value: "2026-05-06T10:00:00Z" }],
+      filters: [{ field: DefaultColumns.createdAt.field, operator: "gt", value: "2026-05-06T10:00:00Z" }],
     };
 
-    const result = applyViewFilters(dateInstances, group);
+    const result = applyViewFilters(dateInstances, group, options);
     expect(result).to.have.length(1);
     expect(result[0].instanceId).to.equal("after");
   });
@@ -262,16 +267,16 @@ describe("applyViewFilters", () => {
 
     const gteGroup = {
       logic: "and" as const,
-      filters: [{ field: "createdAt", operator: "gte", value: "2026-05-06T10:00:00.100Z" }],
+      filters: [{ field: DefaultColumns.createdAt.field, operator: "gte", value: "2026-05-06T10:00:00.100Z" }],
     };
 
     const ltGroup = {
       logic: "and" as const,
-      filters: [{ field: "createdAt", operator: "lt", value: "2026-05-06T10:00:00.100Z" }],
+      filters: [{ field: DefaultColumns.createdAt.field, operator: "lt", value: "2026-05-06T10:00:00.100Z" }],
     };
 
-    const gteResult = applyViewFilters(dateInstances, gteGroup);
-    const ltResult = applyViewFilters(dateInstances, ltGroup);
+    const gteResult = applyViewFilters(dateInstances, gteGroup, options);
+    const ltResult = applyViewFilters(dateInstances, ltGroup, options);
 
     expect(gteResult).to.have.length(1);
     expect(ltResult).to.have.length(0);
@@ -284,24 +289,27 @@ describe("applyViewFilters", () => {
 
 describe("applyViewSorting", () => {
   it("sorts by title asc", () => {
+    const options = { language: "de", module: { name: "processes", urlPrefix: "p", title: "Prozesse" } } as IGenerateXLSXOptions;
     const instances = [
       makeInstance({ instanceId: "1", title: "Zebra" }),
       makeInstance({ instanceId: "2", title: "Alpha" }),
       makeInstance({ instanceId: "3", title: "Mitte" }),
     ];
-    const opts: IGridOptions = { sort: [{ field: "title", dir: "asc" }] };
-    const result = applyViewSorting(instances, opts);
+    const opts: IGridOptions = { sort: [{ field: DefaultColumns.title.field, dir: "asc" }] };
+    const result = applyViewSorting(instances, opts, options);
     expect(result.map((i) => i.title)).to.deep.equal(["Alpha", "Mitte", "Zebra"]);
   });
 
   it("sorts by title desc", () => {
+    const options = { language: "de", module: { name: "processes", urlPrefix: "p", title: "Prozesse" } } as IGenerateXLSXOptions;
     const instances = [makeInstance({ instanceId: "1", title: "Alpha" }), makeInstance({ instanceId: "2", title: "Zebra" })];
-    const opts: IGridOptions = { sort: [{ field: "title", dir: "desc" }] };
-    const result = applyViewSorting(instances, opts);
+    const opts: IGridOptions = { sort: [{ field: DefaultColumns.title.field, dir: "desc" }] };
+    const result = applyViewSorting(instances, opts, options);
     expect(result[0].title).to.equal("Zebra");
   });
 
   it("multi-sort: same completedAtDate falls back to idLowercase desc", () => {
+    const options = { language: "de", module: { name: "processes", urlPrefix: "p", title: "Prozesse" } } as IGenerateXLSXOptions;
     const sameDay = new Date("2025-06-01T10:00:00Z");
     const instances = [
       makeInstance({ instanceId: "aaa111", completedAt: sameDay } as Partial<IInstanceDetails>),
@@ -310,18 +318,19 @@ describe("applyViewSorting", () => {
     ];
     const opts: IGridOptions = {
       sort: [
-        { field: "completedAtDate", dir: "asc" },
-        { field: "idLowercase", dir: "desc" },
+        { field: DefaultColumns.completedAtDate.field, dir: "asc" },
+        { field: DefaultColumns.id.field, dir: "desc" },
       ],
     };
-    const result = applyViewSorting(instances, opts);
+    const result = applyViewSorting(instances, opts, options);
     // All on same date -> secondary sort by idLowercase desc -> zzz > mmm > aaa
     expect(result.map((i) => i.instanceId)).to.deep.equal(["zzz999", "mmm555", "aaa111"]);
   });
 
   it("returns original order when no sort defined", () => {
+    const options = { language: "de", module: { name: "processes", urlPrefix: "p", title: "Prozesse" } } as IGenerateXLSXOptions;
     const instances = [makeInstance({ instanceId: "x" }), makeInstance({ instanceId: "y" })];
-    const result = applyViewSorting(instances, {});
+    const result = applyViewSorting(instances, {}, options);
     expect(result.map((i) => i.instanceId)).to.deep.equal(["x", "y"]);
   });
 });
@@ -334,74 +343,85 @@ describe("instanceToRow", () => {
   const language = "de";
   it("maps title directly", () => {
     const instance = makeInstance({ title: "Mein Vorgang" });
-    const cols = [{ field: "title", title: "Vorgang", show: true, hidden: false }];
-    const row = instanceToRow(instance, cols as never, language);
-    expect(row["Vorgang"]).to.equal("Mein Vorgang");
+    const cols = [{ field: DefaultColumns.title.field, title: "Vorgang", show: true, hidden: false }];
+    const row = instanceToRow(instance, cols as never, { language, module: { name: "processes", urlPrefix: "p", title: "Prozesse" } });
+    expect(row[0]).to.equal("Mein Vorgang");
   });
 
   it("maps idLowercase", () => {
     const instance = makeInstance({ instanceId: "ABC123" });
-    const cols = [{ field: "idLowercase", title: "ID", show: true, hidden: false }];
-    const row = instanceToRow(instance, cols as never, language);
-    expect(row["ID"]).to.equal("abc123");
+    const cols = [{ field: DefaultColumns.id.field, title: "ID", show: true, hidden: false }];
+    const row = instanceToRow(instance, cols as never, { language, module: { name: "processes", urlPrefix: "p", title: "Prozesse" } });
+    expect(row[0]).to.equal("abc123");
   });
 
   it("maps state to readable german text", () => {
     const instance = makeInstance({ state: State.Finished });
-    const cols = [{ field: "state", title: "Status", show: true, hidden: false }];
-    const row = instanceToRow(instance, cols as never, language);
-    expect(row["Status"]).to.equal("Beendet");
+    const cols = [{ field: DefaultColumns.state.field, title: "Status", show: true, hidden: false }];
+    const row = instanceToRow(instance, cols as never, { language, module: { name: "processes", urlPrefix: "p", title: "Prozesse" } });
+    expect(row[0]).to.equal("Beendet");
   });
 
   it("maps State.Running to 'Laufend'", () => {
     const instance = makeInstance({ state: State.Running });
-    const cols = [{ field: "state", title: "Status", show: true, hidden: false }];
-    const row = instanceToRow(instance, cols as never, language);
-    expect(row["Status"]).to.equal("Laufend");
+    const cols = [{ field: DefaultColumns.state.field, title: "Status", show: true, hidden: false }];
+    const row = instanceToRow(instance, cols as never, { language, module: { name: "processes", urlPrefix: "p", title: "Prozesse" } });
+    expect(row[0]).to.equal("Laufend");
   });
 
   it("link field produces a hyperlink object", () => {
     const instance = makeInstance({ instanceId: "inst-1", workspaceId: "ws-1" });
-    const cols = [{ field: "link", title: "Link", show: true, hidden: false }];
-    const row = instanceToRow(instance, cols as never, language);
-    const cell = row["Link"] as { xlsxUrl: string; label: string };
+    const cols = [{ field: DefaultColumns.link.field, title: "Link", show: true, hidden: false }];
+    const row = instanceToRow(instance, cols as never, { language, module: { name: "processes", urlPrefix: "p", title: "Prozesse" } });
+    const cell = row[0] as { xlsxUrl: string; label: string };
     expect(cell).to.have.property("xlsxUrl").that.includes("inst-1");
     expect(cell).to.have.property("label", "Link");
   });
 
-  it("single FileUpload field produces hyperlink with filename as label", () => {
-    const fileUrl = "https://cdn.example.com/files/bericht.pdf";
+  it("single FileUpload field decodes base64 filename", () => {
+    // "bericht.pdf" base64 = "YmVyaWNodC5wZGY="
+    const fileUrl = "https://cdn.example.com/files/YmVyaWNodC5wZGY=";
     const instance = makeInstance({
       fieldContents: { Anlagen: { value: [fileUrl], type: "ProcessHubFileUpload" } },
     });
-    const cols = [{ field: "field_QW5sYWdlbg__ProcessHubFileUpload", title: "Anlagen", show: true, hidden: false }];
-    const row = instanceToRow(instance, cols as never, language);
-    const cell = row["Anlagen"] as { xlsxUrl: string; label: string };
-    expect(cell).to.have.property("xlsxUrl", fileUrl);
-    expect(cell).to.have.property("label", "bericht.pdf");
+    const cols = [{ field: getFieldKey("Anlagen", "ProcessHubFileUpload"), title: "Anlagen", show: true, hidden: false }];
+    const row = instanceToRow(instance, cols as never, { language, module: { name: "processes", urlPrefix: "p", title: "Prozesse" } });
+    expect(row[0]).to.equal("bericht.pdf");
   });
 
-  it("multiple FileUpload files produce comma-separated filenames (no hyperlink)", () => {
+  it("single FileUpload with Base64-encoded filename decodes it correctly", () => {
+    // "Export (3).xlsx" base64 = "RXhwb3J0ICgzKS54bHN4"
+    const fileUrl = "https://devn-48/roxtra/modules/files/1/92E72418215CA315/attachments-EBE508EB0F2DDB9E/1BE87F10C35CF5B4/RXhwb3J0ICgzKS54bHN4";
+    const instance = makeInstance({
+      fieldContents: { Anlagen: { value: [fileUrl], type: "ProcessHubFileUpload" } },
+    });
+    const cols = [{ field: getFieldKey("Anlagen", "ProcessHubFileUpload"), title: "Anlagen", show: true, hidden: false }];
+    const row = instanceToRow(instance, cols as never, { language, module: { name: "processes", urlPrefix: "p", title: "Prozesse" } });
+    expect(row[0]).to.equal("Export (3).xlsx");
+  });
+
+  it("multiple FileUpload files produce comma-separated decoded filenames", () => {
+    // "a.pdf" base64 = "YS5wZGY=", "b.pdf" base64 = "Yi5wZGY="
     const instance = makeInstance({
       fieldContents: {
         Anlagen: {
-          value: ["https://cdn.example.com/files/a.pdf", "https://cdn.example.com/files/b.pdf"],
+          value: ["https://cdn.example.com/files/YS5wZGY=", "https://cdn.example.com/files/Yi5wZGY="],
           type: "ProcessHubFileUpload",
         },
       },
     });
-    const cols = [{ field: "field_QW5sYWdlbg__ProcessHubFileUpload", title: "Anlagen", show: true, hidden: false }];
-    const row = instanceToRow(instance, cols as never, language);
-    expect(row["Anlagen"]).to.equal("a.pdf, b.pdf");
+    const cols = [{ field: getFieldKey("Anlagen", "ProcessHubFileUpload"), title: "Anlagen", show: true, hidden: false }];
+    const row = instanceToRow(instance, cols as never, { language, module: { name: "processes", urlPrefix: "p", title: "Prozesse" } });
+    expect(row[0]).to.equal("a.pdf, b.pdf");
   });
 
   it("empty FileUpload field returns empty string", () => {
     const instance = makeInstance({
       fieldContents: { Anlagen: { value: null, type: "ProcessHubFileUpload" } },
     });
-    const cols = [{ field: "field_QW5sYWdlbg__ProcessHubFileUpload", title: "Anlagen", show: true, hidden: false }];
-    const row = instanceToRow(instance, cols as never, language);
-    expect(row["Anlagen"]).to.equal("");
+    const cols = [{ field: getFieldKey("Anlagen", "ProcessHubFileUpload"), title: "Anlagen", show: true, hidden: false }];
+    const row = instanceToRow(instance, cols as never, { language, module: { name: "processes", urlPrefix: "p", title: "Prozesse" } });
+    expect(row[0]).to.equal("");
   });
 
   it("TextArea strips HTML tags", () => {
@@ -409,16 +429,16 @@ describe("instanceToRow", () => {
       fieldContents: { Feld2: { value: "<p>Hallo <b>Welt</b></p>", type: "ProcessHubTextArea" } },
     });
     // "Feld2" base64 = "RmVsZDI=" -> padding -> "RmVsZDI_"
-    const cols = [{ field: "field_RmVsZDI_ProcessHubTextArea", title: "Feld_2", show: true, hidden: false }];
-    const row = instanceToRow(instance, cols as never, language);
-    expect(row["Feld_2"]).to.equal("Hallo Welt");
+    const cols = [{ field: getFieldKey("Feld2", "ProcessHubTextArea"), title: "Feld_2", show: true, hidden: false }];
+    const row = instanceToRow(instance, cols as never, { language, module: { name: "processes", urlPrefix: "p", title: "Prozesse" } });
+    expect(row[0]).to.equal("Hallo Welt");
   });
 
   it("createdAtDate returns date-only string", () => {
     const instance = makeInstance({ createdAt: new Date("2025-03-15T10:30:00Z") } as Partial<IInstanceDetails>);
-    const cols = [{ field: "createdAtDate", title: "Startdatum", show: true, hidden: false }];
-    const row = instanceToRow(instance, cols as never, language);
-    expect(row["Startdatum"]).to.deep.equal(formatDateOnly(new Date("2025-03-15")));
+    const cols = [{ field: DefaultColumns.createdAtDate.field, title: "Startdatum", show: true, hidden: false }];
+    const row = instanceToRow(instance, cols as never, { language, module: { name: "processes", urlPrefix: "p", title: "Prozesse" } });
+    expect(row[0]).to.deep.equal(formatDateOnly(new Date("2025-03-15")));
   });
 });
 
@@ -428,10 +448,10 @@ describe("instanceToRow", () => {
 
 describe("generateXLSXFromRows", () => {
   it("produces a valid XLSX buffer", async () => {
-    const rows = [{ ID: "abc", Titel: "Test" }];
+    const rows = [{ 0: "abc", 1: "Test" }];
     const cols = [
-      { field: "idLowercase", title: "ID", show: true, hidden: false },
-      { field: "title", title: "Titel", show: true, hidden: false },
+      { field: DefaultColumns.id.field, title: "ID", show: true, hidden: false },
+      { field: DefaultColumns.title.field, title: "Titel", show: true, hidden: false },
     ];
     const buf = await generateXLSXFromRows(rows, cols as never);
     expect(Buffer.isBuffer(buf)).to.equal(true);
@@ -439,10 +459,10 @@ describe("generateXLSXFromRows", () => {
   });
 
   it("writes HYPERLINK formula for link cells", async () => {
-    const rows = [{ Link: { xlsxUrl: "https://example.com/p/i/ws/inst", label: "Link" }, Titel: "Test" }];
+    const rows = [{ 0: { xlsxUrl: "https://example.com/p/i/ws/inst", label: "Link" }, 1: "Test" }];
     const cols = [
-      { field: "link", title: "Link", show: true, hidden: false },
-      { field: "title", title: "Titel", show: true, hidden: false },
+      { field: DefaultColumns.link.field, title: "Link", show: true, hidden: false },
+      { field: DefaultColumns.title.field, title: "Titel", show: true, hidden: false },
     ];
     const buf = await generateXLSXFromRows(rows, cols as never);
     const wb = XLSX.read(buf, { type: "buffer" });
@@ -455,10 +475,10 @@ describe("generateXLSXFromRows", () => {
   });
 
   it("plain text cells have no formula", async () => {
-    const rows = [{ ID: "abc123", Titel: "Normaler Text" }];
+    const rows = [{ 0: "abc123", 1: "Normaler Text" }];
     const cols = [
-      { field: "idLowercase", title: "ID", show: true, hidden: false },
-      { field: "title", title: "Titel", show: true, hidden: false },
+      { field: DefaultColumns.id.field, title: "ID", show: true, hidden: false },
+      { field: DefaultColumns.title.field, title: "Titel", show: true, hidden: false },
     ];
     const buf = await generateXLSXFromRows(rows, cols as never);
     const wb = XLSX.read(buf, { type: "buffer" });
@@ -469,10 +489,10 @@ describe("generateXLSXFromRows", () => {
   });
 
   it("column order matches viewColumns definition", async () => {
-    const rows = [{ Status: "Laufend", ID: "abc" }];
+    const rows = [{ 0: "abc", 1: "Laufend" }];
     const cols = [
-      { field: "idLowercase", title: "ID", show: true, hidden: false },
-      { field: "state", title: "Status", show: true, hidden: false },
+      { field: DefaultColumns.id.field, title: "ID", show: true, hidden: false },
+      { field: DefaultColumns.state.field, title: "Status", show: true, hidden: false },
     ];
     const buf = await generateXLSXFromRows(rows, cols as never);
     const wb = XLSX.read(buf, { type: "buffer" });
@@ -489,17 +509,17 @@ describe("generateXLSXFromRows", () => {
 describe("Test full process: filter > sort > instanceToRow > generateXLSXFromRows", () => {
   // "Status" base64 = "U3RhdHVz" -> no padding needed -> "U3RhdHVz"
   // "Abteilung" base64 = "QWJ0ZWlsdW5n" -> "QWJ0ZWlsdW5n"
-  const COL_STATUS_KEY = "field_U3RhdHVz_ProcessHubTextInput";
-  const COL_ABTEILUNG_KEY = "field_QWJ0ZWlsdW5n_ProcessHubTextInput";
+  const COL_STATUS_KEY = getFieldKey("Status", "ProcessHubTextInput");
+  const COL_ABTEILUNG_KEY = getFieldKey("Abteilung", "ProcessHubTextInput");
 
   const language = "de";
   const viewColumns = [
-    { field: "idLowercase", title: "ID", show: true, hidden: false },
-    { field: "title", title: "Titel", show: true, hidden: false },
-    { field: "createdAtDate", title: "Erstellt am", show: true, hidden: false },
+    { field: DefaultColumns.id.field, title: "ID", show: true, hidden: false },
+    { field: DefaultColumns.title.field, title: "Titel", show: true, hidden: false },
+    { field: DefaultColumns.createdAtDate.field, title: "Erstellt am", show: true, hidden: false },
     { field: COL_STATUS_KEY, title: "Status", show: true, hidden: false },
     { field: COL_ABTEILUNG_KEY, title: "Abteilung", show: true, hidden: false },
-    { field: "state", title: "Zustand", show: true, hidden: false },
+    { field: DefaultColumns.state.field, title: "Zustand", show: true, hidden: false },
   ] as never;
 
   const instances: IInstanceDetails[] = [
@@ -556,6 +576,7 @@ describe("Test full process: filter > sort > instanceToRow > generateXLSXFromRow
   ];
 
   it("Apply filter Abteilung=Vertrieb (and) Status=genehmigt, then sort by createdAtDate asc", () => {
+    const options = { language: "de", module: { name: "processes", urlPrefix: "p", title: "Prozesse" } } as IGenerateXLSXOptions;
     const gridOptions: IGridOptions = {
       filter: {
         logic: "and",
@@ -564,17 +585,18 @@ describe("Test full process: filter > sort > instanceToRow > generateXLSXFromRow
           { field: COL_STATUS_KEY, operator: "eq", value: "genehmigt" },
         ],
       },
-      sort: [{ field: "createdAtDate", dir: "asc" }],
+      sort: [{ field: DefaultColumns.createdAtDate.field, dir: "asc" }],
     };
 
-    const filtered = applyViewFilters(instances, gridOptions.filter!);
-    const sorted = applyViewSorting(filtered, gridOptions);
+    const filtered = applyViewFilters(instances, gridOptions.filter!, options);
+    const sorted = applyViewSorting(filtered, gridOptions, options);
 
     // Only AAA001 (Vertrieb + genehmigt), BBB002 (ausstehend) and DDD004 (abgelehnt) are filtered out
     expect(sorted.map((i) => i.instanceId)).to.deep.equal(["AAA001"]);
   });
 
   it("Apply filter Abteilung=Vertrieb (or group: genehmigt or ausstehend), then sort by createdAtDate desc", () => {
+    const options = { language: "de", module: { name: "processes", urlPrefix: "p", title: "Prozesse" } } as IGenerateXLSXOptions;
     const gridOptions: IGridOptions = {
       filter: {
         logic: "and",
@@ -589,32 +611,33 @@ describe("Test full process: filter > sort > instanceToRow > generateXLSXFromRow
           },
         ],
       },
-      sort: [{ field: "createdAtDate", dir: "desc" }],
+      sort: [{ field: DefaultColumns.createdAtDate.field, dir: "desc" }],
     };
 
-    const filtered = applyViewFilters(instances, gridOptions.filter!);
-    const sorted = applyViewSorting(filtered, gridOptions);
+    const filtered = applyViewFilters(instances, gridOptions.filter!, options);
+    const sorted = applyViewSorting(filtered, gridOptions, options);
 
     // AAA001 (Jan) + BBB002 (März), desc > BBB002 zuerst
     expect(sorted.map((i) => i.instanceId)).to.deep.equal(["BBB002", "AAA001"]);
   });
 
   it("Apply filter createdAtDate >= 2026-02-01, then sort by title asc and check XLSX content", async () => {
+    const options = { language: "de", module: { name: "processes", urlPrefix: "p", title: "Prozesse" } } as IGenerateXLSXOptions;
     const gridOptions: IGridOptions = {
       filter: {
         logic: "and",
-        filters: [{ field: "createdAtDate", operator: "gte", value: "2026-02-01" }],
+        filters: [{ field: DefaultColumns.createdAtDate.field, operator: "gte", value: "2026-02-01" }],
       },
-      sort: [{ field: "title", dir: "asc" }],
+      sort: [{ field: DefaultColumns.title.field, dir: "asc" }],
     };
 
-    const filtered = applyViewFilters(instances, gridOptions.filter!);
-    const sorted = applyViewSorting(filtered, gridOptions);
+    const filtered = applyViewFilters(instances, gridOptions.filter!, options);
+    const sorted = applyViewSorting(filtered, gridOptions, options);
 
     // Feb: CCC003, März: BBB002, Apr: EEE005 > title asc: Fortbildung, Krankmeldung, Urlaub Schmidt
     expect(sorted.map((i) => i.instanceId)).to.deep.equal(["EEE005", "CCC003", "BBB002"]);
 
-    const rows = sorted.map((inst) => instanceToRow(inst, viewColumns, language));
+    const rows = sorted.map((inst) => instanceToRow(inst, viewColumns, { language, module: { name: "processes", urlPrefix: "p", title: "Prozesse" } }));
     const buf = await generateXLSXFromRows(rows, viewColumns);
 
     const wb = XLSX.read(buf, { type: "buffer" });
