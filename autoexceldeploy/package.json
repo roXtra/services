@@ -32,7 +32,7 @@
   "devDependencies": {
     "@types/chai": "^5.2.3",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^22.19.19",
+    "@types/node": "^22.19.21",
     "@types/react": "^18.3.30",
     "@types/sinon": "^21.0.1",
     "bestzip": "^3.0.1",
@@ -42,7 +42,7 @@
     "eslint": "9.39.2",
     "mocha": "^11.7.6",
     "sinon": "^22.0.0",
-    "ts-loader": "^9.5.7",
+    "ts-loader": "^9.6.0",
     "typescript": "^6.0.3",
     "webpack": "^5.107.2",
     "webpack-cli": "^7.0.3",

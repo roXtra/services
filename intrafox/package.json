@@ -35,7 +35,7 @@
     "@types/chai": "^5.2.3",
     "@types/dateformat": "^5.0.3",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^22.19.19",
+    "@types/node": "^22.19.21",
     "@types/react": "^18.3.30",
     "bestzip": "^3.0.1",
     "copyfiles": "^2.4.1",
@@ -43,7 +43,7 @@
     "eslint": "9.39.2",
     "mocha": "^11.7.6",
     "nock": "^14.0.15",
-    "ts-loader": "^9.5.7",
+    "ts-loader": "^9.6.0",
     "typescript": "^6.0.3",
     "webpack": "^5.107.2",
     "webpack-cli": "^7.0.3"
