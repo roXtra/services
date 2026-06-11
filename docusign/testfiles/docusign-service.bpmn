@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:processhub="http://processhub.com/schema/1.0/bpmn" id="Definition_6A5E24234D40C3D4">
+  <bpmn:extensionElements>
+    <processhub:inputOutput>
+      <processhub:inputParameter name="roxtra-version">9.121.0</processhub:inputParameter>
+    </processhub:inputOutput>
+  </bpmn:extensionElements>
+  <bpmn:collaboration id="Collaboration_45EBE3C77004AC45">
+    <bpmn:participant id="Participant_9AF59FC799E74064" name="Signatur" processRef="Process_11CA7EC604A94AA8" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_11CA7EC604A94AA8" isExecutable="true">
+    <bpmn:extensionElements>
+      <processhub:inputOutput>
+        <processhub:inputParameter name="processhub-userform">[{"name":"Anlagen","type":"ProcessHubFileUpload","isRequired":true,"config":{"conditionExpression":"","conditionBuilderMode":true,"validationExpression":"","validationBuilderMode":true},"inlineEditingActive":false,"id":"4B1D3A91B9ACC260","index":3},{"type":"ProcessHubTextInput","name":"SignaturId","config":{"conditionExpression":"","validationExpression":"","conditionBuilderMode":true,"validationBuilderMode":true},"isRequired":false},{"type":"ProcessHubTextInput","name":"SignaturUrl","config":{"conditionExpression":"","validationExpression":"","conditionBuilderMode":true,"validationBuilderMode":true},"isRequired":false},{"type":"ProcessHubFileUpload","name":"Signiertes Dokument","config":{"conditionExpression":"","conditionBuilderMode":true,"validationExpression":"","validationBuilderMode":true},"isRequired":false}]</processhub:inputParameter>
+      </processhub:inputOutput>
+    </bpmn:extensionElements>
+    <bpmn:laneSet id="LaneSet_15AD7441D453F752">
+      <bpmn:lane id="Lane_7A0DD19E05A33282" name="Ersteller">
+        <bpmn:flowNodeRef>StartEvent_5688B5B813686F04</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>UserTask_8FD628156F7DEE21</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ServiceTask_848E935253381382</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>BoundaryEvent_6801F3B0685A7268</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_54155EAA15E1A2C9</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ServiceTask_FC67E858BA85192A</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>UserTask_FFDF7A35B0746C0C</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="StartEvent_5688B5B813686F04">
+      <bpmn:extensionElements>
+        <processhub:inputOutput>
+          <processhub:inputParameter name="processhub-userform">[{"name":"Anlagen","type":"ProcessHubFileUpload","isRequired":true,"config":{"conditionExpression":"","conditionBuilderMode":true,"validationExpression":"","validationBuilderMode":true},"inlineEditingActive":false,"id":"4B1D3A91B9ACC260","index":3}]</processhub:inputParameter>
+          <processhub:inputParameter name="roleowners-editable">true</processhub:inputParameter>
+          <processhub:inputParameter name="anonymous-start">false</processhub:inputParameter>
+        </processhub:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>SequenceFlow_D8995BDC1B74D4B5</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="UserTask_8FD628156F7DEE21" name="Aufgabe 2">
+      <bpmn:incoming>SequenceFlow_A7C100D063F69EBB</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_02B8A57A6454ACEF</bpmn:outgoing>
+      <bpmn:boundaryEventRefs>BoundaryEvent_6801F3B0685A7268</bpmn:boundaryEventRefs>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_D8995BDC1B74D4B5" sourceRef="StartEvent_5688B5B813686F04" targetRef="ServiceTask_848E935253381382" />
+    <bpmn:serviceTask id="ServiceTask_848E935253381382" name="Signaturanfrage erstellen">
+      <bpmn:extensionElements>
+        <processhub:inputOutput>
+          <processhub:inputParameter name="service-task-config-object">{"selectedServiceId":"docusign-service","selectedActionId":"signFile","fields":[{"key":"message","type":"text","value":"Bitte signieren Sie das Dokument"},{"key":"sourceField","type":"select","value":"Anlagen"},{"key":"signatureUrlField","type":"select","value":"SignaturUrl"},{"key":"triggerWebhook","type":"select","value":"false"},{"key":"signatureIdField","type":"select","value":"SignaturId"}]}</processhub:inputParameter>
+        </processhub:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_D8995BDC1B74D4B5</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_A7C100D063F69EBB</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="BoundaryEvent_6801F3B0685A7268" attachedToRef="UserTask_8FD628156F7DEE21">
+      <bpmn:extensionElements>
+        <processhub:inputOutput>
+          <processhub:inputParameter name="message-event-type">webhook</processhub:inputParameter>
+          <processhub:inputParameter name="mail-body-parse-fields">false</processhub:inputParameter>
+          <processhub:inputParameter name="webhook-body-to-field">false</processhub:inputParameter>
+          <processhub:inputParameter name="mail-attachment-field" />
+          <processhub:inputParameter name="mail-start-event-content">{}</processhub:inputParameter>
+        </processhub:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>SequenceFlow_915F17049CE07AD1</bpmn:outgoing>
+      <bpmn:messageEventDefinition />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_A7C100D063F69EBB" sourceRef="ServiceTask_848E935253381382" targetRef="UserTask_8FD628156F7DEE21" />
+    <bpmn:endEvent id="EndEvent_54155EAA15E1A2C9">
+      <bpmn:incoming>SequenceFlow_3038705341A0F419</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="ServiceTask_FC67E858BA85192A" name="Dokument herunterladen">
+      <bpmn:extensionElements>
+        <processhub:inputOutput>
+          <processhub:inputParameter name="service-task-config-object">{"selectedServiceId":"docusign-service","selectedActionId":"downloadFile","fields":[{"key":"targetField","type":"select","value":"Signiertes Dokument"},{"key":"signatureIdField","type":"select","value":"SignaturId"}]}</processhub:inputParameter>
+        </processhub:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_02B8A57A6454ACEF</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_915F17049CE07AD1</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_99D39F0493E18D6D</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_02B8A57A6454ACEF" sourceRef="UserTask_8FD628156F7DEE21" targetRef="ServiceTask_FC67E858BA85192A" />
+    <bpmn:sequenceFlow id="SequenceFlow_915F17049CE07AD1" sourceRef="BoundaryEvent_6801F3B0685A7268" targetRef="ServiceTask_FC67E858BA85192A" />
+    <bpmn:userTask id="UserTask_FFDF7A35B0746C0C">
+      <bpmn:incoming>SequenceFlow_99D39F0493E18D6D</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_3038705341A0F419</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_99D39F0493E18D6D" sourceRef="ServiceTask_FC67E858BA85192A" targetRef="UserTask_FFDF7A35B0746C0C" />
+    <bpmn:sequenceFlow id="SequenceFlow_3038705341A0F419" sourceRef="UserTask_FFDF7A35B0746C0C" targetRef="EndEvent_54155EAA15E1A2C9" />
+  </bpmn:process>
+</bpmn:definitions>
