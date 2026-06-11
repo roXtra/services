@@ -1,0 +1,9 @@
+{
+  "accountId": "",
+  "userId": "",
+  "integrationKey": "",
+  "privateKey": "",
+  "baseUrl": "https://www.docusign.net/restapi/v2.1",
+  "oauthBasePath": "account.docusign.com",
+  "callbackUrlBase": ""
+}
