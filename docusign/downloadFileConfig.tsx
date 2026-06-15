@@ -25,6 +25,18 @@ export function downloadFileConfig(userLanguage: Language): React.JSX.Element {
           </tr>
 
           <tr>
+            <td>
+              <span>{tl("Dokument bei DocuSign löschen?", userLanguage)}</span>
+            </td>
+            <td>
+              <select id="deleteDocumentFromDocuSign" defaultValue="false">
+                <option value="true">Ja</option>
+                <option value="false">Nein</option>
+              </select>
+            </td>
+          </tr>
+
+          <tr>
             <td colSpan={2}>
               <h3>{tl("Hinweise zur Konfiguration", userLanguage)}</h3>
               <div>
@@ -35,6 +47,9 @@ export function downloadFileConfig(userLanguage: Language): React.JSX.Element {
 
                 <h3>{tl("Feld für signierte Datei", userLanguage)}</h3>
                 <p>{tl("Dateianhangsfeld, in dem das heruntergeladene signierte Dokument gespeichert wird.", userLanguage)}</p>
+
+                <h3>{tl("Dokument bei DocuSign löschen", userLanguage)}</h3>
+                <p>{tl("Gibt an, ob das Dokument nach dem Herunterladen bei DocuSign gelöscht werden soll.", userLanguage)}</p>
 
                 <h3>{tl("Mögliche Fehler", userLanguage)}</h3>
                 <p>{tl("CONFIG_INVALID: Fehlende oder fehlerhafte Konfiguration.", userLanguage)}</p>

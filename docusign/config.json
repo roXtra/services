@@ -1,9 +1,9 @@
 {
-  "accountId": "9bf0805a-2af4-456e-b1cc-3e821bc67dcd",
+  "accountId": "",
   "userId": "",
-  "integrationKey": "950aa296-8f3c-45f0-858f-db4cd28689c7",
+  "integrationKey": "",
   "privateKey": "",
-  "baseUrl": "https://demo.docusign.net/restapi/v2.1",
+  "baseUrl": "https://demo.eu.docusign.net/restapi/v2.1",
   "oauthBasePath": "account-d.docusign.com",
   "callbackUrlBase": ""
 }

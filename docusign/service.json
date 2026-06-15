@@ -38,6 +38,18 @@
         },
         { "name": "signatureIdField", "type": "select", "onload": "fields ProcessHubTextInput" }
       ]
+    },
+    {
+      "id": "deleteFile",
+      "label": "Dokument löschen",
+      "configMethod": "deleteFileConfig",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
+      "serviceMethod": "deleteDocumentFromDocuSign",
+      "fields": [
+        { "name": "signatureIdField", "type": "select", "onload": "fields ProcessHubTextInput" },
+        { "name": "deleteMode", "type": "select" }
+      ]
     }
   ]
 }
