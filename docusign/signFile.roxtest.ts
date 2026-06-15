@@ -54,7 +54,8 @@ describe("services", () => {
         getEnvelope: sinon.stub(),
         getRecipientSigningUrl: sinon.stub().returns(Promise.resolve("https://demo.docusign.net/signing/abc")),
         downloadCompletedDocument: sinon.stub(),
-        voidEnvelope: sinon.stub(),
+        deleteEnvelope: sinon.stub(),
+        purgeEnvelope: sinon.stub(),
       };
 
       await serviceLogic(env, docusignApi, mockConfigFile);
@@ -100,7 +101,8 @@ describe("services", () => {
         getEnvelope: sinon.stub(),
         getRecipientSigningUrl: sinon.stub(),
         downloadCompletedDocument: sinon.stub(),
-        voidEnvelope: sinon.stub(),
+        deleteEnvelope: sinon.stub(),
+        purgeEnvelope: sinon.stub(),
       };
 
       await serviceLogic(env, docusignApi, mockConfigFile);
@@ -125,7 +127,8 @@ describe("services", () => {
         getEnvelope: sinon.stub(),
         getRecipientSigningUrl: sinon.stub(),
         downloadCompletedDocument: sinon.stub(),
-        voidEnvelope: sinon.stub(),
+        deleteEnvelope: sinon.stub(),
+        purgeEnvelope: sinon.stub(),
       };
 
       const customBase = "https://example.com/roxtra/";

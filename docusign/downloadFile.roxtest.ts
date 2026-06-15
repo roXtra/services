@@ -39,7 +39,8 @@ describe("services", () => {
         getEnvelope: sinon.stub().returns(Promise.resolve(mockEnvelopeResponse)),
         getRecipientSigningUrl: sinon.stub(),
         downloadCompletedDocument: sinon.stub().returns(Promise.resolve(mockData)),
-        voidEnvelope: sinon.stub(),
+        deleteEnvelope: sinon.stub(),
+        purgeEnvelope: sinon.stub(),
       };
 
       const { env, uploadInstanceAttachmentStub } = await createTestEnv("./testfiles/docusign-service.bpmn");
@@ -70,7 +71,8 @@ describe("services", () => {
         getEnvelope: sinon.stub().returns(Promise.resolve(incompleteEnvelope)),
         getRecipientSigningUrl: sinon.stub(),
         downloadCompletedDocument: sinon.stub(),
-        voidEnvelope: sinon.stub(),
+        deleteEnvelope: sinon.stub(),
+        purgeEnvelope: sinon.stub(),
       };
 
       const { env } = await createTestEnv("./testfiles/docusign-service.bpmn");

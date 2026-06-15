@@ -4,9 +4,10 @@ export interface IDocusignApi {
   getAccessToken(): Promise<string>;
   createEnvelope(token: string, request: ICreateEnvelopeRequest): Promise<IEnvelopeResponse>;
   getEnvelope(token: string, envelopeId: string): Promise<IEnvelopeResponse>;
-  getRecipientSigningUrl(token: string, envelopeId: string, signerEmail: string, signerName: string, returnUrl: string): Promise<string>;
+  getRecipientSigningUrl(token: string, envelopeId: string, signerEmail: string, signerName: string, returnUrl?: string): Promise<string>;
   downloadCompletedDocument(token: string, envelopeId: string): Promise<Blob>;
-  voidEnvelope(token: string, envelopeId: string, voidReason: string): Promise<boolean>;
+  deleteEnvelope(token: string, envelopeId: string): Promise<boolean>;
+  purgeEnvelope(token: string, envelopeId: string): Promise<boolean>;
 }
 
 export interface ICreateEnvelopeRequest {
@@ -132,9 +133,15 @@ class DocusignApi implements IDocusignApi {
         url: request.webhookUrl,
         loggingEnabled: true,
         requireAcknowledgment: true,
-        envelopeEvents: [{ envelopeEventStatusCode: "completed" }],
+        envelopeEvents: [{ envelopeEventStatusCode: "completed" }, { envelopeEventStatusCode: "declined" }, { envelopeEventStatusCode: "voided" }],
         includeCertificateOfCompletion: "false",
         includeDocuments: "false",
+        // Use the structured eventData format to get a minimal JSON payload
+        eventData: {
+          version: "restv2.1",
+          // Only include envelope summary fields (status, envelopeId, sentDateTime etc.) — no documents, no recipients detail
+          includeData: [],
+        },
       };
     }
     const response = await fetch(url, {
@@ -177,7 +184,7 @@ class DocusignApi implements IDocusignApi {
    * @param returnUrl The URL to redirect the signer after signing.
    * @returns The URL for the embedded signing view.
    */
-  public async getRecipientSigningUrl(token: string, envelopeId: string, signerEmail: string, signerName: string, returnUrl: string): Promise<string> {
+  public async getRecipientSigningUrl(token: string, envelopeId: string, signerEmail: string, signerName: string, returnUrl?: string): Promise<string> {
     const url = `${this.#baseUrl}/accounts/${this.#accountId}/envelopes/${envelopeId}/views/recipient`;
     const response = await fetch(url, {
       method: "POST",
@@ -218,22 +225,41 @@ class DocusignApi implements IDocusignApi {
   }
 
   /**
-   * This method enables you to make changes to an envelope. You can use it to:
+   * This method enables you to delete an envelope by moving it to the recycle bin. Envelopes in the recycle bin are automatically purged after 30 days. To immediately and permanently delete an envelope, use the Purge method.
+   * https://developers.docusign.com/docs/esign-rest-api/reference/folders/folders/moveenvelopes/
+   * @param token The external account number (int) or account ID GUID.
+   * @param envelopeId The ID of the envelope to purge.
+   * @returns True if the envelope was successfully queued for purge.
+   */
+  public async deleteEnvelope(token: string, envelopeId: string): Promise<boolean> {
+    const url = `${this.#baseUrl}/accounts/${this.#accountId}/folders/recyclebin`;
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ envelopeIds: [envelopeId] }),
+    });
+    if (response.status !== HTTP_OK) {
+      throw new Error(`DocuSign purge envelope failed: ${url} returned ${response.status}: ${await response.text()}`);
+    }
+    return true;
+  }
+
+  /**
+   * This method enables you to purge the documents from a completed envelope.
    * https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/update/
    * @param token The external account number (int) or account ID GUID.
-   * @param envelopeId The ID of the envelope to void.
-   * @param voidReason The reason for voiding the envelope.
-   * @returns True if the envelope was successfully voided.
+   * @param envelopeId The ID of the envelope to purge.
+   * @returns True if the envelope was successfully queued for purge.
    */
-  public async voidEnvelope(token: string, envelopeId: string, voidReason: string): Promise<boolean> {
+  public async purgeEnvelope(token: string, envelopeId: string): Promise<boolean> {
     const url = `${this.#baseUrl}/accounts/${this.#accountId}/envelopes/${envelopeId}`;
     const response = await fetch(url, {
       method: "PUT",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ status: "voided", voidedReason: voidReason }),
+      body: JSON.stringify({ purgeState: "documents_queued" }),
     });
     if (response.status !== HTTP_OK) {
-      throw new Error(`DocuSign void envelope failed: ${url} returned ${response.status}: ${await response.text()}`);
+      throw new Error(`DocuSign purge envelope failed: ${url} returned ${response.status}: ${await response.text()}`);
     }
     return true;
   }
