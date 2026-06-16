@@ -86,13 +86,10 @@ async function buildEnvelopeRequest(
     throw new BpmnError(ErrorCode.ConfigInvalid, "User has no email address, cannot proceed with service!");
   }
   const signerName = [environment.sender.firstName, environment.sender.lastName].filter(Boolean).join(" ") || userMail;
+  const signerId = environment.sender.userId;
 
   /* Read message */
   const message = config.fields.find((f) => f.key === "message")?.value || "";
-
-  /* Determine whether to use embedded signing (to generate a signing URL) */
-  const signatureUrlField = config.fields.find((f) => f.key === "signatureUrlField")?.value;
-  const embeddedClientUserId = signatureUrlField ? userMail : undefined;
 
   /* Build webhook URL if triggerWebhook is enabled */
   const triggerWebhook = config.fields.find((f) => f.key === "triggerWebhook")?.value || "false";
@@ -108,15 +105,26 @@ async function buildEnvelopeRequest(
     }
   }
 
+  /* Standards-Based Signature (SBS) for EU Advanced (AES) */
+  const signatureProviderName = config.fields.find((f) => f.key === "signatureProvider")?.value || undefined;
+  const signerPhoneNumber = config.fields.find((f) => f.key === "signerPhoneNumber")?.value || undefined;
+  const accessCode = config.fields.find((f) => f.key === "accessCode")?.value || undefined;
+
+  /* Sanitize name: SBS provider rejects ^ : \ @ + in recipient name */
+  const sanitizedSignerName = signatureProviderName ? signerName.replace(/[\^:\\@+]/g, "") || signerName : signerName;
+
   const envelopeRequest: ICreateEnvelopeRequest = {
     emailSubject: fileName,
     emailMessage: message,
     documentBase64: fileData,
     documentName: fileName,
     signerEmail: userMail,
-    signerName,
-    embeddedClientUserId,
+    signerName: sanitizedSignerName,
+    signerId: signerId,
     webhookUrl,
+    signatureProviderName,
+    signerPhoneNumber,
+    accessCode,
   };
 
   return envelopeRequest;
@@ -147,12 +155,18 @@ export async function serviceLogic(environment: IServiceTaskEnvironment, docusig
 
   /* Determine whether to use embedded signing (to generate a signing URL) */
   const signatureUrlField = config.fields.find((f) => f.key === "signatureUrlField")?.value;
-  const embeddedClientUserId = signatureUrlField ? envelopeRequest.signerEmail : undefined;
 
   /* Get and store the signing URL if embedded signing was requested */
-  if (signatureUrlField && embeddedClientUserId) {
+  if (signatureUrlField) {
     const returnUrl = `${getCallbackUrlBase(configFile, environment)}/p/i/${environment.workspace.workspaceId}/${environment.instanceDetails.instanceId.toLocaleLowerCase()}`;
-    const signingUrl = await docusignApi.getRecipientSigningUrl(token, envelopeResponse.envelopeId, envelopeRequest.signerEmail, envelopeRequest.signerName, returnUrl);
+    const signingUrl = await docusignApi.getRecipientSigningUrl(
+      token,
+      envelopeResponse.envelopeId,
+      envelopeRequest.signerEmail,
+      envelopeRequest.signerName,
+      envelopeRequest.signerId,
+      returnUrl,
+    );
     environment.logger.info(`Storing signing URL in field "${signatureUrlField}"`);
     environment.instanceDetails.extras.fieldContents = {
       ...environment.instanceDetails.extras.fieldContents,

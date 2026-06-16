@@ -55,6 +55,38 @@ export function signFileConfig(userLanguage: Language): React.JSX.Element {
           </tr>
 
           <tr>
+            <td>
+              <span>{tl("Signaturart (Optional)", userLanguage)}</span>
+            </td>
+            <td>
+              <select id="signatureProvider" defaultValue="">
+                <option value="">{tl("Standard (SES / Click-to-Sign)", userLanguage)}</option>
+                <option value="UniversalSignaturePen_OpenTrust_Hash_TSP">{tl("EU Advanced (AES / eIDAS) – SMS oder OTP", userLanguage)}</option>
+                <option value="DocuSign_EU_QES_Namirial">{tl("EU Qualifiziert (QES) – Namirial QTSP", userLanguage)}</option>
+                <option value="UniversalSignaturePen_IDnow_QES">{tl("EU Qualifiziert (QES) – IDnow Video-Ident", userLanguage)}</option>
+              </select>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <span>{tl("Telefonnummer für SMS-OTP (Optional – EU Advanced)", userLanguage)}</span>
+            </td>
+            <td>
+              <input id="signerPhoneNumber" placeholder="+49123456789" />
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <span>{tl("Zugangscode / Access Code (Optional – EU Advanced)", userLanguage)}</span>
+            </td>
+            <td>
+              <input id="accessCode" />
+            </td>
+          </tr>
+
+          <tr>
             <td colSpan={2}>
               <h3>{tl("Hinweise zur Konfiguration", userLanguage)}</h3>
               <div>
@@ -86,6 +118,40 @@ export function signFileConfig(userLanguage: Language): React.JSX.Element {
                 <p>
                   {tl(
                     "Optionales Textfeld für die eingebettete Signatur-URL. Wird dieses Feld angegeben, wird eingebettetes Signieren aktiviert: DocuSign versendet keine E-Mail, stattdessen kann der Unterzeichner über die gespeicherte URL direkt signieren.",
+                    userLanguage,
+                  )}
+                </p>
+
+                <h3>{tl("Signaturart", userLanguage)}</h3>
+                <p>{tl("Wählt die Signaturqualität – entspricht dem Skribble-Konzept SES/AES/QES:", userLanguage)}</p>
+                <ul>
+                  <li>{tl("Standard (SES): Einfache elektronische Signatur, Click-to-Sign. Keine zusätzliche Konfiguration nötig.", userLanguage)}</li>
+                  <li>
+                    {tl(
+                      "EU Advanced (AES): Standards-Based Signature gemäß eIDAS. Erfordert SMS-OTP-Telefonnummer oder Zugangscode. DocuSign-Account muss AES unterstützen.",
+                      userLanguage,
+                    )}
+                  </li>
+                  <li>
+                    {tl(
+                      "EU Qualifiziert (QES): Höchste Signaturqualität gemäß eIDAS Art. 26. Die Identität wird durch einen Qualified Trust Service Provider (QTSP) per Video-Ident oder Ausweis-Scan geprüft. Telefonnummer und Zugangscode werden bei QES ignoriert. (Muss vom DocuSign-Support für den Account freigeschaltet werden.)",
+                      userLanguage,
+                    )}
+                  </li>
+                </ul>
+
+                <h3>{tl("Telefonnummer für SMS-OTP", userLanguage)}</h3>
+                <p>
+                  {tl(
+                    "Telefonnummer des Unterzeichners mit Ländervorwahl (z.B. +49123456789). Wird für EU Advanced Signature per SMS-Einmalpasswort benötigt. Entweder Telefonnummer oder Zugangscode angeben, nicht beides.",
+                    userLanguage,
+                  )}
+                </p>
+
+                <h3>{tl("Zugangscode / Access Code", userLanguage)}</h3>
+                <p>
+                  {tl(
+                    "Statischer Zugangscode, den der Unterzeichner beim Signieren eingeben muss. Alternative zur SMS-OTP-Telefonnummer bei EU Advanced Signature. Bei Embedded Signing wird bei fehlgeschlagenem Code auf die Rück-URL mit dem Parameter ?event=access_code_failed weitergeleitet.",
                     userLanguage,
                   )}
                 </p>

@@ -4,7 +4,7 @@ export interface IDocusignApi {
   getAccessToken(): Promise<string>;
   createEnvelope(token: string, request: ICreateEnvelopeRequest): Promise<IEnvelopeResponse>;
   getEnvelope(token: string, envelopeId: string): Promise<IEnvelopeResponse>;
-  getRecipientSigningUrl(token: string, envelopeId: string, signerEmail: string, signerName: string, returnUrl?: string): Promise<string>;
+  getRecipientSigningUrl(token: string, envelopeId: string, signerEmail: string, signerName: string, signerId: string, returnUrl?: string): Promise<string>;
   downloadCompletedDocument(token: string, envelopeId: string): Promise<Blob>;
   deleteEnvelope(token: string, envelopeId: string): Promise<boolean>;
   purgeEnvelope(token: string, envelopeId: string): Promise<boolean>;
@@ -17,9 +17,16 @@ export interface ICreateEnvelopeRequest {
   documentName: string;
   signerEmail: string;
   signerName: string;
-  /** If set, embedded signing mode is used and DocuSign will NOT send an email. Store the signing URL separately. */
-  embeddedClientUserId?: string;
+  signerId: string;
   webhookUrl?: string;
+  /** Standards-Based Signature provider name for eIDAS AES. Use "UniversalSignaturePen_OpenTrust_Hash_TSP" for EU Advanced.
+   *  When set, identityVerificationWorkflowId is ignored.
+   *  The recipient name must not contain: ^ : \ @ + */
+  signatureProviderName?: string;
+  /** Phone number incl. country code for SMS-OTP authentication with SBS (e.g. "+4912345678"). */
+  signerPhoneNumber?: string;
+  /** One-time password / access code for SBS authentication (alternative to signerPhoneNumber). */
+  accessCode?: string;
 }
 
 export interface IEnvelopeResponse {
@@ -106,13 +113,41 @@ class DocusignApi implements IDocusignApi {
   public async createEnvelope(token: string, request: ICreateEnvelopeRequest): Promise<IEnvelopeResponse> {
     const url = `${this.#baseUrl}/accounts/${this.#accountId}/envelopes`;
     const signer: Record<string, unknown> = {
+      clientUserId: request.signerId,
       email: request.signerEmail,
       name: request.signerName,
       recipientId: "1",
       routingOrder: "1",
     };
-    if (request.embeddedClientUserId) {
-      signer["clientUserId"] = request.embeddedClientUserId;
+    // Standards-based signatures
+    // https://developers.docusign.com/docs/esign-rest-api/esign101/concepts/standards-based-signatures/
+    if (request.signatureProviderName) {
+      // QES providers use the recipientSignatureProviders array; AES uses direct fields
+      const isQES = request.signatureProviderName.includes("QES");
+      if (isQES) {
+        // Qualified Electronic Signature — identity verified by a QTSP (IDnow, Namirial, etc.)
+        // Phone/OTP not applicable here — identification happens via video-chat with the QTSP
+        signer["recipientSignatureProviders"] = [
+          {
+            signatureProviderName: request.signatureProviderName,
+            signatureProviderOptions: {},
+          },
+        ];
+      } else {
+        // Both AES and QES use the recipientSignatureProviders array
+        const providerOptions: Record<string, string> = {};
+        if (request.signerPhoneNumber) {
+          providerOptions["sms"] = request.signerPhoneNumber;
+        } else if (request.accessCode) {
+          providerOptions["oneTimePassword"] = request.accessCode;
+        }
+        signer["recipientSignatureProviders"] = [
+          {
+            signatureProviderName: request.signatureProviderName,
+            signatureProviderOptions: providerOptions,
+          },
+        ];
+      }
     }
     const body: Record<string, unknown> = {
       emailSubject: request.emailSubject,
@@ -181,10 +216,11 @@ class DocusignApi implements IDocusignApi {
    * @param envelopeId The ID of the draft envelope or template to preview.
    * @param signerEmail The email address of the signer.
    * @param signerName The name of the signer.
+   * @param signerId The clientUserId of the signer
    * @param returnUrl The URL to redirect the signer after signing.
    * @returns The URL for the embedded signing view.
    */
-  public async getRecipientSigningUrl(token: string, envelopeId: string, signerEmail: string, signerName: string, returnUrl?: string): Promise<string> {
+  public async getRecipientSigningUrl(token: string, envelopeId: string, signerEmail: string, signerName: string, signerId: string, returnUrl?: string): Promise<string> {
     const url = `${this.#baseUrl}/accounts/${this.#accountId}/envelopes/${envelopeId}/views/recipient`;
     const response = await fetch(url, {
       method: "POST",
@@ -193,7 +229,7 @@ class DocusignApi implements IDocusignApi {
         authenticationMethod: "none",
         email: signerEmail,
         userName: signerName,
-        clientUserId: signerEmail,
+        clientUserId: signerId,
         returnUrl,
       }),
     });
