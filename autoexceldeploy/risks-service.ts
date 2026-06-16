@@ -110,7 +110,6 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
     }
   } else {
     // Default view for risks: no state filter, risk-appropriate columns
-    // TODO: Refine columns and filters once the risk management field structure is known
     viewDetails = {
       gridOptions: JSON.stringify({
         skip: 0,

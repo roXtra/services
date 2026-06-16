@@ -359,38 +359,31 @@ export function getResolvedValue(instance: IInstanceDetails, fieldKey: string, o
     return assessments ?? "";
   }
 
-  // Base64-encoded field format): base64(<UUID><fieldName>)
-  // Used by ProcessHub views for risk assessment dimension columns
-  {
-    const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
-    try {
-      const decoded = Buffer.from(fieldKey, "base64").toString("utf-8");
-      const uuidMatch = decoded.match(UUID_REGEX);
-      if (uuidMatch) {
-        const fieldKey = uuidMatch[0];
-        if (fieldKey === DefaultColumns.riskMetric.field || fieldKey === DefaultColumns.riskMetricText.field) {
-          const riskAssessments = instance.riskAssessments ?? [];
-          if (riskAssessments.length === 0) return "";
-          const assessmentValues = Object.values(riskAssessments[0].assessments);
-          if (fieldKey === DefaultColumns.riskMetricText.field) {
-            return getRiskManagementRPZName(assessmentValues[0] * assessmentValues[1], options.language);
-          } else if (fieldKey === DefaultColumns.riskMetric.field) {
-            return getRiskManagementRPZ(assessmentValues[0] * assessmentValues[1]);
-          }
-        } else if (fieldKey === DefaultColumns.auditMetric.field) {
-          const auditMetric = instance.auditMetric;
-          if (auditMetric == null) return "";
-          return Math.round(auditMetric * 100);
-        } else if (fieldKey === DefaultColumns.auditMetricText.field) {
-          const auditMetric = instance.auditMetric;
-          if (auditMetric == null) return "";
-          const auditMetricCategory = options.auditsSettings?.auditMetricCategories.find(({ from, to }) => auditMetric <= to && auditMetric >= from);
-          return auditMetricCategory?.label ?? "";
-        }
-      }
-    } catch {
-      // Not a valid base64 string, ignore and treat as normal field key
+  // Risk metric fields: compute from assessments
+  if (fieldKey.startsWith(DefaultColumns.riskMetric.field) || fieldKey.startsWith(DefaultColumns.riskMetricText.field)) {
+    const riskAssessments = instance.riskAssessments ?? [];
+    if (riskAssessments.length === 0) return "";
+    const assessmentValues = Object.values(riskAssessments[0].assessments);
+    if (fieldKey.startsWith(DefaultColumns.riskMetricText.field)) {
+      return getRiskManagementRPZName(assessmentValues[0] * assessmentValues[1], options.language);
+    } else {
+      return getRiskManagementRPZ(assessmentValues[0] * assessmentValues[1]);
     }
+  }
+
+  // Audit metric fields: compute from latest assessment
+  if (fieldKey === DefaultColumns.auditMetric.field) {
+    const auditMetric = instance.auditMetric;
+    if (auditMetric == null) return "";
+    return Math.round(auditMetric * 100);
+  }
+
+  // Audit metric text field: compute category from latest assessment
+  if (fieldKey === DefaultColumns.auditMetricText.field) {
+    const auditMetric = instance.auditMetric;
+    if (auditMetric == null) return "";
+    const auditMetricCategory = options.auditsSettings?.auditMetricCategories.find(({ from, to }) => auditMetric <= to && auditMetric >= from);
+    return auditMetricCategory?.label ?? "";
   }
 
   // Risk trend field: compute trend and color based on latest two assessments
@@ -445,6 +438,12 @@ export function formatDate(date: Date | string | null | undefined): Date | null 
   return new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds());
 }
 
+/**
+ * Convert state number to string representation
+ * @param state The state of the instance
+ * @param options Additional options for language and module context
+ * @returns The string representation of the state
+ */
 function stateToString(state: State | undefined, options: IGenerateXLSXOptions): string {
   const language = options.language ?? "de";
   if (options.module.name === "risks") {
@@ -471,6 +470,12 @@ function stateToString(state: State | undefined, options: IGenerateXLSXOptions):
   }
 }
 
+/**
+ * Convert assessment cycle value to string representation
+ * @param value The assessment cycle value, which can be a number or a string that can be parsed as a number.
+ * @param language The language code for localization
+ * @returns The string representation of the assessment cycle
+ */
 function getAssessmentCycle(value: number | string, language: string): string {
   const num = typeof value === "number" ? value : parseInt(value, 10);
   if (isNaN(num)) return toStr(value);
@@ -490,6 +495,12 @@ function getAssessmentCycle(value: number | string, language: string): string {
   }
 }
 
+/**
+ * Convert a risk metric value to a risk category name based on RPZ thresholds
+ * @param value The risk metric value, which can be a number or a string that can be parsed as a number.
+ * @param language The language code for localization
+ * @returns The string representation of the risk category based on RPZ thresholds
+ */
 function getRiskManagementRPZName(value: number | string, language: string): string {
   const num = typeof value === "number" ? value : parseInt(value, 10);
   if (isNaN(num)) return toStr(value);
@@ -508,6 +519,11 @@ function getRiskManagementRPZName(value: number | string, language: string): str
   }
 }
 
+/**
+ * Convert a risk metric value to an RPZ object with value and color based on thresholds
+ * @param value The risk metric value, which can be a number or a string that can be parsed as a number.
+ * @returns An object containing the risk metric value and a corresponding color code based on RPZ thresholds
+ */
 function getRiskManagementRPZ(value: number): IRiskManagementRPZ {
   const num = typeof value === "number" ? value : parseInt(value, 10);
   if (isNaN(num)) return { value: 0, color: "#FFFFFF" };
@@ -526,6 +542,12 @@ function getRiskManagementRPZ(value: number): IRiskManagementRPZ {
   }
 }
 
+/**
+ * Convert a probability value to a string representation based on risk management thresholds
+ * @param value The probability value, which can be a number or a string that can be parsed as a number.
+ * @param language The language code for localization
+ * @returns The string representation of the probability category based on risk management thresholds
+ */
 export function getRiskManagementProbability(value: number | string, language: string): string {
   const num = typeof value === "number" ? value : parseInt(value, 10);
   if (isNaN(num)) return toStr(value);
@@ -545,6 +567,12 @@ export function getRiskManagementProbability(value: number | string, language: s
   }
 }
 
+/**
+ * Convert a risk metric value to a string representation of its impact category based on risk management thresholds
+ * @param value The risk metric value, which can be a number or a string that can be parsed as a number.
+ * @param language The language code for localization
+ * @returns The string representation of the impact category based on risk management thresholds
+ */
 export function getRiskManagementImpact(value: number | string, language: string): string {
   const num = typeof value === "number" ? value : parseInt(value, 10);
   if (isNaN(num)) return toStr(value);
@@ -564,6 +592,11 @@ export function getRiskManagementImpact(value: number | string, language: string
   }
 }
 
+/**
+ * Convert a risk trend color category to a hex color code for display purposes
+ * @param riskTrendColor The risk trend color category
+ * @returns The corresponding hex color code for the given risk trend color category
+ */
 export function riskTrendToHexColor(riskTrendColor: RiskTrendColors): string {
   switch (riskTrendColor) {
     case "red":
@@ -591,19 +624,40 @@ export function toStr(value: unknown): string {
   return JSON.stringify(value);
 }
 
+/**
+ * Generate a field key for a given field name and type, encoding the field name in base64 to ensure uniqueness and handle special characters.
+ * @param fieldName The name of the field.
+ * @param fieldType The type of the field.
+ * @returns The generated field key.
+ */
 export function getFieldKey(fieldName: string, fieldType: FieldType): string {
   const base64 = Buffer.from(fieldName, "utf-8").toString("base64").replace(/=/g, "_");
   return `${FIELD_KEY_PREFIX}${base64}${fieldType}`;
 }
 
+/**
+ * Generate a lane key for a given lane ID, which can be used to resolve role owners for that lane.
+ * @param laneId The ID of the lane to generate the key for.
+ * @returns The generated lane key.
+ */
 export function getLaneKey(laneId: string): string {
   return `${LANE_KEY_PREFIX}${laneId}`;
 }
 
+/**
+ * Encode a field name into a base64 string to be used in field keys, replacing padding characters to ensure URL safety.
+ * @param key The field name to encode.
+ * @returns The base64-encoded field name with padding characters replaced for URL safety.
+ */
 export function encodeKey(key: string): string {
   return Buffer.from(key, "utf-8").toString("base64").replace(/=/g, "_");
 }
 
+/**
+ * Decode a base64-encoded field name from a field key, restoring padding characters and handling errors gracefully.
+ * @param encoded The base64-encoded field name with padding characters replaced (e.g. "VGl0ZWw" for "Titel").
+ * @returns The decoded field name, or the original encoded string if decoding fails.
+ */
 export function decodeKey(encoded: string): string {
   const restored = encoded.replace(/_/g, "=");
   try {

@@ -119,6 +119,11 @@ function matchesFilter(value: unknown, filter: IGridFilterCondition, environment
   }
 }
 
+/**
+ * Convert a value to a comparable number for numeric comparisons.
+ * @param value The value to convert.
+ * @returns The numeric representation of the value, or null if it cannot be converted to a number. Dates are converted to timestamps.
+ */
 function toComparableNumber(value: unknown): number | null {
   if (value === null || value === undefined) {
     return null;
@@ -152,6 +157,11 @@ function toComparableNumber(value: unknown): number | null {
   return null;
 }
 
+/**
+ * Strip milliseconds from a timestamp to allow for consistent comparisons of dates with second-level precision.
+ * @param timestamp The timestamp in milliseconds.
+ * @returns The timestamp with milliseconds stripped (rounded down to the nearest second).
+ */
 function stripMilliseconds(timestamp: number): number {
   return Math.floor(timestamp / 1000) * 1000;
 }
