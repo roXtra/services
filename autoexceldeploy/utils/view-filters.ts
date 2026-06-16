@@ -1,6 +1,7 @@
 import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
 import { getResolvedValue, toStr } from "./field-resolver.js";
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { IGenerateXLSXOptions } from "./xlsx-generator.js";
 
 interface IGridFilterCondition {
   field: string;
@@ -39,8 +40,8 @@ export interface IGridOptions {
  * @param filterGroup The filter group containing conditions and logic.
  * @returns The filtered list of instances that match the filter group conditions.
  */
-export function applyViewFilters(instances: IInstanceDetails[], filterGroup: IGridFilterGroup, environment?: IServiceTaskEnvironment): IInstanceDetails[] {
-  return instances.filter((instance) => evaluateFilterGroup(instance, filterGroup, environment));
+export function applyViewFilters(instances: IInstanceDetails[], filterGroup: IGridFilterGroup, options: IGenerateXLSXOptions): IInstanceDetails[] {
+  return instances.filter((instance) => evaluateFilterGroup(instance, filterGroup, options));
 }
 
 /**
@@ -49,18 +50,18 @@ export function applyViewFilters(instances: IInstanceDetails[], filterGroup: IGr
  * @param group The filter group to evaluate.
  * @return True if the instance matches the filter group, false otherwise.
  */
-function evaluateFilterGroup(instance: IInstanceDetails, group: IGridFilterGroup, environment?: IServiceTaskEnvironment): boolean {
+function evaluateFilterGroup(instance: IInstanceDetails, group: IGridFilterGroup, options: IGenerateXLSXOptions): boolean {
   if (group.filters.length === 0) {
     return true;
   }
 
   const results = group.filters.map((entry) => {
     if (isFilterGroup(entry)) {
-      return evaluateFilterGroup(instance, entry, environment);
+      return evaluateFilterGroup(instance, entry, options);
     }
     const fieldKey = entry.field;
-    const value = getResolvedValue(instance, fieldKey);
-    const matchValue = matchesFilter(value, entry, environment);
+    const value = getResolvedValue(instance, fieldKey, options);
+    const matchValue = matchesFilter(value, entry, options.environment);
     return matchValue;
   });
 
@@ -118,6 +119,11 @@ function matchesFilter(value: unknown, filter: IGridFilterCondition, environment
   }
 }
 
+/**
+ * Convert a value to a comparable number for numeric comparisons.
+ * @param value The value to convert.
+ * @returns The numeric representation of the value, or null if it cannot be converted to a number. Dates are converted to timestamps.
+ */
 function toComparableNumber(value: unknown): number | null {
   if (value === null || value === undefined) {
     return null;
@@ -151,6 +157,11 @@ function toComparableNumber(value: unknown): number | null {
   return null;
 }
 
+/**
+ * Strip milliseconds from a timestamp to allow for consistent comparisons of dates with second-level precision.
+ * @param timestamp The timestamp in milliseconds.
+ * @returns The timestamp with milliseconds stripped (rounded down to the nearest second).
+ */
 function stripMilliseconds(timestamp: number): number {
   return Math.floor(timestamp / 1000) * 1000;
 }
