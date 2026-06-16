@@ -1,20 +1,110 @@
 {
   "id": "autoexceldeploy-service",
-  "name": "Excel-Berichtserstellung für Vorgangslisten ",
+  "name": "Excel-Berichtserstellung für Vorgangslisten",
   "minRoXtraVersion": "8.009.0",
   "actions": [
     {
-      "id": "autoexceldeploy",
-      "label": "Excel-Bericht aus öffentlicher Ansicht erzeugen",
-      "configMethod": "autoexceldeployConfig",
+      "id": "process",
+      "label": "Excel-Bericht für Prozesse erzeugen",
+      "configMethod": "processConfig",
       "settings": "main.mjs",
       "serviceFile": "main.mjs",
-      "serviceMethod": "autoexceldeploy",
+      "serviceMethod": "process",
       "fields": [
         {
           "name": "processId",
           "type": "select",
           "onload": "allProcesses"
+        },
+        {
+          "name": "publicViewId",
+          "type": "select",
+          "onload": "allPublicViews"
+        },
+        {
+          "name": "reportField",
+          "type": "select",
+          "onload": "fields ProcessHubFileUpload"
+        },
+        {
+          "name": "fileNameField",
+          "type": "select",
+          "onload": "fields ProcessHubTextInput"
+        }
+      ]
+    },
+    {
+      "id": "risks",
+      "label": "Excel-Bericht für Risiken erzeugen",
+      "configMethod": "risksConfig",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
+      "serviceMethod": "risks",
+      "fields": [
+        {
+          "name": "processId",
+          "type": "select",
+          "onload": "allRisks"
+        },
+        {
+          "name": "publicViewId",
+          "type": "select",
+          "onload": "allPublicViews"
+        },
+        {
+          "name": "reportField",
+          "type": "select",
+          "onload": "fields ProcessHubFileUpload"
+        },
+        {
+          "name": "fileNameField",
+          "type": "select",
+          "onload": "fields ProcessHubTextInput"
+        }
+      ]
+    },
+    {
+      "id": "measures",
+      "label": "Excel-Bericht für Maßnahmen erzeugen",
+      "configMethod": "measuresConfig",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
+      "serviceMethod": "measures",
+      "fields": [
+        {
+          "name": "processId",
+          "type": "select",
+          "onload": "allActions"
+        },
+        {
+          "name": "publicViewId",
+          "type": "select",
+          "onload": "allPublicViews"
+        },
+        {
+          "name": "reportField",
+          "type": "select",
+          "onload": "fields ProcessHubFileUpload"
+        },
+        {
+          "name": "fileNameField",
+          "type": "select",
+          "onload": "fields ProcessHubTextInput"
+        }
+      ]
+    },
+    {
+      "id": "audits",
+      "label": "Excel-Bericht für Audits erzeugen",
+      "configMethod": "auditsConfig",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
+      "serviceMethod": "audits",
+      "fields": [
+        {
+          "name": "processId",
+          "type": "select",
+          "onload": "allAudits"
         },
         {
           "name": "publicViewId",
