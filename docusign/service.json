@@ -20,7 +20,10 @@
         },
         { "name": "signatureUrlField", "type": "select", "onload": "fields ProcessHubTextInput" },
         { "name": "triggerWebhook", "type": "select" },
-        { "name": "signatureIdField", "type": "select", "onload": "fields ProcessHubTextInput" }
+        { "name": "signatureIdField", "type": "select", "onload": "fields ProcessHubTextInput" },
+        { "name": "signatureProvider", "type": "select" },
+        { "name": "signerPhoneNumber", "type": "text" },
+        { "name": "accessCode", "type": "text" }
       ]
     },
     {
