@@ -7,7 +7,7 @@ import type { WorkbookSheetRow, WorkbookSheetRowCell } from "@progress/kendo-oox
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
 import { DefaultColumns } from "./field-keys.js";
 import IAuditsSettings from "processhub-sdk/lib/modules/audits/iauditssettings.js";
-import { ModuleName } from "processhub-sdk/lib/modules/imodule.js";
+import { IntegratedModuleName } from "processhub-sdk/lib/modules/imodule.js";
 
 function isHyperlink(value: unknown): value is IHyperlinkCell {
   return typeof value === "object" && value !== null && "xlsxUrl" in value;
@@ -24,7 +24,7 @@ function isRiskTrendCell(value: unknown): value is IRiskTrendCell {
 export interface IGenerateXLSXOptions {
   language: string;
   module: {
-    name: ModuleName;
+    name: IntegratedModuleName;
     urlPrefix: "p" | "r" | "m" | "mp" | "a";
     title: string;
   };
