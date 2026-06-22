@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { process, processServiceLogic } from "./main.js";
+import { autoexceldeploy, autoExcelDeployServiceLogic } from "./main.js";
 import { decodeFieldKey, formatDateOnly, getFieldKey, getLaneKey, getResolvedValue, toStr } from "./utils/field-resolver.js";
 import { applyViewFilters, IGridOptions } from "./utils/view-filters.js";
 import { applyViewSorting } from "./utils/view-sorting.js";
@@ -35,8 +35,8 @@ function makeInstance(overrides: Partial<IInstanceDetails> & { fieldContents?: R
 
 describe("services", () => {
   it("bundle test", () => {
-    expect(typeof process === "function").to.equal(true);
-    expect(typeof processServiceLogic === "function").to.equal(true);
+    expect(typeof autoexceldeploy === "function").to.equal(true);
+    expect(typeof autoExcelDeployServiceLogic === "function").to.equal(true);
   });
 });
 

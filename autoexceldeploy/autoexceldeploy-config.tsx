@@ -1,14 +1,14 @@
 import { tl } from "processhub-sdk/lib/tl.js";
 import { Language } from "processhub-sdk/lib/tl.js";
 
-export function measuresConfig(userLanguage: Language): React.JSX.Element {
+export function autoexceldeployConfig(userLanguage: Language): React.JSX.Element {
   return (
     <div id="service-form" className="ui form center">
       <table className="table table-striped table-bordered">
         <tbody>
           <tr>
             <td>
-              <span>{tl("Maßnahmen-Prozess auswählen", userLanguage)}</span>
+              <span>{tl("Prozess auswählen", userLanguage)}</span>
             </td>
             <td>
               <select id="processId" />
@@ -46,8 +46,15 @@ export function measuresConfig(userLanguage: Language): React.JSX.Element {
             <td colSpan={2}>
               <h3>{tl("Hinweise zur Konfiguration", userLanguage)}</h3>
               <div>
-                <p>{tl("Geben Sie den Maßnahmen-Prozess an, aus dem der Excel-Bericht erzeugt werden soll.", userLanguage)}</p>
+                <p>{tl("Geben Sie den Prozess an, aus dem der Excel-Berichte erzeugt werden sollen.", userLanguage)}</p>
                 <p>{tl("Wenn es für den ausgewählten Prozess keine öffentliche Ansicht gibt, kann kein Bericht erzeugt werden.", userLanguage)}</p>
+                <p>
+                  {tl(
+                    "Es kann ein Dateiname über das Dateiname-Feld angegeben werden, sollte kein Dateiname angegeben werden, wird dieser automatisch generiert.",
+                    userLanguage,
+                  )}
+                </p>
+                <p>{tl("Wenn Sie einen Dateinamen angeben, wird dieser automatisch mit der Endung .xlsx versehen.", userLanguage)}</p>
                 <p>{tl("Der erzeugte Bericht wird als Datei im angegebenen Zielfeld gespeichert und kann von nachfolgenden Tasks verwendet werden.", userLanguage)}</p>
 
                 <h3>{tl("Mögliche Fehler", userLanguage)}</h3>

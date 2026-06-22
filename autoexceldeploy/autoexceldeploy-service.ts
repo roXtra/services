@@ -13,8 +13,8 @@ import { ProcessRequestRoutes, IGetArchiveViewsRequest, IGetArchiveViewsReply } 
 import { applyViewFilters, IGridOptions } from "./utils/view-filters.js";
 import { applyViewSorting } from "./utils/view-sorting.js";
 import { generateXLSX, IGenerateXLSXOptions } from "./utils/xlsx-generator.js";
-import { DefaultColumns } from "./utils/field-keys.js";
-import { getLaneKey } from "./utils/field-resolver.js";
+import { getDefaultView } from "./utils/default-view.js";
+import { IntegratedModuleName } from "processhub-sdk/lib/modules/imodule.js";
 
 enum ErrorCodes {
   PERMISSION_ERROR = "PERMISSION_ERROR",
@@ -94,6 +94,57 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
     throw new BpmnError(ErrorCodes.PERMISSION_ERROR, tl("Der Benutzer hat keine Berechtigung für den angegebenen Prozess.", language));
   }
 
+  const moduleNames = {
+    processes: "processes",
+    riskmanagement: "risks",
+    actionmanagement: "action",
+    "actionmanagement-basic": "action_basic",
+    audits: "audit",
+  } satisfies Record<string, IntegratedModuleName>;
+
+  const options: IGenerateXLSXOptions = {
+    language,
+    module: {
+      name: "processes",
+      urlPrefix: "p",
+      title: tl("Prozesse", language),
+    },
+    instanceCount: processDetails.instanceCount,
+  };
+
+  // Set module based on process type
+  switch (processDetails.urlName) {
+    case "riskmanagement":
+      options.module = {
+        name: moduleNames.riskmanagement,
+        urlPrefix: "r",
+        title: tl("Risiko", language),
+      };
+      break;
+    case "actionmanagement-basic":
+      options.module = {
+        name: moduleNames["actionmanagement-basic"],
+        urlPrefix: "m",
+        title: tl("Maßnahmen", language),
+      };
+      break;
+    case "audits":
+      options.module = {
+        name: moduleNames.audits,
+        urlPrefix: "a",
+        title: tl("Audit", language),
+      };
+      options.auditsSettings = processDetails.auditsSettings;
+      break;
+    case "actionmanagement":
+      options.module = {
+        name: moduleNames.actionmanagement,
+        urlPrefix: "mp",
+        title: tl("Maßnahmen Plus", language),
+      };
+      break;
+  }
+
   // Fetch archive views and find the configured public view
   // const accessToken = await environment.roxApi.getAccessTokenFromAuth(userId);
   const accessToken = await environment.roxApi.getAccessTokenFromAuth(userId);
@@ -110,84 +161,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
     }
   } else {
     // Default view: If publicViewId is "default"
-    viewDetails = {
-      gridOptions: JSON.stringify({
-        skip: 0,
-        take: 100,
-        sort: [],
-        filter: {
-          logic: "and",
-          filters: [
-            {
-              field: DefaultColumns.state.field,
-              operator: "eq",
-              value: tl("Laufend", language),
-            },
-          ],
-        },
-      }),
-      publicView: true,
-      viewName: tl("Standard", language),
-      columns: [
-        {
-          field: DefaultColumns.link.field,
-          filterable: false,
-          show: true,
-          sortable: false,
-          title: tl("Link", language),
-          width: "75px",
-          hidden: false,
-          filter: undefined,
-        },
-        {
-          field: DefaultColumns.id.field,
-          filterable: true,
-          filter: "text",
-          show: true,
-          title: tl("ID", language),
-          width: "150px",
-          hidden: false,
-        },
-        {
-          field: DefaultColumns.title.field,
-          filterable: true,
-          filter: "text",
-          show: true,
-          title: tl("Vorgang", language),
-          width: "150px",
-          hidden: false,
-        },
-        {
-          field: DefaultColumns.createdAt.field,
-          filterable: true,
-          filter: "date",
-          format: "{0:dd.MM.yyyy HH:mm}",
-          show: true,
-          title: tl("Gestartet", language),
-          width: "146px",
-          hidden: false,
-        },
-        {
-          field: DefaultColumns.completedAt.field,
-          filterable: true,
-          filter: "date",
-          format: "{0:dd.MM.yyyy HH:mm}",
-          show: true,
-          title: tl("Abgeschlossen", language),
-          width: "146px",
-          hidden: false,
-        },
-        {
-          field: DefaultColumns.state.field,
-          filterable: true,
-          filter: "text",
-          show: true,
-          title: tl("Status", language),
-          width: "110px",
-          hidden: false,
-        },
-      ],
-    };
+    viewDetails = await getDefaultView(options.module.name, language, options.module.name === "processes" ? processDetails.extras.bpmnXml : undefined);
   }
 
   // Get visible columns from the view (only columns that are shown and not hidden)
@@ -200,25 +174,6 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
     InstanceExtras.ExtrasFieldContents | InstanceExtras.ExtrasRoleOwners | InstanceExtras.ExtrasTodos,
   );
 
-  // Check for lane_ fields and add them to viewColumns (only for default view)
-  if (publicViewId === "default" && processDetails.extras.bpmnXml) {
-    const selectedProcessBpmn: BpmnProcess = new BpmnProcess();
-    await selectedProcessBpmn.loadXml(processDetails.extras.bpmnXml);
-    for (const lane of selectedProcessBpmn.getLanes(false)) {
-      const fieldKey = getLaneKey(lane.id);
-      if (!viewColumns.some((col) => col.field === fieldKey)) {
-        viewColumns.push({
-          field: fieldKey,
-          title: lane.name || lane.id,
-          filterable: true,
-          filter: "text",
-          show: true,
-          hidden: false,
-        });
-      }
-    }
-  }
-
   instances.sort((a, b) => {
     if (a.createdAt === undefined) return 1;
     if (b.createdAt === undefined) return -1;
@@ -226,16 +181,6 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
   });
 
   environment.logger.debug(`Found ${instances.length} instances`);
-
-  const options: IGenerateXLSXOptions = {
-    language,
-    module: {
-      name: "processes",
-      urlPrefix: "p",
-      title: "Prozesse",
-    },
-    instanceCount: processDetails.instanceCount,
-  };
 
   // Apply filters from gridOptions if available
   let filteredInstances = instances;
@@ -278,7 +223,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
   instance.extras.fieldContents[targetField] = { type: "ProcessHubFileUpload", value: [uploadUrl] };
 }
 
-export async function process(environment: IServiceTaskEnvironment): Promise<boolean> {
+export async function autoexceldeploy(environment: IServiceTaskEnvironment): Promise<boolean> {
   await serviceLogic(environment);
   await environment.instances.updateInstance(environment.instanceDetails);
   return true;
