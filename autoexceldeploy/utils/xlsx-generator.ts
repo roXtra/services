@@ -94,7 +94,7 @@ function toKendoValue(value: unknown): string | number | boolean | Date {
  * Generate XLSX buffer from already prepared rows, preserving column order from view.
  */
 export async function generateXLSXFromRows(rows: Record<number, unknown>[], viewColumns: IBaseStateColumn[]): Promise<Buffer> {
-  const headers = viewColumns.map((col) => (col.title || col.field).replace(/\s*\((?:[^()]*|\([^()]*\))*\)\s*$/, "").trim());
+  const headers = viewColumns.map((col) => (col as unknown as { columnTitle?: string }).columnTitle || col.title || col.field);
 
   // Column widths – IBaseStateColumn.width is a string like "150px" or "150"
   const sheetColumns = viewColumns.map((col) => {
