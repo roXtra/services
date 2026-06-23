@@ -231,10 +231,10 @@ export function resolveFieldDisplayValue(value: FieldValueType | null | undefine
         const dr = value as IDateRangeFieldValue;
         const fmtDate = (d: Date | string | null | undefined): string => {
           if (!d) return "";
-          const s = d instanceof Date ? d.toISOString() : String(d);
-          return s.slice(0, 10);
+          const date = d instanceof Date ? d : new Date(d);
+          return date.toLocaleDateString("de-DE", { year: "numeric", month: "2-digit", day: "2-digit" });
         };
-        return `${fmtDate(dr.start)} – ${fmtDate(dr.end)}`;
+        return `${fmtDate(dr.start)} - ${fmtDate(dr.end)}`;
       }
       return "";
     }
