@@ -1,7 +1,7 @@
 {
   "id": "autoexceldeploy-service",
   "name": "Excel-Berichtserstellung für Vorgangslisten ",
-  "minRoXtraVersion": "9.140.0",
+  "minRoXtraVersion": "9.139.0",
   "actions": [
     {
       "id": "autoexceldeploy",
@@ -14,7 +14,7 @@
         {
           "name": "processId",
           "type": "select",
-          "onload": "allModuleProcesses"
+          "onload": "allProcesses"
         },
         {
           "name": "publicViewId",
