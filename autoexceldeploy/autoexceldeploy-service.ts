@@ -110,6 +110,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
       title: tl("Prozesse", language),
     },
     instanceCount: processDetails.instanceCount,
+    environment,
   };
 
   // Set module based on process type
