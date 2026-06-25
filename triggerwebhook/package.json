@@ -23,7 +23,7 @@
     "npm": "10"
   },
   "dependencies": {
-    "axios": "^1.18.0",
+    "axios": "^1.18.1",
     "chai": "^6.2.2",
     "joi": "^18.2.3",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.140.0/release.tgz",
