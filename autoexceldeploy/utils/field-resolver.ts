@@ -67,8 +67,6 @@ export function decodeFieldKey(fieldKey: string): string {
  * @returns The resolved display value, formatted according to type if provided.
  */
 export function resolveFieldDisplayValue(value: FieldValueType | null | undefined, type: FieldType, instance: IInstanceDetails, options: IGenerateXLSXOptions): unknown {
-  options.environment?.logger.debug(`Resolving display value for type "${type}" with raw value: ${toStr(JSON.stringify(value))}`);
-
   // --- Instance number field ---
   if (type === "ProcessHubInstanceNumber") {
     const num = instance?.instanceNumber;
@@ -170,12 +168,15 @@ export function resolveFieldDisplayValue(value: FieldValueType | null | undefine
   if (typeof value === "object") {
     // DataTable: { columns: [...], rows: [{ data: { <columnKey>: cellValue> }, selected }] }
     if (type === "ProcessHubDataTable") {
-      const data = value as IDataTableFieldValue;
-      return data.rows
-        .filter((row) => row.data && Object.keys(row.data).length > 0 && row.selected)
-        .map((row) => Object.values(row.data)[0] ?? "")
-        .map((cell) => toStr(cell))
-        .join(", ");
+      if (value != null && value !== undefined && "rows" in value) {
+        const data = value as IDataTableFieldValue;
+        return data.rows
+          .filter((row) => row.data && Object.keys(row.data).length > 0 && row.selected)
+          .map((row) => Object.values(row.data)[0] ?? "")
+          .map((cell) => toStr(cell))
+          .join(", ");
+      }
+      return "";
     }
 
     // RadioButton: { radioButtons: [{ name }], selectedRadio: number }
@@ -263,7 +264,7 @@ export function resolveFieldDisplayValue(value: FieldValueType | null | undefine
         if (url === undefined) return "";
         const parts = url.split("/");
         const lastSegment = parts[parts.length - 1] || url;
-        return decodeKey(lastSegment);
+        return parts.length > 1 ? decodeKey(lastSegment) : lastSegment;
       }
       return "";
     }
@@ -290,128 +291,133 @@ export function resolveFieldDisplayValue(value: FieldValueType | null | undefine
  * @returns The resolved value for the field key, checking fieldContents, roleOwners, direct properties, and computed fields.
  */
 export function getResolvedValue(instance: IInstanceDetails, fieldKey: string, options: IGenerateXLSXOptions): unknown {
-  options.environment?.logger.debug(`Resolving field key "${fieldKey}" for instance ${instance.instanceId}`);
+  try {
+    const fc = instance.extras?.fieldContents || {};
+    const roleOwners = instance.extras?.roleOwners || {};
+    const todos = instance.extras?.todos || [];
 
-  const fc = instance.extras?.fieldContents || {};
-  const roleOwners = instance.extras?.roleOwners || {};
-  const todos = instance.extras?.todos || [];
-
-  // Field contents (extras.fieldContents with base64-encoded field keys)
-  if (fieldKey.startsWith(FIELD_KEY_PREFIX)) {
-    const fieldName = decodeFieldKey(fieldKey);
-    const fieldValue = fc[fieldName];
-    if (fieldValue !== undefined) {
-      return resolveFieldDisplayValue(fieldValue.value, fieldValue.type, instance, options);
+    // Field contents (extras.fieldContents with base64-encoded field keys)
+    if (fieldKey.startsWith(FIELD_KEY_PREFIX)) {
+      const fieldName = decodeFieldKey(fieldKey);
+      const fieldValue = fc[fieldName];
+      if (fieldValue !== undefined) {
+        return resolveFieldDisplayValue(fieldValue.value, fieldValue.type, instance, options);
+      }
+      // Field absent from fieldContents – derive type from key suffix for correct default
+      const withoutPrefix = fieldKey.substring(FIELD_KEY_PREFIX.length);
+      for (const t of FieldTypeOptions) {
+        if (withoutPrefix.endsWith(t)) {
+          return resolveFieldDisplayValue(null, t, instance, options);
+        }
+      }
+      return "";
     }
-    // Field absent from fieldContents – derive type from key suffix for correct default
-    const withoutPrefix = fieldKey.substring(FIELD_KEY_PREFIX.length);
-    for (const t of FieldTypeOptions) {
-      if (withoutPrefix.endsWith(t)) {
-        return resolveFieldDisplayValue(null, t, instance, options);
+
+    // Risk dimension fields: dimensionvalue_<16-char-dimensionId><fieldNameBase64>
+    //                        dimensiontext_<16-char-dimensionId><fieldNameBase64>
+    if (fieldKey.startsWith(DIMENSIONVALUE_KEY_PREFIX) || fieldKey.startsWith(DIMENSIONTEXT_KEY_PREFIX)) {
+      const isText = fieldKey.startsWith(DIMENSIONTEXT_KEY_PREFIX);
+      const rest = fieldKey.substring(isText ? DIMENSIONTEXT_KEY_PREFIX.length : DIMENSIONVALUE_KEY_PREFIX.length);
+      const dimensionId = rest.substring(0, 16);
+      // Find the latest riskAssessment for this fieldName (last entry wins)
+      const assessments = instance.riskAssessments ?? [];
+      const first = assessments[0];
+      if (!first) return "";
+      const val = first.assessments[dimensionId];
+      if (val == null) return "";
+      if (isText) {
+        const keyIndex = Object.keys(first.assessments).indexOf(dimensionId);
+        if (keyIndex === 1) return getRiskManagementImpact(val, options.language);
+        return getRiskManagementProbability(val, options.language);
+      }
+      return val;
+    }
+
+    // Lane/role owner fields
+    if (fieldKey.startsWith(LANE_KEY_PREFIX)) {
+      const laneId = fieldKey.replace(LANE_KEY_PREFIX, "");
+      const owners = roleOwners[laneId];
+      return owners && owners.length > 0 ? owners.map((o) => o.displayName || o.memberId).join(", ") : "";
+    }
+
+    // Computed/virtual fields
+    if (fieldKey === DefaultColumns.id.field) return instance.instanceId.toLowerCase();
+    if (fieldKey === DefaultColumns.state.field) return stateToString(instance.state ?? undefined, options);
+    if (fieldKey === DefaultColumns.createdAt.field) return formatDate(instance.createdAt);
+    if (fieldKey === DefaultColumns.createdAtDate.field) return formatDateOnly(instance.createdAt);
+    if (fieldKey === DefaultColumns.completedAt.field) return formatDate(instance.completedAt);
+    if (fieldKey === DefaultColumns.completedAtDate.field) return formatDateOnly(instance.completedAt);
+    if (fieldKey === DefaultColumns.todos.field) return todos.map((t) => t.displayName || t.bpmnTaskId).join(", ");
+    if (fieldKey === DefaultColumns.startEvent.field) return instance.takenStartEvent;
+    if (fieldKey === DefaultColumns.endEvent.field) return (instance.reachedEndEvents || []).join(", ");
+    if (fieldKey === DefaultColumns.riskTitle.field) return instance.title;
+    if (fieldKey === DefaultColumns.openAssessments.field) {
+      const assessments = instance.extras.todos
+        ?.filter((todo) => todo.data.isAssessmentTodo)
+        .map((todo) => todo.displayName)
+        .join(", ");
+      return assessments ?? "";
+    }
+
+    // Risk metric fields: compute from assessments
+    if (fieldKey.startsWith(DefaultColumns.riskMetric.field) || fieldKey.startsWith(DefaultColumns.riskMetricText.field)) {
+      const riskAssessments = instance.riskAssessments ?? [];
+      if (riskAssessments.length === 0) return "";
+      const assessmentValues = Object.values(riskAssessments[0].assessments);
+      if (fieldKey.startsWith(DefaultColumns.riskMetricText.field)) {
+        return getRiskManagementRPZName(assessmentValues[0] * assessmentValues[1], options.language);
+      } else {
+        return getRiskManagementRPZ(assessmentValues[0] * assessmentValues[1]);
       }
     }
+
+    // Audit metric fields: compute from latest assessment
+    if (fieldKey === DefaultColumns.auditMetric.field) {
+      const auditMetric = instance.auditMetric;
+      if (auditMetric == null) return "";
+      return Math.round(auditMetric * 100);
+    }
+
+    // Audit metric text field: compute category from latest assessment
+    if (fieldKey === DefaultColumns.auditMetricText.field) {
+      const auditMetric = instance.auditMetric;
+      if (auditMetric == null) return "";
+      const auditMetricCategory = options.auditsSettings?.auditMetricCategories.find(({ from, to }) => auditMetric <= to && auditMetric >= from);
+      return auditMetricCategory?.label ?? "";
+    }
+
+    // Risk trend field: compute trend and color based on latest two assessments
+    if (fieldKey === DefaultColumns.riskTrend.field || fieldKey === DefaultColumns.riskTrend.field + encodeKey(options.module.title)) {
+      const riskAssessments = instance.riskAssessments ?? [];
+      if (riskAssessments.length > 1) {
+        const latest = riskAssessments[0];
+        const previous = riskAssessments[1];
+        const latestValues = Object.values(latest.assessments);
+        const previousValues = Object.values(previous.assessments);
+
+        const value = latestValues[0] * latestValues[1] - previousValues[0] * previousValues[1];
+        const trendColor: RiskTrendColors = +value < 0 ? "green" : +value > 0 ? "red" : "yellow";
+
+        if (fieldKey === DefaultColumns.riskTrend.field) {
+          return {
+            trend: value,
+            color: riskTrendToHexColor(trendColor),
+          };
+        } else {
+          return value;
+        }
+      }
+    }
+
+    // Direct instance properties as fallback
+    const fieldValue = instance[fieldKey as keyof IInstanceDetails];
+    return fieldValue ?? "";
+  } catch (error: unknown) {
+    options.environment?.logger.error(
+      `Error resolving field key "${fieldKey}" for instance ${instance.instanceId}: ${error instanceof Error ? error.message : String(error)}`,
+    );
     return "";
   }
-
-  // Risk dimension fields: dimensionvalue_<16-char-dimensionId><fieldNameBase64>
-  //                        dimensiontext_<16-char-dimensionId><fieldNameBase64>
-  if (fieldKey.startsWith(DIMENSIONVALUE_KEY_PREFIX) || fieldKey.startsWith(DIMENSIONTEXT_KEY_PREFIX)) {
-    const isText = fieldKey.startsWith(DIMENSIONTEXT_KEY_PREFIX);
-    const rest = fieldKey.substring(isText ? DIMENSIONTEXT_KEY_PREFIX.length : DIMENSIONVALUE_KEY_PREFIX.length);
-    const dimensionId = rest.substring(0, 16);
-    // Find the latest riskAssessment for this fieldName (last entry wins)
-    const assessments = instance.riskAssessments ?? [];
-    const first = assessments[0];
-    if (!first) return "";
-    const val = first.assessments[dimensionId];
-    if (val == null) return "";
-    if (isText) {
-      const keyIndex = Object.keys(first.assessments).indexOf(dimensionId);
-      if (keyIndex === 1) return getRiskManagementImpact(val, options.language);
-      return getRiskManagementProbability(val, options.language);
-    }
-    return val;
-  }
-
-  // Lane/role owner fields
-  if (fieldKey.startsWith(LANE_KEY_PREFIX)) {
-    const laneId = fieldKey.replace(LANE_KEY_PREFIX, "");
-    const owners = roleOwners[laneId];
-    return owners && owners.length > 0 ? owners.map((o) => o.displayName || o.memberId).join(", ") : "";
-  }
-
-  // Computed/virtual fields
-  if (fieldKey === DefaultColumns.id.field) return instance.instanceId.toLowerCase();
-  if (fieldKey === DefaultColumns.state.field) return stateToString(instance.state ?? undefined, options);
-  if (fieldKey === DefaultColumns.createdAt.field) return formatDate(instance.createdAt);
-  if (fieldKey === DefaultColumns.createdAtDate.field) return formatDateOnly(instance.createdAt);
-  if (fieldKey === DefaultColumns.completedAt.field) return formatDate(instance.completedAt);
-  if (fieldKey === DefaultColumns.completedAtDate.field) return formatDateOnly(instance.completedAt);
-  if (fieldKey === DefaultColumns.todos.field) return todos.map((t) => t.displayName || t.bpmnTaskId).join(", ");
-  if (fieldKey === DefaultColumns.startEvent.field) return instance.takenStartEvent;
-  if (fieldKey === DefaultColumns.endEvent.field) return (instance.reachedEndEvents || []).join(", ");
-  if (fieldKey === DefaultColumns.riskTitle.field) return instance.title;
-  if (fieldKey === DefaultColumns.openAssessments.field) {
-    const assessments = instance.extras.todos
-      ?.filter((todo) => todo.data.isAssessmentTodo)
-      .map((todo) => todo.displayName)
-      .join(", ");
-    return assessments ?? "";
-  }
-
-  // Risk metric fields: compute from assessments
-  if (fieldKey.startsWith(DefaultColumns.riskMetric.field) || fieldKey.startsWith(DefaultColumns.riskMetricText.field)) {
-    const riskAssessments = instance.riskAssessments ?? [];
-    if (riskAssessments.length === 0) return "";
-    const assessmentValues = Object.values(riskAssessments[0].assessments);
-    if (fieldKey.startsWith(DefaultColumns.riskMetricText.field)) {
-      return getRiskManagementRPZName(assessmentValues[0] * assessmentValues[1], options.language);
-    } else {
-      return getRiskManagementRPZ(assessmentValues[0] * assessmentValues[1]);
-    }
-  }
-
-  // Audit metric fields: compute from latest assessment
-  if (fieldKey === DefaultColumns.auditMetric.field) {
-    const auditMetric = instance.auditMetric;
-    if (auditMetric == null) return "";
-    return Math.round(auditMetric * 100);
-  }
-
-  // Audit metric text field: compute category from latest assessment
-  if (fieldKey === DefaultColumns.auditMetricText.field) {
-    const auditMetric = instance.auditMetric;
-    if (auditMetric == null) return "";
-    const auditMetricCategory = options.auditsSettings?.auditMetricCategories.find(({ from, to }) => auditMetric <= to && auditMetric >= from);
-    return auditMetricCategory?.label ?? "";
-  }
-
-  // Risk trend field: compute trend and color based on latest two assessments
-  if (fieldKey === DefaultColumns.riskTrend.field || fieldKey === DefaultColumns.riskTrend.field + encodeKey(options.module.title)) {
-    const riskAssessments = instance.riskAssessments ?? [];
-    if (riskAssessments.length > 1) {
-      const latest = riskAssessments[0];
-      const previous = riskAssessments[1];
-      const latestValues = Object.values(latest.assessments);
-      const previousValues = Object.values(previous.assessments);
-
-      const value = latestValues[0] * latestValues[1] - previousValues[0] * previousValues[1];
-      const trendColor: RiskTrendColors = +value < 0 ? "green" : +value > 0 ? "red" : "yellow";
-
-      if (fieldKey === DefaultColumns.riskTrend.field) {
-        return {
-          trend: value,
-          color: riskTrendToHexColor(trendColor),
-        };
-      } else {
-        return value;
-      }
-    }
-  }
-
-  // Direct instance properties as fallback
-  const fieldValue = instance[fieldKey as keyof IInstanceDetails];
-  return fieldValue ?? "";
 }
 
 /**
