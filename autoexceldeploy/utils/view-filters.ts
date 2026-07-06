@@ -77,17 +77,12 @@ function evaluateFilterGroup(instance: IInstanceDetails, group: IGridFilterGroup
  * @param filter The filter condition to apply.
  * @returns True if the value matches the filter condition, false otherwise.
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function matchesFilter(value: unknown, filter: IGridFilterCondition, options: IGenerateXLSXOptions): boolean {
+function matchesFilter(value: unknown, filter: IGridFilterCondition): boolean {
   const filterValue = filter.value;
   const cmpValue = toStr(value).toLocaleLowerCase();
   const cmpFilter = toStr(filterValue).toLocaleLowerCase();
   const numericValue = toComparableNumber(value);
   const numericFilter = toComparableNumber(filterValue);
-  // Debug log for comparing values and filters
-  // options.environment?.logger.debug(
-  //   `Comparing value "${cmpValue}" (numeric: ${numericValue}) with filter "${cmpFilter}" (numeric: ${numericFilter}) using operator "${filter.operator}"`,
-  // );
   switch (filter.operator) {
     case "eq":
       return numericValue !== null && numericFilter !== null ? numericValue === numericFilter : cmpValue === cmpFilter;

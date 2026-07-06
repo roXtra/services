@@ -67,9 +67,6 @@ export function decodeFieldKey(fieldKey: string): string {
  * @returns The resolved display value, formatted according to type if provided.
  */
 export function resolveFieldDisplayValue(value: FieldValueType | null | undefined, type: FieldType, instance: IInstanceDetails, options: IGenerateXLSXOptions): unknown {
-  // Debug log for displaying the field type and value being resolved
-  // options.environment?.logger.debug(`Resolving display value for type "${type}" with raw value: ${toStr(JSON.stringify(value))}`);
-
   // --- Instance number field ---
   if (type === "ProcessHubInstanceNumber") {
     const num = instance?.instanceNumber;
@@ -294,9 +291,6 @@ export function resolveFieldDisplayValue(value: FieldValueType | null | undefine
  * @returns The resolved value for the field key, checking fieldContents, roleOwners, direct properties, and computed fields.
  */
 export function getResolvedValue(instance: IInstanceDetails, fieldKey: string, options: IGenerateXLSXOptions): unknown {
-  // Debug log for displaying the field key being resolved
-  // options.environment?.logger.debug(`Resolving field key "${fieldKey}" for instance ${instance.instanceId}`);
-
   try {
     const fc = instance.extras?.fieldContents || {};
     const roleOwners = instance.extras?.roleOwners || {};
