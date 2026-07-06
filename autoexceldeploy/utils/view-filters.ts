@@ -60,7 +60,7 @@ function evaluateFilterGroup(instance: IInstanceDetails, group: IGridFilterGroup
     }
     const fieldKey = entry.field;
     const value = getResolvedValue(instance, fieldKey, options);
-    const matchValue = matchesFilter(value, entry, options);
+    const matchValue = matchesFilter(value, entry);
     return matchValue;
   });
 
