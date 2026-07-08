@@ -1,0 +1,58 @@
+{
+  "id": "docusign-service",
+  "name": "DocuSign Service",
+  "minRoXtraVersion": "8.009.0",
+  "maxRoXtraVersion": "100.0.0",
+  "actions": [
+    {
+      "id": "signFile",
+      "label": "Signaturanfrage erstellen",
+      "configMethod": "signFileConfig",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
+      "serviceMethod": "signFile",
+      "fields": [
+        { "name": "message", "type": "text" },
+        {
+          "name": "sourceField",
+          "type": "select",
+          "onload": "fields ProcessHubFileUpload"
+        },
+        { "name": "signatureUrlField", "type": "select", "onload": "fields ProcessHubTextInput" },
+        { "name": "triggerWebhook", "type": "select" },
+        { "name": "signatureIdField", "type": "select", "onload": "fields ProcessHubTextInput" },
+        { "name": "signatureProvider", "type": "select" },
+        { "name": "signerPhoneNumber", "type": "text" },
+        { "name": "accessCode", "type": "text" }
+      ]
+    },
+    {
+      "id": "downloadFile",
+      "label": "Dokument herunterladen",
+      "configMethod": "downloadFileConfig",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
+      "serviceMethod": "downloadFile",
+      "fields": [
+        {
+          "name": "targetField",
+          "type": "select",
+          "onload": "fields ProcessHubFileUpload"
+        },
+        { "name": "signatureIdField", "type": "select", "onload": "fields ProcessHubTextInput" }
+      ]
+    },
+    {
+      "id": "deleteFile",
+      "label": "Dokument löschen",
+      "configMethod": "deleteFileConfig",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
+      "serviceMethod": "deleteDocumentFromDocuSign",
+      "fields": [
+        { "name": "signatureIdField", "type": "select", "onload": "fields ProcessHubTextInput" },
+        { "name": "deleteMode", "type": "select" }
+      ]
+    }
+  ]
+}
