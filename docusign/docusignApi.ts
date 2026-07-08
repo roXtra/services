@@ -4,7 +4,7 @@ export interface IDocusignApi {
   getAccessToken(): Promise<string>;
   createEnvelope(token: string, request: ICreateEnvelopeRequest): Promise<IEnvelopeResponse>;
   getEnvelope(token: string, envelopeId: string): Promise<IEnvelopeResponse>;
-  getRecipientSigningUrl(token: string, envelopeId: string, signerEmail: string, signerName: string, signerId: string, returnUrl?: string): Promise<string>;
+  getRecipientSigningUrl(token: string, envelopeId: string, signerEmail: string, signerName: string, returnUrl?: string): Promise<string>;
   downloadCompletedDocument(token: string, envelopeId: string): Promise<Blob>;
   deleteEnvelope(token: string, envelopeId: string): Promise<boolean>;
   purgeEnvelope(token: string, envelopeId: string): Promise<boolean>;
@@ -17,7 +17,6 @@ export interface ICreateEnvelopeRequest {
   documentName: string;
   signerEmail: string;
   signerName: string;
-  signerId: string;
   webhookUrl?: string;
   /** Standards-Based Signature provider name for eIDAS AES. Use "UniversalSignaturePen_OpenTrust_Hash_TSP" for EU Advanced.
    *  When set, identityVerificationWorkflowId is ignored.
@@ -113,7 +112,6 @@ class DocusignApi implements IDocusignApi {
   public async createEnvelope(token: string, request: ICreateEnvelopeRequest): Promise<IEnvelopeResponse> {
     const url = `${this.#baseUrl}/accounts/${this.#accountId}/envelopes`;
     const signer: Record<string, unknown> = {
-      clientUserId: request.signerId,
       email: request.signerEmail,
       name: request.signerName,
       recipientId: "1",
@@ -216,11 +214,10 @@ class DocusignApi implements IDocusignApi {
    * @param envelopeId The ID of the draft envelope or template to preview.
    * @param signerEmail The email address of the signer.
    * @param signerName The name of the signer.
-   * @param signerId The clientUserId of the signer
    * @param returnUrl The URL to redirect the signer after signing.
    * @returns The URL for the embedded signing view.
    */
-  public async getRecipientSigningUrl(token: string, envelopeId: string, signerEmail: string, signerName: string, signerId: string, returnUrl?: string): Promise<string> {
+  public async getRecipientSigningUrl(token: string, envelopeId: string, signerEmail: string, signerName: string, returnUrl?: string): Promise<string> {
     const url = `${this.#baseUrl}/accounts/${this.#accountId}/envelopes/${envelopeId}/views/recipient`;
     const response = await fetch(url, {
       method: "POST",
@@ -229,7 +226,6 @@ class DocusignApi implements IDocusignApi {
         authenticationMethod: "none",
         email: signerEmail,
         userName: signerName,
-        clientUserId: signerId,
         returnUrl,
       }),
     });

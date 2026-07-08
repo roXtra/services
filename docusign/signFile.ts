@@ -86,7 +86,6 @@ async function buildEnvelopeRequest(
     throw new BpmnError(ErrorCode.ConfigInvalid, "User has no email address, cannot proceed with service!");
   }
   const signerName = [environment.sender.firstName, environment.sender.lastName].filter(Boolean).join(" ") || userMail;
-  const signerId = environment.sender.userId;
 
   /* Read message */
   const message = config.fields.find((f) => f.key === "message")?.value || "";
@@ -120,7 +119,6 @@ async function buildEnvelopeRequest(
     documentName: fileName,
     signerEmail: userMail,
     signerName: sanitizedSignerName,
-    signerId: signerId,
     webhookUrl,
     signatureProviderName,
     signerPhoneNumber,
@@ -159,14 +157,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment, docusig
   /* Get and store the signing URL if embedded signing was requested */
   if (signatureUrlField) {
     const returnUrl = `${getCallbackUrlBase(configFile, environment)}/p/i/${environment.workspace.workspaceId}/${environment.instanceDetails.instanceId.toLocaleLowerCase()}`;
-    const signingUrl = await docusignApi.getRecipientSigningUrl(
-      token,
-      envelopeResponse.envelopeId,
-      envelopeRequest.signerEmail,
-      envelopeRequest.signerName,
-      envelopeRequest.signerId,
-      returnUrl,
-    );
+    const signingUrl = await docusignApi.getRecipientSigningUrl(token, envelopeResponse.envelopeId, envelopeRequest.signerEmail, envelopeRequest.signerName, returnUrl);
     environment.logger.info(`Storing signing URL in field "${signatureUrlField}"`);
     environment.instanceDetails.extras.fieldContents = {
       ...environment.instanceDetails.extras.fieldContents,
