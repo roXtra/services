@@ -105,7 +105,7 @@ class DocusignApi implements IDocusignApi {
   /**
    * Creates and sends an envelope or creates a draft envelope.
    * https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/create/
-   * @param token The external account number (int) or account ID GUID.
+   * @param token The DocuSign OAuth access token.
    * @param request The envelope creation request details.
    * @returns The response containing the envelope ID and status.
    */
@@ -191,7 +191,7 @@ class DocusignApi implements IDocusignApi {
   /**
    * Retrieves the overall status for the specified envelope.
    * https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/get/
-   * @param token The external account number (int) or account ID GUID.
+   * @param token The DocuSign OAuth access token.
    * @param envelopeId The envelope's GUID.
    * @returns The response containing the envelope ID and status.
    */
@@ -210,7 +210,7 @@ class DocusignApi implements IDocusignApi {
   /**
    * Returns a URL that enables you to embed the recipient view of the Docusign UI in your applications. If the recipient is a signer, then the view will provide the signing ceremony.
    * https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopeviews/createrecipient/
-   * @param token The external account number (int) or account ID GUID.
+   * @param token The DocuSign OAuth access token.
    * @param envelopeId The ID of the draft envelope or template to preview.
    * @param signerEmail The email address of the signer.
    * @param signerName The name of the signer.
@@ -239,7 +239,7 @@ class DocusignApi implements IDocusignApi {
   /**
    * Retrieves a single document or all documents from an envelope.
    * https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopedocuments/get/
-   * @param token The external account number (int) or account ID GUID.
+   * @param token The DocuSign OAuth access token.
    * @param envelopeId The ID of the envelope containing the documents.
    * @returns The combined document as a Blob.
    */
@@ -259,7 +259,7 @@ class DocusignApi implements IDocusignApi {
   /**
    * This method enables you to delete an envelope by moving it to the recycle bin. Envelopes in the recycle bin are automatically purged after 30 days. To immediately and permanently delete an envelope, use the Purge method.
    * https://developers.docusign.com/docs/esign-rest-api/reference/folders/folders/moveenvelopes/
-   * @param token The external account number (int) or account ID GUID.
+   * @param token The DocuSign OAuth access token.
    * @param envelopeId The ID of the envelope to purge.
    * @returns True if the envelope was successfully queued for purge.
    */
@@ -279,7 +279,7 @@ class DocusignApi implements IDocusignApi {
   /**
    * This method enables you to purge the documents from a completed envelope.
    * https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/update/
-   * @param token The external account number (int) or account ID GUID.
+   * @param token The DocuSign OAuth access token.
    * @param envelopeId The ID of the envelope to purge.
    * @returns True if the envelope was successfully queued for purge.
    */
