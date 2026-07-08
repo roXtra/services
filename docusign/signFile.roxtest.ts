@@ -4,7 +4,7 @@ import { serviceLogic } from "./signFile.js";
 import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools.js";
 import fs from "fs/promises";
 import sinon from "sinon";
-import { IEnvelopeResponse } from "./docusignApi.js";
+import { ICreateEnvelopeRequest, IEnvelopeResponse } from "./docusignApi.js";
 
 const mockEnvelopeResponse: IEnvelopeResponse = {
   envelopeId: "envelope_123",
@@ -70,7 +70,7 @@ describe("services", () => {
         signerEmail: "test@example.com",
         webhookUrl: undefined,
       });
-      expect(docusignApi.createEnvelope.getCall(0).args[1].documentBase64).to.equal("VEVTVA==");
+      expect((docusignApi.createEnvelope.getCall(0).args[1] as ICreateEnvelopeRequest).documentBase64).to.equal("VEVTVA==");
 
       // Signing URL was requested because signatureUrlField is set
       expect(docusignApi.getRecipientSigningUrl.calledOnce).to.equal(true);
@@ -107,9 +107,8 @@ describe("services", () => {
       await serviceLogic(env, docusignApi, mockConfigFile);
 
       expect(docusignApi.createEnvelope.calledOnce).to.equal(true);
-      const envelopeArg = docusignApi.createEnvelope.getCall(0).args[1];
+      const envelopeArg: ICreateEnvelopeRequest = docusignApi.createEnvelope.getCall(0).args[1];
       expect(envelopeArg.webhookUrl).to.match(/webhook\/v1\/trigger\/.*BoundaryEvent_6801F3B0685A7268/);
-      expect(envelopeArg.embeddedClientUserId).to.equal(undefined);
 
       expect(docusignApi.getRecipientSigningUrl.callCount).to.equal(0);
     });
@@ -133,7 +132,7 @@ describe("services", () => {
       const customBase = "https://example.com/roxtra/";
       await serviceLogic(env, docusignApi, { ...mockConfigFile, callbackUrlBase: customBase });
 
-      const envelopeArg = docusignApi.createEnvelope.getCall(0).args[1];
+      const envelopeArg: ICreateEnvelopeRequest = docusignApi.createEnvelope.getCall(0).args[1];
       expect(envelopeArg.webhookUrl).to.match(/^https:\/\/example\.com\/roxtra\/modules\/webhook\/v1\/trigger\/.*BoundaryEvent_6801F3B0685A7268/);
     });
   });

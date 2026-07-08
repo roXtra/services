@@ -156,7 +156,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment, docusig
 
   /* Get and store the signing URL if embedded signing was requested */
   if (signatureUrlField) {
-    const returnUrl = `${getCallbackUrlBase(configFile, environment)}/p/i/${environment.workspace.workspaceId}/${environment.instanceDetails.instanceId.toLocaleLowerCase()}`;
+    const returnUrl = `${getCallbackUrlBase(configFile, environment)}/p/i/${environment.workspace.workspaceId}/${environment.instanceDetails.instanceId.toLowerCase()}`;
     const signingUrl = await docusignApi.getRecipientSigningUrl(token, envelopeResponse.envelopeId, envelopeRequest.signerEmail, envelopeRequest.signerName, returnUrl);
     environment.logger.info(`Storing signing URL in field "${signatureUrlField}"`);
     environment.instanceDetails.extras.fieldContents = {

@@ -49,7 +49,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment, docusig
 
   const arrayBuffer = await data.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
-  const fileName = existingUrl ? Buffer.from(existingUrl, "base64").toString("utf-8") : `signed_${envelopeId}.pdf`;
+  const fileName = existingUrl ? Buffer.from(existingUrl, "base64url").toString("utf-8") : `signed_${envelopeId}.pdf`;
   const url = await environment.instances.uploadAttachment(environment.instanceDetails.instanceId, fileName, buffer);
 
   environment.instanceDetails.extras.fieldContents[targetFieldName] = {
