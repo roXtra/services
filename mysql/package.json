@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
-    "@types/node": "^22.20.0",
+    "@types/node": "^22.20.1",
     "@types/react": "^18.3.31",
     "bestzip": "^3.0.1",
     "copyfiles": "^2.4.1",
