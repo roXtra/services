@@ -44,12 +44,9 @@ export async function serviceLogic(environment: IServiceTaskEnvironment, docusig
   const data = await docusignApi.downloadCompletedDocument(token, envelopeId);
   environment.logger.info(`Document downloaded successfully, size: ${data.size} bytes`);
 
-  const existingFieldValue = environment.instanceDetails.extras.fieldContents[targetFieldName];
-  const existingUrl = existingFieldValue?.type === "ProcessHubFileUpload" ? (existingFieldValue.value as string[] | undefined)?.[0]?.split("/").pop() : undefined;
-
   const arrayBuffer = await data.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
-  const fileName = existingUrl ? Buffer.from(existingUrl, "base64url").toString("utf-8") : `signed_${envelopeId}.pdf`;
+  const fileName = `${envelopeId}.pdf`;
   const url = await environment.instances.uploadAttachment(environment.instanceDetails.instanceId, fileName, buffer);
 
   environment.instanceDetails.extras.fieldContents[targetFieldName] = {
