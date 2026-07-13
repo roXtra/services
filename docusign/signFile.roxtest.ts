@@ -68,6 +68,7 @@ describe("services", () => {
         emailMessage: "Bitte signieren Sie das Dokument",
         documentName: "dokument.pdf",
         signerEmail: "test@example.com",
+        embeddedClientUserId: "test@example.com",
         webhookUrl: undefined,
       });
       expect((docusignApi.createEnvelope.getCall(0).args[1] as ICreateEnvelopeRequest).documentBase64).to.equal("VEVTVA==");
