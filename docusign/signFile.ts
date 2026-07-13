@@ -90,6 +90,10 @@ async function buildEnvelopeRequest(
   /* Read message */
   const message = config.fields.find((f) => f.key === "message")?.value || "";
 
+  /* Determine whether to use embedded signing (to generate a signing URL) */
+  const signatureUrlField = config.fields.find((f) => f.key === "signatureUrlField")?.value;
+  const embeddedClientUserId = signatureUrlField ? userMail : undefined;
+
   /* Build webhook URL if triggerWebhook is enabled */
   const triggerWebhook = config.fields.find((f) => f.key === "triggerWebhook")?.value || "false";
   let webhookUrl: string | undefined;
@@ -119,6 +123,7 @@ async function buildEnvelopeRequest(
     documentName: fileName,
     signerEmail: userMail,
     signerName: sanitizedSignerName,
+    embeddedClientUserId,
     webhookUrl,
     signatureProviderName,
     signerPhoneNumber,
@@ -153,9 +158,10 @@ export async function serviceLogic(environment: IServiceTaskEnvironment, docusig
 
   /* Determine whether to use embedded signing (to generate a signing URL) */
   const signatureUrlField = config.fields.find((f) => f.key === "signatureUrlField")?.value;
+  const embeddedClientUserId = signatureUrlField ? envelopeRequest.signerEmail : undefined;
 
   /* Get and store the signing URL if embedded signing was requested */
-  if (signatureUrlField) {
+  if (signatureUrlField && embeddedClientUserId) {
     const returnUrl = `${getCallbackUrlBase(configFile, environment)}/p/i/${environment.workspace.workspaceId}/${environment.instanceDetails.instanceId.toLowerCase()}`;
     const signingUrl = await docusignApi.getRecipientSigningUrl(token, envelopeResponse.envelopeId, envelopeRequest.signerEmail, envelopeRequest.signerName, returnUrl);
     environment.logger.info(`Storing signing URL in field "${signatureUrlField}"`);

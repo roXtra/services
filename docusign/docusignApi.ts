@@ -17,6 +17,7 @@ export interface ICreateEnvelopeRequest {
   documentName: string;
   signerEmail: string;
   signerName: string;
+  embeddedClientUserId?: string;
   webhookUrl?: string;
   /** Standards-Based Signature provider name for eIDAS AES. Use "UniversalSignaturePen_OpenTrust_Hash_TSP" for EU Advanced.
    *  When set, identityVerificationWorkflowId is ignored.
@@ -112,6 +113,7 @@ class DocusignApi implements IDocusignApi {
   public async createEnvelope(token: string, request: ICreateEnvelopeRequest): Promise<IEnvelopeResponse> {
     const url = `${this.#baseUrl}/accounts/${this.#accountId}/envelopes`;
     const signer: Record<string, unknown> = {
+      clientUserId: request.embeddedClientUserId,
       email: request.signerEmail,
       name: request.signerName,
       recipientId: "1",
@@ -226,6 +228,7 @@ class DocusignApi implements IDocusignApi {
         authenticationMethod: "none",
         email: signerEmail,
         userName: signerName,
+        clientUserId: signerEmail,
         returnUrl,
       }),
     });

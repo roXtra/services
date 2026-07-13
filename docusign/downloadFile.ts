@@ -44,12 +44,9 @@ export async function serviceLogic(environment: IServiceTaskEnvironment, docusig
   const data = await docusignApi.downloadCompletedDocument(token, envelopeId);
   environment.logger.info(`Document downloaded successfully, size: ${data.size} bytes`);
 
-  const existingFieldValue = environment.instanceDetails.extras.fieldContents[targetFieldName];
-  const existingUrl = existingFieldValue?.type === "ProcessHubFileUpload" ? (existingFieldValue.value as string[] | undefined)?.[0]?.split("/").pop() : undefined;
-
   const arrayBuffer = await data.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
-  const fileName = existingUrl ? Buffer.from(existingUrl, "base64url").toString("utf-8") : `signed_${envelopeId}.pdf`;
+  const fileName = `${envelopeId}.pdf`;
   const url = await environment.instances.uploadAttachment(environment.instanceDetails.instanceId, fileName, buffer);
 
   environment.instanceDetails.extras.fieldContents[targetFieldName] = {
@@ -58,11 +55,15 @@ export async function serviceLogic(environment: IServiceTaskEnvironment, docusig
   };
   environment.logger.info(`Signed document saved to field "${targetFieldName}".`);
 
-  const deleteDocumentFromDocuSign = config.fields.find((f) => f.key === "deleteDocumentFromDocuSign")?.value || "false";
-  if (deleteDocumentFromDocuSign === "true") {
+  const deleteDocumentFromDocuSign = config.fields.find((f) => f.key === "deleteDocumentFromDocuSign")?.value || "nodelete";
+  if (deleteDocumentFromDocuSign === "purge") {
     environment.logger.info(`Deleting document with ID: "${envelopeId}" from DocuSign.`);
     await docusignApi.purgeEnvelope(token, envelopeId);
     environment.logger.info(`Document deleted successfully.`);
+  } else if (deleteDocumentFromDocuSign === "recyclebin") {
+    environment.logger.info(`Moving envelope "${envelopeId}" to recycle bin.`);
+    await docusignApi.deleteEnvelope(token, envelopeId);
+    environment.logger.info(`Envelope moved to recycle bin successfully.`);
   } else {
     environment.logger.info(`Skipping document deletion from DocuSign as per configuration.`);
   }

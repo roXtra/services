@@ -29,9 +29,10 @@ export function downloadFileConfig(userLanguage: Language): React.JSX.Element {
               <span>{tl("Dokument bei DocuSign löschen?", userLanguage)}</span>
             </td>
             <td>
-              <select id="deleteDocumentFromDocuSign" defaultValue="false">
-                <option value="true">Ja</option>
-                <option value="false">Nein</option>
+              <select id="deleteDocumentFromDocuSign" defaultValue="nodelete">
+                <option value="nodelete">{tl("Nein", userLanguage)}</option>
+                <option value="recyclebin">{tl("Ja - Papierkorb (wiederherstellbar)", userLanguage)}</option>
+                <option value="purge">{tl("Ja - Dauerhaft löschen", userLanguage)}</option>
               </select>
             </td>
           </tr>
@@ -50,6 +51,10 @@ export function downloadFileConfig(userLanguage: Language): React.JSX.Element {
 
                 <h3>{tl("Dokument bei DocuSign löschen", userLanguage)}</h3>
                 <p>{tl("Gibt an, ob das Dokument nach dem Herunterladen bei DocuSign gelöscht werden soll.", userLanguage)}</p>
+                <p>{tl("Papierkorb: Verschiebt die Envelope in den Papierkorb. Kann für eine gewisse Zeit wiederhergestellt werden.", userLanguage)}</p>
+                <p>
+                  {tl("Dauerhaft löschen: Entfernt die Dokumente unwiderruflich aus der Envelope. Die Envelope selbst bleibt mit Status 'purged' erhalten.", userLanguage)}
+                </p>
 
                 <h3>{tl("Mögliche Fehler", userLanguage)}</h3>
                 <p>{tl("CONFIG_INVALID: Fehlende oder fehlerhafte Konfiguration.", userLanguage)}</p>
