@@ -58,11 +58,15 @@ export async function serviceLogic(environment: IServiceTaskEnvironment, docusig
   };
   environment.logger.info(`Signed document saved to field "${targetFieldName}".`);
 
-  const deleteDocumentFromDocuSign = config.fields.find((f) => f.key === "deleteDocumentFromDocuSign")?.value || "false";
-  if (deleteDocumentFromDocuSign === "true") {
+  const deleteDocumentFromDocuSign = config.fields.find((f) => f.key === "deleteDocumentFromDocuSign")?.value || "nodelete";
+  if (deleteDocumentFromDocuSign === "purge") {
     environment.logger.info(`Deleting document with ID: "${envelopeId}" from DocuSign.`);
     await docusignApi.purgeEnvelope(token, envelopeId);
     environment.logger.info(`Document deleted successfully.`);
+  } else if (deleteDocumentFromDocuSign === "recyclebin") {
+    environment.logger.info(`Moving envelope "${envelopeId}" to recycle bin.`);
+    await docusignApi.deleteEnvelope(token, envelopeId);
+    environment.logger.info(`Envelope moved to recycle bin successfully.`);
   } else {
     environment.logger.info(`Skipping document deletion from DocuSign as per configuration.`);
   }
