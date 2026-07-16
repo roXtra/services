@@ -29,12 +29,12 @@
   },
   "homepage": "https://github.com/roXtra/services#readme",
   "dependencies": {
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.140.0-3/release.tgz",
     "react": "^18.3.1"
   },
   "devDependencies": {
     "@types/chai": "^5.2.3",
     "@types/mocha": "^10.0.10",
+    "@typescript/native": "npm:typescript@^7.0.2",
     "bestzip": "^3.0.1",
     "copyfiles": "^2.4.1",
     "directory-tree": "^3.6.0",
@@ -47,7 +47,7 @@
     "mocha": "^11.7.6",
     "prettier": "^3.9.5",
     "ts-loader": "^9.6.2",
-    "typescript": "^6.0.3",
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
     "typescript-eslint": "^8.64.0"
   }
 }

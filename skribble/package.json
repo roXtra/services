@@ -40,13 +40,14 @@
     "@types/node": "^22.20.1",
     "@types/react": "^19.1.8",
     "@types/sinon": "^22.0.0",
+    "@typescript/native": "npm:typescript@^7.0.2",
     "bestzip": "^3.0.1",
     "copyfiles": "^2.4.1",
     "cross-env": "^10.1.0",
     "eslint": "9.39.2",
     "sinon": "^22.0.0",
     "ts-loader": "^9.6.2",
-    "typescript": "^6.0.3",
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
     "webpack": "^5.108.4",
     "webpack-cli": "^7.2.1"
   }
