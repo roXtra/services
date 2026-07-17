@@ -15,6 +15,7 @@ import { applyViewSorting } from "./utils/view-sorting.js";
 import { generateXLSX, IGenerateXLSXOptions } from "./utils/xlsx-generator.js";
 import { getDefaultView } from "./utils/default-view.js";
 import { IntegratedModuleName } from "processhub-sdk/lib/modules/imodule.js";
+import { LANE_KEY_PREFIX } from "./utils/field-keys.js";
 
 enum ErrorCodes {
   PERMISSION_ERROR = "PERMISSION_ERROR",
@@ -167,6 +168,11 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
 
   // Get visible columns from the view (only columns that are shown and not hidden)
   const viewColumns = viewDetails.columns.filter((col) => col.show && !col.hidden);
+  viewColumns.forEach((col) => {
+    if (!col.hidden && col.field.startsWith(LANE_KEY_PREFIX)) {
+      col.title = processDetails.extras.processRoles?.[col.field.substring(LANE_KEY_PREFIX.length)]?.roleName || col.title;
+    }
+  });
   const gridOptions = JSON.parse(viewDetails.gridOptions) as IGridOptions;
 
   // Load all instances with field contents, role owners, and todos
