@@ -169,7 +169,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment): Promis
   // Get visible columns from the view (only columns that are shown and not hidden)
   const viewColumns = viewDetails.columns.filter((col) => col.show && !col.hidden);
   viewColumns.forEach((col) => {
-    if (!col.hidden && col.field.startsWith(LANE_KEY_PREFIX)) {
+    if (col.field.startsWith(LANE_KEY_PREFIX)) {
       col.title = processDetails.extras.processRoles?.[col.field.substring(LANE_KEY_PREFIX.length)]?.roleName || col.title;
     }
   });
