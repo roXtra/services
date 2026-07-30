@@ -18,8 +18,8 @@
     "copymain": "cp dist/main.mjs disttests/main.js"
   },
   "engines": {
-    "node": "22",
-    "npm": "10"
+    "node": "24",
+    "npm": "12"
   },
   "overrides": {
     "@sinonjs/fake-timers": "15.4.0"
