@@ -1,0 +1,4 @@
+{
+  "extends": "../tsconfig-webpack.json",
+  "files": ["main.ts"]
+}
