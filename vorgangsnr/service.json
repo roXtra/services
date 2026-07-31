@@ -1,0 +1,19 @@
+{
+  "id": "vorgangsnr",
+  "minRoXtraVersion": "8.009.0",
+  "name": "Vorgangsnummer erzeugen",
+  "actions": [
+    {
+      "id": "vorgangsnr",
+      "label": "Vorgangsnummer erzeugen",
+      "configMethod": "vorgangsnrConfig",
+      "settings": "main.mjs",
+      "serviceFile": "main.mjs",
+      "serviceMethod": "vorgangsnrAction",
+      "fields": [{ "name": "targetfield", "type": "text" },
+        { "name": "conditionfield", "type": "text" },
+        { "name": "expressionfield", "type": "text" }
+      ]
+    }
+  ]
+}
