@@ -18,7 +18,7 @@
         { "name": "serviceName", "type": "text" },
         { "name": "useTls", "type": "text" },
         { "name": "query", "type": "text" },
-        { "name": "targetField", "type": "select", "onload": "fields" }
+        { "name": "targetField", "type": "select", "onload": "fields ProcessHubTextInput" }
       ]
     },
     {
