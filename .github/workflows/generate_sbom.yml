@@ -82,6 +82,171 @@ jobs:
           echo "output_file=${OUTPUT_FILE}" >> "${GITHUB_OUTPUT}"
           echo "artifact_name=${ARTIFACT_NAME}" >> "${GITHUB_OUTPUT}"
 
+      - name: Remove npm dev dependencies from SBOM
+        env:
+          SBOM_FILE: ${{ steps.sbom.outputs.output_file }}
+        run: |
+          node <<'NODE'
+          "use strict";
+
+          const fs = require("node:fs");
+          const path = require("node:path");
+
+          const sbomFile = process.env.SBOM_FILE;
+          if (!sbomFile) {
+            throw new Error("SBOM_FILE is not set.");
+          }
+
+          function findPackageLocks(directory) {
+            const packageLocks = [];
+
+            for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+              if (entry.name === ".git" || entry.name === "node_modules" || entry.name === "sbom") {
+                continue;
+              }
+
+              const entryPath = path.join(directory, entry.name);
+              if (entry.isDirectory()) {
+                packageLocks.push(...findPackageLocks(entryPath));
+              } else if (entry.isFile() && entry.name === "package-lock.json") {
+                packageLocks.push(entryPath);
+              }
+            }
+
+            return packageLocks;
+          }
+
+          function packageNameFromLockPath(lockPath) {
+            const marker = "node_modules/";
+            const normalizedPath = lockPath.replaceAll("\\", "/");
+            const markerIndex = normalizedPath.lastIndexOf(marker);
+
+            return markerIndex === -1 ? null : normalizedPath.slice(markerIndex + marker.length);
+          }
+
+          function collectLegacyDependencies(dependencies, devIdentities, runtimeIdentities) {
+            if (!dependencies || typeof dependencies !== "object") {
+              return;
+            }
+
+            for (const [name, entry] of Object.entries(dependencies)) {
+              if (!entry || !entry.version) {
+                continue;
+              }
+
+              const identity = `${name}@${entry.version}`;
+              if (entry.dev === true) {
+                devIdentities.add(identity);
+              } else {
+                runtimeIdentities.add(identity);
+              }
+
+              collectLegacyDependencies(entry.dependencies, devIdentities, runtimeIdentities);
+            }
+          }
+
+          function collectPackageLockIdentities(lockfile, devIdentities, runtimeIdentities) {
+            const lock = JSON.parse(fs.readFileSync(lockfile, "utf8"));
+
+            if (lock.packages && typeof lock.packages === "object") {
+              for (const [packagePath, entry] of Object.entries(lock.packages)) {
+                if (!packagePath || !entry || !entry.version) {
+                  continue;
+                }
+
+                const name = entry.name || packageNameFromLockPath(packagePath);
+                if (!name) {
+                  continue;
+                }
+
+                const identity = `${name}@${entry.version}`;
+                if (entry.dev === true) {
+                  devIdentities.add(identity);
+                } else {
+                  runtimeIdentities.add(identity);
+                }
+              }
+            }
+
+            collectLegacyDependencies(lock.dependencies, devIdentities, runtimeIdentities);
+          }
+
+          function npmIdentityFromPurl(purl) {
+            if (!purl || !purl.startsWith("pkg:npm/")) {
+              return null;
+            }
+
+            const packagePart = decodeURIComponent(purl.slice("pkg:npm/".length).split(/[?#]/)[0]);
+            const versionSeparatorIndex = packagePart.lastIndexOf("@");
+            if (versionSeparatorIndex <= 0) {
+              return null;
+            }
+
+            return packagePart.slice(0, versionSeparatorIndex) + "@" + packagePart.slice(versionSeparatorIndex + 1);
+          }
+
+          const devIdentities = new Set();
+          const runtimeIdentities = new Set();
+          const packageLocks = findPackageLocks(process.cwd());
+
+          if (packageLocks.length === 0) {
+            throw new Error("No package-lock.json files found; cannot filter npm dev dependencies.");
+          }
+
+          for (const packageLock of packageLocks) {
+            collectPackageLockIdentities(packageLock, devIdentities, runtimeIdentities);
+          }
+
+          for (const identity of runtimeIdentities) {
+            devIdentities.delete(identity);
+          }
+
+          const sbom = JSON.parse(fs.readFileSync(sbomFile, "utf8"));
+          const components = Array.isArray(sbom.components) ? sbom.components : [];
+          const removedComponents = [];
+          const keptComponents = [];
+
+          for (const component of components) {
+            const identity = npmIdentityFromPurl(component.purl);
+            if (identity && devIdentities.has(identity)) {
+              removedComponents.push(component);
+            } else {
+              keptComponents.push(component);
+            }
+          }
+
+          sbom.components = keptComponents;
+
+          const keptRefs = new Set(keptComponents.map((component) => component["bom-ref"]).filter(Boolean));
+          if (sbom.metadata?.component?.["bom-ref"]) {
+            keptRefs.add(sbom.metadata.component["bom-ref"]);
+          }
+
+          if (Array.isArray(sbom.dependencies)) {
+            sbom.dependencies = sbom.dependencies
+              .map((dependency) => ({
+                ...dependency,
+                dependsOn: Array.isArray(dependency.dependsOn)
+                  ? dependency.dependsOn.filter((reference) => keptRefs.has(reference))
+                  : dependency.dependsOn,
+                provides: Array.isArray(dependency.provides)
+                  ? dependency.provides.filter((reference) => keptRefs.has(reference))
+                  : dependency.provides,
+              }))
+              .filter((dependency) => keptRefs.has(dependency.ref));
+          }
+
+          fs.writeFileSync(sbomFile, JSON.stringify(sbom, null, 2) + "\n");
+
+          console.log(`Removed ${removedComponents.length} npm dev dependency component(s) from ${sbomFile}.`);
+          for (const component of removedComponents.slice(0, 50)) {
+            console.log(`- ${npmIdentityFromPurl(component.purl) || component.name}`);
+          }
+          if (removedComponents.length > 50) {
+            console.log(`... and ${removedComponents.length - 50} more`);
+          }
+          NODE
+
       - name: Validate SBOM format
         run: |
           jq -e '.bomFormat == "CycloneDX" and .specVersion == "1.6"' "${{ steps.sbom.outputs.output_file }}" > /dev/null
