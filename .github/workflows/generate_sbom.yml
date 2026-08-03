@@ -1,0 +1,94 @@
+name: Generate SBOM
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_name:
+        description: "Release name or tag to generate the SBOM for"
+        required: true
+        type: string
+
+run-name: Generate SBOM for ${{ inputs.release_name }}
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: 22
+
+jobs:
+  generate:
+    name: Generate SBOM
+    runs-on: ubuntu-latest
+    steps:
+      - id: release
+        name: Resolve release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_NAME: ${{ inputs.release_name }}
+        run: |
+          set -euo pipefail
+
+          RELEASES_JSON="$(mktemp)"
+          gh api --paginate "repos/${GITHUB_REPOSITORY}/releases" > "${RELEASES_JSON}"
+
+          TAG_NAME="$(jq -sr --arg release "${RELEASE_NAME}" '[.[][] | select(.name == $release or .tag_name == $release)][0].tag_name // empty' "${RELEASES_JSON}")"
+
+          if [ -z "${TAG_NAME}" ]; then
+            echo "::error title=Release not found::No release found with the provided name or tag."
+            exit 1
+          fi
+
+          echo "tag_name=${TAG_NAME}" >> "${GITHUB_OUTPUT}"
+
+      - name: Checkout release tag
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ steps.release.outputs.tag_name }}
+
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install cdxgen
+        run: npm install -g @cyclonedx/cdxgen@12 --omit=optional --ignore-scripts
+
+      - id: sbom
+        name: Generate CycloneDX SBOM
+        env:
+          RELEASE_TAG: ${{ steps.release.outputs.tag_name }}
+        run: |
+          set -euo pipefail
+
+          SAFE_RELEASE_TAG="$(printf '%s' "${RELEASE_TAG}" | tr -c 'A-Za-z0-9._-' '-')"
+          if [ -z "${SAFE_RELEASE_TAG}" ]; then
+            SAFE_RELEASE_TAG="release"
+          fi
+
+          OUTPUT_FILE="sbom/services-${SAFE_RELEASE_TAG}.cyclonedx.json"
+          ARTIFACT_NAME="services-${SAFE_RELEASE_TAG}-cyclonedx-sbom"
+
+          mkdir -p sbom
+          cdxgen . \
+            --type js \
+            --recurse \
+            --no-install-deps \
+            --spec-version 1.6 \
+            --project-name services \
+            --project-version "${RELEASE_TAG}" \
+            --output "${OUTPUT_FILE}"
+
+          echo "output_file=${OUTPUT_FILE}" >> "${GITHUB_OUTPUT}"
+          echo "artifact_name=${ARTIFACT_NAME}" >> "${GITHUB_OUTPUT}"
+
+      - name: Validate SBOM format
+        run: |
+          jq -e '.bomFormat == "CycloneDX" and .specVersion == "1.6"' "${{ steps.sbom.outputs.output_file }}" > /dev/null
+
+      - name: Upload SBOM workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.sbom.outputs.artifact_name }}
+          path: ${{ steps.sbom.outputs.output_file }}
+          if-no-files-found: error
