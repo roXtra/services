@@ -20,8 +20,8 @@
     "deploy:local": "copyfiles dist/* service.json ../../ProcessHub/app/node_modules/@eformservice/$Env:npm_package_config_servicename"
   },
   "engines": {
-    "node": "22",
-    "npm": "10"
+    "node": "24",
+    "npm": "12"
   },
   "overrides": {
     "@sinonjs/fake-timers": "15.4.0"
