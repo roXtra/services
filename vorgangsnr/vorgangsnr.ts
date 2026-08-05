@@ -191,7 +191,7 @@ function resolveExpressionLogic(
   const template = expression || "";
 
   if (!template.trim()) {
-    throw new Error("Expression is empty, cannot proceed with service!");
+    throw new Error("EXPRESSION_ERROR: Expression is empty, cannot proceed with service!");
   }
 
   const variables: Record<string, string | number> = {
@@ -208,15 +208,27 @@ function resolveExpressionLogic(
     const expressionCodeTrimmed = expressionCode.trim();
 
     if (!expressionCodeTrimmed) {
-      throw new Error("Expression placeholder is empty, cannot proceed with service!");
+      throw new Error("EXPRESSION_ERROR: Expression placeholder is empty, cannot proceed with service!");
     }
 
     try {
-      // eslint-disable-next-line @typescript-eslint/no-implied-eval, @typescript-eslint/no-unsafe-call
-      const value = Function(...Object.keys(variables), `return (${expressionCodeTrimmed});`)(...Object.values(variables));
+      const argNames = Object.keys(variables);
+      const argValues = Object.values(variables);
+
+      // Require that the placeholder references at least one allowed variable
+      // to avoid allowing arbitrary expressions that don't use any provided data.
+      const varPattern = new RegExp(`\\b(${argNames.map((n) => escapeRegExp(n)).join("|")})\\b`);
+      if (!varPattern.test(expressionCodeTrimmed)) {
+        throw new Error(`EXPRESSION_ERROR: Expression placeholder must reference at least one of: ${argNames.join(", ")}`);
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-implied-eval
+      const rawExprFn = Function(...argNames, `return (${expressionCodeTrimmed});`);
+      const exprFn = rawExprFn as (...args: unknown[]) => unknown;
+      const value = exprFn(...(argValues as unknown[]));
       return formatExpressionValue(value);
     } catch (error) {
-      throw new Error(`Unable to resolve expression placeholder: ${expressionCodeTrimmed} Error: ${String(error)}`);
+      throw new Error(`EXPRESSION_ERROR: Unable to resolve expression placeholder: ${expressionCodeTrimmed} Error: ${String(error)}`);
     }
   });
 }

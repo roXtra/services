@@ -1,0 +1,12 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run vorgangsnr tests",
+			"type": "shell",
+			"command": "npx mocha ./disttests/**/*.roxtest.js --exit --recursive --timeout 40000 --require source-map-support/register",
+			"problemMatcher": [],
+			"group": "test"
+		}
+	]
+}
