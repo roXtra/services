@@ -147,6 +147,7 @@ export function vorgangsnrConfig(userLanguage: Language): React.JSX.Element {
             <div>
               <p>{tl("CONFIG_INVALID: Bitte prüfen Sie die Konfiguration, zum Beispiel ob ein Zielfeld angegeben wurde.", userLanguage)}</p>
               <p>{tl("FILTER_ERROR: Bitte prüfen Sie den Filter auf Syntaxfehler oder unpassende Feldnamen.", userLanguage)}</p>
+              <p>{tl("EXPRESSION_ERROR: Bitte prüfen Sie den Ausdruck auf Syntaxfehler oder unpassende Platzhalter.", userLanguage)}</p>
             </div>
           </td>
         </tr>
