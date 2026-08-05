@@ -452,7 +452,7 @@ describe("Tests", () => {
 
     it("throws when placeholder references no allowed variables", async () => {
       const targetFieldName = "target";
-      const expression = "CAPA-${1+1}"; // does not reference any allowed variable
+      const expression = "CAPA-${1+1}"; // Does not reference any allowed variable
       const filter = "";
 
       const instances: IInstanceDetails[] = [createInstance(new Date("October 13, 2018 11:13:00"), { "CAPA notwendig?": "Ja" })];
