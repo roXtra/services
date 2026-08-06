@@ -87,7 +87,7 @@ jobs:
           jq -e '.bomFormat == "CycloneDX" and .specVersion == "1.6"' "${{ steps.sbom.outputs.output_file }}" > /dev/null
 
       - name: Upload SBOM workflow artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ steps.sbom.outputs.artifact_name }}
           path: ${{ steps.sbom.outputs.output_file }}
