@@ -39,7 +39,7 @@
     "@types/react": "^18.3.31",
     "@types/sinon": "^22.0.0",
     "@typescript/native": "npm:typescript@^7.0.2",
-    "bestzip": "^3.0.1",
+    "bestzip": "^3.0.2",
     "copyfiles": "^2.4.1",
     "cross-env": "^10.1.0",
     "eslint": "9.39.2",
