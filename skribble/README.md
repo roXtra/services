@@ -1,14 +1,31 @@
+# Skribble Integration Service
+
+This service allows digital signatures via Skribble to be integrated into roXtra processes.
+
+## Configuration
+
 Copy the file configtemplate.json to config.json and adjust the values (userName and apiKey from Skribble, and the API URL — depending on which database you use. For Germany
 and the EU, use https://api.skribble.de/v2, and for Switzerland and the rest of the world, use https://api.skribble.com/v2).
+
+## Creating credentials in Skribble
+
+API access requires at least a **Skribble Pro Plan**.
+
+1. Log in to the [Skribble Portal](https://www.skribble.com) and switch to the **Admin area**.
+2. Under **API keys**, create a new key and give it a name.
+3. Skribble will then display a **username** and **API key** – note both values.
+4. Enter these values as `userName` and `apiKey` in `config.json`.
 
 Optional: you can set "callbackUrlBase" in config.json to override the base used for webhook callback URLs (callback_success_url) when the service is configured to trigger a webhook.
 Use this if your roXtra instance is published behind a reverse proxy and needs a different external base path.
 
-Notes:
+## Notes
+
 - A trailing slash at the end of the base is fine; it will be trimmed.
 - If omitted or empty, the server's default base URL is used.
 
-Example config with callbackUrlBase:
+## Example config with callbackUrlBase:
+
 ```json
 {
   "userName": "",
