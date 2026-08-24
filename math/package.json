@@ -19,7 +19,7 @@
   },
   "engines": {
     "node": "24",
-    "npm": "12"
+    "npm": ">=11 <13"
   },
   "author": "",
   "license": "ISC",
