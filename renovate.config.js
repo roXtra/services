@@ -22,11 +22,11 @@ module.exports = {
     },
     {
       matchPackageNames: ["node", "@types/node"],
-      allowedVersions: "^22.0.0",
+      allowedVersions: "^24.0.0",
     },
     {
       matchPackageNames: ["npm"],
-      allowedVersions: "^10.0.0",
+      allowedVersions: "^12.0.0",
     },
     {
       description: "Don't bump engines field in package.json",
