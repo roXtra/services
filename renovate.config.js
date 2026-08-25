@@ -26,7 +26,7 @@ module.exports = {
     },
     {
       matchPackageNames: ["npm"],
-      allowedVersions: "^12.0.0",
+      allowedVersions: ">=11 <13",
     },
     {
       description: "Don't bump engines field in package.json",
@@ -39,10 +39,10 @@ module.exports = {
       matchPackageNames: ["react", "react-dom", "@types/react"],
       allowedVersions: "^18.0.0",
     },
-	// Lock eslint to 9.39.2 because of https://rossmanith.atlassian.net/browse/RM-850
-	{
-		matchPackageNames: ["eslint"],
-		allowedVersions: "9.39.2",
-	},
+    // Lock eslint to 9.39.2 because of https://rossmanith.atlassian.net/browse/RM-850
+    {
+      matchPackageNames: ["eslint"],
+      allowedVersions: "9.39.2",
+    },
   ],
 };
