@@ -3,7 +3,7 @@ name: Build and Test
 on: [push]
 
 env:
-  NODE_VERSION: 22
+  NODE_VERSION: 24
   MYSQL_CONTAINER_VERSION: 8.4
   MYSQL_CONTAINER_NAME: mysql-test
 
@@ -13,7 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Start MySQL Docker Container
-        run: docker run -p 3306:3306 --name ${{ env.MYSQL_CONTAINER_NAME }} -e MYSQL_ROOT_PASSWORD=12345 -e MYSQL_DATABASE=test -d mysql:${{ env.MYSQL_CONTAINER_VERSION }} --mysql-native-password=ON
+        run:
+          docker run -p 3306:3306 --name ${{ env.MYSQL_CONTAINER_NAME }} -e MYSQL_ROOT_PASSWORD=12345 -e MYSQL_DATABASE=test -d mysql:${{ env.MYSQL_CONTAINER_VERSION }}
+          --mysql-native-password=ON
       - uses: actions/checkout@v7
       - name: Use Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v7

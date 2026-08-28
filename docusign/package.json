@@ -20,15 +20,15 @@
     "deploy:local": "copyfiles dist/* service.json ../../ProcessHub/app/node_modules/@eformservice/$Env:npm_package_config_servicename"
   },
   "engines": {
-    "node": "22",
-    "npm": "10"
+    "node": "24",
+    "npm": ">=11 <13"
   },
   "overrides": {
     "@sinonjs/fake-timers": "15.4.0"
   },
   "dependencies": {
-    "@pnp/nodejs": "^4.21.0",
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.143.0/release.tgz",
+    "@pnp/nodejs": "^4.20.0",
+    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.144.0-1/release.tgz",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
