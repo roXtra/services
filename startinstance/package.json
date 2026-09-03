@@ -36,7 +36,7 @@
     "@types/react": "^18.3.31",
     "@typescript/native": "npm:typescript@^7.0.2",
     "acorn": "^8.18.0",
-    "bestzip": "^3.0.2",
+    "bestzip": "^3.0.3",
     "copyfiles": "^2.4.1",
     "cross-env": "^10.1.0",
     "eslint": "9.39.2",
