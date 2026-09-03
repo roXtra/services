@@ -21,6 +21,12 @@ module.exports = {
       stabilityDays: 0,
     },
     {
+      matchDatasources: ["npm"],
+      minimumReleaseAge: "5 days",
+      // Prevents immediate PR creation with pending status. This causes the PR to only be created after the cooldown time.
+      internalChecksFilter: "strict",
+    },
+    {
       matchPackageNames: ["node", "@types/node"],
       allowedVersions: "^24.0.0",
     },
