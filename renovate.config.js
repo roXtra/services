@@ -27,6 +27,12 @@ module.exports = {
       internalChecksFilter: "strict",
     },
     {
+      groupName: "roXtra Packages",
+      matchPackagePatterns: ["^@roxtra/", "^@eformservice/", "processhub-sdk"],
+      // Reduce stability days for internal packages
+      minimumReleaseAge: null,
+    },
+    {
       matchPackageNames: ["node", "@types/node"],
       allowedVersions: "^24.0.0",
     },
