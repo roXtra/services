@@ -25,7 +25,7 @@
   "dependencies": {
     "axios": "^1.20.0",
     "chai": "^6.2.2",
-    "joi": "^18.2.8",
+    "joi": "^18.2.9",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.144.0/release.tgz",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
@@ -33,7 +33,7 @@
   "devDependencies": {
     "@types/chai": "^5.2.3",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^24.13.3",
+    "@types/node": "^24.13.4",
     "@types/react": "^18.3.31",
     "@typescript/native": "npm:typescript@^7.0.2",
     "bestzip": "^3.0.3",
