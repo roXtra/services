@@ -21,9 +21,6 @@
     "node": "24",
     "npm": ">=11 <13"
   },
-  "overrides": {
-    "@sinonjs/fake-timers": "15.4.0"
-  },
   "author": "",
   "license": "ISC",
   "dependencies": {
