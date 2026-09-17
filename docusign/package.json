@@ -23,9 +23,6 @@
     "node": "24",
     "npm": ">=11 <13"
   },
-  "overrides": {
-    "@sinonjs/fake-timers": "15.4.0"
-  },
   "dependencies": {
     "@pnp/nodejs": "^4.21.0",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.144.0/release.tgz",
