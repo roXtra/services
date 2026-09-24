@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
-    "@types/node": "^24.13.4",
+    "@types/node": "^24.13.6",
     "@types/oracledb": "^7.0.3",
     "@types/react": "^18.3.31",
     "bestzip": "^4.0.0",
