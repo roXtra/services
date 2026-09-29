@@ -1,11 +1,12 @@
 import * as fs from "fs";
 import { assert } from "chai";
-import { serviceLogic } from "./main.js";
+import { serviceLogic, vorgangsnrAction } from "./main.js";
 import { IProcessDetails } from "processhub-sdk/lib/process/processinterfaces.js";
 import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue.js";
 import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
 import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools.js";
 import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
+import { IRoleOwnerMap } from "processhub-sdk/lib/process/processrights.js";
 
 describe("Tests", () => {
   describe("vorgangsnr", () => {
@@ -18,7 +19,7 @@ describe("Tests", () => {
       return env;
     }
 
-    function createInstance(createdAt: Date, fieldContents: Record<string, string>): IInstanceDetails {
+    function createInstance(createdAt: Date, fieldContents: Record<string, IFieldValue["value"]>): IInstanceDetails {
       return {
         title: "",
         instanceId: "",
@@ -85,6 +86,40 @@ describe("Tests", () => {
       return env;
     }
 
+    async function performVorgangsNrActionTest(filter: string, title: string, roleOwners?: IRoleOwnerMap): Promise<IServiceTaskEnvironment> {
+      const bpmnXmlPath = "./testfiles/vorgangsnr-test-process.bpmn";
+      const existingConfig = '{"selectedServiceId":"complaintnr","selectedActionId":"complaintnr","fields":[{"key":"targetfield","type":"text","value":"target"}]}';
+      const serviceConfig = JSON.stringify({
+        selectedServiceId: "vorgangsnr",
+        selectedActionId: "vorgangsnr",
+        fields: [
+          { key: "targetfield", type: "text", value: "target" },
+          { key: "expressionfield", type: "text", value: "COUNT-${totalInstanceNumber}" },
+          { key: "conditionfield", type: "text", value: filter },
+        ],
+      });
+      const bpmnXml = fs.readFileSync(bpmnXmlPath, "utf8").replace(existingConfig, serviceConfig);
+      const env = createEmptyTestServiceEnvironment(bpmnXml);
+      env.bpmnTaskId = "ServiceTask_508AF9C8EEE3A181";
+      env.instanceDetails.title = title;
+      env.instanceDetails.createdAt = new Date("October 13, 2018 11:13:00");
+      env.instanceDetails.extras.fieldContents = {};
+      env.instanceDetails.extras.roleOwners = roleOwners;
+      env.instances.getAllInstancesForProcess = () => Promise.resolve([createInstance(new Date("October 13, 2018 11:13:00"), {})]);
+      env.processes.getProcessDetails = () =>
+        Promise.resolve({
+          processId: "",
+          workspaceId: "",
+          displayName: "",
+          description: "",
+          extras: { instances: [] },
+          type: "backend",
+        });
+
+      await vorgangsnrAction(env);
+      return env;
+    }
+
     it("counts instances for a specific year with filter set", async () => {
       const targetFieldName = "target";
       const expression = "CAPA-${yearlyInstanceNumber < 10 ? 0 : ''}${yearlyInstanceNumber}-${instanceYear}";
@@ -138,6 +173,23 @@ describe("Tests", () => {
       const env = await performVorgangsNrTest("./testfiles/vorgangsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName, expression, filter);
 
       assert.equal((env.instanceDetails.extras.fieldContents![targetFieldName] as IFieldValue).value as string, "CAPA-02-2018");
+    });
+
+    it("counts a variable used inside a conditional placeholder", async () => {
+      const targetFieldName = "target";
+      const expression = 'CAPA-${yearlyInstanceNumber < 10 ? "0" + yearlyInstanceNumber : yearlyInstanceNumber}-${instanceYear}-TD';
+      const instances = [createInstance(new Date("October 13, 2026 11:13:00"), {}), createInstance(new Date("October 14, 2026 11:13:00"), {})];
+
+      const env = await performVorgangsNrTestWithEnvDate(
+        "./testfiles/vorgangsnr-test-process.bpmn",
+        "ServiceTask_508AF9C8EEE3A181",
+        instances,
+        targetFieldName,
+        expression,
+        new Date("October 15, 2026 11:13:00"),
+      );
+
+      assert.equal((env.instanceDetails.extras.fieldContents![targetFieldName] as IFieldValue).value as string, "CAPA-02-2026-TD");
     });
 
     it("counts instances for a specific month with empty filter", async () => {
@@ -405,6 +457,28 @@ describe("Tests", () => {
       assert.equal((env.instanceDetails.extras.fieldContents![targetFieldName] as IFieldValue).value as string, "COUNT-1");
     });
 
+    it("supports loose equality in filters", async () => {
+      const targetFieldName = "target";
+      const expression = "COUNT-${totalInstanceNumber}";
+      const filter = "field['Amount'] == 10";
+      const instances = [createInstance(new Date("October 13, 2018 11:13:00"), { Amount: "10" }), createInstance(new Date("October 13, 2018 11:14:00"), { Amount: "11" })];
+
+      const env = await performVorgangsNrTest("./testfiles/vorgangsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName, expression, filter);
+
+      assert.equal((env.instanceDetails.extras.fieldContents![targetFieldName] as IFieldValue).value as string, "COUNT-1");
+    });
+
+    it("supports loose inequality in filters", async () => {
+      const targetFieldName = "target";
+      const expression = "COUNT-${totalInstanceNumber}";
+      const filter = "field['Amount'] != 10";
+      const instances = [createInstance(new Date("October 13, 2018 11:13:00"), { Amount: "10" }), createInstance(new Date("October 13, 2018 11:14:00"), { Amount: "11" })];
+
+      const env = await performVorgangsNrTest("./testfiles/vorgangsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName, expression, filter);
+
+      assert.equal((env.instanceDetails.extras.fieldContents![targetFieldName] as IFieldValue).value as string, "COUNT-1");
+    });
+
     it("returns numeric expression results as strings", async () => {
       const targetFieldName = "target";
       const expression = "${dailyInstanceNumber}";
@@ -435,6 +509,126 @@ describe("Tests", () => {
       assert.equal((env.instanceDetails.extras.fieldContents![targetFieldName] as IFieldValue).value as string, "FOUND-1");
     });
 
+    it("treats filter field values as data instead of expression code", async () => {
+      const targetFieldName = "target";
+      const expression = "COUNT-${totalInstanceNumber}";
+      const filter = "field['Name'] === 'Yes'";
+      const instances = [createInstance(new Date("October 13, 2018 11:13:00"), { Name: "\\' || true || 'x" })];
+
+      const env = await performVorgangsNrTest("./testfiles/vorgangsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName, expression, filter);
+
+      assert.equal((env.instanceDetails.extras.fieldContents![targetFieldName] as IFieldValue).value as string, "COUNT-0");
+    });
+
+    it("supports logical negation and disjunction in filters", async () => {
+      const targetFieldName = "target";
+      const expression = "COUNT-${totalInstanceNumber}";
+      const filter = "!field['Ignore'] && (field['Approved'] || field['Override'])";
+      const instances = [
+        createInstance(new Date("October 13, 2018 11:13:00"), { Ignore: "", Approved: "", Override: "Yes" }),
+        createInstance(new Date("October 13, 2018 11:14:00"), { Ignore: "Yes", Approved: "Yes", Override: "" }),
+        createInstance(new Date("October 13, 2018 11:15:00"), { Ignore: "", Approved: "", Override: "" }),
+      ];
+
+      const env = await performVorgangsNrTest("./testfiles/vorgangsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName, expression, filter);
+
+      assert.equal((env.instanceDetails.extras.fieldContents![targetFieldName] as IFieldValue).value as string, "COUNT-1");
+    });
+
+    it("rejects unsafe field properties", async () => {
+      const targetFieldName = "target";
+      const expression = "COUNT-${totalInstanceNumber}";
+      const filter = "field['Flag']['constructor'] === undefined";
+      const instances = [createInstance(new Date("October 13, 2018 11:13:00"), { Flag: { Test: true } })];
+
+      try {
+        await performVorgangsNrTest("./testfiles/vorgangsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName, expression, filter);
+        assert.fail("Expected unsafe field access to throw");
+      } catch (error) {
+        assert.include(String(error), "FILTER_ERROR");
+      }
+    });
+
+    it("rejects unsupported filter syntax in a short-circuited branch", async () => {
+      const targetFieldName = "target";
+      const expression = "COUNT-${totalInstanceNumber}";
+      const filter = "field['Approved'] || globalThis.process.exit()";
+      const instances = [createInstance(new Date("October 13, 2018 11:13:00"), { Approved: "Yes" })];
+
+      try {
+        await performVorgangsNrTest("./testfiles/vorgangsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName, expression, filter);
+        assert.fail("Expected unsupported filter syntax to throw");
+      } catch (error) {
+        assert.include(String(error), "FILTER_ERROR");
+      }
+    });
+
+    it("rejects unsupported expression syntax in an unselected conditional branch", async () => {
+      const targetFieldName = "target";
+      const expression = "COUNT-${dailyInstanceNumber}-${dailyInstanceNumber ? dailyInstanceNumber : nonExistingFunction()}";
+      const instances = [createInstance(new Date("October 13, 2018 11:13:00"), { A: "x" })];
+
+      try {
+        await performVorgangsNrTest("./testfiles/vorgangsnr-test-process.bpmn", "ServiceTask_508AF9C8EEE3A181", instances, targetFieldName, expression);
+        assert.fail("Expected unsupported expression syntax to throw");
+      } catch (error) {
+        assert.include(String(error), "Unable to resolve expression placeholder");
+      }
+    });
+
+    it("resolves nested field values through action filter preprocessing", async () => {
+      const bpmnXmlPath = "./testfiles/vorgangsnr-test-process.bpmn";
+      const existingConfig = '{"selectedServiceId":"complaintnr","selectedActionId":"complaintnr","fields":[{"key":"targetfield","type":"text","value":"target"}]}';
+      const serviceConfig = JSON.stringify({
+        selectedServiceId: "vorgangsnr",
+        selectedActionId: "vorgangsnr",
+        fields: [
+          { key: "targetfield", type: "text", value: "target" },
+          { key: "expressionfield", type: "text", value: "COUNT-${totalInstanceNumber}" },
+          { key: "conditionfield", type: "text", value: "field['Flag']['Test'] === true" },
+        ],
+      });
+      const bpmnXml = fs.readFileSync(bpmnXmlPath, "utf8").replace(existingConfig, serviceConfig);
+      const env = createEmptyTestServiceEnvironment(bpmnXml);
+      env.bpmnTaskId = "ServiceTask_508AF9C8EEE3A181";
+      env.instanceDetails.createdAt = new Date("October 13, 2018 11:13:00");
+      env.instanceDetails.extras.fieldContents = { Flag: { type: "ProcessHubChecklist", value: { Test: true } } };
+      env.instances.getAllInstancesForProcess = () =>
+        Promise.resolve([
+          createInstance(new Date("October 13, 2018 11:13:00"), { Flag: { Test: true } }),
+          createInstance(new Date("October 13, 2018 11:14:00"), { Flag: { Test: false } }),
+        ]);
+      env.processes.getProcessDetails = () =>
+        Promise.resolve({
+          processId: "",
+          workspaceId: "",
+          displayName: "",
+          description: "",
+          extras: { instances: [] },
+          type: "backend",
+        });
+
+      await vorgangsnrAction(env);
+
+      assert.equal((env.instanceDetails.extras.fieldContents!["target"] as IFieldValue).value as string, "COUNT-1");
+    });
+
+    it("does not interpret instance placeholder values as filter syntax", async () => {
+      const env = await performVorgangsNrActionTest("!instance['title']", "false || true");
+
+      assert.equal((env.instanceDetails.extras.fieldContents!["target"] as IFieldValue).value as string, "COUNT-0");
+    });
+
+    it("does not interpret role placeholder values as filter syntax", async () => {
+      const creatorLaneId = "Lane_DAF8ED6DEEC6CA8F";
+      const roleOwners: IRoleOwnerMap = {
+        [creatorLaneId]: [{ memberId: "test-user", displayName: "false || true" }],
+      };
+      const env = await performVorgangsNrActionTest("!role['Ersteller']", "", roleOwners);
+
+      assert.equal((env.instanceDetails.extras.fieldContents!["target"] as IFieldValue).value as string, "COUNT-0");
+    });
+
     it("reports errors for invalid expression calls", async () => {
       const targetFieldName = "target";
       const expression = "ERR-${nonExistingFunction()}";
@@ -452,7 +646,7 @@ describe("Tests", () => {
 
     it("throws when placeholder references no allowed variables", async () => {
       const targetFieldName = "target";
-      const expression = "CAPA-${1+1}"; // does not reference any allowed variable
+      const expression = "CAPA-${1+1}"; // Does not reference any allowed variable
       const filter = "";
 
       const instances: IInstanceDetails[] = [createInstance(new Date("October 13, 2018 11:13:00"), { "CAPA notwendig?": "Ja" })];

@@ -9,7 +9,7 @@ export function vorgangsnrConfig(userLanguage: Language): React.JSX.Element {
           <td style={{ width: "30%" }}>
             <span>{tl("Filter (optional)", userLanguage)}</span>
             <br />
-            <small>{tl("Nur Instanzen mit passenden Werten werden gezählt.", userLanguage)}</small>
+            <small>{tl("Optional: Legt fest, welche Instanzen in die Zählung eingehen.", userLanguage)}</small>
           </td>
           <td style={{ width: "70%" }}>
             <input id="conditionfield" style={{ width: "100%" }} />
@@ -20,7 +20,7 @@ export function vorgangsnrConfig(userLanguage: Language): React.JSX.Element {
           <td style={{ width: "30%" }}>
             <span>{tl("Vorgangsnummer-Ausdruck", userLanguage)}</span>
             <br />
-            <small>{tl("Hier wird die Ausgabe für die Nummer zusammengesetzt.", userLanguage)}</small>
+            <small>{tl("Setzt festen Text und berechnete Platzhalter zur Vorgangsnummer zusammen.", userLanguage)}</small>
           </td>
           <td style={{ width: "70%" }}>
             <input id="expressionfield" style={{ width: "100%" }} />
@@ -43,23 +43,44 @@ export function vorgangsnrConfig(userLanguage: Language): React.JSX.Element {
             <h3>{tl("So funktioniert der Filter", userLanguage)}</h3>
             <div>
               <p>
-                {tl(
-                  "Mit dem Filter werden nur Instanzen berücksichtigt, deren Feldwerte an die Bedingung anpassen. Verwenden Sie dafür die Schreibweise field['Feldname']. Sollte der Filter nicht angegeben werden, werden alle Instanzen berücksichtigt.",
-                  userLanguage,
-                )}
+                <strong>{tl("Zweck:", userLanguage)}</strong>{" "}
+                {tl("Der optionale Filter legt fest, welche Instanzen gezählt werden. Ohne Filter werden alle Instanzen berücksichtigt.", userLanguage)}
               </p>
-              <p>{tl("Beispiele:", userLanguage)}</p>
+              <p>
+                <strong>{tl("Felder:", userLanguage)}</strong> {tl("Feldwerte sprechen Sie mit field['Feldname'] an.", userLanguage)}
+              </p>
+              <p>{tl("Vergleiche: == und != mit Typumwandlung; === und !== ohne. Außerdem <, <=, > und >=.", userLanguage)}</p>
+              <p>{tl("Bedingungen verbinden: && bedeutet UND, || bedeutet ODER und ! kehrt eine Bedingung um.", userLanguage)}</p>
+              <p>
+                <strong>{tl("Beispiele:", userLanguage)}</strong>
+              </p>
               <ul>
                 <li>{"field['CAPA notwendig?'] === 'Ja'"}</li>
+                <li>{"field['Menge'] == 10"}</li>
                 <li>{"field['Abteilung'] === 'QM' && field['Status'] !== 'Abgeschlossen'"}</li>
                 <li>{"field['Abteilung'] === 'QM' || (field['Abteilung'] === 'Produktion' && field['Status'] !== 'Abgeschlossen')"}</li>
+                <li>{"field['Freigabe']['Erteilt'] === true"}</li>
               </ul>
+              <p>{tl("Funktionsaufrufe sind nicht zulässig. Fehlt ein Feld, hat es den Wert undefined.", userLanguage)}</p>
             </div>
 
             <h3>{tl("So funktioniert der Ausdruck", userLanguage)}</h3>
             <div>
-              <p>{tl("Im Ausdruck wird die Vorgangsnummer zusammengesetzt. Sie können Zahlen, Texte und Platzhalter kombinieren.", userLanguage)}</p>
-              <p>{tl("Verfügbare Platzhalter:", userLanguage)}</p>
+              <p>
+                <strong>{tl("Aufbau:", userLanguage)}</strong> {tl("Fester Text bleibt unverändert. Berechnete Werte setzen Sie in ${...} ein, zum Beispiel", userLanguage)}{" "}
+                {"CAPA-${yearlyInstanceNumber}-${instanceYear}"}
+              </p>
+              <p>
+                <strong>{tl("Rechnen:", userLanguage)}</strong> {tl("Verwenden Sie +, -, *, / und %.", userLanguage)}
+              </p>
+              <p>{tl("Vergleiche: == und != mit Typumwandlung; === und !== ohne. Außerdem <, <=, > und >=.", userLanguage)}</p>
+              <p>
+                {tl("Bedingungen: && bedeutet UND, || bedeutet ODER, ! bedeutet NICHT. Mit ? und : wählen Sie abhängig von einer Bedingung einen Wert aus.", userLanguage)}
+              </p>
+              <p>{tl("Jeder Platzhalter muss mindestens eine Variable aus der folgenden Liste enthalten. Funktionsaufrufe sind nicht zulässig.", userLanguage)}</p>
+              <p>
+                <strong>{tl("Verfügbare Variablen:", userLanguage)}</strong>
+              </p>
               <div style={{ marginTop: "8px", marginBottom: "16px" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse" }}>
                   <tbody>
@@ -73,7 +94,7 @@ export function vorgangsnrConfig(userLanguage: Language): React.JSX.Element {
                     </tr>
                     <tr>
                       <td style={{ borderWidth: "1px", padding: "4px" }}>instanceMonth</td>
-                      <td style={{ borderWidth: "1px", padding: "4px" }}>{tl("Der Monat der aktuellen Instanz.", userLanguage)}</td>
+                      <td style={{ borderWidth: "1px", padding: "4px" }}>{tl("Der Monat der aktuellen Instanz, beginnend bei 0 (Januar = 0).", userLanguage)}</td>
                     </tr>
                     <tr>
                       <td style={{ borderWidth: "1px", padding: "4px" }}>instanceDay</td>
@@ -81,31 +102,35 @@ export function vorgangsnrConfig(userLanguage: Language): React.JSX.Element {
                     </tr>
                     <tr>
                       <td style={{ borderWidth: "1px", padding: "4px" }}>dailyInstanceNumber</td>
-                      <td style={{ borderWidth: "1px", padding: "4px" }}>{tl("Anzahl der passenden Instanzen am selben Tag.", userLanguage)}</td>
+                      <td style={{ borderWidth: "1px", padding: "4px" }}>
+                        {tl("Anzahl der passenden Instanzen am selben Tag, einschließlich des aktuellen Vorgangs.", userLanguage)}
+                      </td>
                     </tr>
                     <tr>
                       <td style={{ borderWidth: "1px", padding: "4px" }}>monthlyInstanceNumber</td>
-                      <td style={{ borderWidth: "1px", padding: "4px" }}>{tl("Anzahl der passenden Instanzen im selben Monat.", userLanguage)}</td>
+                      <td style={{ borderWidth: "1px", padding: "4px" }}>
+                        {tl("Anzahl der passenden Instanzen im selben Monat, einschließlich des aktuellen Vorgangs.", userLanguage)}
+                      </td>
                     </tr>
                     <tr>
                       <td style={{ borderWidth: "1px", padding: "4px" }}>yearlyInstanceNumber</td>
-                      <td style={{ borderWidth: "1px", padding: "4px" }}>{tl("Anzahl der passenden Instanzen im selben Jahr.", userLanguage)}</td>
+                      <td style={{ borderWidth: "1px", padding: "4px" }}>
+                        {tl("Anzahl der passenden Instanzen im selben Jahr, einschließlich des aktuellen Vorgangs.", userLanguage)}
+                      </td>
                     </tr>
                     <tr>
                       <td style={{ borderWidth: "1px", padding: "4px" }}>totalInstanceNumber</td>
-                      <td style={{ borderWidth: "1px", padding: "4px" }}>{tl("Gesamtanzahl der passenden Instanzen.", userLanguage)}</td>
+                      <td style={{ borderWidth: "1px", padding: "4px" }}>
+                        {tl("Gesamtanzahl der passenden Instanzen, einschließlich des aktuellen Vorgangs.", userLanguage)}
+                      </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-              <p>
-                <strong>
-                  {tl("Platzhalter können über die ${} Schreibweise eingefügt werden, z. B. ", userLanguage)}
-                  {"CAPA-${yearlyInstanceNumber}-${instanceYear}"}
-                </strong>
-              </p>
               <div style={{ marginTop: "8px", marginBottom: "16px" }}>
-                <p>{tl("Weitere Beispiele:", userLanguage)}</p>
+                <p>
+                  <strong>{tl("Beispiele:", userLanguage)}</strong>
+                </p>
                 <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: "8px" }}>
                   <tbody>
                     <tr>
@@ -117,7 +142,7 @@ export function vorgangsnrConfig(userLanguage: Language): React.JSX.Element {
                       <td style={{ borderWidth: "1px", padding: "4px" }}>{"CAPA-3"}</td>
                     </tr>
                     <tr>
-                      <td style={{ borderWidth: "1px", padding: "4px" }}>{"CAPA-${monthlyInstanceNumber}-${instanceMonth}"}</td>
+                      <td style={{ borderWidth: "1px", padding: "4px" }}>{"CAPA-${monthlyInstanceNumber}-${instanceMonth + 1}"}</td>
                       <td style={{ borderWidth: "1px", padding: "4px" }}>{"CAPA-12-7"}</td>
                     </tr>
                     <tr>
@@ -145,9 +170,9 @@ export function vorgangsnrConfig(userLanguage: Language): React.JSX.Element {
 
             <h3>{tl("Mögliche Fehler", userLanguage)}</h3>
             <div>
-              <p>{tl("CONFIG_INVALID: Bitte prüfen Sie die Konfiguration, zum Beispiel ob ein Zielfeld angegeben wurde.", userLanguage)}</p>
-              <p>{tl("FILTER_ERROR: Bitte prüfen Sie den Filter auf Syntaxfehler oder unpassende Feldnamen.", userLanguage)}</p>
-              <p>{tl("EXPRESSION_ERROR: Bitte prüfen Sie den Ausdruck auf Syntaxfehler oder unpassende Platzhalter.", userLanguage)}</p>
+              <p>{tl("CONFIG_INVALID: Prüfen Sie, ob Zielfeld und Ausdruck angegeben sind.", userLanguage)}</p>
+              <p>{tl("FILTER_ERROR: Prüfen Sie die Schreibweise der Feldnamen und die Syntax der Filterbedingung.", userLanguage)}</p>
+              <p>{tl("EXPRESSION_ERROR: Prüfen Sie ${...}-Platzhalter, Variablennamen und Operatoren.", userLanguage)}</p>
             </div>
           </td>
         </tr>

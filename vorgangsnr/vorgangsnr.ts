@@ -6,40 +6,11 @@ import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicet
 import { tl } from "processhub-sdk/lib/tl.js";
 import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror.js";
 import { parseAndInsertStringWithFieldContent } from "processhub-sdk/lib/data/datatools.js";
-
-/**
- * Escape a string so it can be used safely inside a regular expression.
- * @param value The string to escape.
- * @returns The escaped string.
- */
-function escapeRegExp(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-/**
- * Convert a filter value into a JavaScript literal string for expression evaluation.
- * @param value The value to serialize.
- * @returns The serialized filter value.
- */
-function serializeFilterValue(value: unknown): string {
-  if (value === undefined || value === null) {
-    return "undefined";
-  }
-
-  if (typeof value === "string") {
-    return `'${value.replace(/'/g, "\\'")}'`;
-  }
-
-  if (typeof value === "number" || typeof value === "boolean") {
-    return String(value);
-  }
-
-  return JSON.stringify(value);
-}
+import { evaluateExpression, expressionUsesVariable, formatExpressionValue } from "./expression-evaluator.js";
+import { quoteFilterPlaceholderValues } from "./filter-placeholder-values.js";
 
 /**
  * Evaluate a filter expression for a single instance.
- * Field placeholders like field['Name'] are resolved before execution.
  * @param filter The filter expression to evaluate.
  * @param instance The instance to test.
  * @returns True when the instance matches the filter.
@@ -49,103 +20,43 @@ function evaluateFilter(filter: string | undefined, instance: IInstanceDetails):
     return true;
   }
 
-  const fieldReferences = Array.from(filter.matchAll(/field\[['"]([^'"]+)['"]\]/g), (match) => match[1]);
-  const resolvedValues = fieldReferences.map((fieldName) => serializeFilterValue(instance.extras?.fieldContents?.[fieldName]?.value));
-  let resolvedFilter = filter;
-
-  fieldReferences.forEach((fieldName, index) => {
-    resolvedFilter = resolvedFilter.replace(new RegExp(`field\\[['"]${escapeRegExp(fieldName)}['"]\\]`, "g"), resolvedValues[index]);
-  });
+  // Keep values as data instead of interpolating them into the expression source.
+  const fieldValues = Object.fromEntries(Object.entries(instance.extras?.fieldContents ?? {}).map(([fieldName, fieldValue]) => [fieldName, fieldValue?.value]));
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-implied-eval, @typescript-eslint/no-unsafe-call
-    return Boolean(Function(`return (${resolvedFilter});`)());
+    return Boolean(evaluateExpression(filter, { field: fieldValues, undefined: undefined }));
   } catch (error) {
     throw new Error(`FILTER_ERROR: ${filter} Error: ${String(error)}`);
   }
 }
 
-/**
- * Format a resolved placeholder value as a string for expression replacement.
- * @param value The resolved value.
- * @returns The string representation of the value.
- */
-function formatExpressionValue(value: unknown): string {
-  if (typeof value === "number") {
-    return String(value);
-  }
+type InstanceMatcher = (instance: IInstanceDetails, createdAt: Date) => boolean;
 
-  if (value === undefined || value === null) {
-    return "";
-  }
+function countInstancesMatching(instances: IInstanceDetails[], matches: InstanceMatcher): number {
+  return instances.reduce((count, instance) => {
+    if (instance.createdAt === undefined) {
+      throw new Error(`createdAt is undefined for instance ${instance.instanceId}, cannot proceed with service!`);
+    }
 
-  // eslint-disable-next-line @typescript-eslint/no-base-to-string
-  return String(value);
+    return matches(instance, instance.createdAt) ? count + 1 : count;
+  }, 0);
 }
 
-// Funktionen zum zählen der Instanzen, die in einem bestimmten Zeitraum erstellt wurden
-/**
- * Count all matched instances regardless of creation date.
- * @param instances The list of instances to count.
- * @param filterEvaluator A predicate to include instances.
- * @returns The total number of matching instances.
- */
 function getTotalNumberOfInstances(instances: IInstanceDetails[], filterEvaluator: (instance: IInstanceDetails) => boolean): number {
-  return instances.reduce((count, instance) => {
-    if (instance.createdAt === undefined) {
-      throw new Error(`createdAt is undefined for instance ${instance.instanceId}, cannot proceed with service!`);
-    }
-
-    return filterEvaluator(instance) ? count + 1 : count;
-  }, 0);
+  return countInstancesMatching(instances, (instance) => filterEvaluator(instance));
 }
 
-/**
- * Count matching instances created in a specific year.
- * @param instances The list of instances to count.
- * @param year The target year to match.
- * @param filterEvaluator A predicate to include instances.
- * @returns The number of matching instances in the year.
- */
 function getNumberOfInstancesOfSpecificYear(instances: IInstanceDetails[], year: number, filterEvaluator: (instance: IInstanceDetails) => boolean): number {
-  return instances.reduce((count, instance) => {
-    if (instance.createdAt === undefined) {
-      throw new Error(`createdAt is undefined for instance ${instance.instanceId}, cannot proceed with service!`);
-    }
-
-    return new Date(instance.createdAt).getFullYear() === year && filterEvaluator(instance) ? count + 1 : count;
-  }, 0);
+  return countInstancesMatching(instances, (instance, createdAt) => new Date(createdAt).getFullYear() === year && filterEvaluator(instance));
 }
 
-/**
- * Count matching instances created in a specific month.
- * @param instances The list of instances to count.
- * @param year The target year to match.
- * @param month The target month to match.
- * @param filterEvaluator A predicate to include instances.
- * @returns The number of matching instances in the month.
- */
 function getNumberOfInstancesOfSpecificMonth(instances: IInstanceDetails[], year: number, month: number, filterEvaluator: (instance: IInstanceDetails) => boolean): number {
-  return instances.reduce((count, instance) => {
-    if (instance.createdAt === undefined) {
-      throw new Error(`createdAt is undefined for instance ${instance.instanceId}, cannot proceed with service!`);
-    }
-
-    const date = new Date(instance.createdAt);
-
-    return date.getFullYear() === year && date.getMonth() === month && filterEvaluator(instance) ? count + 1 : count;
-  }, 0);
+  return countInstancesMatching(instances, (instance, createdAt) => {
+    const date = new Date(createdAt);
+    return date.getFullYear() === year && date.getMonth() === month && filterEvaluator(instance);
+  });
 }
 
-/**
- * Count matching instances created on a specific day.
- * @param instances The list of instances to count.
- * @param year The target year to match.
- * @param month The target month to match.
- * @param day The target day to match.
- * @param filterEvaluator A predicate to include instances.
- * @returns The number of matching instances on the day.
- */
 function getNumberOfInstancesOfSpecificDay(
   instances: IInstanceDetails[],
   year: number,
@@ -153,56 +64,35 @@ function getNumberOfInstancesOfSpecificDay(
   day: number,
   filterEvaluator: (instance: IInstanceDetails) => boolean,
 ): number {
-  return instances.reduce((count, instance) => {
-    if (instance.createdAt === undefined) {
-      throw new Error(`createdAt is undefined for instance ${instance.instanceId}, cannot proceed with service!`);
-    }
-
-    const date = new Date(instance.createdAt);
-
-    return date.getFullYear() === year && date.getMonth() === month && date.getDate() === day && filterEvaluator(instance) ? count + 1 : count;
-  }, 0);
+  return countInstancesMatching(instances, (instance, createdAt) => {
+    const date = new Date(createdAt);
+    return date.getFullYear() === year && date.getMonth() === month && date.getDate() === day && filterEvaluator(instance);
+  });
 }
 
-// Auflösen der Variablen in der Ausdruckslogik
+interface IInstanceNumberValues {
+  dailyInstanceNumber: number;
+  monthlyInstanceNumber: number;
+  yearlyInstanceNumber: number;
+  totalInstanceNumber: number;
+  instanceYear: number;
+  instanceMonth: number;
+  instanceDay: number;
+}
+
 /**
  * Resolve placeholders inside the expression string and replace them with actual values.
- * Supports JavaScript expressions inside ${...} blocks.
+ * Supports arithmetic, comparisons, logical operators, and conditional expressions inside ${...} blocks.
  * @param expression The template expression to resolve.
- * @param dailyInstanceNumber The count of matching instances for the current day.
- * @param monthlyInstanceNumber The count of matching instances for the current month.
- * @param yearlyInstanceNumber The count of matching instances for the current year.
- * @param totalInstanceNumber The total count of matching instances.
- * @param instanceYear The current instance year.
- * @param instanceMonth The current instance month.
- * @param instanceDay The current instance day.
+ * @param values The available counts and date parts for the current instance.
  * @returns The resolved string with placeholder values inserted.
  */
-function resolveExpressionLogic(
-  expression: string,
-  dailyInstanceNumber: number,
-  monthlyInstanceNumber: number,
-  yearlyInstanceNumber: number,
-  totalInstanceNumber: number,
-  instanceYear: number,
-  instanceMonth: number,
-  instanceDay: number,
-): string {
+function resolveExpressionLogic(expression: string, values: IInstanceNumberValues): string {
   const template = expression || "";
 
   if (!template.trim()) {
     throw new Error("EXPRESSION_ERROR: Expression is empty, cannot proceed with service!");
   }
-
-  const variables: Record<string, string | number> = {
-    dailyInstanceNumber,
-    monthlyInstanceNumber,
-    yearlyInstanceNumber,
-    totalInstanceNumber,
-    instanceYear,
-    instanceMonth,
-    instanceDay,
-  };
 
   return template.replace(/\$\{([^}]+)\}/g, (match: string, expressionCode: string) => {
     const expressionCodeTrimmed = expressionCode.trim();
@@ -212,20 +102,7 @@ function resolveExpressionLogic(
     }
 
     try {
-      const argNames = Object.keys(variables);
-      const argValues = Object.values(variables);
-
-      // Require that the placeholder references at least one allowed variable
-      // to avoid allowing arbitrary expressions that don't use any provided data.
-      const varPattern = new RegExp(`\\b(${argNames.map((n) => escapeRegExp(n)).join("|")})\\b`);
-      if (!varPattern.test(expressionCodeTrimmed)) {
-        throw new Error(`EXPRESSION_ERROR: Expression placeholder must reference at least one of: ${argNames.join(", ")}`);
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-implied-eval
-      const rawExprFn = Function(...argNames, `return (${expressionCodeTrimmed});`);
-      const exprFn = rawExprFn as (...args: unknown[]) => unknown;
-      const value = exprFn(...(argValues as unknown[]));
+      const value = evaluateExpression(expressionCodeTrimmed, { ...values, undefined: undefined }, new Set(Object.keys(values)));
       return formatExpressionValue(value);
     } catch (error) {
       throw new Error(`EXPRESSION_ERROR: Unable to resolve expression placeholder: ${expressionCodeTrimmed} Error: ${String(error)}`);
@@ -256,24 +133,20 @@ export async function serviceLogic(
   const instanceMonth = environment.instanceDetails.createdAt.getMonth();
   const instanceDay = environment.instanceDetails.createdAt.getDate();
   const filterEvaluator = (instance: IInstanceDetails) => evaluateFilter(filter, instance);
-  const dailyInstanceNumber = expression.includes("{dailyInstanceNumber}")
-    ? getNumberOfInstancesOfSpecificDay(instances, instanceYear, instanceMonth, instanceDay, filterEvaluator)
-    : 0;
-  const monthlyInstanceNumber = expression.includes("{monthlyInstanceNumber}")
-    ? getNumberOfInstancesOfSpecificMonth(instances, instanceYear, instanceMonth, filterEvaluator)
-    : 0;
-  const yearlyInstanceNumber = expression.includes("{yearlyInstanceNumber}") ? getNumberOfInstancesOfSpecificYear(instances, instanceYear, filterEvaluator) : 0;
-  const totalInstanceNumber = expression.includes("{totalInstanceNumber}") ? getTotalNumberOfInstances(instances, filterEvaluator) : 0;
-  const nr = resolveExpressionLogic(
-    expression,
-    dailyInstanceNumber,
-    monthlyInstanceNumber,
-    yearlyInstanceNumber,
-    totalInstanceNumber,
+  const instanceNumbers: IInstanceNumberValues = {
+    dailyInstanceNumber: expressionUsesVariable(expression, "dailyInstanceNumber")
+      ? getNumberOfInstancesOfSpecificDay(instances, instanceYear, instanceMonth, instanceDay, filterEvaluator)
+      : 0,
+    monthlyInstanceNumber: expressionUsesVariable(expression, "monthlyInstanceNumber")
+      ? getNumberOfInstancesOfSpecificMonth(instances, instanceYear, instanceMonth, filterEvaluator)
+      : 0,
+    yearlyInstanceNumber: expressionUsesVariable(expression, "yearlyInstanceNumber") ? getNumberOfInstancesOfSpecificYear(instances, instanceYear, filterEvaluator) : 0,
+    totalInstanceNumber: expressionUsesVariable(expression, "totalInstanceNumber") ? getTotalNumberOfInstances(instances, filterEvaluator) : 0,
     instanceYear,
     instanceMonth,
     instanceDay,
-  );
+  };
+  const nr = resolveExpressionLogic(expression, instanceNumbers);
 
   const newValue: IFieldValue = {
     value: nr,
@@ -301,17 +174,28 @@ export async function vorgangsnrAction(environment: IServiceTaskEnvironment): Pr
   const expression = fields.find((f) => f.key === "expressionfield")?.value;
   const filter = fields.find((f) => f.key === "conditionfield")?.value;
   const roleOwners = environment.instanceDetails.extras.roleOwners ?? {};
+  const userFieldsConfig = await environment.roxApi.getUsersConfig();
+  const filterWithQuotedPlaceholders = quoteFilterPlaceholderValues(filter ?? "", processObject, environment.instanceDetails, roleOwners, userFieldsConfig);
+  // The SDK helper replaces field placeholders; this proxy keeps absent fields replaceable too.
+  const fieldContents = new Proxy(environment.instanceDetails.extras.fieldContents ?? {}, {
+    get(target, property, receiver): unknown {
+      if (typeof property === "string" && !Object.hasOwn(target, property)) {
+        return { type: "ProcessHubTextInput", value: undefined };
+      }
+      return Reflect.get(target, property, receiver);
+    },
+  });
   const filterWithValues = parseAndInsertStringWithFieldContent(
-    filter ?? "",
-    environment.instanceDetails.extras.fieldContents,
-    processObject,
-    roleOwners,
+    filterWithQuotedPlaceholders,
+    fieldContents,
+    {},
+    {},
     environment.sender.language || "de-DE",
-    await environment.roxApi.getUsersConfig(),
+    userFieldsConfig,
     false,
     "",
-    (fieldName, valueObject) => serializeFilterValue(valueObject.value),
-    environment.instanceDetails,
+    // Preserve placeholders as references so the evaluator reads the original typed field value.
+    (fieldName) => `field[${JSON.stringify(fieldName)}]`,
   );
 
   if (targetField === undefined) {
