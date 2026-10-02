@@ -40,22 +40,16 @@ export type RiskTrendColors = "red" | "orange" | "green" | "olive" | "yellow";
 export function decodeFieldKey(fieldKey: string): string {
   const withoutPrefix = fieldKey.substring(FIELD_KEY_PREFIX.length);
 
-  let base64Part = withoutPrefix;
+  // Use the longest matching type suffix so a shorter type name can never accidentally shadow the real one.
+  let matchedType = "";
   for (const type of FieldTypeOptions) {
-    if (withoutPrefix.endsWith(type)) {
-      base64Part = withoutPrefix.substring(0, withoutPrefix.length - type.length);
-      break;
+    if (withoutPrefix.endsWith(type) && type.length > matchedType.length) {
+      matchedType = type;
     }
   }
-
-  // Restore base64 padding: trailing '_' -> '='
-  const restored = base64Part.replace(/_/g, "=");
-
-  try {
-    return Buffer.from(restored, "base64").toString("utf-8");
-  } catch {
-    return fieldKey;
-  }
+  const base64Part = matchedType ? withoutPrefix.substring(0, withoutPrefix.length - matchedType.length) : withoutPrefix;
+  const decoded = decodeKey(base64Part);
+  return decoded === base64Part ? fieldKey : decoded;
 }
 
 /**
@@ -144,7 +138,7 @@ export function resolveFieldDisplayValue(value: FieldValueType | null | undefine
             const parts = v.split("/");
             const lastSegment = parts[parts.length - 1] || v;
             try {
-              return Buffer.from(lastSegment, "base64").toString("utf-8");
+              return decodeKey(lastSegment);
             } catch {
               return decodeURIComponent(lastSegment);
             }
@@ -665,10 +659,14 @@ export function encodeKey(key: string): string {
  * @returns The decoded field name, or the original encoded string if decoding fails.
  */
 export function decodeKey(encoded: string): string {
+  const BASE64_CHARSET_REGEX = /^[A-Za-z0-9+/]*={0,2}$/;
   const restored = encoded.replace(/_/g, "=");
-  try {
-    return Buffer.from(restored, "base64").toString("utf-8");
-  } catch {
-    return encoded;
+  if (BASE64_CHARSET_REGEX.test(restored)) {
+    try {
+      return Buffer.from(restored, "base64").toString("utf-8");
+    } catch {
+      /* Fall through to URI-decoding below */
+    }
   }
+  return encoded;
 }
