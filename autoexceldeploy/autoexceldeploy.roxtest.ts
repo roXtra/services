@@ -60,16 +60,31 @@ describe("decodeFieldKey", () => {
 
   it("returns the original key when base64 decoding fails", () => {
     const key = "field_!!!invalid";
-    // No known suffix -> tries to decode "!!!invalid" which is not valid base64 for utf-8
+    // No known suffix -> "!!!invalid" contains chars outside the base64 charset -> falls back to the original key
     const result = decodeFieldKey(key);
-    // Should not throw, just return something
-    expect(typeof result).to.equal("string");
+    expect(result).to.equal(key);
   });
 
   it("strips ProcessHubFileUpload suffix", () => {
     // "Anlagen" -> base64 "QW5sYWdlbg=="  padding -> "QW5sYWdlbg__"
     const key = "field_QW5sYWdlbg__ProcessHubFileUpload";
     expect(decodeFieldKey(key)).to.equal("Anlagen");
+  });
+
+  it("decodes field names containing a question mark", () => {
+    const name = "Warum wurde der Antrag abgelehnt?";
+    const key = getFieldKey(name, "ProcessHubTextArea");
+    expect(decodeFieldKey(key)).to.equal(name);
+  });
+
+  it("decodes field names containing other special characters (+, /, umlauts, etc.)", () => {
+    const names = ["100% korrekt?", "A+B/C=D?", "Wieso/Weshalb/Warum?", "Prüfüng äöü ß?", "Kommentar (optional)?"];
+    for (const name of names) {
+      for (const type of ["ProcessHubTextInput", "ProcessHubDropdown", "ProcessHubDate"] as const) {
+        const key = getFieldKey(name, type);
+        expect(decodeFieldKey(key), `field name ${JSON.stringify(name)} with type ${type}`).to.equal(name);
+      }
+    }
   });
 });
 
@@ -97,6 +112,13 @@ describe("getResolvedValue", () => {
     const instance = makeInstance({ fieldContents: { Titel: { value: "Mein Vorgang", type: "ProcessHubTextInput" } } });
     const result = getResolvedValue(instance, getFieldKey("Titel", "ProcessHubTextInput"), options);
     expect(result).to.equal("Mein Vorgang");
+  });
+
+  it("resolves a field whose name contains a question mark", () => {
+    const fieldName = "Warum wurde der Antrag abgelehnt?";
+    const instance = makeInstance({ fieldContents: { [fieldName]: { value: "Budget nicht ausreichend", type: "ProcessHubTextArea" } } });
+    const result = getResolvedValue(instance, getFieldKey(fieldName, "ProcessHubTextArea"), options);
+    expect(result).to.equal("Budget nicht ausreichend");
   });
 
   it("returns empty string when field_* key is missing from fieldContents", () => {
