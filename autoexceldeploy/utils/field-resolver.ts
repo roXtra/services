@@ -33,26 +33,6 @@ export interface IRiskTrendCell {
 export type RiskTrendColors = "red" | "orange" | "green" | "olive" | "yellow";
 
 /**
- * Get the resolved value for a given field key from an instance.
- * @param fieldKey The field key to resolve (e.g. "field_VGl0ZWw_ProcessHubTextInput", "lane_Lane_7A0DD19E05A33282", "state", etc.)
- * @returns The resolved value for the field key, checking fieldContents, roleOwners, direct properties, and computed fields.
- */
-export function decodeFieldKey(fieldKey: string): string {
-  const withoutPrefix = fieldKey.substring(FIELD_KEY_PREFIX.length);
-
-  // Use the longest matching type suffix so a shorter type name can never accidentally shadow the real one.
-  let matchedType = "";
-  for (const type of FieldTypeOptions) {
-    if (withoutPrefix.endsWith(type) && type.length > matchedType.length) {
-      matchedType = type;
-    }
-  }
-  const base64Part = matchedType ? withoutPrefix.substring(0, withoutPrefix.length - matchedType.length) : withoutPrefix;
-  const decoded = decodeKey(base64Part);
-  return decoded === base64Part ? fieldKey : decoded;
-}
-
-/**
  * Resolve a field value for display, handling different types and formatting as needed.
  * @param value The raw value to resolve.
  * @param type The field type to guide formatting (e.g. "ProcessHubFileUpload", "ProcessHubRadioButton", etc.)
@@ -292,8 +272,13 @@ export function getResolvedValue(instance: IInstanceDetails, fieldKey: string, o
 
     // Field contents (extras.fieldContents with base64-encoded field keys)
     if (fieldKey.startsWith(FIELD_KEY_PREFIX)) {
-      const fieldName = decodeFieldKey(fieldKey);
-      const fieldValue = fc[fieldName];
+      const fieldContentsByKey = Object.fromEntries(
+        Object.entries(fc).map(([name, value]) => {
+          const typedValue = value as { value: FieldValueType | null | undefined; type: FieldType };
+          return [getFieldKey(name, typedValue.type), typedValue];
+        }),
+      );
+      const fieldValue = fieldContentsByKey[fieldKey] as { value: FieldValueType | null | undefined; type: FieldType } | undefined;
       if (fieldValue !== undefined) {
         return resolveFieldDisplayValue(fieldValue.value, fieldValue.type, instance, options);
       }
@@ -631,8 +616,7 @@ export function toStr(value: unknown): string {
  * @returns The generated field key.
  */
 export function getFieldKey(fieldName: string, fieldType: FieldType): string {
-  const base64 = Buffer.from(fieldName, "utf-8").toString("base64").replace(/=/g, "_");
-  return `${FIELD_KEY_PREFIX}${base64}${fieldType}`;
+  return `${FIELD_KEY_PREFIX}${encodeKey(fieldName)}${fieldType}`;
 }
 
 /**
@@ -645,12 +629,13 @@ export function getLaneKey(laneId: string): string {
 }
 
 /**
- * Encode a field name into a base64 string to be used in field keys, replacing padding characters to ensure URL safety.
+ * Encode a field name into a base64 string to be used in field keys. '+', '/' and '=' are each mapped to a
+ * distinct, non-base64 character ('-', '.', '_') so decoding is always unambiguous.
  * @param key The field name to encode.
- * @returns The base64-encoded field name with padding characters replaced for URL safety.
+ * @returns The encoded field name, safe to embed in a field key.
  */
 export function encodeKey(key: string): string {
-  return Buffer.from(key, "utf-8").toString("base64").replace(/=/g, "_");
+  return Buffer.from(key, "utf-8").toString("base64").replace(/[=/+]/g, "_");
 }
 
 /**
