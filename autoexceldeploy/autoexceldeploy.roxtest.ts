@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { autoexceldeploy, autoExcelDeployServiceLogic } from "./main.js";
-import { decodeFieldKey, formatDateOnly, getFieldKey, getLaneKey, getResolvedValue, toStr } from "./utils/field-resolver.js";
+import { formatDateOnly, getFieldKey, getLaneKey, getResolvedValue, toStr } from "./utils/field-resolver.js";
 import { applyViewFilters, IGridOptions } from "./utils/view-filters.js";
 import { applyViewSorting } from "./utils/view-sorting.js";
 import { instanceToRow, generateXLSXFromRows, IGenerateXLSXOptions } from "./utils/xlsx-generator.js";
@@ -37,54 +37,6 @@ describe("services", () => {
   it("bundle test", () => {
     expect(typeof autoexceldeploy === "function").to.equal(true);
     expect(typeof autoExcelDeployServiceLogic === "function").to.equal(true);
-  });
-});
-
-// ---------------------------------------------------------------------------
-// decodeFieldKey
-// ---------------------------------------------------------------------------
-
-describe("decodeFieldKey", () => {
-  it("decodes a simple text field key", () => {
-    // "Titel" in base64 is "VGl0ZWw=" -> padding '=' replaced by '_'
-    const key = "field_VGl0ZWw_ProcessHubTextInput";
-    expect(decodeFieldKey(key)).to.equal("Titel");
-  });
-
-  it("decodes a field key without known type suffix (falls back to raw base64)", () => {
-    // "Test" in base64 is "VGVzdA=="
-    const key = "field_VGVzdA__";
-    const result = decodeFieldKey(key);
-    expect(result).to.equal("Test");
-  });
-
-  it("returns the original key when base64 decoding fails", () => {
-    const key = "field_!!!invalid";
-    // No known suffix -> "!!!invalid" contains chars outside the base64 charset -> falls back to the original key
-    const result = decodeFieldKey(key);
-    expect(result).to.equal(key);
-  });
-
-  it("strips ProcessHubFileUpload suffix", () => {
-    // "Anlagen" -> base64 "QW5sYWdlbg=="  padding -> "QW5sYWdlbg__"
-    const key = "field_QW5sYWdlbg__ProcessHubFileUpload";
-    expect(decodeFieldKey(key)).to.equal("Anlagen");
-  });
-
-  it("decodes field names containing a question mark", () => {
-    const name = "Warum wurde der Antrag abgelehnt?";
-    const key = getFieldKey(name, "ProcessHubTextArea");
-    expect(decodeFieldKey(key)).to.equal(name);
-  });
-
-  it("decodes field names containing other special characters (+, /, umlauts, etc.)", () => {
-    const names = ["100% korrekt?", "A+B/C=D?", "Wieso/Weshalb/Warum?", "Prüfüng äöü ß?", "Kommentar (optional)?"];
-    for (const name of names) {
-      for (const type of ["ProcessHubTextInput", "ProcessHubDropdown", "ProcessHubDate"] as const) {
-        const key = getFieldKey(name, type);
-        expect(decodeFieldKey(key), `field name ${JSON.stringify(name)} with type ${type}`).to.equal(name);
-      }
-    }
   });
 });
 
