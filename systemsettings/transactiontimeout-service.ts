@@ -1,6 +1,6 @@
-import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror.js";
-import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { BpmnError, ErrorCode } from "@roxtra/processhub-sdk/lib/instance/bpmnerror.js";
+import { BpmnProcess } from "@roxtra/processhub-sdk/lib/process/bpmn/bpmnprocess.js";
+import { IServiceTaskEnvironment } from "@roxtra/processhub-sdk/lib/servicetask/servicetaskenvironment.js";
 
 export async function transactionTimeout(environment: IServiceTaskEnvironment): Promise<boolean> {
   const processObject: BpmnProcess = new BpmnProcess();

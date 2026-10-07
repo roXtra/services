@@ -1,19 +1,19 @@
-import { FieldTypeOptions, FieldType, FieldValueType } from "processhub-sdk/lib/data/ifieldvalue.js";
-import { IRadioButtonGroupFieldValue } from "processhub-sdk/lib/data/fields/radiobutton.js";
-import { ITreeViewEntry, ITreeViewFieldValue } from "processhub-sdk/lib/data/fields/treeview.js";
-import { ITasksFieldValue } from "processhub-sdk/lib/data/fields/tasks.js";
-import { IDateRangeFieldValue } from "processhub-sdk/lib/data/fields/daterange.js";
-import { ISVGDropdownOption } from "processhub-sdk/lib/data/fields/svgdropdown.js";
-import { IProcessLinkValue } from "processhub-sdk/lib/data/fields/processlink.js";
-import { IRoxFileFieldValue } from "processhub-sdk/lib/data/fields/roxfilefield.js";
-import { IRoxFileLinkValue } from "processhub-sdk/lib/data/fields/roxfilelink.js";
-import { IInstanceDetails, State } from "processhub-sdk/lib/instance/instanceinterfaces.js";
-import { tl } from "processhub-sdk/lib/tl.js";
-import { IDataTableFieldValue } from "processhub-sdk/lib/data/fields/datatable.js";
+import { FieldTypeOptions, FieldType, FieldValueType } from "@roxtra/processhub-sdk/lib/data/ifieldvalue.js";
+import { IRadioButtonGroupFieldValue } from "@roxtra/processhub-sdk/lib/data/fields/radiobutton.js";
+import { ITreeViewEntry, ITreeViewFieldValue } from "@roxtra/processhub-sdk/lib/data/fields/treeview.js";
+import { ITasksFieldValue } from "@roxtra/processhub-sdk/lib/data/fields/tasks.js";
+import { IDateRangeFieldValue } from "@roxtra/processhub-sdk/lib/data/fields/daterange.js";
+import { ISVGDropdownOption } from "@roxtra/processhub-sdk/lib/data/fields/svgdropdown.js";
+import { IProcessLinkValue } from "@roxtra/processhub-sdk/lib/data/fields/processlink.js";
+import { IRoxFileFieldValue } from "@roxtra/processhub-sdk/lib/data/fields/roxfilefield.js";
+import { IRoxFileLinkValue } from "@roxtra/processhub-sdk/lib/data/fields/roxfilelink.js";
+import { IInstanceDetails, State } from "@roxtra/processhub-sdk/lib/instance/instanceinterfaces.js";
+import { tl } from "@roxtra/processhub-sdk/lib/tl.js";
+import { IDataTableFieldValue } from "@roxtra/processhub-sdk/lib/data/fields/datatable.js";
 import { IGenerateXLSXOptions } from "./xlsx-generator.js";
 import { DefaultColumns, DIMENSIONTEXT_KEY_PREFIX, DIMENSIONVALUE_KEY_PREFIX, FIELD_KEY_PREFIX, LANE_KEY_PREFIX } from "./field-keys.js";
-import { ISpreadSheetFieldValue } from "processhub-sdk/lib/data/fields/spreadsheet.js";
-import { getBackendUrl } from "processhub-sdk/lib/config.js";
+import { ISpreadSheetFieldValue } from "@roxtra/processhub-sdk/lib/data/fields/spreadsheet.js";
+import { getBackendUrl } from "@roxtra/processhub-sdk/lib/config.js";
 
 export interface IHyperlinkCell {
   xlsxUrl: string;

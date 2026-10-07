@@ -1,8 +1,8 @@
-import { IFieldContentMap } from "processhub-sdk/lib/data/ifieldcontentmap.js";
-import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
-import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
-import { createId } from "processhub-sdk/lib/tools/guid.js";
+import { IFieldContentMap } from "@roxtra/processhub-sdk/lib/data/ifieldcontentmap.js";
+import { IInstanceDetails } from "@roxtra/processhub-sdk/lib/instance/instanceinterfaces.js";
+import { BpmnProcess } from "@roxtra/processhub-sdk/lib/process/bpmn/bpmnprocess.js";
+import { IServiceTaskEnvironment } from "@roxtra/processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { createId } from "@roxtra/processhub-sdk/lib/tools/guid.js";
 
 async function getServiceTaskConfig(environment: IServiceTaskEnvironment): Promise<{ workspaceAndProcessId: string; fields: string[]; executingUserId: string }> {
   const processObject: BpmnProcess = new BpmnProcess();

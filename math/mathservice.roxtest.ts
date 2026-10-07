@@ -14,9 +14,9 @@ import {
   divisionServiceLogic,
 } from "./main.js";
 import * as fs from "fs";
-import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue.js";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
-import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools.js";
+import { IFieldValue } from "@roxtra/processhub-sdk/lib/data/ifieldvalue.js";
+import { IServiceTaskEnvironment } from "@roxtra/processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { createEmptyTestServiceEnvironment } from "@roxtra/processhub-sdk/lib/test/testtools.js";
 
 const operators = {
   ADDITION: 0,

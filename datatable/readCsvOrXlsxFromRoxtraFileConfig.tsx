@@ -1,4 +1,4 @@
-import { tl, Language } from "processhub-sdk/lib/tl.js";
+import { tl, Language } from "@roxtra/processhub-sdk/lib/tl.js";
 import { DataTableErrorCode } from "./common.js";
 
 const ErrorHelp = ({ userLanguage }: { userLanguage: string }) => (

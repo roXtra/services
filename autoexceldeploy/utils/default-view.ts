@@ -1,9 +1,9 @@
 import { DefaultColumns } from "./field-keys.js";
-import { tl } from "processhub-sdk/lib/tl.js";
-import { IArchiveViewDetails } from "processhub-sdk/lib/process/legacyapi.js";
+import { tl } from "@roxtra/processhub-sdk/lib/tl.js";
+import { IArchiveViewDetails } from "@roxtra/processhub-sdk/lib/process/legacyapi.js";
 import { encodeKey, getFieldKey, getLaneKey } from "./field-resolver.js";
-import { IntegratedModuleName } from "processhub-sdk/lib/modules/imodule.js";
-import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
+import { IntegratedModuleName } from "@roxtra/processhub-sdk/lib/modules/imodule.js";
+import { BpmnProcess } from "@roxtra/processhub-sdk/lib/process/bpmn/bpmnprocess.js";
 
 export async function getDefaultView(module: IntegratedModuleName, language: string, bpmnXml?: string): Promise<IArchiveViewDetails> {
   let viewDetails: IArchiveViewDetails;

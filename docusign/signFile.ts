@@ -1,13 +1,13 @@
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { IServiceTaskEnvironment } from "@roxtra/processhub-sdk/lib/servicetask/servicetaskenvironment.js";
 import DocusignApi, { IDocusignApi, ICreateEnvelopeRequest } from "./docusignApi.js";
 import { loadConfig, readConfigFile } from "./common.js";
 import fs from "fs/promises";
-import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror.js";
-import { decodeURLSafeBase64 } from "processhub-sdk/lib/tools/stringtools.js";
-import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
+import { BpmnError, ErrorCode } from "@roxtra/processhub-sdk/lib/instance/bpmnerror.js";
+import { decodeURLSafeBase64 } from "@roxtra/processhub-sdk/lib/tools/stringtools.js";
+import { BpmnProcess } from "@roxtra/processhub-sdk/lib/process/bpmn/bpmnprocess.js";
 import { Bpmn } from "modeler/bpmn/bpmn";
-import { getWebhookTriggerRoute } from "processhub-sdk/lib/webhhooks/webhhooks.js";
-import { IServiceTaskConfigObject } from "processhub-sdk/lib/process/processinterfaces.js";
+import { getWebhookTriggerRoute } from "@roxtra/processhub-sdk/lib/webhhooks/webhhooks.js";
+import { IServiceTaskConfigObject } from "@roxtra/processhub-sdk/lib/process/processinterfaces.js";
 
 function getPhysicalPath(attachmentUrl: string, environment: IServiceTaskEnvironment) {
   let relativePath = attachmentUrl.split("modules/files/")[1];

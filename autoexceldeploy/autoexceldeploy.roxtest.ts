@@ -4,7 +4,7 @@ import { formatDateOnly, getFieldKey, getLaneKey, getResolvedValue, toStr } from
 import { applyViewFilters, IGridOptions } from "./utils/view-filters.js";
 import { applyViewSorting } from "./utils/view-sorting.js";
 import { instanceToRow, generateXLSXFromRows, IGenerateXLSXOptions } from "./utils/xlsx-generator.js";
-import { IInstanceDetails, State } from "processhub-sdk/lib/instance/instanceinterfaces.js";
+import { IInstanceDetails, State } from "@roxtra/processhub-sdk/lib/instance/instanceinterfaces.js";
 import * as XLSX from "xlsx";
 import { DefaultColumns } from "./utils/field-keys.js";
 

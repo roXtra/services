@@ -1,8 +1,8 @@
-import { parseAndInsertStringWithFieldContent } from "processhub-sdk/lib/data/datatools.js";
-import { FieldType, FieldValueType } from "processhub-sdk/lib/data/ifieldvalue.js";
-import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror.js";
-import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { parseAndInsertStringWithFieldContent } from "@roxtra/processhub-sdk/lib/data/datatools.js";
+import { FieldType, FieldValueType } from "@roxtra/processhub-sdk/lib/data/ifieldvalue.js";
+import { BpmnError } from "@roxtra/processhub-sdk/lib/instance/bpmnerror.js";
+import { BpmnProcess } from "@roxtra/processhub-sdk/lib/process/bpmn/bpmnprocess.js";
+import { IServiceTaskEnvironment } from "@roxtra/processhub-sdk/lib/servicetask/servicetaskenvironment.js";
 import { getConnectionPool } from "./database.js";
 
 export enum ErrorCodes {

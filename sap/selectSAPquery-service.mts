@@ -1,6 +1,6 @@
-import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue.js";
-import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { IFieldValue } from "@roxtra/processhub-sdk/lib/data/ifieldvalue.js";
+import { BpmnProcess } from "@roxtra/processhub-sdk/lib/process/bpmn/bpmnprocess.js";
+import { IServiceTaskEnvironment } from "@roxtra/processhub-sdk/lib/servicetask/servicetaskenvironment.js";
 import Methods from "./sapServiceMethods.mjs";
 
 export async function selectSAPQuery(environment: IServiceTaskEnvironment): Promise<boolean> {

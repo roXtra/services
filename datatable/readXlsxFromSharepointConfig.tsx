@@ -1,5 +1,5 @@
-import { tl } from "processhub-sdk/lib/tl.js";
-import { Language } from "processhub-sdk/lib/tl.js";
+import { tl } from "@roxtra/processhub-sdk/lib/tl.js";
+import { Language } from "@roxtra/processhub-sdk/lib/tl.js";
 import { SharePointConfigFields, SharePointConfigFieldsHelp } from "../sharepoint/readfile-config.js";
 import { ErrorHelp, SheetFilterTargetHelp } from "./readXlsxConfig.js";
 

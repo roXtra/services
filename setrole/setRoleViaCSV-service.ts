@@ -1,11 +1,11 @@
-import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { BpmnProcess } from "@roxtra/processhub-sdk/lib/process/bpmn/bpmnprocess.js";
+import { IServiceTaskEnvironment } from "@roxtra/processhub-sdk/lib/servicetask/servicetaskenvironment.js";
 import { readFile, utils, set_fs } from "xlsx";
 import fs from "fs";
-import { isPotentialRoleOwner } from "processhub-sdk/lib/process/processrights.js";
-import { UserExtras } from "processhub-sdk/lib/user/userinterfaces.js";
-import { ProcessExtras } from "processhub-sdk/lib/process/processinterfaces.js";
-import { WorkspaceExtras } from "processhub-sdk/lib/workspace/workspaceinterfaces.js";
+import { isPotentialRoleOwner } from "@roxtra/processhub-sdk/lib/process/processrights.js";
+import { UserExtras } from "@roxtra/processhub-sdk/lib/user/userinterfaces.js";
+import { ProcessExtras } from "@roxtra/processhub-sdk/lib/process/processinterfaces.js";
+import { WorkspaceExtras } from "@roxtra/processhub-sdk/lib/workspace/workspaceinterfaces.js";
 
 export async function serviceLogic({ bpmnTaskId, bpmnXml, instanceDetails, users, workspaces, processes }: IServiceTaskEnvironment): Promise<void> {
   const roleOwners = throwErrorIfNotSet(instanceDetails.extras.roleOwners, "Role owners are undefined, cannot proceed with service!");

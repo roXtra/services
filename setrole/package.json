@@ -23,8 +23,8 @@
     "npm": ">=11 <13"
   },
   "dependencies": {
+    "@roxtra/processhub-sdk": "^9.145.0-2",
     "chai": "^6.3.0",
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.145.0/release.tgz",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz"

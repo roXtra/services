@@ -1,6 +1,6 @@
 import { getQueryHint } from "./executequery-config.js";
-import { tl } from "processhub-sdk/lib/tl.js";
-import { Language } from "processhub-sdk/lib/tl.js";
+import { tl } from "@roxtra/processhub-sdk/lib/tl.js";
+import { Language } from "@roxtra/processhub-sdk/lib/tl.js";
 
 export function executeQueryNoReturnConfig(userLanguage: Language): React.JSX.Element {
   return (

@@ -1,9 +1,9 @@
 import { initReportUploadField, createReportConfig, uploadReport } from "./main.js";
 import * as fs from "fs";
 import { assert, expect } from "chai";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
-import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue.js";
-import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools.js";
+import { IServiceTaskEnvironment } from "@roxtra/processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { IFieldValue } from "@roxtra/processhub-sdk/lib/data/ifieldvalue.js";
+import { createEmptyTestServiceEnvironment } from "@roxtra/processhub-sdk/lib/test/testtools.js";
 import Sinon from "sinon";
 
 describe("services", () => {

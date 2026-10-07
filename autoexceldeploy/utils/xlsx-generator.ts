@@ -1,13 +1,13 @@
-import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
-import { IBaseStateColumn } from "processhub-sdk/lib/process/legacyapi.js";
+import { IInstanceDetails } from "@roxtra/processhub-sdk/lib/instance/instanceinterfaces.js";
+import { IBaseStateColumn } from "@roxtra/processhub-sdk/lib/process/legacyapi.js";
 import { toStr, getResolvedValue, IHyperlinkCell, IRiskManagementRPZ, IRiskTrendCell } from "./field-resolver.js";
-import { getBackendUrl } from "processhub-sdk/lib/config.js";
+import { getBackendUrl } from "@roxtra/processhub-sdk/lib/config.js";
 import { Workbook } from "@progress/kendo-ooxml";
 import type { WorkbookSheetRow, WorkbookSheetRowCell } from "@progress/kendo-ooxml";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { IServiceTaskEnvironment } from "@roxtra/processhub-sdk/lib/servicetask/servicetaskenvironment.js";
 import { DefaultColumns } from "./field-keys.js";
-import IAuditsSettings from "processhub-sdk/lib/modules/audits/iauditssettings.js";
-import { IntegratedModuleName } from "processhub-sdk/lib/modules/imodule.js";
+import IAuditsSettings from "@roxtra/processhub-sdk/lib/modules/audits/iauditssettings.js";
+import { IntegratedModuleName } from "@roxtra/processhub-sdk/lib/modules/imodule.js";
 
 function isHyperlink(value: unknown): value is IHyperlinkCell {
   return typeof value === "object" && value !== null && "xlsxUrl" in value;

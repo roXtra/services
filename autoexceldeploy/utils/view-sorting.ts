@@ -1,4 +1,4 @@
-import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
+import { IInstanceDetails } from "@roxtra/processhub-sdk/lib/instance/instanceinterfaces.js";
 import { IGridOptions } from "./view-filters.js";
 import { getResolvedValue, toStr } from "./field-resolver.js";
 import { IGenerateXLSXOptions } from "./xlsx-generator.js";

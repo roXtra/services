@@ -1,6 +1,6 @@
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { IServiceTaskEnvironment } from "@roxtra/processhub-sdk/lib/servicetask/servicetaskenvironment.js";
 import { loadConfig, readConfigFile } from "./common.js";
-import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror.js";
+import { BpmnError, ErrorCode } from "@roxtra/processhub-sdk/lib/instance/bpmnerror.js";
 import DocusignApi, { IDocusignApi } from "./docusignApi.js";
 
 export async function serviceLogic(environment: IServiceTaskEnvironment, docusignApi: IDocusignApi) {

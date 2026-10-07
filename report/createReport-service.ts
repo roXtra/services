@@ -1,8 +1,8 @@
-import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
-import { BpmnError, ErrorCode as BpmnErrorCode } from "processhub-sdk/lib/instance/bpmnerror.js";
-import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
-import { IGenerateReportRequestType } from "processhub-sdk/lib/instance/legacyapi.js";
+import { IInstanceDetails } from "@roxtra/processhub-sdk/lib/instance/instanceinterfaces.js";
+import { BpmnError, ErrorCode as BpmnErrorCode } from "@roxtra/processhub-sdk/lib/instance/bpmnerror.js";
+import { BpmnProcess } from "@roxtra/processhub-sdk/lib/process/bpmn/bpmnprocess.js";
+import { IServiceTaskEnvironment } from "@roxtra/processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { IGenerateReportRequestType } from "@roxtra/processhub-sdk/lib/instance/legacyapi.js";
 
 enum ErrorCodes {
   ATTACHMENT_ERROR = "ATTACHMENT_ERROR",

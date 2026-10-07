@@ -1,20 +1,20 @@
-import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
-import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror.js";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
-import { ProcessExtras } from "processhub-sdk/lib/process/processinterfaces.js";
-import { InstanceExtras } from "processhub-sdk/lib/instance/instanceinterfaces.js";
-import { WorkspaceExtras } from "processhub-sdk/lib/workspace/workspaceinterfaces.js";
-import { DefaultRoles } from "processhub-sdk/lib/process/processrights.js";
-import { isPotentialRoleOwner } from "processhub-sdk/lib/process/processrights.js";
-import { UserExtras } from "processhub-sdk/lib/user/userinterfaces.js";
-import { tl } from "processhub-sdk/lib/tl.js";
-import { postJson } from "processhub-sdk/lib/legacyapi/apirequests.js";
-import { ProcessRequestRoutes, IGetArchiveViewsRequest, IGetArchiveViewsReply } from "processhub-sdk/lib/process/legacyapi.js";
+import { BpmnProcess } from "@roxtra/processhub-sdk/lib/process/bpmn/bpmnprocess.js";
+import { BpmnError } from "@roxtra/processhub-sdk/lib/instance/bpmnerror.js";
+import { IServiceTaskEnvironment } from "@roxtra/processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { ProcessExtras } from "@roxtra/processhub-sdk/lib/process/processinterfaces.js";
+import { InstanceExtras } from "@roxtra/processhub-sdk/lib/instance/instanceinterfaces.js";
+import { WorkspaceExtras } from "@roxtra/processhub-sdk/lib/workspace/workspaceinterfaces.js";
+import { DefaultRoles } from "@roxtra/processhub-sdk/lib/process/processrights.js";
+import { isPotentialRoleOwner } from "@roxtra/processhub-sdk/lib/process/processrights.js";
+import { UserExtras } from "@roxtra/processhub-sdk/lib/user/userinterfaces.js";
+import { tl } from "@roxtra/processhub-sdk/lib/tl.js";
+import { postJson } from "@roxtra/processhub-sdk/lib/legacyapi/apirequests.js";
+import { ProcessRequestRoutes, IGetArchiveViewsRequest, IGetArchiveViewsReply } from "@roxtra/processhub-sdk/lib/process/legacyapi.js";
 import { applyViewFilters, IGridOptions } from "./utils/view-filters.js";
 import { applyViewSorting } from "./utils/view-sorting.js";
 import { generateXLSX, IGenerateXLSXOptions } from "./utils/xlsx-generator.js";
 import { getDefaultView } from "./utils/default-view.js";
-import { IntegratedModuleName } from "processhub-sdk/lib/modules/imodule.js";
+import { IntegratedModuleName } from "@roxtra/processhub-sdk/lib/modules/imodule.js";
 import { LANE_KEY_PREFIX } from "./utils/field-keys.js";
 
 enum ErrorCodes {

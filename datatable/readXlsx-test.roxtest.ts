@@ -1,9 +1,9 @@
 import { readXlsx, readXlsxConfig, readXlsxFile } from "./main.js";
-import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools.js";
+import { createEmptyTestServiceEnvironment } from "@roxtra/processhub-sdk/lib/test/testtools.js";
 import { assert, expect } from "chai";
 import fs from "fs";
 import { DataTableErrorCode, readFileData } from "./common.js";
-import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror.js";
+import { BpmnError } from "@roxtra/processhub-sdk/lib/instance/bpmnerror.js";
 
 describe("services", () => {
   describe("datatable", () => {

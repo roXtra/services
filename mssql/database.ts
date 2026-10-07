@@ -1,8 +1,8 @@
 import * as sql from "mssql";
-import { IServiceActionConfigField } from "processhub-sdk/lib/data/datainterfaces.js";
-import { replaceObjectReferences } from "processhub-sdk/lib/data/datatools.js";
-import { IServiceConfigSchema, IServiceConfigSecret, readConfigFile } from "processhub-sdk/lib/servicetask/configfile.js";
-import { IServiceTaskLogger } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { IServiceActionConfigField } from "@roxtra/processhub-sdk/lib/data/datainterfaces.js";
+import { replaceObjectReferences } from "@roxtra/processhub-sdk/lib/data/datatools.js";
+import { IServiceConfigSchema, IServiceConfigSecret, readConfigFile } from "@roxtra/processhub-sdk/lib/servicetask/configfile.js";
+import { IServiceTaskLogger } from "@roxtra/processhub-sdk/lib/servicetask/servicetaskenvironment.js";
 
 export async function getConnectionPool(fields: IServiceActionConfigField[], logger: IServiceTaskLogger, configPath: string): Promise<sql.ConnectionPool> {
   const configFile = (await readConfigFile<IServiceConfigSecret>(configPath, logger, IServiceConfigSchema)) || { secret: {} };

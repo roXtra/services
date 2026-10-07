@@ -2,7 +2,7 @@ import dirTree from "directory-tree";
 import { execSync } from "child_process";
 
 // If renamed, adjust name in trigger_release_creation.yml
-const processHubSDKVersion = "v9.145.0";
+const processHubSDKVersion = "v9.145.0-2";
 
 const childProcessStdioOptions = [0, 1, 2];
 const childProcessTimeout = 300000;
@@ -58,8 +58,9 @@ function installDeps(directoryPath) {
     timeout: childProcessTimeout,
   };
 
-  // Install current processhub-sdk for child
-  execSync(`npm i --save https://github.com/roXtra/processhub-sdk/releases/download/${processHubSDKVersion}/release.tgz`, childProcessOptions);
+  // Install current processhub-sdk for child from the @roxtra GitHub Packages registry
+  const sdkVersion = processHubSDKVersion.replace(/^v/, "");
+  execSync(`npm i --save @roxtra/processhub-sdk@${sdkVersion}`, childProcessOptions);
   console.log("Installed current processhub SDK for " + directoryPath);
 
   // npm install

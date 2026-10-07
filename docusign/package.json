@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@pnp/nodejs": "^4.21.0",
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.145.0/release.tgz",
+    "@roxtra/processhub-sdk": "^9.145.0-2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

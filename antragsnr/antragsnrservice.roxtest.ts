@@ -1,11 +1,11 @@
 import * as fs from "fs";
 import { assert } from "chai";
 import { serviceLogic } from "./main.js";
-import { IProcessDetails } from "processhub-sdk/lib/process/processinterfaces.js";
-import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue.js";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
-import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools.js";
-import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
+import { IProcessDetails } from "@roxtra/processhub-sdk/lib/process/processinterfaces.js";
+import { IFieldValue } from "@roxtra/processhub-sdk/lib/data/ifieldvalue.js";
+import { IServiceTaskEnvironment } from "@roxtra/processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { createEmptyTestServiceEnvironment } from "@roxtra/processhub-sdk/lib/test/testtools.js";
+import { IInstanceDetails } from "@roxtra/processhub-sdk/lib/instance/instanceinterfaces.js";
 
 describe("services", () => {
   describe("servicetemplate", () => {
