@@ -1,5 +1,5 @@
 {
-  "name": "@eformservice/oracle",
+  "name": "@roxtra/eformservice-oracle",
   "type": "module",
   "version": "1.0.0",
   "description": "",
@@ -24,7 +24,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@roxtra/processhub-sdk": "^9.145.0-2",
+    "@roxtra/processhub-sdk": "^9.146.0-1",
     "chai": "^6.3.0",
     "oracledb": "^7.0.1",
     "react": "^18.3.1",
@@ -44,5 +44,12 @@
     "typescript": "^5.9.3",
     "webpack": "^5.111.1",
     "webpack-cli": "^7.2.3"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/roXtra/services.git"
   }
 }

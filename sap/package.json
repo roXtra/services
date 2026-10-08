@@ -1,9 +1,8 @@
 {
-  "name": "@eformservice/sap",
+  "name": "@roxtra/eformservice-sap",
   "type": "module",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "config": {
     "servicename": "sap"
   },
@@ -23,7 +22,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@roxtra/processhub-sdk": "^9.145.0-2",
+    "@roxtra/processhub-sdk": "^9.146.0-1",
     "@sap/hana-client": "2.30.27",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
@@ -40,5 +39,13 @@
     "mocha": "^12.0.3",
     "ts-loader": "^9.6.2",
     "typescript": "npm:@typescript/typescript6@^6.0.2"
-  }
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/roXtra/services.git"
+  },
+  "main": "index.js"
 }

@@ -12,6 +12,9 @@ jobs:
   build:
     name: Create Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -19,8 +22,12 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: ${{ env.NODE_VERSION }}
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@roxtra"
       - name: Install dependencies
         run: npm install
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Run Format Checker
         run: npm run check:format
         working-directory: ./
@@ -32,6 +39,8 @@ jobs:
       - name: Build, Test services and create Bundle
         run: |
           npm run buildbundle
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Release
         uses: softprops/action-gh-release@v3
         with:
@@ -41,3 +50,25 @@ jobs:
           prerelease: ${{ contains(github.ref, '-') }} # If tag contains -, it's a prerelease (e.g. /refs/tags/v8.30.0-0)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish eformservice packages to GitHub Packages
+        # Additional distribution channel; the release downloads above remain for external consumers.
+        # Their release URL identifies the repo version, while the tarball uses the service version.
+        # Registry consumers have no release URL, so each @roxtra package needs the repo version
+        # (e.g. 9.145.0-1), not the internal service version (e.g. 1.0.3).
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          for service in */; do
+            [ -f "$service/service.json" ] || continue
+            (
+              cd "$service"
+              SERVICE_VERSION=$(node -p "require('./package.json').version")
+              # npm publish reads the version from package.json. Change it only for publication;
+              # the EXIT trap restores the service version on success or failure.
+              # Build, ZIP creation and legacy tarball creation have already finished.
+              trap 'npm pkg set version="$SERVICE_VERSION"' EXIT
+              npm pkg set version="$VERSION"
+              npm publish --tag ${{ contains(github.ref, '-') && 'prerelease' || 'latest' }}
+            )
+          done
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

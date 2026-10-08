@@ -24,6 +24,10 @@ jobs:
   configure:
     name: Configure Release Branch
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: read
+      pull-requests: write
     env:
       isprereleasebuild: ${{ inputs.isfinalreleasebuild != true }}
       prassignee: ${{ inputs.prassignee || github.actor }}
@@ -37,12 +41,16 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: ${{ env.NODE_VERSION }}
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@roxtra"
       - name: Configure Git
         run: |
           git config user.name 'Development Bot'
           git config user.email 'devbot@roxtra.com'
       - name: Install dependencies
         run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Update SDK
         # Replace processHubSDKVersion in buildScript.js with new version
         # Build all services to update package-lock.json files
@@ -54,6 +62,8 @@ jobs:
           npm run buildonly
           git add -A
           git diff-index --quiet HEAD || git commit -m "Update SDK"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - id: version-upgrade
         name: Upgrade Version
         # Make next RC Final or, if sdkversion is a prerelease (contains a "-"), create a prerelease

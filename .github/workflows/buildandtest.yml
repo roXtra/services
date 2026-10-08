@@ -11,6 +11,9 @@ jobs:
   build:
     name: Build and Test
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
     steps:
       - name: Start MySQL Docker Container
         run:
@@ -21,14 +24,20 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: ${{ env.NODE_VERSION }}
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@roxtra"
       - name: Install dependencies
         run: npm install
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Run Format Checker
         run: npm run check:format
         working-directory: ./
         timeout-minutes: 10
       - name: Build and Test services
         run: npm run buildonly
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup MySQL
         run: docker exec -i ${{ env.MYSQL_CONTAINER_NAME }} sh -c 'exec mysql --default-auth=mysql_native_password -uroot -p"12345"' < setup.sql
         working-directory: ./mysql/test/testfiles

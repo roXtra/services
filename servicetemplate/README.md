@@ -22,6 +22,9 @@ Inside the package.json you have multiple places which *must* be modified
 3. version - use semantic versioning here (e.g. 1.0.0)
 4. description - add some text here which describes your service and its use cases it operates on
 
+Services published by this repository to GitHub Packages use `@roxtra/eformservice-{service-name}` and the repository release version.
+Release tarballs for external consumers keep `@eformservice/{service-name}` and the individual service version described above.
+
 #### service.json
 Inside the service.json you have multiple places which *must* be modified
 

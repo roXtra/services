@@ -1,5 +1,5 @@
 {
-  "name": "@eformservice/mysql",
+  "name": "@roxtra/eformservice-mysql",
   "type": "module",
   "version": "1.0.0",
   "description": "",
@@ -25,7 +25,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@roxtra/processhub-sdk": "^9.145.0-2",
+    "@roxtra/processhub-sdk": "^9.146.0-1",
     "chai": "^6.3.0",
     "mysql2": "^3.24.5",
     "react": "^18.3.1",
@@ -45,5 +45,12 @@
     "typescript": "npm:@typescript/typescript6@^6.0.2",
     "webpack": "^5.111.1",
     "webpack-cli": "^7.2.3"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/roXtra/services.git"
   }
 }
