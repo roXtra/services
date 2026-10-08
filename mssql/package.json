@@ -24,7 +24,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "chai": "^6.2.2",
+    "chai": "^6.3.0",
     "joi": "^18.2.9",
     "mssql": "12.7.2",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.145.0/release.tgz",
