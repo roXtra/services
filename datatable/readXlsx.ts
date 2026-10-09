@@ -1,7 +1,7 @@
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
-import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror.js";
-import { tl } from "processhub-sdk/lib/tl.js";
-import { IDataTableFieldValue } from "processhub-sdk/lib/data/fields/datatable.js";
+import { IServiceTaskEnvironment } from "@roxtra/processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { BpmnError, ErrorCode } from "@roxtra/processhub-sdk/lib/instance/bpmnerror.js";
+import { tl } from "@roxtra/processhub-sdk/lib/tl.js";
+import { IDataTableFieldValue } from "@roxtra/processhub-sdk/lib/data/fields/datatable.js";
 import { checkResultField, loadConfig, readFileData } from "./common.js";
 
 /**

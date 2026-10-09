@@ -1,7 +1,7 @@
-import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
-import { tl } from "processhub-sdk/lib/tl.js";
-import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror.js";
+import { BpmnProcess } from "@roxtra/processhub-sdk/lib/process/bpmn/bpmnprocess.js";
+import { IServiceTaskEnvironment } from "@roxtra/processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { tl } from "@roxtra/processhub-sdk/lib/tl.js";
+import { BpmnError, ErrorCode } from "@roxtra/processhub-sdk/lib/instance/bpmnerror.js";
 import fs from "fs/promises";
 
 export const stringifyErr = (e: unknown) => JSON.stringify(e, Object.getOwnPropertyNames(e));

@@ -1,8 +1,8 @@
 import { readXlsxFromAttachment, readXlsxFromAttachmentConfig } from "./main.js";
-import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools.js";
+import { createEmptyTestServiceEnvironment } from "@roxtra/processhub-sdk/lib/test/testtools.js";
 import { expect } from "chai";
 import fs from "fs";
-import { IDataTableFieldValue } from "processhub-sdk/lib/data/fields/datatable.js";
+import { IDataTableFieldValue } from "@roxtra/processhub-sdk/lib/data/fields/datatable.js";
 
 describe("services", () => {
   describe("datatable", () => {

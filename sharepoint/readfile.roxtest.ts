@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { readFileConfig, readFile } from "./main.js";
-import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools.js";
+import { createEmptyTestServiceEnvironment } from "@roxtra/processhub-sdk/lib/test/testtools.js";
 import fs from "fs";
 import sinon from "sinon";
 import { ISharePointConfig, sharePoint } from "./sharepoint.js";

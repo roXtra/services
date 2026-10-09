@@ -1,10 +1,10 @@
 import oracledb from "oracledb";
-import { IServiceActionConfigField } from "processhub-sdk/lib/data/datainterfaces.js";
-import { parseAndInsertStringWithFieldContent, replaceObjectReferences } from "processhub-sdk/lib/data/datatools.js";
-import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror.js";
-import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
-import { IServiceConfigSchema, IServiceConfigSecret, readConfigFile } from "processhub-sdk/lib/servicetask/configfile.js";
+import { IServiceActionConfigField } from "@roxtra/processhub-sdk/lib/data/datainterfaces.js";
+import { parseAndInsertStringWithFieldContent, replaceObjectReferences } from "@roxtra/processhub-sdk/lib/data/datatools.js";
+import { BpmnError } from "@roxtra/processhub-sdk/lib/instance/bpmnerror.js";
+import { BpmnProcess } from "@roxtra/processhub-sdk/lib/process/bpmn/bpmnprocess.js";
+import { IServiceTaskEnvironment } from "@roxtra/processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { IServiceConfigSchema, IServiceConfigSecret, readConfigFile } from "@roxtra/processhub-sdk/lib/servicetask/configfile.js";
 import { ErrorCodes } from "./executequery-service.js";
 
 export async function executeQueryNoReturn(environment: IServiceTaskEnvironment, configPath: string): Promise<boolean> {

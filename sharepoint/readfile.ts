@@ -1,10 +1,10 @@
-import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
-import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror.js";
-import { tl } from "processhub-sdk/lib/tl.js";
+import { BpmnProcess } from "@roxtra/processhub-sdk/lib/process/bpmn/bpmnprocess.js";
+import { IServiceTaskEnvironment } from "@roxtra/processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { BpmnError, ErrorCode } from "@roxtra/processhub-sdk/lib/instance/bpmnerror.js";
+import { tl } from "@roxtra/processhub-sdk/lib/tl.js";
 import fs from "fs/promises";
 import { sharePoint } from "./sharepoint.js";
-import { IServiceActionConfigField } from "processhub-sdk/lib/data/datainterfaces.js";
+import { IServiceActionConfigField } from "@roxtra/processhub-sdk/lib/data/datainterfaces.js";
 
 export enum ErrorCodes {
   SHAREPOINT_ERROR = "SHAREPOINT_ERROR",

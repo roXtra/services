@@ -1,5 +1,5 @@
-import { tl } from "processhub-sdk/lib/tl.js";
-import { Language } from "processhub-sdk/lib/tl.js";
+import { tl } from "@roxtra/processhub-sdk/lib/tl.js";
+import { Language } from "@roxtra/processhub-sdk/lib/tl.js";
 import { ErrorHelp, SheetFilterTargetHelp } from "./readXlsxConfig.js";
 
 export function readXlsxFromAttachmentConfig(userLanguage: Language): React.JSX.Element {

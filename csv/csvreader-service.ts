@@ -1,9 +1,9 @@
-import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
-import { tl } from "processhub-sdk/lib/tl.js";
+import { BpmnProcess } from "@roxtra/processhub-sdk/lib/process/bpmn/bpmnprocess.js";
+import { IServiceTaskEnvironment } from "@roxtra/processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { tl } from "@roxtra/processhub-sdk/lib/tl.js";
 import * as XLSX from "xlsx";
 import { CSVServiceMethods } from "./csvServiceMethods.js";
-import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror.js";
+import { BpmnError, ErrorCode } from "@roxtra/processhub-sdk/lib/instance/bpmnerror.js";
 import fs from "fs";
 
 enum ErrorCodes {

@@ -1,10 +1,10 @@
-import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
-import { parseAndInsertStringWithFieldContent, replaceObjectReferences } from "processhub-sdk/lib/data/datatools.js";
-import { BpmnError, ErrorCode } from "processhub-sdk/lib/instance/bpmnerror.js";
+import { BpmnProcess } from "@roxtra/processhub-sdk/lib/process/bpmn/bpmnprocess.js";
+import { IServiceTaskEnvironment } from "@roxtra/processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { parseAndInsertStringWithFieldContent, replaceObjectReferences } from "@roxtra/processhub-sdk/lib/data/datatools.js";
+import { BpmnError, ErrorCode } from "@roxtra/processhub-sdk/lib/instance/bpmnerror.js";
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-import { IServiceConfigSchema, IServiceConfigSecret, readConfigFile } from "processhub-sdk/lib/servicetask/configfile.js";
-import { FieldType } from "processhub-sdk/lib/data/ifieldvalue.js";
+import { IServiceConfigSchema, IServiceConfigSecret, readConfigFile } from "@roxtra/processhub-sdk/lib/servicetask/configfile.js";
+import { FieldType } from "@roxtra/processhub-sdk/lib/data/ifieldvalue.js";
 
 // Extract the serviceLogic that testing is possible
 export async function serviceLogic(environment: IServiceTaskEnvironment, configPath: string): Promise<boolean> {

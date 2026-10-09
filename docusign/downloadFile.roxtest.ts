@@ -2,7 +2,7 @@ import { downloadFile, downloadFileConfig } from "./main.js";
 import { expect } from "chai";
 import { serviceLogic } from "./downloadFile.js";
 import sinon from "sinon";
-import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools.js";
+import { createEmptyTestServiceEnvironment } from "@roxtra/processhub-sdk/lib/test/testtools.js";
 import fs from "fs/promises";
 import { IEnvelopeResponse } from "./docusignApi.js";
 

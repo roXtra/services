@@ -1,4 +1,4 @@
-import { BpmnError } from "processhub-sdk/lib/instance/bpmnerror.js";
+import { BpmnError } from "@roxtra/processhub-sdk/lib/instance/bpmnerror.js";
 import { IReadXlsxApi } from "./ireadXlsxApi.js";
 import { ErrorCodes, IRequestHeader } from "./readXlsxApiTypes.js";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";

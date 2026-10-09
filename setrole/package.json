@@ -1,10 +1,13 @@
 {
-  "name": "@eformservice/setrole",
+  "name": "@roxtra/eformservice-setrole",
   "type": "module",
   "version": "1.0.0",
   "license": "ISC",
   "description": "",
   "main": "index.js",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "config": {
     "servicename": "setrole"
   },
@@ -23,8 +26,8 @@
     "npm": ">=11 <13"
   },
   "dependencies": {
+    "@roxtra/processhub-sdk": "^9.146.0-1",
     "chai": "^6.3.0",
-    "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.145.0/release.tgz",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz"
@@ -44,5 +47,9 @@
     "typescript": "npm:@typescript/typescript6@^6.0.2",
     "webpack": "^5.111.1",
     "webpack-cli": "^7.2.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/roXtra/services.git"
   }
 }

@@ -1,8 +1,8 @@
 import { expect } from "chai";
 import { triggerwebhookPost, triggerwebhookPostConfig } from "../main.js";
 import * as fs from "fs";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
-import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools.js";
+import { IServiceTaskEnvironment } from "@roxtra/processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { createEmptyTestServiceEnvironment } from "@roxtra/processhub-sdk/lib/test/testtools.js";
 import nock from "nock";
 import { serviceLogic } from "../triggerwebhook-service.js";
 

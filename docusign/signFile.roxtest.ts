@@ -1,7 +1,7 @@
 import { signFile, signFileConfig } from "./main.js";
 import { expect } from "chai";
 import { serviceLogic } from "./signFile.js";
-import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools.js";
+import { createEmptyTestServiceEnvironment } from "@roxtra/processhub-sdk/lib/test/testtools.js";
 import fs from "fs/promises";
 import sinon from "sinon";
 import { ICreateEnvelopeRequest, IEnvelopeResponse } from "./docusignApi.js";

@@ -50,6 +50,13 @@ To run your new service you have to restart your roXtraEFormulare Windows Servic
 
 ## Develop your own Services
 
+### GitHub Packages
+
+Each service is available as `@roxtra/eformservice-<name>` with the repository release version, for example `@roxtra/eformservice-ics@9.145.0-1`.
+Configure `@roxtra:registry=https://npm.pkg.github.com`, authenticate with package read access, and install the exact version you need.
+
+Release downloads remain available as `services.zip` and `eformservice-<name>-<service-version>.tgz` within the corresponding GitHub release.
+
 ### Note
 
 If you implement a service yourself, you must also ensure that the service is kept up to date. Before a roXtra system update of the productive system, you should install the

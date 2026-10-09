@@ -3,9 +3,9 @@ import { expect } from "chai";
 import { IRoXtraFileApi } from "../iroxtrafileapi.js";
 import { ICreateFileRequestBody } from "../roxtrafileapitypes.js";
 import { serviceLogicCreateroxfile, createRoxFile, createRoxFileConfig } from "../main.js";
-import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue.js";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
-import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools.js";
+import { IFieldValue } from "@roxtra/processhub-sdk/lib/data/ifieldvalue.js";
+import { IServiceTaskEnvironment } from "@roxtra/processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { createEmptyTestServiceEnvironment } from "@roxtra/processhub-sdk/lib/test/testtools.js";
 
 describe("services", () => {
   describe("roxfile", () => {

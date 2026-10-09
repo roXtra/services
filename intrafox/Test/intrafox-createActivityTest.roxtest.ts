@@ -2,11 +2,11 @@ import { assert, expect } from "chai";
 import * as fs from "fs";
 import { createActivityServiceLogic } from "../main.js";
 import { NockServer } from "./nockServer.js";
-import { BpmnError, isBpmnError } from "processhub-sdk/lib/instance/bpmnerror.js";
+import { BpmnError, isBpmnError } from "@roxtra/processhub-sdk/lib/instance/bpmnerror.js";
 import { ErrorCodes } from "../IntrafoxTypes.js";
-import { createEmptyTestServiceEnvironment } from "processhub-sdk/lib/test/testtools.js";
-import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue.js";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { createEmptyTestServiceEnvironment } from "@roxtra/processhub-sdk/lib/test/testtools.js";
+import { IFieldValue } from "@roxtra/processhub-sdk/lib/data/ifieldvalue.js";
+import { IServiceTaskEnvironment } from "@roxtra/processhub-sdk/lib/servicetask/servicetaskenvironment.js";
 
 describe("services", () => {
   describe("intrafox", () => {

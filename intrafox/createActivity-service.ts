@@ -1,7 +1,7 @@
-import { IFieldValue } from "processhub-sdk/lib/data/ifieldvalue.js";
-import { IInstanceDetails } from "processhub-sdk/lib/instance/instanceinterfaces.js";
-import { BpmnProcess } from "processhub-sdk/lib/process/bpmn/bpmnprocess.js";
-import { IServiceTaskEnvironment } from "processhub-sdk/lib/servicetask/servicetaskenvironment.js";
+import { IFieldValue } from "@roxtra/processhub-sdk/lib/data/ifieldvalue.js";
+import { IInstanceDetails } from "@roxtra/processhub-sdk/lib/instance/instanceinterfaces.js";
+import { BpmnProcess } from "@roxtra/processhub-sdk/lib/process/bpmn/bpmnprocess.js";
+import { IServiceTaskEnvironment } from "@roxtra/processhub-sdk/lib/servicetask/servicetaskenvironment.js";
 import * as IntrafoxAPI from "./IntrafoxAPI.js";
 import * as IntrafoxTypes from "./IntrafoxTypes.js";
 
