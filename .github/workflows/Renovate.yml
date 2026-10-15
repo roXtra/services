@@ -13,4 +13,4 @@ jobs:
         with:
           configurationFile: renovate.config.js
           token: ${{ secrets.RENOVATE_TOKEN }}
-          renovate-version: '44.164.2'
+          renovate-version: '44.164.4'
