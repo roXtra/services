@@ -27,7 +27,7 @@
     "@roxtra/processhub-sdk": "^9.146.0-1",
     "chai": "^6.3.0",
     "joi": "^18.2.9",
-    "mssql": "12.7.2",
+    "mssql": "12.7.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
