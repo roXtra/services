@@ -8,6 +8,13 @@ module.exports = {
   onboarding: true,
   onboardingBranch: `${branchName}/configure`,
   platform: "github",
+  hostRules: [
+    {
+      matchHost: "https://npm.pkg.github.com/",
+      hostType: "npm",
+      token: process.env.GITHUB_COM_TOKEN,
+    },
+  ],
   regexManagers: [],
   repositories: ["roXtra/services"],
   rebaseWhen: "behind-base-branch",
