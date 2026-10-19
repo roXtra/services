@@ -5,6 +5,9 @@ jobs:
   renovate:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      contents: read
+      packages: read
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -14,3 +17,5 @@ jobs:
           configurationFile: renovate.config.js
           token: ${{ secrets.RENOVATE_TOKEN }}
           renovate-version: '44.164.5'
+        env:
+          GITHUB_COM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
