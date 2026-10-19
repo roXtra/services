@@ -1,15 +1,68 @@
 {
-  "extends": ["config:base", ":timezone(Europe/Amsterdam)"],
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", ":timezone(Europe/Amsterdam)"],
   "ignorePresets": [":prHourlyLimit2"],
   "lockFileMaintenance": {
     "enabled": true,
     "schedule": ["after 3pm and before 7pm on Thursday"]
   },
   "major": {
-    "stabilityDays": 3
+    "minimumReleaseAge": "3 days"
   },
   "rangeStrategy": "bump",
   "prCreation": "not-pending",
   "assignees": ["@AlexKay34", "@VFritsch", "@m-reischl"],
-  "assigneesSampleSize": 1
+  "assigneesSampleSize": 1,
+  "enabledManagers": ["github-actions", "npm"],
+  "rebaseWhen": "behind-base-branch",
+  "prConcurrentLimit": 6,
+  "prHourlyLimit": 6,
+  "npmrcMerge": true,
+  "packageRules": [
+    // Reduce stability days for renovate bot updates for itself as they update regularly and otherwise, it would never update itself
+    {
+      "matchPackageNames": ["renovatebot/github-action"],
+      "minimumReleaseAge": "0 days"
+    },
+    // Prevents immediate PR creation with pending status. This causes the PR to only be created after the cooldown time.
+    {
+      "matchDatasources": ["npm"],
+      "minimumReleaseAge": "5 days",
+      "internalChecksFilter": "strict"
+    },
+    // Reduce stability days for internal packages
+    {
+      "groupName": "roXtra Packages",
+      "minimumReleaseAge": null,
+      "matchPackageNames": [
+        "/^@roxtra//",
+        "/^@eformservice//",
+        "/processhub-sdk/"
+      ]
+    },
+    {
+      "matchPackageNames": ["node", "@types/node"],
+      "allowedVersions": "^24.0.0"
+    },
+    {
+      "matchPackageNames": ["npm"],
+      "allowedVersions": ">=11 <13"
+    },
+    {
+      "description": "Don't bump engines field in package.json",
+      "matchPackageNames": ["node", "npm"],
+      "matchManagers": ["npm"],
+      "matchDepTypes": ["engines"],
+      "rangeStrategy": "auto"
+    },
+    {
+      "matchPackageNames": ["react", "react-dom", "@types/react"],
+      "allowedVersions": "^18.0.0"
+    },
+    // Lock eslint to 9.39.2 because of https://rossmanith.atlassian.net/browse/RM-850
+    {
+      "matchPackageNames": ["eslint"],
+      "allowedVersions": "9.39.2"
+    }
+  ]
 }
