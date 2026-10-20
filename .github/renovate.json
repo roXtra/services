@@ -1,15 +1,27 @@
 {
-  "extends": ["config:base", ":timezone(Europe/Amsterdam)"],
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  // Load the former bot rules before the recommended preset to preserve their priority.
+  "extends": [
+    "local>roXtra/services//.github/renovate-package-rules",
+    "config:recommended",
+    ":timezone(Europe/Amsterdam)"
+  ],
   "ignorePresets": [":prHourlyLimit2"],
   "lockFileMaintenance": {
     "enabled": true,
     "schedule": ["after 3pm and before 7pm on Thursday"]
   },
   "major": {
-    "stabilityDays": 3
+    "minimumReleaseAge": "3 days"
   },
   "rangeStrategy": "bump",
   "prCreation": "not-pending",
   "assignees": ["@AlexKay34", "@VFritsch", "@m-reischl"],
-  "assigneesSampleSize": 1
+  "assigneesSampleSize": 1,
+  "enabledManagers": ["github-actions", "npm"],
+  "rebaseWhen": "behind-base-branch",
+  "prConcurrentLimit": 6,
+  "prHourlyLimit": 6,
+  "npmrcMerge": true,
+  "schedule": ["at any time"]
 }
