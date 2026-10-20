@@ -1,9 +1,9 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  // Load the former bot rules before the recommended preset to preserve their priority.
+  // Load central defaults before repository-specific rules so local overrides take precedence.
   "extends": [
+    "local>roXtra/Internal.RenovateConfig",
     "local>roXtra/services//.github/renovate-package-rules",
-    "config:recommended",
     ":timezone(Europe/Amsterdam)"
   ],
   "ignorePresets": [":prHourlyLimit2"],
@@ -22,6 +22,5 @@
   "rebaseWhen": "behind-base-branch",
   "prConcurrentLimit": 6,
   "prHourlyLimit": 6,
-  "npmrcMerge": true,
-  "schedule": ["at any time"]
+  "npmrcMerge": true
 }
