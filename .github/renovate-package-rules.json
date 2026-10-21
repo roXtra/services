@@ -12,9 +12,10 @@
       "minimumReleaseAge": "5 days",
       "internalChecksFilter": "strict"
     },
-    // Reduce stability days for internal packages
+    // Keep internal packages eligible throughout the working week with reduced stability days.
     {
       "groupName": "roXtra Packages",
+      "schedule": ["after 6am and before 6pm every weekday"],
       "minimumReleaseAge": null,
       "matchPackageNames": [
         "/^@roxtra//",
