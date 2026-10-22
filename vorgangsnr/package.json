@@ -26,7 +26,7 @@
   "dependencies": {
     "@roxtra/processhub-sdk": "^9.146.0-1",
     "chai": "^6.3.0",
-    "jsep": "^1.4.0",
+    "jsep": "^1.6.0",
     "processhub-sdk": "https://github.com/roXtra/processhub-sdk/releases/download/v9.144.0/release.tgz",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
