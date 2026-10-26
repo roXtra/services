@@ -33,7 +33,7 @@
     "@types/chai": "^5.2.3",
     "@types/node": "^24.19.2",
     "@types/react": "^19.1.8",
-    "@types/sinon": "^22.0.0",
+    "@types/sinon": "^22.0.1",
     "@typescript/native": "npm:typescript@^7.0.2",
     "bestzip": "^4.0.3",
     "chai": "^6.3.0",
