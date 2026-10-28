@@ -3,7 +3,7 @@ import { execSync } from "child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 
 // If renamed, adjust name in trigger_release_creation.yml
-const processHubSDKVersion = "v9.146.0-1";
+const processHubSDKVersion = "v9.146.0";
 
 const childProcessStdioOptions = [0, 1, 2];
 const childProcessTimeout = 300000;
