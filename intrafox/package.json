@@ -27,7 +27,7 @@
     "@roxtra/processhub-sdk": "^9.146.0",
     "axios": "^1.20.0",
     "chai": "^6.3.0",
-    "dateformat": "^5.0.4",
+    "dateformat": "^5.0.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
