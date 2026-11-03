@@ -143,7 +143,7 @@ export function signFileConfig(userLanguage: Language): React.JSX.Element {
                 <h3>{tl("Telefonnummer für SMS-OTP", userLanguage)}</h3>
                 <p>
                   {tl(
-                    "Telefonnummer des Unterzeichners mit Ländervorwahl (z.B. +49123456789). Wird für EU Advanced Signature per SMS-Einmalpasswort benötigt. Entweder Telefonnummer oder Zugangscode angeben, nicht beides.",
+                    'Für EU Advanced per SMS eine feste Telefonnummer mit Ländervorwahl (z. B. +49123456789) oder ein Vorgangsfeld (z. B. field["Telefonnummer"] oder {field["Telefonnummer"]}) angeben. Das Vorgangsfeld muss beim Ausführen des Tasks eine internationale Telefonnummer mit führendem + und ohne Trennzeichen enthalten (z. B. +49123456789). Alternativ kann ein Zugangscode verwendet werden.',
                     userLanguage,
                   )}
                 </p>
