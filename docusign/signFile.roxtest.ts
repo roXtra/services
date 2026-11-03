@@ -1,5 +1,8 @@
 import { signFile, signFileConfig } from "./main.js";
 import { expect } from "chai";
+import { rejects } from "node:assert/strict";
+import { ErrorCode } from "@roxtra/processhub-sdk/lib/instance/bpmnerror.js";
+import { IServiceTaskConfigObject } from "@roxtra/processhub-sdk/lib/process/processinterfaces.js";
 import { serviceLogic } from "./signFile.js";
 import { createEmptyTestServiceEnvironment } from "@roxtra/processhub-sdk/lib/test/testtools.js";
 import fs from "fs/promises";
@@ -20,6 +23,36 @@ async function createEnv(filePath: string) {
     value: ["https://localhost/roxtra/modules/files/1/4DCCE1EB39A16601/attachments-8EB4C9CA2F44C492/A43E75808EFFE301/ZG9rdW1lbnQucGRm"],
   };
   return env;
+}
+
+async function createAdvancedSigningTest(signerPhoneNumber: string, accessCode = "") {
+  const env = await createEnv("./testfiles/docusign-service.bpmn");
+  sinon.stub(env.fileStore, "getPhysicalPath").returns("./testfiles/data.txt");
+  env.sender.mail = "test@example.com";
+  env.bpmnXml = env.bpmnXml.replace(
+    /(<processhub:inputParameter name="service-task-config-object">)([^<]+)(<\/processhub:inputParameter>)/,
+    (match: string, start: string, json: string, end: string) => {
+      const config = JSON.parse(json) as IServiceTaskConfigObject;
+      config.fields.push(
+        { key: "signatureProvider", type: "select", value: "UniversalSignaturePen_OpenTrust_Hash_TSP" },
+        { key: "signerPhoneNumber", type: "text", value: signerPhoneNumber },
+        { key: "accessCode", type: "text", value: accessCode },
+      );
+      return start + JSON.stringify(config).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;") + end;
+    },
+  );
+
+  const api = {
+    getAccessToken: sinon.stub().resolves("access_token"),
+    createEnvelope: sinon.stub().resolves(mockEnvelopeResponse),
+    getEnvelope: sinon.stub(),
+    getRecipientSigningUrl: sinon.stub().resolves("https://demo.docusign.net/signing/abc"),
+    downloadCompletedDocument: sinon.stub(),
+    deleteEnvelope: sinon.stub(),
+    purgeEnvelope: sinon.stub(),
+  };
+
+  return { env, api };
 }
 
 const mockConfigFile = {
@@ -87,6 +120,83 @@ describe("services", () => {
         value: "https://demo.docusign.net/signing/abc",
       });
     });
+
+    it("should read the SMS number from the current process instance", async () => {
+      for (const [reference, phoneNumber] of [
+        ['field["SMS Telefonnummer"]', "+49123456789"],
+        ['field["SMS Telefonnummer"]', "+49987654321"],
+        ["field['SMS Telefonnummer']", "+49123456789"],
+        ['{field["SMS Telefonnummer"]}', "+49123456789"],
+        ["{ field['SMS Telefonnummer'] }", "+49123456789"],
+        ["{field[SMS Telefonnummer]}", "+49123456789"],
+        ["{{ field.SMS Telefonnummer }}", "+49123456789"],
+      ]) {
+        const { env, api } = await createAdvancedSigningTest(reference);
+        env.instanceDetails.extras.fieldContents!["SMS Telefonnummer"] = { type: "ProcessHubTextInput", value: phoneNumber };
+
+        await serviceLogic(env, api, mockConfigFile);
+
+        sinon.assert.calledOnce(api.createEnvelope);
+        expect((api.createEnvelope.firstCall.args[1] as ICreateEnvelopeRequest).signerPhoneNumber).to.equal(phoneNumber);
+      }
+    });
+
+    it("should preserve literal field names that contain template syntax, quotes, or line breaks", async () => {
+      const fieldNames = ["Mobil {{field.alt}}", "Mobil field['alt']", ' Mobil "privat" & <Firma>\' [Ä] }\nzweite Zeile ', "__proto__"];
+      for (const fieldName of fieldNames) {
+        for (const reference of ['field["' + fieldName + '"]', '{field["' + fieldName + '"]}']) {
+          const { env, api } = await createAdvancedSigningTest(reference);
+          env.instanceDetails.extras.fieldContents = {
+            ...env.instanceDetails.extras.fieldContents,
+            [fieldName]: { type: "ProcessHubTextInput", value: "  +49123456789  " },
+          };
+
+          await serviceLogic(env, api, mockConfigFile);
+
+          sinon.assert.calledOnce(api.createEnvelope);
+          expect((api.createEnvelope.firstCall.args[1] as ICreateEnvelopeRequest).signerPhoneNumber).to.equal("+49123456789");
+        }
+      }
+    });
+
+    it("should still accept a fixed SMS number", async () => {
+      const { env, api } = await createAdvancedSigningTest("+49123456789");
+
+      await serviceLogic(env, api, mockConfigFile);
+
+      expect((api.createEnvelope.firstCall.args[1] as ICreateEnvelopeRequest).signerPhoneNumber).to.equal("+49123456789");
+    });
+
+    it("should still accept an access code with no configured SMS number", async () => {
+      const { env, api } = await createAdvancedSigningTest("", "123456");
+
+      await serviceLogic(env, api, mockConfigFile);
+
+      expect(api.createEnvelope.firstCall.args[1]).to.include({ signerPhoneNumber: undefined, accessCode: "123456" });
+    });
+
+    for (const { description, reference, fieldValue, reason } of [
+      { description: "malformed reference", reference: 'field["Telefonnummer"] + "123"', reason: /Expected a field reference/ },
+      { description: "missing field", reference: 'field["Telefonnummer"]', reason: /does not exist/ },
+      { description: "malformed braced reference", reference: '{field["Telefonnummer"]', reason: /Expected a field reference/ },
+      { description: "blank field", reference: '{field["Telefonnummer"]}', fieldValue: "  ", reason: /must contain non-empty text/ },
+      { description: "non-text field value", reference: 'field["Telefonnummer"]', fieldValue: ["+49123456789"], reason: /must contain non-empty text/ },
+      { description: "invalid phone number", reference: 'field["Telefonnummer"]', fieldValue: "abc", reason: /must contain an international phone number/ },
+    ]) {
+      it("should reject a " + description + " before creating an envelope", async () => {
+        const { env, api } = await createAdvancedSigningTest(reference);
+        if (fieldValue !== undefined) {
+          env.instanceDetails.extras.fieldContents!["Telefonnummer"] =
+            typeof fieldValue === "string" ? { type: "ProcessHubTextInput", value: fieldValue } : { type: "ProcessHubFileUpload", value: fieldValue };
+        }
+
+        await rejects(serviceLogic(env, api, mockConfigFile), {
+          errorCode: ErrorCode.ConfigInvalid,
+          message: new RegExp("^signerPhoneNumber: .*" + reason.source),
+        });
+        sinon.assert.notCalled(api.createEnvelope);
+      });
+    }
 
     it("should create an envelope with webhook URL and no signing URL", async () => {
       const env = await createEnv("./testfiles/docusign-service-webhook.bpmn");

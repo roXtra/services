@@ -2,6 +2,7 @@ import { IServiceTaskEnvironment } from "@roxtra/processhub-sdk/lib/servicetask/
 import DocusignApi, { IDocusignApi, ICreateEnvelopeRequest } from "./docusignApi.js";
 import { loadConfig, readConfigFile } from "./common.js";
 import fs from "fs/promises";
+import { parseAndInsertStringWithFieldContent } from "@roxtra/processhub-sdk/lib/data/datatools.js";
 import { BpmnError, ErrorCode } from "@roxtra/processhub-sdk/lib/instance/bpmnerror.js";
 import { decodeURLSafeBase64 } from "@roxtra/processhub-sdk/lib/tools/stringtools.js";
 import { BpmnProcess } from "@roxtra/processhub-sdk/lib/process/bpmn/bpmnprocess.js";
@@ -54,6 +55,56 @@ function getCallbackUrlBase(configFile: { callbackUrlBase: string }, environment
     return trimmed + "/modules";
   }
   return environment.serverConfig.Webserver.baseUrl;
+}
+
+function resolveSignerPhoneNumber(configuredNumber: string | undefined, environment: IServiceTaskEnvironment): string | undefined {
+  const reference = configuredNumber?.trim();
+  if (!reference) {
+    return undefined;
+  }
+  if (!/^(?:field\s*(?:\[|$)|\{\s*field\s*\[|\{\{\s*field\.)/.test(reference)) {
+    return configuredNumber;
+  }
+
+  const legacy = /^\{\{\s*field\.([\s\S]+?)\s*\}\}$/.exec(reference);
+  const braced = /^\{\s*(field\[[\s\S]*\])\s*\}$/.exec(reference);
+  const bracketed = /^field\[(?:"([\s\S]*)"|'([\s\S]*)')\]$/.exec(braced?.[1] ?? reference);
+  const unquoted = braced && /^field\[([^"'\]][\s\S]*)\]$/.exec(braced[1]);
+  const fieldName = legacy?.[1] ?? bracketed?.[1] ?? bracketed?.[2] ?? unquoted?.[1];
+  if (!fieldName) {
+    throw new BpmnError(ErrorCode.ConfigInvalid, 'signerPhoneNumber: Expected a field reference of the form field["Field name"].');
+  }
+
+  const fields = environment.instanceDetails.extras.fieldContents;
+  if (!fields || !Object.hasOwn(fields, fieldName)) {
+    throw new BpmnError(ErrorCode.ConfigInvalid, "signerPhoneNumber: The referenced process field does not exist.");
+  }
+
+  let value: unknown;
+  // Keep the exact field name out of the SDK template, where it could contain another reference.
+  parseAndInsertStringWithFieldContent(
+    "field['signerPhoneNumber']",
+    { signerPhoneNumber: fields[fieldName] },
+    {},
+    {},
+    environment.sender.language || "en-US",
+    { fields: [] },
+    false,
+    "",
+    (name, field) => {
+      // Keep the raw value and prevent the SDK from interpreting it as another template.
+      value = field.value;
+      return "";
+    },
+  );
+  if (typeof value !== "string" || !value.trim()) {
+    throw new BpmnError(ErrorCode.ConfigInvalid, "signerPhoneNumber: The referenced process field must contain non-empty text.");
+  }
+  const phoneNumber = value.trim();
+  if (!/^\+[1-9][0-9]{1,14}$/.test(phoneNumber)) {
+    throw new BpmnError(ErrorCode.ConfigInvalid, "signerPhoneNumber: The referenced process field must contain an international phone number such as +49123456789.");
+  }
+  return phoneNumber;
 }
 
 async function buildEnvelopeRequest(
@@ -110,7 +161,9 @@ async function buildEnvelopeRequest(
 
   /* Standards-Based Signature (SBS) for EU Advanced (AES) */
   const signatureProviderName = config.fields.find((f) => f.key === "signatureProvider")?.value || undefined;
-  const signerPhoneNumber = config.fields.find((f) => f.key === "signerPhoneNumber")?.value || undefined;
+  const configuredPhoneNumber = config.fields.find((f) => f.key === "signerPhoneNumber")?.value || undefined;
+  const signerPhoneNumber =
+    signatureProviderName === "UniversalSignaturePen_OpenTrust_Hash_TSP" ? resolveSignerPhoneNumber(configuredPhoneNumber, environment) : configuredPhoneNumber;
   const accessCode = config.fields.find((f) => f.key === "accessCode")?.value || undefined;
 
   /* Sanitize name: SBS provider rejects ^ : \ @ + in recipient name */
@@ -136,12 +189,13 @@ async function buildEnvelopeRequest(
 export async function serviceLogic(environment: IServiceTaskEnvironment, docusignApi: IDocusignApi, configFile: Awaited<ReturnType<typeof readConfigFile>>) {
   const { config, bpmnProcess } = await loadConfig(environment, environment.sender.language || "en-US");
 
+  const envelopeRequest = await buildEnvelopeRequest(config, environment, bpmnProcess, configFile);
+
   // Obtain access token from DocuSign API
   environment.logger.info(`Obtaining DocuSign access token...`);
   const token = await docusignApi.getAccessToken();
   environment.logger.info(`DocuSign access token obtained.`);
 
-  const envelopeRequest: ICreateEnvelopeRequest = await buildEnvelopeRequest(config, environment, bpmnProcess, configFile);
   environment.logger.info(`Creating DocuSign envelope for document (request): ${envelopeRequest.documentName}`);
   const envelopeResponse = await docusignApi.createEnvelope(token, envelopeRequest);
   environment.logger.info(`DocuSign envelope created (response): ${envelopeResponse.envelopeId}, status: ${envelopeResponse.status}`);
