@@ -107,7 +107,12 @@ class DocusignApi implements IDocusignApi {
   }
 
   /**
-   * Obtain WorkflowId
+   * Retrieves the Phone Authentication workflow ID for the configured DocuSign account.
+   * When creating an envelope, set the signer's `identityVerification.workflowId` to this ID
+   * to require phone verification before the signer can view the document.
+   * @param token The DocuSign OAuth access token.
+   * @returns The ID of the account's Phone Authentication workflow.
+   * @see https://developers.docusign.com/docs/esign-rest-api/how-to/phone-auth
    */
   private async getPhoneAuthenticationWorkflowId(token: string): Promise<string> {
     const url = `${this.#baseUrl}/accounts/${this.#accountId}/identity_verification`;
