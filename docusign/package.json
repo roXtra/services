@@ -26,6 +26,7 @@
   "dependencies": {
     "@pnp/nodejs": "^4.22.0",
     "@roxtra/processhub-sdk": "^9.146.0",
+    "libphonenumber-js": "^1.13.16",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

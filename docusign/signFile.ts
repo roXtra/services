@@ -2,6 +2,7 @@ import { IServiceTaskEnvironment } from "@roxtra/processhub-sdk/lib/servicetask/
 import DocusignApi, { IDocusignApi, ICreateEnvelopeRequest } from "./docusignApi.js";
 import { loadConfig, readConfigFile } from "./common.js";
 import fs from "fs/promises";
+import { parsePhoneNumberFromString } from "libphonenumber-js/min";
 import { BpmnError, ErrorCode } from "@roxtra/processhub-sdk/lib/instance/bpmnerror.js";
 import { decodeURLSafeBase64 } from "@roxtra/processhub-sdk/lib/tools/stringtools.js";
 import { BpmnProcess } from "@roxtra/processhub-sdk/lib/process/bpmn/bpmnprocess.js";
@@ -99,7 +100,7 @@ function resolveSignerPhoneNumber(configuredNumber: string | undefined, environm
     throw new BpmnError(ErrorCode.ConfigInvalid, "signerPhoneNumber: The referenced process field must contain non-empty text.");
   }
   if (!internationalPhoneNumber.test(phoneNumber)) {
-    throw new BpmnError(ErrorCode.ConfigInvalid, "signerPhoneNumber: The referenced process field must contain an international phone number such as +49123456789.");
+    throw new BpmnError(ErrorCode.ConfigInvalid, "signerPhoneNumber: The referenced process field must contain an international phone number such as +4915112345678.");
   }
   return phoneNumber;
 }
@@ -180,16 +181,19 @@ async function buildEnvelopeRequest(
 
   let phoneAuthentication: ICreateEnvelopeRequest["phoneAuthentication"];
   if (phoneAuthenticationCountryCode) {
-    if (!/^\+?[1-9][0-9]{0,2}$/.test(phoneAuthenticationCountryCode)) {
-      throw new BpmnError(ErrorCode.ConfigInvalid, "Phone Authentication requires a country calling code such as +49.");
+    const automaticCountryCode = phoneAuthenticationCountryCode.toLowerCase() === "auto";
+    if (!automaticCountryCode && !/^\+?[1-9][0-9]{0,2}$/.test(phoneAuthenticationCountryCode)) {
+      throw new BpmnError(ErrorCode.ConfigInvalid, "Phone Authentication requires 'auto' or a country calling code such as +49.");
     }
-    const countryCode = phoneAuthenticationCountryCode.replace(/^\+/, "");
     const phoneNumber = signerPhoneNumber?.trim();
-    const prefix = `+${countryCode}`;
-    if (!phoneNumber || !internationalPhoneNumber.test(phoneNumber) || !phoneNumber.startsWith(prefix) || phoneNumber.length === prefix.length) {
+    const parsedNumber = phoneNumber && internationalPhoneNumber.test(phoneNumber) ? parsePhoneNumberFromString(phoneNumber, { extract: false }) : undefined;
+    if (!parsedNumber || parsedNumber.number !== phoneNumber) {
+      throw new BpmnError(ErrorCode.ConfigInvalid, "Phone Authentication requires an international phone number in E.164 format such as +4915112345678.");
+    }
+    if (!automaticCountryCode && phoneAuthenticationCountryCode.replace(/^\+/, "") !== parsedNumber.countryCallingCode) {
       throw new BpmnError(ErrorCode.ConfigInvalid, "Phone Authentication requires an international phone number matching the configured country calling code.");
     }
-    phoneAuthentication = { countryCode, number: phoneNumber.slice(prefix.length) };
+    phoneAuthentication = { countryCode: parsedNumber.countryCallingCode, number: parsedNumber.nationalNumber };
   }
 
   /* Sanitize name: SBS provider rejects ^ : \ @ + in recipient name */

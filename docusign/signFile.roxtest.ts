@@ -258,14 +258,58 @@ describe("services", () => {
       });
     });
 
-    it("should reject Phone Authentication with a mismatched country calling code", async () => {
-      const { env, api } = await createSigningTest("+4915112345678", { signatureProvider: "", phoneAuthenticationCountryCode: "+43" });
+    it("should derive the Phone Authentication country calling code from the current process field", async () => {
+      for (const [phoneNumber, countryCode, number] of [
+        ["+12025550123", "1", "2025550123"],
+        ["+4915112345678", "49", "15112345678"],
+        ["+358401234567", "358", "401234567"],
+      ]) {
+        const { env, api } = await createSigningTest('field["Telefonnummer"]', { signatureProvider: "", phoneAuthenticationCountryCode: "auto" });
+        env.instanceDetails.extras.fieldContents!["Telefonnummer"] = { type: "ProcessHubTextInput", value: phoneNumber };
 
-      await rejects(serviceLogic(env, api, mockConfigFile), {
-        errorCode: ErrorCode.ConfigInvalid,
-        message: /Phone Authentication requires an international phone number/,
-      });
-      sinon.assert.notCalled(api.createEnvelope);
+        await serviceLogic(env, api, mockConfigFile);
+
+        sinon.assert.calledOnce(api.createEnvelope);
+        expect((api.createEnvelope.firstCall.args[1] as ICreateEnvelopeRequest).phoneAuthentication).to.deep.equal({ countryCode, number });
+      }
+    });
+
+    it("should reject unknown country codes and local numbers with automatic Phone Authentication", async () => {
+      for (const phoneNumber of ["+999123456789", "015112345678"]) {
+        const { env, api } = await createSigningTest(phoneNumber, { signatureProvider: "", phoneAuthenticationCountryCode: "auto" });
+
+        await rejects(serviceLogic(env, api, mockConfigFile), {
+          errorCode: ErrorCode.ConfigInvalid,
+          message: /Phone Authentication requires an international phone number in E\.164 format/,
+        });
+        sinon.assert.notCalled(api.createEnvelope);
+      }
+    });
+
+    it("should reject noncanonical international numbers in both Phone Authentication modes", async () => {
+      for (const phoneAuthenticationCountryCode of ["auto", "+49"]) {
+        const { env, api } = await createSigningTest("+49015112345678", { signatureProvider: "", phoneAuthenticationCountryCode });
+
+        await rejects(serviceLogic(env, api, mockConfigFile), {
+          errorCode: ErrorCode.ConfigInvalid,
+          message: /Phone Authentication requires an international phone number in E\.164 format/,
+        });
+        sinon.assert.notCalled(api.getAccessToken);
+        sinon.assert.notCalled(api.createEnvelope);
+      }
+    });
+
+    it("should reject Phone Authentication with a mismatched country calling code", async () => {
+      for (const phoneAuthenticationCountryCode of ["+43", "+4"]) {
+        const { env, api } = await createSigningTest("+4915112345678", { signatureProvider: "", phoneAuthenticationCountryCode });
+
+        await rejects(serviceLogic(env, api, mockConfigFile), {
+          errorCode: ErrorCode.ConfigInvalid,
+          message: /Phone Authentication requires an international phone number/,
+        });
+        sinon.assert.notCalled(api.getAccessToken);
+        sinon.assert.notCalled(api.createEnvelope);
+      }
     });
 
     it("should create an envelope with webhook URL and no signing URL", async () => {

@@ -73,16 +73,16 @@ export function signFileConfig(userLanguage: Language): React.JSX.Element {
               <span>{tl("Telefonnummer für Phone Authentication oder EU Advanced SMS-OTP", userLanguage)}</span>
             </td>
             <td>
-              <input id="signerPhoneNumber" placeholder="+49123456789" />
+              <input id="signerPhoneNumber" placeholder="+4915112345678" />
             </td>
           </tr>
 
           <tr>
             <td>
-              <span>{tl("Ländervorwahl für Phone Authentication (Optional)", userLanguage)}</span>
+              <span>{tl("Phone Authentication (Optional)", userLanguage)}</span>
             </td>
             <td>
-              <input id="phoneAuthenticationCountryCode" placeholder="+49" />
+              <input id="phoneAuthenticationCountryCode" placeholder="auto" />
             </td>
           </tr>
 
@@ -161,15 +161,15 @@ export function signFileConfig(userLanguage: Language): React.JSX.Element {
                 <h3>{tl("Telefonnummer", userLanguage)}</h3>
                 <p>
                   {tl(
-                    'Für Phone Authentication oder EU Advanced per SMS eine feste internationale Telefonnummer (z. B. +49123456789) oder ein Vorgangsfeld (z. B. field["Telefonnummer"] oder {field["Telefonnummer"]}) angeben. Das Vorgangsfeld muss beim Ausführen des Tasks eine internationale Telefonnummer mit führendem + und ohne Trennzeichen enthalten.',
+                    'Für Phone Authentication oder EU Advanced per SMS eine feste internationale Telefonnummer (z. B. +4915112345678) oder ein Vorgangsfeld (z. B. field["Telefonnummer"] oder {field["Telefonnummer"]}) angeben. Das Vorgangsfeld muss beim Ausführen des Tasks eine internationale Telefonnummer mit führendem + und ohne Trennzeichen enthalten.',
                     userLanguage,
                   )}
                 </p>
 
-                <h3>{tl("Ländervorwahl für Phone Authentication", userLanguage)}</h3>
+                <h3>{tl("Phone Authentication", userLanguage)}</h3>
                 <p>
                   {tl(
-                    "Eine Ländervorwahl wie +49 aktiviert die Telefonprüfung vor dem Öffnen des Dokuments. DocuSign sendet den Prüfcode per SMS oder Anruf, nachdem der Unterzeichner die Methode gewählt hat. Der Workflow Phone Authentication muss im verwendeten DocuSign-Konto verfügbar sein.",
+                    "Mit auto ermittelt der Service die Ländervorwahl aus der internationalen Telefonnummer. Eine feste Vorwahl wie +49 ist ebenfalls möglich. Ein leeres Feld deaktiviert die Telefonprüfung vor dem Öffnen des Dokuments. DocuSign sendet den Prüfcode per SMS oder Anruf, nachdem der Unterzeichner die Methode gewählt hat. Der Workflow Phone Authentication muss für das Konto verfügbar sein.",
                     userLanguage,
                   )}
                 </p>
@@ -185,7 +185,7 @@ export function signFileConfig(userLanguage: Language): React.JSX.Element {
                 <h3>{tl("Code für Signaturabschluss", userLanguage)}</h3>
                 <p>
                   {tl(
-                    "Für EU Advanced wird der feste Zugangscode beim Abschluss der Signatur abgefragt, wenn die Ländervorwahl für Phone Authentication und die Telefonnummer leer sind. Ein verknüpftes Vorgangsfeld für die Telefonnummer darf dafür leer bleiben. Bei Embedded Signing wird bei fehlgeschlagenem Code auf die Rück-URL mit dem Parameter ?event=access_code_failed weitergeleitet.",
+                    "Für EU Advanced wird der feste Zugangscode beim Abschluss der Signatur abgefragt, wenn Phone Authentication und die Telefonnummer leer sind. Ein verknüpftes Vorgangsfeld für die Telefonnummer darf dafür leer bleiben. Bei Embedded Signing wird bei fehlgeschlagenem Code auf die Rück-URL mit dem Parameter ?event=access_code_failed weitergeleitet.",
                     userLanguage,
                   )}
                 </p>
