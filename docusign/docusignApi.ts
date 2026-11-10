@@ -19,8 +19,11 @@ export interface ICreateEnvelopeRequest {
   signerName: string;
   embeddedClientUserId?: string;
   webhookUrl?: string;
+  /** Recipient phone verification before the document can be viewed. */
+  phoneAuthentication?: { countryCode: string; number: string };
+  /** Code that the recipient enters before viewing the document. */
+  recipientAccessCode?: string;
   /** Standards-Based Signature provider name for eIDAS AES. Use "UniversalSignaturePen_OpenTrust_Hash_TSP" for EU Advanced.
-   *  When set, identityVerificationWorkflowId is ignored.
    *  The recipient name must not contain: ^ : \ @ + */
   signatureProviderName?: string;
   /** Phone number incl. country code for SMS-OTP authentication with SBS (e.g. "+4912345678"). */
@@ -104,6 +107,24 @@ class DocusignApi implements IDocusignApi {
   }
 
   /**
+   * Obtain WorkflowId
+   */
+  private async getPhoneAuthenticationWorkflowId(token: string): Promise<string> {
+    const url = `${this.#baseUrl}/accounts/${this.#accountId}/identity_verification`;
+    const response = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+    if (response.status !== HTTP_OK) {
+      throw new Error(`DocuSign Phone Authentication workflow lookup failed: ${response.status}: ${await response.text()}`);
+    }
+
+    const workflows = (await response.json()) as { identityVerification?: { defaultName: string; workflowId: string }[] };
+    const workflowId = workflows.identityVerification?.find((workflow) => workflow.defaultName === "Phone Authentication")?.workflowId;
+    if (!workflowId) {
+      throw new Error("DocuSign Phone Authentication is not available for the configured account.");
+    }
+    return workflowId;
+  }
+
+  /**
    * Creates and sends an envelope or creates a draft envelope.
    * https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/create/
    * @param token The DocuSign OAuth access token.
@@ -113,6 +134,7 @@ class DocusignApi implements IDocusignApi {
   public async createEnvelope(token: string, request: ICreateEnvelopeRequest): Promise<IEnvelopeResponse> {
     const url = `${this.#baseUrl}/accounts/${this.#accountId}/envelopes`;
     const signer: Record<string, unknown> = {
+      accessCode: request.recipientAccessCode,
       clientUserId: request.embeddedClientUserId,
       email: request.signerEmail,
       name: request.signerName,
@@ -122,11 +144,10 @@ class DocusignApi implements IDocusignApi {
     // Standards-based signatures
     // https://developers.docusign.com/docs/esign-rest-api/esign101/concepts/standards-based-signatures/
     if (request.signatureProviderName) {
-      // QES providers use the recipientSignatureProviders array; AES uses direct fields
       const isQES = request.signatureProviderName.includes("QES");
       if (isQES) {
         // Qualified Electronic Signature — identity verified by a QTSP (IDnow, Namirial, etc.)
-        // Phone/OTP not applicable here — identification happens via video-chat with the QTSP
+        // The QTSP handles authentication for the qualified signature.
         signer["recipientSignatureProviders"] = [
           {
             signatureProviderName: request.signatureProviderName,
@@ -134,7 +155,6 @@ class DocusignApi implements IDocusignApi {
           },
         ];
       } else {
-        // Both AES and QES use the recipientSignatureProviders array
         const providerOptions: Record<string, string> = {};
         if (request.signerPhoneNumber) {
           providerOptions["sms"] = request.signerPhoneNumber;
@@ -148,6 +168,12 @@ class DocusignApi implements IDocusignApi {
           },
         ];
       }
+    }
+    if (request.phoneAuthentication) {
+      signer["identityVerification"] = {
+        workflowId: await this.getPhoneAuthenticationWorkflowId(token),
+        inputOptions: [{ name: "phone_number_list", valueType: "PhoneNumberList", phoneNumberList: [request.phoneAuthentication] }],
+      };
     }
     const body: Record<string, unknown> = {
       emailSubject: request.emailSubject,
