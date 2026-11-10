@@ -23,6 +23,8 @@
         { "name": "signatureIdField", "type": "select", "onload": "fields ProcessHubTextInput" },
         { "name": "signatureProvider", "type": "select" },
         { "name": "signerPhoneNumber", "type": "text" },
+        { "name": "phoneAuthenticationCountryCode", "type": "text" },
+        { "name": "recipientAccessCode", "type": "text" },
         { "name": "accessCode", "type": "text" }
       ]
     },

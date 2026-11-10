@@ -2,13 +2,15 @@ import { IServiceTaskEnvironment } from "@roxtra/processhub-sdk/lib/servicetask/
 import DocusignApi, { IDocusignApi, ICreateEnvelopeRequest } from "./docusignApi.js";
 import { loadConfig, readConfigFile } from "./common.js";
 import fs from "fs/promises";
-import { parseAndInsertStringWithFieldContent } from "@roxtra/processhub-sdk/lib/data/datatools.js";
+import { parsePhoneNumberFromString } from "libphonenumber-js/min";
 import { BpmnError, ErrorCode } from "@roxtra/processhub-sdk/lib/instance/bpmnerror.js";
 import { decodeURLSafeBase64 } from "@roxtra/processhub-sdk/lib/tools/stringtools.js";
 import { BpmnProcess } from "@roxtra/processhub-sdk/lib/process/bpmn/bpmnprocess.js";
 import { Bpmn } from "modeler/bpmn/bpmn";
 import { getWebhookTriggerRoute } from "@roxtra/processhub-sdk/lib/webhhooks/webhhooks.js";
 import { IServiceTaskConfigObject } from "@roxtra/processhub-sdk/lib/process/processinterfaces.js";
+
+const internationalPhoneNumber = /^\+[1-9][0-9]{1,14}$/;
 
 function getPhysicalPath(attachmentUrl: string, environment: IServiceTaskEnvironment) {
   let relativePath = attachmentUrl.split("modules/files/")[1];
@@ -57,13 +59,11 @@ function getCallbackUrlBase(configFile: { callbackUrlBase: string }, environment
   return environment.serverConfig.Webserver.baseUrl;
 }
 
-function resolveSignerPhoneNumber(configuredNumber: string | undefined, environment: IServiceTaskEnvironment): string | undefined {
-  const reference = configuredNumber?.trim();
-  if (!reference) {
+function resolveProcessFieldReference(configuredValue: string, environment: IServiceTaskEnvironment, setting: "signerPhoneNumber" | "recipientAccessCode") {
+  const reference = configuredValue.trim();
+  const looksLikeReference = /^(?:field\s*\[|\{\s*field\s*\[|\{\{\s*field\.)/.test(reference);
+  if (!looksLikeReference && !(setting === "signerPhoneNumber" && reference === "field")) {
     return undefined;
-  }
-  if (!/^(?:field\s*(?:\[|$)|\{\s*field\s*\[|\{\{\s*field\.)/.test(reference)) {
-    return configuredNumber;
   }
 
   const legacy = /^\{\{\s*field\.([\s\S]+?)\s*\}\}$/.exec(reference);
@@ -72,39 +72,49 @@ function resolveSignerPhoneNumber(configuredNumber: string | undefined, environm
   const unquoted = braced && /^field\[([^"'\]][\s\S]*)\]$/.exec(braced[1]);
   const fieldName = legacy?.[1] ?? bracketed?.[1] ?? bracketed?.[2] ?? unquoted?.[1];
   if (!fieldName) {
-    throw new BpmnError(ErrorCode.ConfigInvalid, 'signerPhoneNumber: Expected a field reference of the form field["Field name"].');
+    throw new BpmnError(ErrorCode.ConfigInvalid, `${setting}: Expected a field reference of the form field["Field name"].`);
   }
 
   const fields = environment.instanceDetails.extras.fieldContents;
   if (!fields || !Object.hasOwn(fields, fieldName)) {
-    throw new BpmnError(ErrorCode.ConfigInvalid, "signerPhoneNumber: The referenced process field does not exist.");
+    throw new BpmnError(ErrorCode.ConfigInvalid, `${setting}: The referenced process field does not exist.`);
   }
+  return { field: fields[fieldName] };
+}
 
-  let value: unknown;
-  // Keep the exact field name out of the SDK template, where it could contain another reference.
-  parseAndInsertStringWithFieldContent(
-    "field['signerPhoneNumber']",
-    { signerPhoneNumber: fields[fieldName] },
-    {},
-    {},
-    environment.sender.language || "en-US",
-    { fields: [] },
-    false,
-    "",
-    (name, field) => {
-      // Keep the raw value and prevent the SDK from interpreting it as another template.
-      value = field.value;
-      return "";
-    },
-  );
-  if (typeof value !== "string" || !value.trim()) {
+function resolveSignerPhoneNumber(configuredNumber: string | undefined, environment: IServiceTaskEnvironment, allowEmpty: boolean): string | undefined {
+  if (!configuredNumber?.trim()) {
+    return undefined;
+  }
+  const reference = resolveProcessFieldReference(configuredNumber, environment, "signerPhoneNumber");
+  if (!reference) {
+    return configuredNumber;
+  }
+  const phoneField = reference.field;
+  const value = phoneField?.value;
+  const phoneNumber = typeof value === "string" ? value.trim() : undefined;
+  if (allowEmpty && (phoneNumber === "" || (value == null && phoneField?.type === "ProcessHubTextInput"))) {
+    return undefined;
+  }
+  if (!phoneNumber) {
     throw new BpmnError(ErrorCode.ConfigInvalid, "signerPhoneNumber: The referenced process field must contain non-empty text.");
   }
-  const phoneNumber = value.trim();
-  if (!/^\+[1-9][0-9]{1,14}$/.test(phoneNumber)) {
-    throw new BpmnError(ErrorCode.ConfigInvalid, "signerPhoneNumber: The referenced process field must contain an international phone number such as +49123456789.");
+  if (!internationalPhoneNumber.test(phoneNumber)) {
+    throw new BpmnError(ErrorCode.ConfigInvalid, "signerPhoneNumber: The referenced process field must contain an international phone number such as +4915112345678.");
   }
   return phoneNumber;
+}
+
+function resolveRecipientAccessCode(configuredCode: string | undefined, environment: IServiceTaskEnvironment): string | undefined {
+  if (!configuredCode) {
+    return undefined;
+  }
+  const reference = resolveProcessFieldReference(configuredCode, environment, "recipientAccessCode");
+  const accessCode = reference ? reference.field?.value : configuredCode;
+  if (typeof accessCode !== "string" || !accessCode.trim() || accessCode.length > 50 || /[<>&#]/.test(accessCode)) {
+    throw new BpmnError(ErrorCode.ConfigInvalid, "recipientAccessCode must contain text, have at most 50 characters, and exclude <, >, & and #.");
+  }
+  return accessCode;
 }
 
 async function buildEnvelopeRequest(
@@ -159,12 +169,32 @@ async function buildEnvelopeRequest(
     }
   }
 
-  /* Standards-Based Signature (SBS) for EU Advanced (AES) */
   const signatureProviderName = config.fields.find((f) => f.key === "signatureProvider")?.value || undefined;
+  const usesAdvancedSignature = signatureProviderName === "UniversalSignaturePen_OpenTrust_Hash_TSP";
   const configuredPhoneNumber = config.fields.find((f) => f.key === "signerPhoneNumber")?.value || undefined;
-  const signerPhoneNumber =
-    signatureProviderName === "UniversalSignaturePen_OpenTrust_Hash_TSP" ? resolveSignerPhoneNumber(configuredPhoneNumber, environment) : configuredPhoneNumber;
+  const phoneAuthenticationCountryCode = config.fields.find((f) => f.key === "phoneAuthenticationCountryCode")?.value?.trim();
   const accessCode = config.fields.find((f) => f.key === "accessCode")?.value || undefined;
+  const recipientAccessCode = resolveRecipientAccessCode(config.fields.find((f) => f.key === "recipientAccessCode")?.value, environment);
+  const allowEmptyPhoneNumber = usesAdvancedSignature && !phoneAuthenticationCountryCode && Boolean(accessCode?.trim());
+  const signerPhoneNumber =
+    phoneAuthenticationCountryCode || usesAdvancedSignature ? resolveSignerPhoneNumber(configuredPhoneNumber, environment, allowEmptyPhoneNumber) : configuredPhoneNumber;
+
+  let phoneAuthentication: ICreateEnvelopeRequest["phoneAuthentication"];
+  if (phoneAuthenticationCountryCode) {
+    const automaticCountryCode = phoneAuthenticationCountryCode.toLowerCase() === "auto";
+    if (!automaticCountryCode && !/^\+?[1-9][0-9]{0,2}$/.test(phoneAuthenticationCountryCode)) {
+      throw new BpmnError(ErrorCode.ConfigInvalid, "Phone Authentication requires 'auto' or a country calling code such as +49.");
+    }
+    const phoneNumber = signerPhoneNumber?.trim();
+    const parsedNumber = phoneNumber && internationalPhoneNumber.test(phoneNumber) ? parsePhoneNumberFromString(phoneNumber, { extract: false }) : undefined;
+    if (!parsedNumber || parsedNumber.number !== phoneNumber) {
+      throw new BpmnError(ErrorCode.ConfigInvalid, "Phone Authentication requires an international phone number in E.164 format such as +4915112345678.");
+    }
+    if (!automaticCountryCode && phoneAuthenticationCountryCode.replace(/^\+/, "") !== parsedNumber.countryCallingCode) {
+      throw new BpmnError(ErrorCode.ConfigInvalid, "Phone Authentication requires an international phone number matching the configured country calling code.");
+    }
+    phoneAuthentication = { countryCode: parsedNumber.countryCallingCode, number: parsedNumber.nationalNumber };
+  }
 
   /* Sanitize name: SBS provider rejects ^ : \ @ + in recipient name */
   const sanitizedSignerName = signatureProviderName ? signerName.replace(/[\^:\\@+]/g, "") || signerName : signerName;
@@ -178,6 +208,8 @@ async function buildEnvelopeRequest(
     signerName: sanitizedSignerName,
     embeddedClientUserId,
     webhookUrl,
+    phoneAuthentication,
+    recipientAccessCode,
     signatureProviderName,
     signerPhoneNumber,
     accessCode,

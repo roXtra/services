@@ -70,16 +70,34 @@ export function signFileConfig(userLanguage: Language): React.JSX.Element {
 
           <tr>
             <td>
-              <span>{tl("Telefonnummer für SMS-OTP (Optional – EU Advanced)", userLanguage)}</span>
+              <span>{tl("Telefonnummer für Phone Authentication oder EU Advanced SMS-OTP", userLanguage)}</span>
             </td>
             <td>
-              <input id="signerPhoneNumber" placeholder="+49123456789" />
+              <input id="signerPhoneNumber" placeholder="+4915112345678" />
             </td>
           </tr>
 
           <tr>
             <td>
-              <span>{tl("Zugangscode / Access Code (Optional – EU Advanced)", userLanguage)}</span>
+              <span>{tl("Phone Authentication (Optional)", userLanguage)}</span>
+            </td>
+            <td>
+              <input id="phoneAuthenticationCountryCode" placeholder="auto" />
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <span>{tl("Zugangscode für Dokumentzugriff (Optional)", userLanguage)}</span>
+            </td>
+            <td>
+              <input id="recipientAccessCode" placeholder={'field["Zugangscode"]'} />
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <span>{tl("Code für Signaturabschluss (Optional – EU Advanced)", userLanguage)}</span>
             </td>
             <td>
               <input id="accessCode" />
@@ -125,7 +143,7 @@ export function signFileConfig(userLanguage: Language): React.JSX.Element {
                 <h3>{tl("Signaturart", userLanguage)}</h3>
                 <p>{tl("Wählt die Signaturqualität – entspricht dem Skribble-Konzept SES/AES/QES:", userLanguage)}</p>
                 <ul>
-                  <li>{tl("Standard (SES): Einfache elektronische Signatur, Click-to-Sign. Keine zusätzliche Konfiguration nötig.", userLanguage)}</li>
+                  <li>{tl("Standard (SES): Einfache elektronische Signatur, Click-to-Sign.", userLanguage)}</li>
                   <li>
                     {tl(
                       "EU Advanced (AES): Standards-Based Signature gemäß eIDAS. Erfordert SMS-OTP-Telefonnummer oder Zugangscode. DocuSign-Account muss AES unterstützen.",
@@ -134,24 +152,40 @@ export function signFileConfig(userLanguage: Language): React.JSX.Element {
                   </li>
                   <li>
                     {tl(
-                      "EU Qualifiziert (QES): Höchste Signaturqualität gemäß eIDAS Art. 26. Die Identität wird durch einen Qualified Trust Service Provider (QTSP) per Video-Ident oder Ausweis-Scan geprüft. Telefonnummer und Zugangscode werden bei QES ignoriert. (Muss vom DocuSign-Support für den Account freigeschaltet werden.)",
+                      "EU Qualifiziert (QES): Die Identitätsprüfung für die qualifizierte Signatur übernimmt der Qualified Trust Service Provider (QTSP), zum Beispiel per Video-Ident oder Ausweis-Scan. DocuSign muss den Signaturanbieter für das Konto freischalten.",
                       userLanguage,
                     )}
                   </li>
                 </ul>
 
-                <h3>{tl("Telefonnummer für SMS-OTP", userLanguage)}</h3>
+                <h3>{tl("Telefonnummer", userLanguage)}</h3>
                 <p>
                   {tl(
-                    'Für EU Advanced per SMS eine feste Telefonnummer mit Ländervorwahl (z. B. +49123456789) oder ein Vorgangsfeld (z. B. field["Telefonnummer"] oder {field["Telefonnummer"]}) angeben. Das Vorgangsfeld muss beim Ausführen des Tasks eine internationale Telefonnummer mit führendem + und ohne Trennzeichen enthalten (z. B. +49123456789). Alternativ kann ein Zugangscode verwendet werden.',
+                    'Für Phone Authentication oder EU Advanced per SMS eine feste internationale Telefonnummer (z. B. +4915112345678) oder ein Vorgangsfeld (z. B. field["Telefonnummer"] oder {field["Telefonnummer"]}) angeben. Das Vorgangsfeld muss beim Ausführen des Tasks eine internationale Telefonnummer mit führendem + und ohne Trennzeichen enthalten.',
                     userLanguage,
                   )}
                 </p>
 
-                <h3>{tl("Zugangscode / Access Code", userLanguage)}</h3>
+                <h3>{tl("Phone Authentication", userLanguage)}</h3>
                 <p>
                   {tl(
-                    "Statischer Zugangscode, den der Unterzeichner beim Signieren eingeben muss. Alternative zur SMS-OTP-Telefonnummer bei EU Advanced Signature. Bei Embedded Signing wird bei fehlgeschlagenem Code auf die Rück-URL mit dem Parameter ?event=access_code_failed weitergeleitet.",
+                    "Mit auto ermittelt der Service die Ländervorwahl aus der internationalen Telefonnummer. Eine feste Vorwahl wie +49 ist ebenfalls möglich. Ein leeres Feld deaktiviert die Telefonprüfung vor dem Öffnen des Dokuments. DocuSign sendet den Prüfcode per SMS oder Anruf, nachdem der Unterzeichner die Methode gewählt hat. Der Workflow Phone Authentication muss für das Konto verfügbar sein.",
+                    userLanguage,
+                  )}
+                </p>
+
+                <h3>{tl("Zugangscode für Dokumentzugriff", userLanguage)}</h3>
+                <p>
+                  {tl(
+                    'Gib einen festen Zugangscode oder ein Textfeld aus dem Vorgang an, z. B. field["Zugangscode"]. DocuSign fragt den Code vor dem Anzeigen des Dokuments ab. Teile ihn dem Unterzeichner separat mit. Der Code darf maximal 50 Zeichen enthalten. Die Zeichen <, >, & und # sind unzulässig.',
+                    userLanguage,
+                  )}
+                </p>
+
+                <h3>{tl("Code für Signaturabschluss", userLanguage)}</h3>
+                <p>
+                  {tl(
+                    "Für EU Advanced wird der feste Zugangscode beim Abschluss der Signatur abgefragt, wenn Phone Authentication und die Telefonnummer leer sind. Ein verknüpftes Vorgangsfeld für die Telefonnummer darf dafür leer bleiben. Bei Embedded Signing wird bei fehlgeschlagenem Code auf die Rück-URL mit dem Parameter ?event=access_code_failed weitergeleitet.",
                     userLanguage,
                   )}
                 </p>

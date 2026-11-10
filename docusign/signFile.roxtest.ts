@@ -25,7 +25,10 @@ async function createEnv(filePath: string) {
   return env;
 }
 
-async function createAdvancedSigningTest(signerPhoneNumber: string, accessCode = "") {
+async function createSigningTest(
+  signerPhoneNumber: string,
+  { accessCode = "", signatureProvider = "UniversalSignaturePen_OpenTrust_Hash_TSP", phoneAuthenticationCountryCode = "", recipientAccessCode = "" } = {},
+) {
   const env = await createEnv("./testfiles/docusign-service.bpmn");
   sinon.stub(env.fileStore, "getPhysicalPath").returns("./testfiles/data.txt");
   env.sender.mail = "test@example.com";
@@ -34,8 +37,10 @@ async function createAdvancedSigningTest(signerPhoneNumber: string, accessCode =
     (match: string, start: string, json: string, end: string) => {
       const config = JSON.parse(json) as IServiceTaskConfigObject;
       config.fields.push(
-        { key: "signatureProvider", type: "select", value: "UniversalSignaturePen_OpenTrust_Hash_TSP" },
+        { key: "signatureProvider", type: "select", value: signatureProvider },
         { key: "signerPhoneNumber", type: "text", value: signerPhoneNumber },
+        { key: "phoneAuthenticationCountryCode", type: "text", value: phoneAuthenticationCountryCode },
+        { key: "recipientAccessCode", type: "text", value: recipientAccessCode },
         { key: "accessCode", type: "text", value: accessCode },
       );
       return start + JSON.stringify(config).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;") + end;
@@ -131,7 +136,7 @@ describe("services", () => {
         ["{field[SMS Telefonnummer]}", "+49123456789"],
         ["{{ field.SMS Telefonnummer }}", "+49123456789"],
       ]) {
-        const { env, api } = await createAdvancedSigningTest(reference);
+        const { env, api } = await createSigningTest(reference);
         env.instanceDetails.extras.fieldContents!["SMS Telefonnummer"] = { type: "ProcessHubTextInput", value: phoneNumber };
 
         await serviceLogic(env, api, mockConfigFile);
@@ -145,7 +150,7 @@ describe("services", () => {
       const fieldNames = ["Mobil {{field.alt}}", "Mobil field['alt']", ' Mobil "privat" & <Firma>\' [Ä] }\nzweite Zeile ', "__proto__"];
       for (const fieldName of fieldNames) {
         for (const reference of ['field["' + fieldName + '"]', '{field["' + fieldName + '"]}']) {
-          const { env, api } = await createAdvancedSigningTest(reference);
+          const { env, api } = await createSigningTest(reference);
           env.instanceDetails.extras.fieldContents = {
             ...env.instanceDetails.extras.fieldContents,
             [fieldName]: { type: "ProcessHubTextInput", value: "  +49123456789  " },
@@ -160,7 +165,7 @@ describe("services", () => {
     });
 
     it("should still accept a fixed SMS number", async () => {
-      const { env, api } = await createAdvancedSigningTest("+49123456789");
+      const { env, api } = await createSigningTest("+49123456789");
 
       await serviceLogic(env, api, mockConfigFile);
 
@@ -168,11 +173,54 @@ describe("services", () => {
     });
 
     it("should still accept an access code with no configured SMS number", async () => {
-      const { env, api } = await createAdvancedSigningTest("", "123456");
+      const { env, api } = await createSigningTest("", { accessCode: "123456" });
 
       await serviceLogic(env, api, mockConfigFile);
 
       expect(api.createEnvelope.firstCall.args[1]).to.include({ signerPhoneNumber: undefined, accessCode: "123456" });
+    });
+
+    it("should read the document access code from the process field for a standard signature", async () => {
+      const { env, api } = await createSigningTest("", { signatureProvider: "", recipientAccessCode: 'field["Zugangscode"]' });
+      env.instanceDetails.extras.fieldContents!["Zugangscode"] = { type: "ProcessHubTextInput", value: "004219" };
+
+      await serviceLogic(env, api, mockConfigFile);
+
+      expect(api.createEnvelope.firstCall.args[1]).to.include({ recipientAccessCode: "004219", accessCode: undefined });
+    });
+
+    it("should reject missing and invalid document access codes before contacting DocuSign", async () => {
+      for (const fieldValue of [undefined, "", "Code&123", "x".repeat(51)]) {
+        const { env, api } = await createSigningTest("", { signatureProvider: "", recipientAccessCode: 'field["Zugangscode"]' });
+        if (fieldValue !== undefined) {
+          env.instanceDetails.extras.fieldContents!["Zugangscode"] = { type: "ProcessHubTextInput", value: fieldValue };
+        }
+
+        await rejects(serviceLogic(env, api, mockConfigFile), { errorCode: ErrorCode.ConfigInvalid, message: /^recipientAccessCode/ });
+        sinon.assert.notCalled(api.getAccessToken);
+      }
+    });
+
+    it("should use the AES access code when the referenced phone field is empty", async () => {
+      for (const value of [undefined, "", "  "]) {
+        const { env, api } = await createSigningTest('field["Telefonnummer"]', { accessCode: "123456" });
+        env.instanceDetails.extras.fieldContents!["Telefonnummer"] = { type: "ProcessHubTextInput", value };
+
+        await serviceLogic(env, api, mockConfigFile);
+
+        expect(api.createEnvelope.firstCall.args[1]).to.include({ signerPhoneNumber: undefined, accessCode: "123456" });
+      }
+    });
+
+    it("should require a number even with an AES access code when Phone Authentication is enabled", async () => {
+      const { env, api } = await createSigningTest('field["Telefonnummer"]', { accessCode: "123456", phoneAuthenticationCountryCode: "+49" });
+      env.instanceDetails.extras.fieldContents!["Telefonnummer"] = { type: "ProcessHubTextInput", value: "" };
+
+      await rejects(serviceLogic(env, api, mockConfigFile), {
+        errorCode: ErrorCode.ConfigInvalid,
+        message: /signerPhoneNumber: .*must contain non-empty text/,
+      });
+      sinon.assert.notCalled(api.createEnvelope);
     });
 
     for (const { description, reference, fieldValue, reason } of [
@@ -184,7 +232,7 @@ describe("services", () => {
       { description: "invalid phone number", reference: 'field["Telefonnummer"]', fieldValue: "abc", reason: /must contain an international phone number/ },
     ]) {
       it("should reject a " + description + " before creating an envelope", async () => {
-        const { env, api } = await createAdvancedSigningTest(reference);
+        const { env, api } = await createSigningTest(reference);
         if (fieldValue !== undefined) {
           env.instanceDetails.extras.fieldContents!["Telefonnummer"] =
             typeof fieldValue === "string" ? { type: "ProcessHubTextInput", value: fieldValue } : { type: "ProcessHubFileUpload", value: fieldValue };
@@ -197,6 +245,72 @@ describe("services", () => {
         sinon.assert.notCalled(api.createEnvelope);
       });
     }
+
+    it("should enable Phone Authentication for a standard signer using a process field", async () => {
+      const { env, api } = await createSigningTest('field["Telefonnummer"]', { signatureProvider: "", phoneAuthenticationCountryCode: "+49" });
+      env.instanceDetails.extras.fieldContents!["Telefonnummer"] = { type: "ProcessHubTextInput", value: "+4915112345678" };
+
+      await serviceLogic(env, api, mockConfigFile);
+
+      expect((api.createEnvelope.firstCall.args[1] as ICreateEnvelopeRequest).phoneAuthentication).to.deep.equal({
+        countryCode: "49",
+        number: "15112345678",
+      });
+    });
+
+    it("should derive the Phone Authentication country calling code from the current process field", async () => {
+      for (const [phoneNumber, countryCode, number] of [
+        ["+12025550123", "1", "2025550123"],
+        ["+4915112345678", "49", "15112345678"],
+        ["+358401234567", "358", "401234567"],
+      ]) {
+        const { env, api } = await createSigningTest('field["Telefonnummer"]', { signatureProvider: "", phoneAuthenticationCountryCode: "auto" });
+        env.instanceDetails.extras.fieldContents!["Telefonnummer"] = { type: "ProcessHubTextInput", value: phoneNumber };
+
+        await serviceLogic(env, api, mockConfigFile);
+
+        sinon.assert.calledOnce(api.createEnvelope);
+        expect((api.createEnvelope.firstCall.args[1] as ICreateEnvelopeRequest).phoneAuthentication).to.deep.equal({ countryCode, number });
+      }
+    });
+
+    it("should reject unknown country codes and local numbers with automatic Phone Authentication", async () => {
+      for (const phoneNumber of ["+999123456789", "015112345678"]) {
+        const { env, api } = await createSigningTest(phoneNumber, { signatureProvider: "", phoneAuthenticationCountryCode: "auto" });
+
+        await rejects(serviceLogic(env, api, mockConfigFile), {
+          errorCode: ErrorCode.ConfigInvalid,
+          message: /Phone Authentication requires an international phone number in E\.164 format/,
+        });
+        sinon.assert.notCalled(api.createEnvelope);
+      }
+    });
+
+    it("should reject noncanonical international numbers in both Phone Authentication modes", async () => {
+      for (const phoneAuthenticationCountryCode of ["auto", "+49"]) {
+        const { env, api } = await createSigningTest("+49015112345678", { signatureProvider: "", phoneAuthenticationCountryCode });
+
+        await rejects(serviceLogic(env, api, mockConfigFile), {
+          errorCode: ErrorCode.ConfigInvalid,
+          message: /Phone Authentication requires an international phone number in E\.164 format/,
+        });
+        sinon.assert.notCalled(api.getAccessToken);
+        sinon.assert.notCalled(api.createEnvelope);
+      }
+    });
+
+    it("should reject Phone Authentication with a mismatched country calling code", async () => {
+      for (const phoneAuthenticationCountryCode of ["+43", "+4"]) {
+        const { env, api } = await createSigningTest("+4915112345678", { signatureProvider: "", phoneAuthenticationCountryCode });
+
+        await rejects(serviceLogic(env, api, mockConfigFile), {
+          errorCode: ErrorCode.ConfigInvalid,
+          message: /Phone Authentication requires an international phone number/,
+        });
+        sinon.assert.notCalled(api.getAccessToken);
+        sinon.assert.notCalled(api.createEnvelope);
+      }
+    });
 
     it("should create an envelope with webhook URL and no signing URL", async () => {
       const env = await createEnv("./testfiles/docusign-service-webhook.bpmn");
