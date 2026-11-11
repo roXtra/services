@@ -131,6 +131,13 @@
         "variables": true
       }
     ],
+    "typescript/no-floating-promises": "error",
+    "typescript/no-misused-promises": [
+      "error",
+      {
+        "checksVoidReturn": false
+      }
+    ],
     "typescript/ban-ts-comment": "error",
     "typescript/no-duplicate-enum-values": "error",
     "typescript/no-empty-object-type": "error",
@@ -193,8 +200,8 @@
     }
   ],
   "options": {
-    "typeAware": false,
-    "reportUnusedDisableDirectives": "warn",
+    "typeAware": true,
+    "reportUnusedDisableDirectives": "error",
     "respectEslintDisableDirectives": false
   },
   "settings": {

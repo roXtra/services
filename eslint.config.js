@@ -46,6 +46,9 @@ export default tseslint.config(
    * General rules
    */
   {
+    linterOptions: {
+      reportUnusedDisableDirectives: "error",
+    },
     languageOptions: {
       globals: {
         ...globals.browser,
@@ -231,6 +234,6 @@ export default tseslint.config(
   {
     ...eslintPluginPrettier,
   },
-  // Disable only the syntax rules enabled in the shared Oxlint configuration.
-  ...eslintPluginOxlint.buildFromOxlintConfigFile(fileURLToPath(new URL("./.oxlintrc.json", import.meta.url)), { typeAware: false }),
+  // Disable the checks already handled by the shared Oxlint configuration.
+  ...eslintPluginOxlint.buildFromOxlintConfigFile(fileURLToPath(new URL("./.oxlintrc.json", import.meta.url)), { typeAware: true }),
 );

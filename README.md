@@ -88,7 +88,7 @@ To build and run a service, several files are required:
 
 - package.json, to specify the dependencies
 - tsconfig.json, to specify compile options
-- `.oxlintrc.json` and `eslint.config.js` in the repository root, to specify lint options
+- .eslintrc.json, to specify lint options
 
 The following files contain code for the service you want to develop:
 
@@ -174,7 +174,7 @@ Ein Service benötigt verschiedene Dateien:
 
 - package.json, um die Abhängigkeiten zu definieren
 - tsconfig.json, um Compiler Optionen zu definieren
-- `.oxlintrc.json` und `eslint.config.js` im Repository-Stamm, um Linter-Optionen zu definieren
+- .eslintrc.json, um Linter Optionen zu definieren
 
 Die folgenden Dateien können für Ihren Service angepasst werden:
 
@@ -183,15 +183,3 @@ Die folgenden Dateien können für Ihren Service angepasst werden:
 - \<myservicename\>-service.ts, bestimmt das Verhalten Ihres Services
 
 Für ein grundlegendes Verständnis der Service Entwicklung, können Sie gerne einen Blick in die bereits vorhandenen Services in diesem Repository werfen.
-
-## Linting
-
-Run `npm ci` in the repository root and the relevant service, then run `npm run lint` in that service. The existing build and release scripts also run this check before compiling each service.
-
-Oxlint checks the supported syntax rules for the existing TypeScript/TSX files. ESLint retains type-aware checks, unsupported rules, and Prettier. The shared configuration files preserve test overrides and exclusions; additional JavaScript and module file types are excluded from the native scan.
-
-All `eslint-plugin-security` rules are enabled as warnings in ESLint. Findings appear in the existing linter/build output and do not fail the build; existing lint errors remain blocking. Findings identify code that needs review and do not establish exploitability.
-
-Maintain the transferred rules in `.oxlintrc.json` and the remaining rules in `eslint.config.js`. The configuration-based `eslint-plugin-oxlint` bridge disables only the checks already performed by Oxlint.
-
-Native rule exceptions use `oxlint-disable...`; remaining ESLint rule exceptions use `eslint-disable...`. Specify both directives for mixed exceptions. Unused exceptions are reported as warnings.

@@ -16,5 +16,5 @@
     "types": ["mocha", "node"]
   },
   "include": ["./**/*"],
-  "exclude": ["./dist/**/*", "./node_modules"]
+  "exclude": ["./dist/**/*", "./disttests/**/*", "./node_modules"]
 }

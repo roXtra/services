@@ -42,11 +42,10 @@
       "matchPackageNames": ["react", "react-dom", "@types/react"],
       "allowedVersions": "^18.0.0"
     },
-    // Update the native linter and its ESLint compatibility rules together.
+    // Update the native linters and their ESLint compatibility rules together.
     {
-      "matchPackageNames": ["oxlint", "eslint-plugin-oxlint"],
-      "groupName": "Oxlint",
-      "rangeStrategy": "pin"
+      "matchPackageNames": ["oxlint", "oxlint-tsgolint", "eslint-plugin-oxlint"],
+      "groupName": "Oxlint"
     },
     // Lock eslint to 9.39.2 because of https://rossmanith.atlassian.net/browse/RM-850
     {

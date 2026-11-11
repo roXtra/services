@@ -31,14 +31,14 @@ describe("services", () => {
             },
           };
 
-          // eslint-disable-next-line @typescript-eslint/unbound-method, @typescript-eslint/require-await
+          // eslint-disable-next-line @typescript-eslint/require-await
           environment.roxApi.getAccessTokenFromAuth = async (userId: string): Promise<string> => {
             // Must match the value defined in startservice.bpmn
             expect(userId).to.equal("7133");
             return testAccessToken;
           };
 
-          // eslint-disable-next-line @typescript-eslint/unbound-method, @typescript-eslint/require-await
+          // eslint-disable-next-line @typescript-eslint/require-await
           environment.instances.executeInstance = async (processId, instance, startEventId, accessToken): Promise<string> => {
             executeWasCalled = true;
             expect(accessToken).to.equal(testAccessToken);
