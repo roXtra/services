@@ -91,7 +91,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment, configP
       responseType: "text",
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // oxlint-disable-next-line typescript/no-explicit-any
     let requestResult: AxiosResponse<any, any>;
 
     switch (webhookMethod) {
@@ -109,7 +109,7 @@ export async function serviceLogic(environment: IServiceTaskEnvironment, configP
         break;
       case "POST":
       // Default is the fallback for older service tasks configured before this option existed - back then it was always a POST
-      // eslint-disable-next-line no-fallthrough
+      // oxlint-disable-next-line no-fallthrough
       default:
         requestResult = await axios.post(webhookAddressWithFieldValues, webhookBodyWithFieldValues, requestConfig);
         break;

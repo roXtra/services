@@ -1,6 +1,9 @@
 // @ts-check
 
+import { fileURLToPath } from "node:url";
 import eslint from "@eslint/js";
+import eslintPluginOxlint from "eslint-plugin-oxlint";
+import eslintPluginSecurity from "eslint-plugin-security";
 import tseslint from "typescript-eslint";
 import globals from "globals";
 import eslintPluginNoOnlyTests from "eslint-plugin-no-only-tests";
@@ -222,8 +225,12 @@ export default tseslint.config(
       "*/disttests/",
     ],
   },
-  // Add prettier as last entry to ensure it can overwrite other configurations
+  // Security findings are warnings; the existing lint errors remain blocking.
+  eslintPluginSecurity.configs.recommended,
+  // Keep Prettier after the lint rules so formatting settings take precedence.
   {
     ...eslintPluginPrettier,
   },
+  // Disable only the syntax rules enabled in the shared Oxlint configuration.
+  ...eslintPluginOxlint.buildFromOxlintConfigFile(fileURLToPath(new URL("./.oxlintrc.json", import.meta.url)), { typeAware: false }),
 );

@@ -16,7 +16,7 @@ describe("services", () => {
     }
 
     // Uncomment the following line in real service
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // oxlint-disable-next-line no-unused-vars
     async function performService1Test(bpmnXmlPath: string, bpmnTaskId: string, feld1Value: string, feld2Value: string): Promise<void> {
       const env = createEnvironment(bpmnXmlPath, bpmnTaskId, feld1Value, feld2Value);
       await service1(env);
@@ -25,7 +25,7 @@ describe("services", () => {
     }
 
     // Uncomment the following line in real service
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // oxlint-disable-next-line no-unused-vars
     async function performService2Test(bpmnXmlPath: string, bpmnTaskId: string, feld1Value: string, feld2Value: string): Promise<void> {
       const env = createEnvironment(bpmnXmlPath, bpmnTaskId, feld1Value, feld2Value);
       await service2(env);
