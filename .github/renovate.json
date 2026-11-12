@@ -7,10 +7,6 @@
     ":timezone(Europe/Amsterdam)"
   ],
   "ignorePresets": [":prHourlyLimit2"],
-  "lockFileMaintenance": {
-    "enabled": true,
-    "schedule": ["after 3pm and before 7pm on Thursday"]
-  },
   "major": {
     "minimumReleaseAge": "3 days"
   },
