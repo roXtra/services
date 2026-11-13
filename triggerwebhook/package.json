@@ -26,7 +26,7 @@
     "@roxtra/processhub-sdk": "^9.146.0",
     "axios": "^1.21.0",
     "chai": "^6.3.0",
-    "joi": "^18.3.1",
+    "joi": "^18.3.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
@@ -41,13 +41,13 @@
     "cross-env": "^10.1.0",
     "eslint": "9.39.2",
     "mocha": "^12.0.3",
-    "nock": "^15.0.5",
-    "oxlint": "^1.82.0",
-    "oxlint-tsgolint": "^7.0.2001",
+    "nock": "^15.0.6",
     "ts-loader": "^9.6.2",
     "typescript": "npm:@typescript/typescript6@^6.0.2",
     "webpack": "^5.112.2",
-    "webpack-cli": "^7.3.1"
+    "webpack-cli": "^7.3.1",
+    "oxlint": "^1.82.0",
+    "oxlint-tsgolint": "^7.0.2001"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
