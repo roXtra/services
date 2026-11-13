@@ -8,7 +8,7 @@
     "servicename": "report"
   },
   "scripts": {
-    "lint": "eslint \"**/*.{ts,tsx}\"",
+    "lint": "oxlint -c ../.oxlintrc.json . && eslint \"**/*.{ts,tsx}\"",
     "test": "cross-env HOTRELOAD=no DEBUG=bpmn-engine:123* mocha ./disttests/**/*.roxtest.js --exit --recursive --timeout 40000 --require source-map-support/register",
     "build": "$(if (Test-Path ./disttests) { Remove-Item -Recurse ./disttests }) && tsc && npm run webpack && npm run copymain",
     "copyfiles": "copyfiles service.json configtemplate.json dist/* $Env:npm_package_config_servicename",
@@ -41,6 +41,8 @@
     "cross-env": "^10.1.0",
     "eslint": "9.39.2",
     "mocha": "^12.0.3",
+    "oxlint": "^1.82.0",
+    "oxlint-tsgolint": "^7.0.2001",
     "sinon": "^22.1.0",
     "ts-loader": "^9.6.2",
     "typescript": "npm:@typescript/typescript6@^6.0.2",

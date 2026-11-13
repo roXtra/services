@@ -7,7 +7,7 @@
     "servicename": "sap"
   },
   "scripts": {
-    "lint": "eslint \"**/*.{ts,tsx}\"",
+    "lint": "oxlint -c ../.oxlintrc.json . && eslint \"**/*.{ts,tsx}\"",
     "build": "$(if (Test-Path ./dist) { Remove-Item -Recurse ./dist }) && tsc && mv ./dist/deleteSAPquery-config.js ./dist/deleteSAPquery-config.mjs && mv ./dist/executeSAPquery-config.js ./dist/executeSAPquery-config.mjs && mv ./dist/insertSAPquery-config.js ./dist/insertSAPquery-config.mjs && mv ./dist/selectSAPquery-config.js ./dist/selectSAPquery-config.mjs",
     "test": "cross-env HOTRELOAD=no DEBUG=bpmn-engine:123* mocha ./dist/**/*.roxtest.js --exit --recursive --timeout 40000 --require source-map-support/register",
     "copyproduction": "copyfiles package.json production && copyfiles .npmrc production && cd ./production && npm install --production && cd .. && copyfiles -u 1 \"./production/node_modules/**/*\" $Env:npm_package_config_servicename && Remove-Item -Force -Recurse ./production",
@@ -37,6 +37,8 @@
     "cross-env": "^10.1.0",
     "eslint": "9.39.2",
     "mocha": "^12.0.3",
+    "oxlint": "^1.82.0",
+    "oxlint-tsgolint": "^7.0.2001",
     "ts-loader": "^9.6.2",
     "typescript": "npm:@typescript/typescript6@^6.0.2"
   },
