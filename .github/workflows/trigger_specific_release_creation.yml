@@ -5,7 +5,10 @@ on:
   workflow_dispatch:
     inputs:
       source_ref:
-        description: "Source branch, tag, or full commit SHA (defaults to master)"
+        description: >-
+          Branch (refs/heads/master), tag (refs/tags/v9.146.0), or full
+          40-character commit SHA (e.g. 0123456789abcdef0123456789abcdef01234567).
+          Leave blank to use master.
         required: false
         default: "refs/heads/master"
         type: string
