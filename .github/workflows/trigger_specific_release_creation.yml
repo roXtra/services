@@ -1,12 +1,13 @@
 name: Trigger Specific Release Creation
-run-name: Release ${{ inputs.version }} from ${{ inputs.source_ref }}
+run-name: Release ${{ inputs.version }} from ${{ inputs.source_ref || 'refs/heads/master' }}
 
 on:
   workflow_dispatch:
     inputs:
       source_ref:
-        description: "Source branch, tag, or full commit SHA (e.g. refs/tags/v9.146.0)"
-        required: true
+        description: "Source branch, tag, or full commit SHA (defaults to master)"
+        required: false
+        default: "refs/heads/master"
         type: string
       version:
         description: "Target version (e.g. 9.146.1 or 9.146.1-1)"
@@ -31,10 +32,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GIT_TERMINAL_PROMPT: "0"
+      SOURCE_REF: ${{ inputs.source_ref || 'refs/heads/master' }}
     steps:
       - name: Validate release inputs
         env:
-          SOURCE_REF: ${{ inputs.source_ref }}
           RELEASE_VERSION: ${{ inputs.version }}
           SDK_VERSION: ${{ inputs.sdk_version || inputs.version }}
         run: |
@@ -58,7 +59,7 @@ jobs:
       - name: Check out the requested source
         uses: actions/checkout@v7
         with:
-          ref: ${{ inputs.source_ref }}
+          ref: ${{ env.SOURCE_REF }}
           persist-credentials: false
 
       - name: Check release prerequisites
