@@ -1,9 +1,12 @@
 {
-  "name": "@eformservice/vorgangsnr",
+  "name": "@roxtra/eformservice-vorgangsnr",
   "type": "module",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "config": {
     "servicename": "vorgangsnr"
   },
