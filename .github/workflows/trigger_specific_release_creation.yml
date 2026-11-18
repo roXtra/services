@@ -1,0 +1,125 @@
+name: Trigger Specific Release Creation
+run-name: Release ${{ inputs.version }} from ${{ inputs.source_ref }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_ref:
+        description: "Source branch, tag, or full commit SHA (e.g. refs/tags/v9.146.0)"
+        required: true
+        type: string
+      version:
+        description: "Target version (e.g. 9.146.1 or 9.146.1-1)"
+        required: true
+        type: string
+      sdk_version:
+        description: "SDK package version (defaults to the release version)"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  packages: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  tag-release:
+    name: Prepare and push release tag
+    runs-on: ubuntu-latest
+    env:
+      GIT_TERMINAL_PROMPT: "0"
+    steps:
+      - name: Validate release inputs
+        env:
+          SOURCE_REF: ${{ inputs.source_ref }}
+          RELEASE_VERSION: ${{ inputs.version }}
+          SDK_VERSION: ${{ inputs.sdk_version || inputs.version }}
+        run: |
+          if ! git check-ref-format --allow-onelevel "$SOURCE_REF"; then
+            echo "::error::Enter a branch, tag, or commit SHA as the source ref."
+            exit 1
+          fi
+
+          RELEASE_VERSION=${RELEASE_VERSION#v}
+          SDK_VERSION=${SDK_VERSION#v}
+          number='(0|[1-9][0-9]*)'
+          version_pattern="^$number\.$number\.$number(-$number)?$"
+          for input in RELEASE_VERSION SDK_VERSION; do
+            if [[ ! "${!input}" =~ $version_pattern ]]; then
+              echo "::error::$input must be a version like 9.146.1 or 9.146.1-1."
+              exit 1
+            fi
+            printf '%s=%s\n' "$input" "${!input}" >> "$GITHUB_ENV"
+          done
+
+      - name: Check out the requested source
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.source_ref }}
+          persist-credentials: false
+
+      - name: Check release prerequisites
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [[ ! -f .github/workflows/createrelease.yml ]]; then
+            echo "::error::The source ref does not contain .github/workflows/createrelease.yml."
+            exit 1
+          fi
+          tag_ref="refs/tags/v$RELEASE_VERSION"
+          existing_tag=$(git -c credential.helper= -c 'credential.helper=!gh auth git-credential' ls-remote --refs origin "$tag_ref")
+          if [[ -n "$existing_tag" ]]; then
+            echo "::error::Tag $tag_ref already exists."
+            exit 1
+          fi
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@roxtra"
+
+      - name: Set repository and SDK versions
+        env:
+          NODE_AUTH_TOKEN: ${{ github.token }}
+        run: |
+          sed -Ei "s/^const processHubSDKVersion = \"v[^\"]+\";$/const processHubSDKVersion = \"v$SDK_VERSION\";/" buildScript.js
+          if ! grep -Fxq "const processHubSDKVersion = \"v$SDK_VERSION\";" buildScript.js; then
+            echo "::error::Could not set the SDK version in buildScript.js."
+            exit 1
+          fi
+
+          npm version "$RELEASE_VERSION" --no-git-tag-version --allow-same-version --ignore-scripts
+          npm ci
+          npm run buildonly
+
+          git add -u -- buildScript.js ':(glob)**/package.json' ':(glob)**/package-lock.json'
+
+      - name: Commit and push release tag
+        env:
+          GH_TOKEN: ${{ secrets.DEVBOT_GH_TOKEN }}
+        run: |
+          if [[ -z "$GH_TOKEN" ]]; then
+            echo "::error::DEVBOT_GH_TOKEN is required to push the release tag."
+            exit 1
+          fi
+
+          tag="v$RELEASE_VERSION"
+          source_commit=$(git rev-parse HEAD)
+          git config user.name 'Development Bot'
+          git config user.email 'devbot@roxtra.com'
+          git diff --cached --check
+          if ! git diff --cached --quiet; then
+            git commit -m "Release $tag"
+          fi
+          git tag -a "$tag" -m "$tag"
+
+          # Push with the bot token so GitHub starts the existing tag-triggered workflow.
+          git -c credential.helper= -c 'credential.helper=!gh auth git-credential' push origin "refs/tags/$tag"
+
+          printf 'Pushed `%s` from `%s`. [View the release](%s/%s/releases/tag/%s) after the tag build succeeds.\n' \
+            "$tag" "$source_commit" "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$tag" >> "$GITHUB_STEP_SUMMARY"
