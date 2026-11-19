@@ -23,7 +23,7 @@
   "license": "ISC",
   "dependencies": {
     "@roxtra/processhub-sdk": "^9.147.0",
-    "@sap/hana-client": "2.30.27",
+    "@sap/hana-client": "2.30.32",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
