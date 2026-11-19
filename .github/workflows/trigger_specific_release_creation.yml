@@ -21,6 +21,9 @@ on:
         required: false
         type: string
 
+env:
+  NODE_VERSION: 24
+
 permissions:
   contents: read
   packages: read
@@ -80,10 +83,10 @@ jobs:
             exit 1
           fi
 
-      - name: Set up Node.js 24
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v7
         with:
-          node-version: 24
+          node-version: ${{ env.NODE_VERSION }}
           registry-url: "https://npm.pkg.github.com"
           scope: "@roxtra"
 
