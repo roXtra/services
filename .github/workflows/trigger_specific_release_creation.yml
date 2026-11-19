@@ -22,7 +22,7 @@ on:
         type: string
 
 env:
-  NODE_VERSION: 24
+  NODE_VERSION: 24.22.3
 
 permissions:
   contents: read
