@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@roxtra/processhub-sdk": "^9.147.0",
-    "axios": "^1.21.0",
+    "axios": "^1.21.1",
     "chai": "^6.3.0",
     "joi": "^18.3.2",
     "react": "^18.3.1",
