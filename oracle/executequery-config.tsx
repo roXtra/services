@@ -75,10 +75,10 @@ export function executeQueryConfig(userLanguage: Language): React.JSX.Element {
 
           <tr>
             <td>
-              <span>{tl("TLS verwenden", userLanguage)}</span>
+              <label htmlFor="useTls">{tl("TLS verwenden", userLanguage)}</label>
             </td>
             <td>
-              <input id="useTls" type="checkbox" />
+              <input id="useTls" type="checkbox" className="form-check-input" />
             </td>
           </tr>
 
